@@ -4,56 +4,61 @@
     "cat": "Git",
     "q": "Git 基础工作流 — add/commit/status/log",
     "bullets": [
-      "<pre>git init                     <span class=\"cm\"># 初始化仓库</span>\\ngit add file.py              <span class=\"cm\"># 暂存单个文件</span>\\ngit add .                    <span class=\"cm\"># 暂存所有变更（慎用）</span>\\ngit commit -m <span class=\"str\">\"feat: add X\"</span> <span class=\"cm\"># 提交</span>\\ngit status                   <span class=\"cm\"># 查看工作区状态</span>\\ngit log --oneline -10        <span class=\"cm\"># 最近10条提交</span>\\ngit diff                     <span class=\"cm\"># 工作区 vs 暂存区</span>\\ngit diff --staged            <span class=\"cm\"># 暂存区 vs 最新commit</span></pre>",
+      "<pre>git init                     <span class=\"cm\"># 初始化仓库</span>\ngit add file.py              <span class=\"cm\"># 暂存单个文件</span>\ngit add .                    <span class=\"cm\"># 暂存所有变更（慎用）</span>\ngit commit -m <span class=\"str\">\"feat: add X\"</span> <span class=\"cm\"># 提交</span>\ngit status                   <span class=\"cm\"># 查看工作区状态</span>\ngit log --oneline -10        <span class=\"cm\"># 最近10条提交</span>\ngit diff                     <span class=\"cm\"># 工作区 vs 暂存区</span>\ngit diff --staged            <span class=\"cm\"># 暂存区 vs 最新commit</span></pre>",
       "三个区域：<span class=\"highlight\">工作区(Working) → 暂存区(Staging) → 仓库(Repository)</span>",
       "Commit message 规范：type(scope): description → feat/fix/docs/refactor/test"
     ],
-    "lv": 1
+    "lv": 1,
+    "group": "工程"
   },
   {
     "id": "gt02",
     "cat": "Git",
     "q": ".gitignore — 忽略文件配置",
     "bullets": [
-      "<pre><span class=\"cm\"># .gitignore 常用模式</span>\\n*.pyc              <span class=\"cm\"># 忽略所有.pyc文件</span>\\n__pycache__/       <span class=\"cm\"># 忽略目录</span>\\n.env               <span class=\"cm\"># 忽略环境变量文件</span>\\n*.log              <span class=\"cm\"># 忽略日志</span>\\n!important.log     <span class=\"cm\"># 但保留这个</span>\\ndata/              <span class=\"cm\"># 忽略数据目录</span>\\n.venv/             <span class=\"cm\"># 忽略虚拟环境</span>\\n*.pt *.pth *.ckpt  <span class=\"cm\"># 忽略模型权重</span></pre>",
+      "<pre><span class=\"cm\"># .gitignore 常用模式</span>\n*.pyc              <span class=\"cm\"># 忽略所有.pyc文件</span>\n__pycache__/       <span class=\"cm\"># 忽略目录</span>\n.env               <span class=\"cm\"># 忽略环境变量文件</span>\n*.log              <span class=\"cm\"># 忽略日志</span>\n!important.log     <span class=\"cm\"># 但保留这个</span>\ndata/              <span class=\"cm\"># 忽略数据目录</span>\n.venv/             <span class=\"cm\"># 忽略虚拟环境</span>\n*.pt *.pth *.ckpt  <span class=\"cm\"># 忽略模型权重</span></pre>",
       "已被track的文件需要 <code>git rm --cached file</code> 才能忽略",
       "AI项目必忽略：模型权重/数据集/.env/wandb目录/checkpoint"
     ],
-    "lv": 1
+    "lv": 1,
+    "group": "工程"
   },
   {
     "id": "gt03",
     "cat": "Git",
     "q": "撤销操作 — restore/reset/revert 区别",
     "bullets": [
-      "<pre><span class=\"cm\"># 撤销工作区修改（未add）</span>\\ngit restore file.py\\n<span class=\"cm\"># 取消暂存（已add未commit）</span>\\ngit restore --staged file.py\\n<span class=\"cm\"># 软重置（撤销commit但保留修改）</span>\\ngit reset --soft HEAD~1\\n<span class=\"cm\"># 硬重置（丢弃所有修改！危险！）</span>\\ngit reset --hard HEAD~1\\n<span class=\"cm\"># 创建新commit来撤销（安全，保留历史）</span>\\ngit revert HEAD</pre>",
+      "<pre><span class=\"cm\"># 撤销工作区修改（未add）</span>\ngit restore file.py\n<span class=\"cm\"># 取消暂存（已add未commit）</span>\ngit restore --staged file.py\n<span class=\"cm\"># 软重置（撤销commit但保留修改）</span>\ngit reset --soft HEAD~1\n<span class=\"cm\"># 硬重置（丢弃所有修改！危险！）</span>\ngit reset --hard HEAD~1\n<span class=\"cm\"># 创建新commit来撤销（安全，保留历史）</span>\ngit revert HEAD</pre>",
       "<span class=\"highlight\">reset改写历史，revert不改写历史</span>",
       "团队协作中已push的commit用revert，不要reset → 否则队友pull会出问题"
     ],
-    "lv": 1
+    "lv": 1,
+    "group": "工程"
   },
   {
     "id": "gt04",
     "cat": "Git",
     "q": "分支操作与合并策略",
     "bullets": [
-      "<pre>git branch feature-x          <span class=\"cm\"># 创建分支</span>\\ngit checkout -b feature-x     <span class=\"cm\"># 创建并切换</span>\\ngit switch -c feature-x       <span class=\"cm\"># 新语法（推荐）</span>\\ngit merge feature-x           <span class=\"cm\"># 合并到当前分支</span>\\ngit merge --no-ff feature-x   <span class=\"cm\"># 强制创建merge commit</span>\\ngit branch -d feature-x       <span class=\"cm\"># 删除已合并分支</span></pre>",
+      "<pre>git branch feature-x          <span class=\"cm\"># 创建分支</span>\ngit checkout -b feature-x     <span class=\"cm\"># 创建并切换</span>\ngit switch -c feature-x       <span class=\"cm\"># 新语法（推荐）</span>\ngit merge feature-x           <span class=\"cm\"># 合并到当前分支</span>\ngit merge --no-ff feature-x   <span class=\"cm\"># 强制创建merge commit</span>\ngit branch -d feature-x       <span class=\"cm\"># 删除已合并分支</span></pre>",
       "Fast-Forward合并：直线历史，不产生merge commit → 简洁但丢失分支信息",
       "--no-ff：总是产生merge commit → 保留\"这是一个feature\"的信息",
       "原则：主分支用--no-ff，本地整理用ff"
     ],
-    "lv": 2
+    "lv": 2,
+    "group": "工程"
   },
   {
     "id": "gt05",
     "cat": "Git",
     "q": "合并冲突解决 — 完整流程",
     "bullets": [
-      "<pre><span class=\"cm\"># 1. 合并触发冲突</span>\\ngit merge feature-x\\n<span class=\"cm\"># CONFLICT in file.py</span>\\n\\n<span class=\"cm\"># 2. 打开冲突文件，手动编辑</span>\\n<<<<<<< HEAD\\n当前分支的代码\\n=======\\nfeature-x分支的代码\\n>>>>>>> feature-x\\n\\n<span class=\"cm\"># 3. 解决后</span>\\ngit add file.py\\ngit commit  <span class=\"cm\"># 自动生成merge commit message</span></pre>",
+      "<pre><span class=\"cm\"># 1. 合并触发冲突</span>\ngit merge feature-x\n<span class=\"cm\"># CONFLICT in file.py</span>\n\n<span class=\"cm\"># 2. 打开冲突文件，手动编辑</span>\n<<<<<<< HEAD\n当前分支的代码\n=======\nfeature-x分支的代码\n>>>>>>> feature-x\n\n<span class=\"cm\"># 3. 解决后</span>\ngit add file.py\ngit commit  <span class=\"cm\"># 自动生成merge commit message</span></pre>",
       "预防冲突：频繁从主分支拉更新(rebase/merge) + 小粒度commit + 避免长生命周期分支",
       "工具：VS Code内置 / git mergetool / IntelliJ三向合并"
     ],
-    "lv": 2
+    "lv": 2,
+    "group": "工程"
   },
   {
     "id": "gt06",
@@ -62,58 +67,63 @@
     "bullets": [
       "<span class=\"highlight\">merge</span>：保留完整历史，产生merge commit → 团队协作、主分支合并",
       "<span class=\"highlight\">rebase</span>：线性历史，把分支的commit\"搬\"到目标分支末端 → 个人分支整理",
-      "<pre><span class=\"cm\"># 在feature分支上执行</span>\\ngit rebase main\\n<span class=\"cm\"># 相当于：把feature的commit摘下来，接在main最新commit后面</span>\\n<span class=\"cm\"># ⚠️ 不要rebase已push的公共分支！</span></pre>",
+      "<pre><span class=\"cm\"># 在feature分支上执行</span>\ngit rebase main\n<span class=\"cm\"># 相当于：把feature的commit摘下来，接在main最新commit后面</span>\n<span class=\"cm\"># ⚠️ 不要rebase已push的公共分支！</span></pre>",
       "<span class=\"highlight\">黄金法则</span>：只rebase自己的本地分支，不rebase公共分支",
       "git pull --rebase：拉取时用rebase而不是merge → 避免无意义的merge commit"
     ],
-    "lv": 2
+    "lv": 2,
+    "group": "工程"
   },
   {
     "id": "gt07",
     "cat": "Git",
     "q": "stash — 暂存未完成的工作",
     "bullets": [
-      "<pre>git stash                   <span class=\"cm\"># 暂存工作区和暂存区的修改</span>\\ngit stash -u                <span class=\"cm\"># 包括untracked文件</span>\\ngit stash list              <span class=\"cm\"># 查看所有stash</span>\\ngit stash pop               <span class=\"cm\"># 恢复最近的stash并删除</span>\\ngit stash apply stash@{1}   <span class=\"cm\"># 恢复指定stash但不删除</span>\\ngit stash drop stash@{0}    <span class=\"cm\"># 删除指定stash</span></pre>",
+      "<pre>git stash                   <span class=\"cm\"># 暂存工作区和暂存区的修改</span>\ngit stash -u                <span class=\"cm\"># 包括untracked文件</span>\ngit stash list              <span class=\"cm\"># 查看所有stash</span>\ngit stash pop               <span class=\"cm\"># 恢复最近的stash并删除</span>\ngit stash apply stash@{1}   <span class=\"cm\"># 恢复指定stash但不删除</span>\ngit stash drop stash@{0}    <span class=\"cm\"># 删除指定stash</span></pre>",
       "场景：正在写feature突然要修bug → stash保存 → 切分支修bug → 切回来pop",
       "注意：stash不会保存.gitignore里的文件，需要用 -a (--all)"
     ],
-    "lv": 2
+    "lv": 2,
+    "group": "工程"
   },
   {
     "id": "gt08",
     "cat": "Git",
     "q": "cherry-pick — 精确选择commit",
     "bullets": [
-      "<pre>git cherry-pick abc1234        <span class=\"cm\"># 把某个commit复制到当前分支</span>\\ngit cherry-pick abc..def       <span class=\"cm\"># 范围(不含abc)</span>\\ngit cherry-pick --no-commit abc <span class=\"cm\"># 只应用修改不自动commit</span></pre>",
+      "<pre>git cherry-pick abc1234        <span class=\"cm\"># 把某个commit复制到当前分支</span>\ngit cherry-pick abc..def       <span class=\"cm\"># 范围(不含abc)</span>\ngit cherry-pick --no-commit abc <span class=\"cm\"># 只应用修改不自动commit</span></pre>",
       "场景①：hotfix在错误的分支上提交了 → cherry-pick到正确分支",
       "场景②：只想从feature分支取某个特定修复 → cherry-pick而非merge整个分支",
       "注意：cherry-pick会创建新commit（不同hash），不是\"移动\"而是\"复制\""
     ],
-    "lv": 3
+    "lv": 3,
+    "group": "工程"
   },
   {
     "id": "gt09",
     "cat": "Git",
     "q": "reflog — 恢复误操作的救命工具",
     "bullets": [
-      "<pre>git reflog                     <span class=\"cm\"># 查看所有HEAD移动历史</span>\\n<span class=\"cm\"># 输出: abc1234 HEAD@{0}: reset: moving to HEAD~3</span>\\n<span class=\"cm\"># 输出: def5678 HEAD@{1}: commit: add feature</span>\\n\\n<span class=\"cm\"># 恢复到误操作前</span>\\ngit reset --hard def5678       <span class=\"cm\"># 或 HEAD@{1}</span></pre>",
+      "<pre>git reflog                     <span class=\"cm\"># 查看所有HEAD移动历史</span>\n<span class=\"cm\"># 输出: abc1234 HEAD@{0}: reset: moving to HEAD~3</span>\n<span class=\"cm\"># 输出: def5678 HEAD@{1}: commit: add feature</span>\n\n<span class=\"cm\"># 恢复到误操作前</span>\ngit reset --hard def5678       <span class=\"cm\"># 或 HEAD@{1}</span></pre>",
       "reflog记录本地所有引用的变化，<span class=\"highlight\">即使被reset/rebase也能找回</span>",
       "保留约90天 → 不是永久的。重要代码还是要push到remote",
       "场景：git reset --hard后发现删错了 → reflog找到之前的commit → 恢复"
     ],
-    "lv": 3
+    "lv": 3,
+    "group": "工程"
   },
   {
     "id": "gt10",
     "cat": "Git",
     "q": "bisect — 二分法定位bug",
     "bullets": [
-      "<pre>git bisect start\\ngit bisect bad                 <span class=\"cm\"># 当前commit有bug</span>\\ngit bisect good v1.0           <span class=\"cm\"># 这个版本没bug</span>\\n<span class=\"cm\"># Git自动checkout中间的commit</span>\\n<span class=\"cm\"># 测试后告诉Git:</span>\\ngit bisect good  <span class=\"cm\"># 或 bad</span>\\n<span class=\"cm\"># 重复直到找到引入bug的commit</span>\\ngit bisect reset               <span class=\"cm\"># 结束</span></pre>",
+      "<pre>git bisect start\ngit bisect bad                 <span class=\"cm\"># 当前commit有bug</span>\ngit bisect good v1.0           <span class=\"cm\"># 这个版本没bug</span>\n<span class=\"cm\"># Git自动checkout中间的commit</span>\n<span class=\"cm\"># 测试后告诉Git:</span>\ngit bisect good  <span class=\"cm\"># 或 bad</span>\n<span class=\"cm\"># 重复直到找到引入bug的commit</span>\ngit bisect reset               <span class=\"cm\"># 结束</span></pre>",
       "O(log n)步找到引入bug的commit — 100个commit只需~7步",
       "自动化：<code>git bisect run pytest test_x.py</code> → 自动根据测试结果判断good/bad",
       "场景：上周还好的功能今天突然坏了，不知道哪个commit引入的"
     ],
-    "lv": 3
+    "lv": 3,
+    "group": "工程"
   },
   {
     "id": "gt11",
@@ -126,6 +136,7 @@
       "字节/Google/Meta 倾向 Trunk-Based → 小粒度commit + feature flag + 持续部署",
       "选择依据：发布频率高→Trunk / 需要多版本维护→GitFlow"
     ],
-    "lv": 3
+    "lv": 3,
+    "group": "工程"
   }
 ]

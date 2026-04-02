@@ -9,7 +9,8 @@
       "Self-Attention：每个token关注序列中所有其他token，捕捉长距离依赖",
       "FFN：两层全连接（扩展到4倍再压缩），负责非线性变换和知识存储",
       "Residual Connection：防止梯度消失，让深层网络可训练；Layer Norm：稳定训练"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "l02",
@@ -21,7 +22,8 @@
       "√d_k 缩放防止点积过大导致 softmax 饱和（梯度消失）",
       "Multi-Head：并行多组QKV，不同head关注不同类型的关系（语法/语义/位置）",
       "复杂度 O(n²d)：序列长度的平方，这是长文本处理的瓶颈"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "l03",
@@ -33,7 +35,8 @@
       "SentencePiece：直接处理原始文本（不需要预分词），支持BPE/Unigram → 多语言友好",
       "中文/日语：无空格，SentencePiece直接按字符和子词处理",
       "Vocab大小 trade-off：大→覆盖率高但embedding矩阵大；小→OOV多但参数少。通常32K-128K"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "l04",
@@ -45,7 +48,8 @@
       "<span class=\"highlight\">RLHF</span>：训练Reward Model(偏好排序) → PPO优化策略使输出更符合人类偏好。复杂、不稳定",
       "<span class=\"highlight\">DPO</span>：跳过RM，直接用偏好对训练。更简单稳定，但对数据质量敏感",
       "你的经验：SFT 248条效果好，DPO反而−7.6pp → <span class=\"highlight\">不是所有场景都需要对齐</span>"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "l05",
@@ -57,7 +61,8 @@
       "含义：<span class=\"highlight\">不是模型越大越好，而是算力分配要合理</span>",
       "实践影响：Llama系列（更小模型+更多数据）比GPT-3（大模型+少数据）效率高",
       "对客户的意义：14B充分训练可能比32B欠训练效果好（你的实验验证了这点）"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "l06",
@@ -69,7 +74,8 @@
       "用cache：缓存已计算的K/V → 每步只算新token的Q与所有K/V → O(n) 增量",
       "显存占用：2 × n_layers × d_model × seq_len × batch_size × sizeof(dtype)",
       "<span class=\"highlight\">Paged Attention</span>(vLLM)：像OS虚拟内存一样管理KV Cache，减少碎片，支持更大batch"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "l07",
@@ -81,7 +87,8 @@
       "Flash Attention：分块(tiling)在SRAM中完成QKV运算，不在HBM存中间矩阵",
       "效果：速度2-4x，显存从O(n²)降到O(n)，<span class=\"highlight\">精确计算不是近似</span>",
       "Flash Attention 2/3：进一步优化并行策略和GPU利用率"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "l08",
@@ -94,7 +101,8 @@
       "GPTQ：逐层量化+Hessian补偿（post-training），GPU推理用",
       "AWQ：只保护1%的\"重要权重\"不量化，效果好于GPTQ",
       "GGUF：llama.cpp格式，Q4_K_M/Q8_0等，<span class=\"highlight\">专为CPU推理优化</span>"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "l09",
@@ -107,7 +115,8 @@
       "缓解：<span class=\"highlight\">RAG</span>(用事实文档grounding) / Guardrails(检查事实性) / Self-consistency(多次采样投票)",
       "缓解：Fine-tuning让模型学会说\"我不知道\" / 降Temperature减少随机性",
       "你的做法：SiLR验证器 = 用仿真器事实检查LLM的\"幻觉动作\""
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "l10",
@@ -119,7 +128,8 @@
       "Top-p(Nucleus)：从累积概率达到p的最小token集中采样。<span class=\"highlight\">动态调整候选数量</span>",
       "Beam Search：同时维护beam_size条候选序列，选总概率最高的。适合翻译，不适合对话",
       "实践：对话用Top-p=0.9+T=0.7；代码/工具调用用T=0(确定性输出)"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "l11",
@@ -131,7 +141,8 @@
       "优势：总参数量大（知识容量大），但每次推理只用一部分（计算量小）",
       "典型：Mixtral 8x7B = 47B总参数但每次只激活~13B",
       "挑战：负载均衡（某些专家过载）/ 通信开销（分布式训练）/ 显存仍需存所有专家"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "l12",
@@ -143,7 +154,8 @@
       "<span class=\"highlight\">RoPE</span>(Rotary)：用旋转矩阵编码相对位置，支持长度外推（配合NTK scaling）→ 主流选择",
       "ALiBi：不加位置编码，而是给远距离token的attention分数加线性惩罚 → 训练简单",
       "长文本处理：RoPE+Dynamic NTK/YaRN可扩展到128K+；ALiBi天然支持外推"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "l13",
@@ -156,7 +168,8 @@
       "DPO缺点：没有显式reward信号，难以诊断哪里出了问题",
       "新趋势：SimPO/ORPO等直接用reference-free偏好优化，更简单",
       "你的结论：修复所有问题后DPO仅+0.6pp，工具调用场景不推荐"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "l14",
@@ -168,6 +181,7 @@
       "句向量：平均池化 / [CLS] token / 对比学习(SimCSE, sentence-transformers)",
       "bge-m3：多语言多粒度多功能embedding模型，<span class=\"highlight\">支持Dense+Sparse+ColBERT三种检索</span>",
       "Embedding微调：用三元组(query,positive,negative)+对比Loss，你的经验：Recall@1 +16.4pp"
-    ]
+    ],
+    "group": "基础"
   }
 ]

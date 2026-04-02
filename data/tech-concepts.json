@@ -9,7 +9,8 @@
       "Streamlit：Python快速搭前端，适合PoC和demo（不适合生产环境）",
       "SSE(Server-Sent Events)：服务器→客户端单向推送，LLM逐token流式输出用SSE就够了",
       "SSE vs WebSocket：SSE单向，WebSocket双向"
-    ]
+    ],
+    "group": "工程"
   },
   {
     "id": "t02",
@@ -22,7 +23,8 @@
       "Docker Compose：同时管理多个容器（一键部署FastAPI+向量数据库+前端）",
       "Registry仓库：存储和分发镜像的地方（Docker Hub）",
       "核心价值：解决\"在我机器上能跑\"问题，保证交付物稳定运行"
-    ]
+    ],
+    "group": "工程"
   },
   {
     "id": "t03",
@@ -34,7 +36,8 @@
       "自动扩缩容：流量大自动加容器，流量小自动减",
       "自动恢复：容器挂了自动重启；滚动更新：不停机更新服务",
       "SA需要知道的深度：知道是什么、为什么用，不需要会写YAML"
-    ]
+    ],
+    "group": "工程"
   },
   {
     "id": "t04",
@@ -46,7 +49,8 @@
       "常见：Chroma（轻量级，本地开发）/ Qdrant / Weaviate / Pinecone（云端）/ FAISS（库）",
       "RAG流程：文档→embedding→存向量数据库→查询时检索相似向量→取对应文本",
       "FAISS：Facebook AI的开源库，IndexFlatIP（精确）→IndexIVFPQ（近似，大规模用）"
-    ]
+    ],
+    "group": "工程"
   },
   {
     "id": "t05",
@@ -58,7 +62,8 @@
       "Prefix Caching：System Prompt对所有请求相同→KV Cache复用，计算量减少~30%",
       "Tensor Parallelism(TP=2)：大模型跨多卡并行，vLLM支持",
       "SA场景：edge用Ollama，cloud/企业API用vLLM"
-    ]
+    ],
+    "group": "工程"
   },
   {
     "id": "t06",
@@ -70,7 +75,8 @@
       "QLoRA：在LoRA基础上，原始权重用4-bit NF4量化，进一步降低显存",
       "lora_alpha：缩放系数，通常=2r（alpha=128对应r=64）",
       "target_modules：q_proj/k_proj/v_proj/o_proj + gate/up/down_proj（7个）"
-    ]
+    ],
+    "group": "工程"
   },
   {
     "id": "t07",
@@ -83,7 +89,8 @@
       "ADK(Google)：和Google Cloud集成好，较新",
       "自研：完全可控，但要自己造轮子（SiLR-Agent选择自研的原因）",
       "选哪个取决于客户需求和团队熟悉度，不存在\"最好的框架\""
-    ]
+    ],
+    "group": "工程"
   },
   {
     "id": "t08",
@@ -94,7 +101,8 @@
       "Plan-and-Execute：先整体规划再执行，适合步骤较明确的复杂任务，但计划有误会连锁出错",
       "Multi-Agent：多个专门化Agent协作（规划/执行/审核），适合角色分工明确的场景",
       "实际项目经常混合使用，不是非此即彼"
-    ]
+    ],
+    "group": "工程"
   },
   {
     "id": "t09",
@@ -106,7 +114,8 @@
       "RAG失败场景：回归任务（时序预测）/ 答案需要计算而非检索",
       "结合使用：先RAG检索相关文档，再用fine-tuned模型生成（JP-DocRAG的做法）",
       "帮客户判断：问题是\"找答案\"还是\"计算/推理\"？"
-    ]
+    ],
+    "group": "工程"
   },
   {
     "id": "t10",
@@ -118,6 +127,7 @@
       "③ 人工评估：领域专家最终验证，金融/医疗等高风险场景必须",
       "关键：先定义\"好\"的标准——电商文案的\"好\"和金融报告的\"好\"差别很大",
       "A/B测试：最终用业务指标（CTR/转化率）验证，不只是技术指标"
-    ]
+    ],
+    "group": "工程"
   }
 ]

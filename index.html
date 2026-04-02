@@ -26,14 +26,24 @@
   .toolbar-btn { background: #1e1e2e; border: 1px solid #2a2a3a; border-radius: 6px; color: #bbb; padding: 5px 12px; font-size: 0.75rem; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
   .toolbar-btn:hover { border-color: #5a7ec9; color: #fff; }
 
+  /* ── Group nav ── */
+  .group-nav { background: #151520; border-bottom: 1px solid #222; display: flex; gap: 4px; padding: 8px 12px; overflow-x: auto; white-space: nowrap; scrollbar-width: thin; }
+  .group-nav::-webkit-scrollbar { height: 4px; }
+  .group-nav::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+  .group-btn { background: #1e1e2e; border: 1px solid #2a2a3a; border-radius: 8px; color: #bbb; padding: 5px 14px; font-size: 0.78rem; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .group-btn:hover { border-color: #5a7ec9; color: #fff; }
+  .group-btn.active { background: #2a3a6a; border-color: #5a7ec9; color: #7eb8f7; font-weight: 600; }
+  .group-btn .badge { background: #333; border-radius: 10px; padding: 1px 6px; font-size: 0.7rem; margin-left: 4px; color: #888; }
+  .group-btn.active .badge { background: #1e2d5a; color: #7eb8f7; }
+
   /* ── Category nav ── */
-  nav { background: #151520; border-bottom: 1px solid #222; display: flex; gap: 4px; padding: 8px 12px; overflow-x: auto; white-space: nowrap; scrollbar-width: thin; }
+  nav { background: #12121a; border-bottom: 1px solid #222; display: flex; gap: 4px; padding: 6px 12px; overflow-x: auto; white-space: nowrap; scrollbar-width: thin; }
   nav::-webkit-scrollbar { height: 4px; }
   nav::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
-  .cat-btn { background: #1e1e2e; border: 1px solid #2a2a3a; border-radius: 8px; color: #bbb; padding: 5px 14px; font-size: 0.78rem; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .cat-btn { background: #1a1a28; border: 1px solid #252535; border-radius: 6px; color: #999; padding: 4px 10px; font-size: 0.72rem; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
   .cat-btn:hover { border-color: #5a7ec9; color: #fff; }
   .cat-btn.active { background: #2a3a6a; border-color: #5a7ec9; color: #7eb8f7; font-weight: 600; }
-  .cat-btn .badge { background: #333; border-radius: 10px; padding: 1px 6px; font-size: 0.7rem; margin-left: 4px; color: #888; }
+  .cat-btn .badge { background: #333; border-radius: 10px; padding: 1px 6px; font-size: 0.65rem; margin-left: 4px; color: #888; }
   .cat-btn.active .badge { background: #1e2d5a; color: #7eb8f7; }
 
   /* ── Mode controls ── */
@@ -177,8 +187,10 @@
   <button class="toolbar-btn" onclick="exportCards()">导出</button>
   <button class="toolbar-btn" onclick="document.getElementById('import-file').click()">导入</button>
   <input type="file" id="import-file" accept=".json" style="display:none" onchange="importCards(event)">
+  <button class="toolbar-btn" onclick="syncProgress()" style="color:#7eb8f7">同步</button>
 </div>
 
+<div class="group-nav" id="group-nav"></div>
 <nav id="cat-nav"></nav>
 
 <div class="controls">
@@ -363,22 +375,49 @@ function isDue(cardId) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// CATEGORIES
+// CATEGORIES & GROUPS
 // ═══════════════════════════════════════════════════════════════
+let currentGroup = 'ALL';
+const GROUP_ORDER = ['ALL', '面试', '项目', '基础', '工程'];
+
+function getGroups() {
+  const groups = new Set();
+  getAllCards().forEach(c => { if(c.group) groups.add(c.group); });
+  return ['ALL', ...GROUP_ORDER.filter(g => g !== 'ALL' && groups.has(g))];
+}
+
 function getCats() {
   const cats = ['ALL'];
-  getAllCards().forEach(c => { if(!cats.includes(c.cat)) cats.push(c.cat); });
+  getAllCards().forEach(c => {
+    if(currentGroup !== 'ALL' && c.group !== currentGroup) return;
+    if(!cats.includes(c.cat)) cats.push(c.cat);
+  });
   return cats;
 }
+
 function buildNav() {
+  // Group nav
+  const groupNav = document.getElementById('group-nav');
+  groupNav.innerHTML = '';
+  const all = getAllCards();
+  getGroups().forEach(group => {
+    const count = group === 'ALL' ? all.length : all.filter(c => c.group === group).length;
+    const btn = document.createElement('button');
+    btn.className = 'group-btn' + (group === currentGroup ? ' active' : '');
+    btn.innerHTML = (group === 'ALL' ? '全部' : group) + `<span class="badge">${count}</span>`;
+    btn.onclick = () => { currentGroup = group; currentCat = 'ALL'; buildNav(); buildList(); render(); };
+    groupNav.appendChild(btn);
+  });
+
+  // Category nav (filtered by group)
   const nav = document.getElementById('cat-nav');
   nav.innerHTML = '';
-  const all = getAllCards();
   getCats().forEach(cat => {
-    const count = cat === 'ALL' ? all.length : all.filter(c => c.cat === cat).length;
+    const filtered = all.filter(c => (currentGroup === 'ALL' || c.group === currentGroup));
+    const count = cat === 'ALL' ? filtered.length : filtered.filter(c => c.cat === cat).length;
     const btn = document.createElement('button');
     btn.className = 'cat-btn' + (cat === currentCat ? ' active' : '');
-    btn.innerHTML = cat + `<span class="badge">${count}</span>`;
+    btn.innerHTML = (cat === 'ALL' ? '全部' : cat) + `<span class="badge">${count}</span>`;
     btn.onclick = () => { currentCat = cat; buildNav(); buildList(); render(); };
     nav.appendChild(btn);
   });
@@ -403,7 +442,9 @@ function matchesSearch(card) {
 // DISPLAY LIST
 // ═══════════════════════════════════════════════════════════════
 function buildList() {
-  let base = getAllCards().filter(c => currentCat === 'ALL' || c.cat === currentCat);
+  let base = getAllCards();
+  if(currentGroup !== 'ALL') base = base.filter(c => c.group === currentGroup);
+  base = base.filter(c => currentCat === 'ALL' || c.cat === currentCat);
   base = base.filter(matchesSearch);
   if(diffFilter > 0) base = base.filter(c => c.lv === diffFilter);
   if(mode === 'known') base = base.filter(c => isMastered(c.id));
@@ -646,7 +687,66 @@ function saveCard() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// EXPORT / IMPORT
+// SYNC (cross-device via compressed URL or clipboard)
+// ═══════════════════════════════════════════════════════════════
+function syncProgress() {
+  const stateCount = Object.keys(fsrsStates).length;
+  const actions = [
+    stateCount > 0 ? `导出进度 (${stateCount}张卡片)` : null,
+    '从剪贴板导入进度',
+  ].filter(Boolean);
+
+  if (stateCount > 0) {
+    if (confirm(`复制 ${stateCount} 张卡片的 FSRS 进度到剪贴板？\n\n在另一台设备上点"同步"→"从剪贴板导入"即可恢复。\n\n点"取消"改为从剪贴板导入。`)) {
+      exportToClipboard();
+    } else {
+      importFromClipboard();
+    }
+  } else {
+    importFromClipboard();
+  }
+}
+
+function exportToClipboard() {
+  const data = { v: 2, s: fsrsStates, t: Date.now() };
+  const json = JSON.stringify(data);
+  // Compress with base64
+  const encoded = btoa(unescape(encodeURIComponent(json)));
+  navigator.clipboard.writeText(encoded).then(() => {
+    alert(`已复制到剪贴板！(${(encoded.length/1024).toFixed(1)}KB)\n\n在另一台设备上点"同步"→取消→粘贴即可恢复。`);
+  }).catch(() => {
+    // Fallback: show in prompt
+    prompt('复制以下内容到另一台设备：', encoded);
+  });
+}
+
+function importFromClipboard() {
+  navigator.clipboard.readText().then(text => {
+    applyEncodedProgress(text.trim());
+  }).catch(() => {
+    const text = prompt('粘贴同步数据：');
+    if (text) applyEncodedProgress(text.trim());
+  });
+}
+
+function applyEncodedProgress(encoded) {
+  try {
+    const json = decodeURIComponent(escape(atob(encoded)));
+    const data = JSON.parse(json);
+    if (data.v !== 2 || !data.s) throw new Error('格式不对');
+    const imported = Object.keys(data.s).length;
+    Object.assign(fsrsStates, data.s);
+    saveFsrsStates();
+    buildList(); render();
+    const time = new Date(data.t).toLocaleString('zh-CN');
+    alert(`导入成功！${imported} 张卡片进度已恢复。\n(导出时间: ${time})`);
+  } catch(e) {
+    alert('导入失败：数据格式无效。请确认粘贴了完整的同步数据。');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// EXPORT / IMPORT (file-based)
 // ═══════════════════════════════════════════════════════════════
 function exportCards() {
   const data = {

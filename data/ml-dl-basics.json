@@ -9,7 +9,8 @@
       "<span class=\"highlight\">AdamW</span>：Adam + 正确的weight decay（Adam的L2不等价于weight decay）→ LLM标准选择",
       "学习率：LLM训练通常用cosine schedule + warmup（前几百步线性升温，防止开始时梯度爆炸）",
       "LoRA微调常用lr=2e-4~2e-5，比全量微调高一个量级"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "m02",
@@ -22,7 +23,8 @@
       "Early Stopping：验证loss不再下降时停止训练 → 最简单有效",
       "数据增强：增加训练数据多样性 → 图像(翻转/裁剪)、NLP(同义替换/回译)",
       "LLM场景：LoRA本身就是正则化（低秩约束限制了参数自由度）"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "m03",
@@ -34,7 +36,8 @@
       "Focal Loss：给简单样本低权重，难样本高权重 → 解决类别不平衡",
       "Contrastive Loss：拉近正样本对、推远负样本对 → Embedding训练核心",
       "Triplet Loss：(anchor, positive, negative)三元组 → 你的bge-m3微调用的"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "m04",
@@ -46,7 +49,8 @@
       "经典架构演进：LeNet→AlexNet→VGG→ResNet(残差连接)→EfficientNet",
       "ResNet的残差连接：y = F(x) + x → 让深层网络可训练（和Transformer的residual connection相同思想）",
       "你的Edge AI项目：用TensorRT对视觉模型做量化加速部署到Jetson Nano"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "m05",
@@ -58,7 +62,8 @@
       "GRU：LSTM简化版，两个门(重置/更新) → 参数少，效果接近LSTM",
       "已被Transformer大部分取代，但在低资源/实时场景仍有价值",
       "你的经验：PowerTS中LSTM精度比LLM高13倍，推理~1ms vs ~5-10s → <span class=\"highlight\">简单模型在特定场景仍是最优解</span>"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "m06",
@@ -70,7 +75,8 @@
       "RMSNorm：Layer Norm的简化版，只做缩放不做平移 → Llama/Qwen使用，更快",
       "Pre-Norm vs Post-Norm：Transformer中Layer Norm放在Attention前(Pre)还是后(Post)",
       "Pre-Norm训练更稳定（主流选择），Post-Norm理论上效果更好但难训练"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "m07",
@@ -82,7 +88,8 @@
       "WGAN：用Wasserstein距离替代JS散度 → 更稳定的训练信号",
       "应用：图像生成 / 数据增强 / 风格迁移 / 超分辨率",
       "你的经验：本科项目用GAN做电力系统稀有事件数据增强 → 解决类别不平衡问题"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "m08",
@@ -94,7 +101,8 @@
       "<span class=\"highlight\">PPO</span>：加clip限制策略更新幅度 → 稳定训练。RLHF的标准选择",
       "<span class=\"highlight\">DDPG</span>：Actor-Critic + 连续动作空间 → 适合机器人/电力控制",
       "你的经验：①本科用DDPG/PPO做电力系统实时控制 ②理解RLHF中PPO的作用"
-    ]
+    ],
+    "group": "基础"
   },
   {
     "id": "m09",
@@ -106,6 +114,7 @@
       "CLIP：图像和文本配对做对比学习 → 跨模态理解",
       "SimCSE：用dropout制造正样本对 → 简单有效的句向量方法",
       "你的应用：bge-m3微调用MultipleNegativesRankingLoss（对比学习变体），in-batch negatives提高效率"
-    ]
+    ],
+    "group": "基础"
   }
 ]

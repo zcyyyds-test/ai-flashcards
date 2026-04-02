@@ -10,7 +10,8 @@
       "链表适合：频繁插入删除、大小动态变化、不需要随机访问",
       "Python list 底层是<span class=\"highlight\">动态数组</span>（非链表），append均摊O(1)"
     ],
-    "lv": 1
+    "lv": 1,
+    "group": "基础"
   },
   {
     "id": "ds02",
@@ -18,11 +19,12 @@
     "q": "栈 (Stack) — LIFO 原理与应用",
     "bullets": [
       "后进先出(Last In First Out)，只能操作栈顶：push O(1) / pop O(1) / peek O(1)",
-      "<pre><span class=\"cm\"># Python 用 list 实现栈</span>\\nstack = []\\nstack.append(1)  <span class=\"cm\"># push</span>\\nstack.append(2)\\ntop = stack.pop()  <span class=\"cm\"># pop → 2</span>\\npeek = stack[-1]   <span class=\"cm\"># peek → 1</span></pre>",
+      "<pre><span class=\"cm\"># Python 用 list 实现栈</span>\nstack = []\nstack.append(1)  <span class=\"cm\"># push</span>\nstack.append(2)\ntop = stack.pop()  <span class=\"cm\"># pop → 2</span>\npeek = stack[-1]   <span class=\"cm\"># peek → 1</span></pre>",
       "经典应用：括号匹配 / 函数调用栈 / 浏览器前进后退 / 表达式求值",
       "面试高频：有效括号(LC20)、最小栈(LC155)、每日温度(LC739)"
     ],
-    "lv": 1
+    "lv": 1,
+    "group": "基础"
   },
   {
     "id": "ds03",
@@ -30,11 +32,12 @@
     "q": "队列 (Queue) — FIFO 原理与应用",
     "bullets": [
       "先进先出(First In First Out)：enqueue O(1) / dequeue O(1)",
-      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> deque\\nq = deque()\\nq.append(1)     <span class=\"cm\"># enqueue</span>\\nq.append(2)\\nfront = q.popleft()  <span class=\"cm\"># dequeue → 1</span></pre>",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> deque\nq = deque()\nq.append(1)     <span class=\"cm\"># enqueue</span>\nq.append(2)\nfront = q.popleft()  <span class=\"cm\"># dequeue → 1</span></pre>",
       "双端队列 deque：两端都能O(1)操作，比list.pop(0)快（list是O(n)）",
       "经典应用：BFS / 任务调度 / 消息队列 / 滑动窗口最大值"
     ],
-    "lv": 1
+    "lv": 1,
+    "group": "基础"
   },
   {
     "id": "ds04",
@@ -44,10 +47,11 @@
       "核心：key → hash函数 → 数组索引 → 存value。查找/插入/删除均摊 <span class=\"num\">O(1)</span>",
       "冲突解决：①链地址法（每个桶是链表/红黑树）②开放地址法（线性/二次探测）",
       "Python dict 用开放地址法，负载因子>2/3时自动扩容（×2）",
-      "<pre><span class=\"cm\"># Two Sum — 哈希表经典应用</span>\\n<span class=\"kw\">def</span> <span class=\"fn\">two_sum</span>(nums, target):\\n    seen = {}\\n    <span class=\"kw\">for</span> i, n <span class=\"kw\">in</span> enumerate(nums):\\n        <span class=\"kw\">if</span> target - n <span class=\"kw\">in</span> seen:\\n            <span class=\"kw\">return</span> [seen[target-n], i]\\n        seen[n] = i</pre>",
+      "<pre><span class=\"cm\"># Two Sum — 哈希表经典应用</span>\n<span class=\"kw\">def</span> <span class=\"fn\">two_sum</span>(nums, target):\n    seen = {}\n    <span class=\"kw\">for</span> i, n <span class=\"kw\">in</span> enumerate(nums):\n        <span class=\"kw\">if</span> target - n <span class=\"kw\">in</span> seen:\n            <span class=\"kw\">return</span> [seen[target-n], i]\n        seen[n] = i</pre>",
       "时间O(n)空间O(n)，用空间换时间的典型思路"
     ],
-    "lv": 1
+    "lv": 1,
+    "group": "基础"
   },
   {
     "id": "ds05",
@@ -61,18 +65,20 @@
       "<span class=\"num\">O(n²)</span>：冒泡/选择/插入排序、暴力两层循环",
       "<span class=\"num\">O(2ⁿ)</span>：子集枚举、递归斐波那契 | <span class=\"num\">O(n!)</span>：全排列"
     ],
-    "lv": 1
+    "lv": 1,
+    "group": "基础"
   },
   {
     "id": "ds06",
     "cat": "数据结构",
     "q": "二叉树遍历 — 前序/中序/后序/层序",
     "bullets": [
-      "<pre><span class=\"kw\">def</span> <span class=\"fn\">inorder</span>(root):  <span class=\"cm\"># 中序：左-根-右 → BST有序</span>\\n    <span class=\"kw\">if not</span> root: <span class=\"kw\">return</span> []\\n    <span class=\"kw\">return</span> inorder(root.left)+[root.val]+inorder(root.right)\\n\\n<span class=\"kw\">from</span> collections <span class=\"kw\">import</span> deque\\n<span class=\"kw\">def</span> <span class=\"fn\">level_order</span>(root):  <span class=\"cm\"># BFS层序</span>\\n    <span class=\"kw\">if not</span> root: <span class=\"kw\">return</span> []\\n    q, res = deque([root]), []\\n    <span class=\"kw\">while</span> q:\\n        level = []\\n        <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(len(q)):\\n            node = q.popleft()\\n            level.append(node.val)\\n            <span class=\"kw\">if</span> node.left: q.append(node.left)\\n            <span class=\"kw\">if</span> node.right: q.append(node.right)\\n        res.append(level)\\n    <span class=\"kw\">return</span> res</pre>",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">inorder</span>(root):  <span class=\"cm\"># 中序：左-根-右 → BST有序</span>\n    <span class=\"kw\">if not</span> root: <span class=\"kw\">return</span> []\n    <span class=\"kw\">return</span> inorder(root.left)+[root.val]+inorder(root.right)\n\n<span class=\"kw\">from</span> collections <span class=\"kw\">import</span> deque\n<span class=\"kw\">def</span> <span class=\"fn\">level_order</span>(root):  <span class=\"cm\"># BFS层序</span>\n    <span class=\"kw\">if not</span> root: <span class=\"kw\">return</span> []\n    q, res = deque([root]), []\n    <span class=\"kw\">while</span> q:\n        level = []\n        <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(len(q)):\n            node = q.popleft()\n            level.append(node.val)\n            <span class=\"kw\">if</span> node.left: q.append(node.left)\n            <span class=\"kw\">if</span> node.right: q.append(node.right)\n        res.append(level)\n    <span class=\"kw\">return</span> res</pre>",
       "前序(根左右)/中序(左根右)/后序(左右根) → 递归或用栈迭代",
       "层序 = BFS = 队列"
     ],
-    "lv": 2
+    "lv": 2,
+    "group": "基础"
   },
   {
     "id": "ds07",
@@ -80,11 +86,12 @@
     "q": "堆 / 优先队列",
     "bullets": [
       "最小堆：父节点 ≤ 子节点。插入O(log n)，取最小O(1)，删除最小O(log n)",
-      "<pre><span class=\"kw\">import</span> heapq\\nnums = [3,1,4,1,5,9]\\nheapq.heapify(nums)       <span class=\"cm\"># O(n) 建堆</span>\\nheapq.heappush(nums, 2)   <span class=\"cm\"># O(log n)</span>\\nmin_val = heapq.heappop(nums)  <span class=\"cm\"># O(log n) → 1</span>\\n<span class=\"cm\"># Top-K：nlargest / nsmallest</span>\\ntop3 = heapq.nlargest(3, nums)</pre>",
+      "<pre><span class=\"kw\">import</span> heapq\nnums = [3,1,4,1,5,9]\nheapq.heapify(nums)       <span class=\"cm\"># O(n) 建堆</span>\nheapq.heappush(nums, 2)   <span class=\"cm\"># O(log n)</span>\nmin_val = heapq.heappop(nums)  <span class=\"cm\"># O(log n) → 1</span>\n<span class=\"cm\"># Top-K：nlargest / nsmallest</span>\ntop3 = heapq.nlargest(3, nums)</pre>",
       "Python heapq 是<span class=\"highlight\">最小堆</span>，要最大堆可以取负或用 nlargest",
       "经典应用：Top-K问题 / 合并K个有序链表 / 中位数流"
     ],
-    "lv": 2
+    "lv": 2,
+    "group": "基础"
   },
   {
     "id": "ds08",
@@ -93,11 +100,12 @@
     "bullets": [
       "<span class=\"highlight\">邻接表</span>：dict of lists，空间O(V+E)，适合<span class=\"highlight\">稀疏图</span>（大多数面试题用这个）",
       "<span class=\"highlight\">邻接矩阵</span>：2D数组，空间O(V²)，适合<span class=\"highlight\">稠密图</span>，O(1)判断边是否存在",
-      "<pre><span class=\"cm\"># 邻接表（最常用）</span>\\n<span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\\ngraph = defaultdict(list)\\ngraph[<span class=\"num\">0</span>].append(<span class=\"num\">1</span>)  <span class=\"cm\"># 0 → 1</span>\\ngraph[<span class=\"num\">0</span>].append(<span class=\"num\">2</span>)  <span class=\"cm\"># 0 → 2</span>\\ngraph[<span class=\"num\">1</span>].append(<span class=\"num\">2</span>)  <span class=\"cm\"># 1 → 2</span>\\n\\n<span class=\"cm\"># 邻接矩阵</span>\\nV = <span class=\"num\">3</span>\\nmatrix = [[<span class=\"num\">0</span>]*V <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(V)]\\nmatrix[<span class=\"num\">0</span>][<span class=\"num\">1</span>] = <span class=\"num\">1</span>  <span class=\"cm\"># 0 → 1</span>\\nmatrix[<span class=\"num\">0</span>][<span class=\"num\">2</span>] = <span class=\"num\">1</span>  <span class=\"cm\"># 0 → 2</span>\\nmatrix[<span class=\"num\">1</span>][<span class=\"num\">2</span>] = <span class=\"num\">1</span>  <span class=\"cm\"># 1 → 2</span></pre>",
+      "<pre><span class=\"cm\"># 邻接表（最常用）</span>\n<span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\ngraph = defaultdict(list)\ngraph[<span class=\"num\">0</span>].append(<span class=\"num\">1</span>)  <span class=\"cm\"># 0 → 1</span>\ngraph[<span class=\"num\">0</span>].append(<span class=\"num\">2</span>)  <span class=\"cm\"># 0 → 2</span>\ngraph[<span class=\"num\">1</span>].append(<span class=\"num\">2</span>)  <span class=\"cm\"># 1 → 2</span>\n\n<span class=\"cm\"># 邻接矩阵</span>\nV = <span class=\"num\">3</span>\nmatrix = [[<span class=\"num\">0</span>]*V <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(V)]\nmatrix[<span class=\"num\">0</span>][<span class=\"num\">1</span>] = <span class=\"num\">1</span>  <span class=\"cm\"># 0 → 1</span>\nmatrix[<span class=\"num\">0</span>][<span class=\"num\">2</span>] = <span class=\"num\">1</span>  <span class=\"cm\"># 0 → 2</span>\nmatrix[<span class=\"num\">1</span>][<span class=\"num\">2</span>] = <span class=\"num\">1</span>  <span class=\"cm\"># 1 → 2</span></pre>",
       "选择依据：E ≪ V² 用邻接表（省空间），E ≈ V² 用邻接矩阵（快速查边）",
       "面试中绝大多数图题使用邻接表，矩阵多见于Floyd最短路、图的连通性等特定问题"
     ],
-    "lv": 2
+    "lv": 2,
+    "group": "基础"
   },
   {
     "id": "ds09",
@@ -110,7 +118,8 @@
       "两者查找/插入/删除均为 <span class=\"num\">O(log n)</span>，区别在于常数因子：AVL查找略快（更矮），红黑树修改略快（旋转少）",
       "Python 没有内置平衡BST；可用第三方库 <span class=\"highlight\">sortedcontainers.SortedList</span>，底层是B-tree变体，实测性能优秀"
     ],
-    "lv": 3
+    "lv": 3,
+    "group": "基础"
   },
   {
     "id": "ds10",
@@ -118,12 +127,13 @@
     "q": "线段树 — 区间查询与更新",
     "bullets": [
       "解决问题：区间求和/最值 + 单点更新，每次操作 <span class=\"num\">O(log n)</span>（暴力需要O(n)）",
-      "<pre><span class=\"kw\">class</span> <span class=\"fn\">SegTree</span>:\\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, nums):\\n        self.n = len(nums)\\n        self.tree = [<span class=\"num\">0</span>] * (<span class=\"num\">2</span> * self.n)\\n        <span class=\"cm\"># 叶子节点放在 tree[n..2n-1]</span>\\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(self.n):\\n            self.tree[self.n + i] = nums[i]\\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(self.n - <span class=\"num\">1</span>, <span class=\"num\">0</span>, -<span class=\"num\">1</span>):\\n            self.tree[i] = self.tree[<span class=\"num\">2</span>*i] + self.tree[<span class=\"num\">2</span>*i+<span class=\"num\">1</span>]</pre>",
-      "<pre><span class=\"kw\">def</span> <span class=\"fn\">update</span>(self, i, val):  <span class=\"cm\"># 单点更新</span>\\n    i += self.n\\n    self.tree[i] = val\\n    <span class=\"kw\">while</span> i > <span class=\"num\">1</span>:\\n        i //= <span class=\"num\">2</span>\\n        self.tree[i] = self.tree[<span class=\"num\">2</span>*i] + self.tree[<span class=\"num\">2</span>*i+<span class=\"num\">1</span>]\\n\\n<span class=\"kw\">def</span> <span class=\"fn\">query</span>(self, l, r):  <span class=\"cm\"># 区间和 [l, r)</span>\\n    res = <span class=\"num\">0</span>\\n    l += self.n; r += self.n\\n    <span class=\"kw\">while</span> l < r:\\n        <span class=\"kw\">if</span> l % <span class=\"num\">2</span> == <span class=\"num\">1</span>: res += self.tree[l]; l += <span class=\"num\">1</span>\\n        <span class=\"kw\">if</span> r % <span class=\"num\">2</span> == <span class=\"num\">1</span>: r -= <span class=\"num\">1</span>; res += self.tree[r]\\n        l //= <span class=\"num\">2</span>; r //= <span class=\"num\">2</span>\\n    <span class=\"kw\">return</span> res</pre>",
+      "<pre><span class=\"kw\">class</span> <span class=\"fn\">SegTree</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, nums):\n        self.n = len(nums)\n        self.tree = [<span class=\"num\">0</span>] * (<span class=\"num\">2</span> * self.n)\n        <span class=\"cm\"># 叶子节点放在 tree[n..2n-1]</span>\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(self.n):\n            self.tree[self.n + i] = nums[i]\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(self.n - <span class=\"num\">1</span>, <span class=\"num\">0</span>, -<span class=\"num\">1</span>):\n            self.tree[i] = self.tree[<span class=\"num\">2</span>*i] + self.tree[<span class=\"num\">2</span>*i+<span class=\"num\">1</span>]</pre>",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">update</span>(self, i, val):  <span class=\"cm\"># 单点更新</span>\n    i += self.n\n    self.tree[i] = val\n    <span class=\"kw\">while</span> i > <span class=\"num\">1</span>:\n        i //= <span class=\"num\">2</span>\n        self.tree[i] = self.tree[<span class=\"num\">2</span>*i] + self.tree[<span class=\"num\">2</span>*i+<span class=\"num\">1</span>]\n\n<span class=\"kw\">def</span> <span class=\"fn\">query</span>(self, l, r):  <span class=\"cm\"># 区间和 [l, r)</span>\n    res = <span class=\"num\">0</span>\n    l += self.n; r += self.n\n    <span class=\"kw\">while</span> l < r:\n        <span class=\"kw\">if</span> l % <span class=\"num\">2</span> == <span class=\"num\">1</span>: res += self.tree[l]; l += <span class=\"num\">1</span>\n        <span class=\"kw\">if</span> r % <span class=\"num\">2</span> == <span class=\"num\">1</span>: r -= <span class=\"num\">1</span>; res += self.tree[r]\n        l //= <span class=\"num\">2</span>; r //= <span class=\"num\">2</span>\n    <span class=\"kw\">return</span> res</pre>",
       "应用：区间最值/求和（LC 307）、区间调度、数据流统计",
       "<span class=\"highlight\">懒传播(Lazy Propagation)</span>：支持区间批量更新，将更新延迟到查询时下推，区间更新也能O(log n)"
     ],
-    "lv": 3
+    "lv": 3,
+    "group": "基础"
   },
   {
     "id": "ds11",
@@ -132,11 +142,12 @@
     "bullets": [
       "比线段树更简洁，专门解决<span class=\"highlight\">前缀和 + 单点更新</span>问题，代码量仅约10行",
       "核心：<span class=\"highlight\">lowbit = i & (-i)</span>，利用二进制最低位1来划分区间",
-      "<pre><span class=\"kw\">class</span> <span class=\"fn\">BIT</span>:\\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, n):\\n        self.n = n\\n        self.tree = [<span class=\"num\">0</span>] * (n + <span class=\"num\">1</span>)  <span class=\"cm\"># 1-indexed</span>\\n\\n    <span class=\"kw\">def</span> <span class=\"fn\">update</span>(self, i, delta):  <span class=\"cm\"># 单点加 delta</span>\\n        <span class=\"kw\">while</span> i <= self.n:\\n            self.tree[i] += delta\\n            i += i & (-i)  <span class=\"cm\"># lowbit</span>\\n\\n    <span class=\"kw\">def</span> <span class=\"fn\">prefix_sum</span>(self, i):  <span class=\"cm\"># 前缀和 [1..i]</span>\\n        s = <span class=\"num\">0</span>\\n        <span class=\"kw\">while</span> i > <span class=\"num\">0</span>:\\n            s += self.tree[i]\\n            i -= i & (-i)\\n        <span class=\"kw\">return</span> s\\n\\n    <span class=\"kw\">def</span> <span class=\"fn\">range_sum</span>(self, l, r):  <span class=\"cm\"># 区间和 [l..r]</span>\\n        <span class=\"kw\">return</span> self.prefix_sum(r) - self.prefix_sum(l - <span class=\"num\">1</span>)</pre>",
+      "<pre><span class=\"kw\">class</span> <span class=\"fn\">BIT</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, n):\n        self.n = n\n        self.tree = [<span class=\"num\">0</span>] * (n + <span class=\"num\">1</span>)  <span class=\"cm\"># 1-indexed</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">update</span>(self, i, delta):  <span class=\"cm\"># 单点加 delta</span>\n        <span class=\"kw\">while</span> i <= self.n:\n            self.tree[i] += delta\n            i += i & (-i)  <span class=\"cm\"># lowbit</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">prefix_sum</span>(self, i):  <span class=\"cm\"># 前缀和 [1..i]</span>\n        s = <span class=\"num\">0</span>\n        <span class=\"kw\">while</span> i > <span class=\"num\">0</span>:\n            s += self.tree[i]\n            i -= i & (-i)\n        <span class=\"kw\">return</span> s\n\n    <span class=\"kw\">def</span> <span class=\"fn\">range_sum</span>(self, l, r):  <span class=\"cm\"># 区间和 [l..r]</span>\n        <span class=\"kw\">return</span> self.prefix_sum(r) - self.prefix_sum(l - <span class=\"num\">1</span>)</pre>",
       "更新 <span class=\"num\">O(log n)</span>，查询 <span class=\"num\">O(log n)</span>，空间 <span class=\"num\">O(n)</span>",
       "BIT vs 线段树：BIT仅支持前缀类操作（前缀和/前缀最值），线段树支持任意区间操作 → 能用BIT就用BIT（更简洁更快）"
     ],
-    "lv": 3
+    "lv": 3,
+    "group": "基础"
   },
   {
     "id": "ds12",
@@ -144,25 +155,27 @@
     "q": "双向链表 — 实现与应用",
     "bullets": [
       "每个节点有 prev 和 next 指针，已知节点引用时插入/删除均为 <span class=\"num\">O(1)</span>（单链表删除需要前驱，O(n)查找）",
-      "<pre><span class=\"kw\">class</span> <span class=\"fn\">Node</span>:\\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, key=<span class=\"num\">0</span>, val=<span class=\"num\">0</span>):\\n        self.key, self.val = key, val\\n        self.prev = self.next = <span class=\"kw\">None</span>\\n\\n<span class=\"kw\">class</span> <span class=\"fn\">DoublyLinkedList</span>:\\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self):\\n        self.head, self.tail = Node(), Node()  <span class=\"cm\"># 哨兵节点</span>\\n        self.head.next = self.tail\\n        self.tail.prev = self.head\\n\\n    <span class=\"kw\">def</span> <span class=\"fn\">add_to_head</span>(self, node):\\n        node.prev, node.next = self.head, self.head.next\\n        self.head.next.prev = node\\n        self.head.next = node\\n\\n    <span class=\"kw\">def</span> <span class=\"fn\">remove</span>(self, node):\\n        node.prev.next = node.next\\n        node.next.prev = node.prev</pre>",
+      "<pre><span class=\"kw\">class</span> <span class=\"fn\">Node</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, key=<span class=\"num\">0</span>, val=<span class=\"num\">0</span>):\n        self.key, self.val = key, val\n        self.prev = self.next = <span class=\"kw\">None</span>\n\n<span class=\"kw\">class</span> <span class=\"fn\">DoublyLinkedList</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self):\n        self.head, self.tail = Node(), Node()  <span class=\"cm\"># 哨兵节点</span>\n        self.head.next = self.tail\n        self.tail.prev = self.head\n\n    <span class=\"kw\">def</span> <span class=\"fn\">add_to_head</span>(self, node):\n        node.prev, node.next = self.head, self.head.next\n        self.head.next.prev = node\n        self.head.next = node\n\n    <span class=\"kw\">def</span> <span class=\"fn\">remove</span>(self, node):\n        node.prev.next = node.next\n        node.next.prev = node.prev</pre>",
       "<span class=\"highlight\">哨兵节点</span>（dummy head/tail）：消除头尾边界判断，代码更简洁不易出错",
       "核心应用：<span class=\"highlight\">LRU Cache</span>（双向链表 + HashMap，LC 146）、浏览器前进后退、文本编辑器undo/redo",
       "面试重点：LRU = HashMap存key→node + 双向链表维护访问顺序，get/put 均 O(1)"
     ],
-    "lv": 2
+    "lv": 2,
+    "group": "基础"
   },
   {
     "id": "ds13",
     "cat": "数据结构",
     "q": "Python collections — Counter/defaultdict/OrderedDict",
     "bullets": [
-      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> Counter\\nc = Counter(<span class=\"str\">\"aabbbcc\"</span>)  <span class=\"cm\"># Counter({'b':3, 'a':2, 'c':2})</span>\\nc.most_common(<span class=\"num\">2</span>)  <span class=\"cm\"># [('b',3), ('a',2)]</span>\\nc1 + c2  <span class=\"cm\"># 合并计数</span>\\nc1 - c2  <span class=\"cm\"># 差集（只保留正数）</span></pre>",
-      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\\ngraph = defaultdict(list)   <span class=\"cm\"># 缺失key自动创建空list</span>\\ncount = defaultdict(int)    <span class=\"cm\"># 缺失key自动为0</span>\\ngroups = defaultdict(set)   <span class=\"cm\"># 缺失key自动创建空set</span>\\n<span class=\"cm\"># 比 dict.setdefault() 更简洁</span></pre>",
-      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> OrderedDict\\nod = OrderedDict()\\nod[<span class=\"str\">'a'</span>] = <span class=\"num\">1</span>; od[<span class=\"str\">'b'</span>] = <span class=\"num\">2</span>; od[<span class=\"str\">'c'</span>] = <span class=\"num\">3</span>\\nod.move_to_end(<span class=\"str\">'a'</span>)        <span class=\"cm\"># 移到末尾</span>\\nod.popitem(last=<span class=\"kw\">False</span>)    <span class=\"cm\"># 弹出最早的 → ('b',2)</span>\\n<span class=\"cm\"># 可用于实现 LRU Cache</span></pre>",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> Counter\nc = Counter(<span class=\"str\">\"aabbbcc\"</span>)  <span class=\"cm\"># Counter({'b':3, 'a':2, 'c':2})</span>\nc.most_common(<span class=\"num\">2</span>)  <span class=\"cm\"># [('b',3), ('a',2)]</span>\nc1 + c2  <span class=\"cm\"># 合并计数</span>\nc1 - c2  <span class=\"cm\"># 差集（只保留正数）</span></pre>",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\ngraph = defaultdict(list)   <span class=\"cm\"># 缺失key自动创建空list</span>\ncount = defaultdict(int)    <span class=\"cm\"># 缺失key自动为0</span>\ngroups = defaultdict(set)   <span class=\"cm\"># 缺失key自动创建空set</span>\n<span class=\"cm\"># 比 dict.setdefault() 更简洁</span></pre>",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> OrderedDict\nod = OrderedDict()\nod[<span class=\"str\">'a'</span>] = <span class=\"num\">1</span>; od[<span class=\"str\">'b'</span>] = <span class=\"num\">2</span>; od[<span class=\"str\">'c'</span>] = <span class=\"num\">3</span>\nod.move_to_end(<span class=\"str\">'a'</span>)        <span class=\"cm\"># 移到末尾</span>\nod.popitem(last=<span class=\"kw\">False</span>)    <span class=\"cm\"># 弹出最早的 → ('b',2)</span>\n<span class=\"cm\"># 可用于实现 LRU Cache</span></pre>",
       "面试常见用法：Counter统计频率 → 字母异位词/Top-K；defaultdict建图/分组；OrderedDict实现LRU",
       "注意：Python 3.7+ 普通 dict 也保持插入序，但 OrderedDict 额外支持 move_to_end 和 == 比较顺序"
     ],
-    "lv": 1
+    "lv": 1,
+    "group": "基础"
   },
   {
     "id": "ds14",
@@ -170,12 +183,13 @@
     "q": "跳表 (Skip List) — Redis ZSet 的底层",
     "bullets": [
       "多层链表 + 概率平衡：每层以 ~50% 概率提升节点，形成「快速通道」",
-      "<pre><span class=\"cm\"># 概念图：3层跳表</span>\\n<span class=\"cm\"># L2:  1 ─────────────── 7 ─── NIL</span>\\n<span class=\"cm\"># L1:  1 ──── 3 ──────── 7 ─── NIL</span>\\n<span class=\"cm\"># L0:  1 → 2 → 3 → 5 → 7 → 8 → NIL</span>\\n<span class=\"cm\"># 查找从最高层开始，逐层下降</span>\\n<span class=\"cm\"># 类似二分查找的效果</span></pre>",
+      "<pre><span class=\"cm\"># 概念图：3层跳表</span>\n<span class=\"cm\"># L2:  1 ─────────────── 7 ─── NIL</span>\n<span class=\"cm\"># L1:  1 ──── 3 ──────── 7 ─── NIL</span>\n<span class=\"cm\"># L0:  1 → 2 → 3 → 5 → 7 → 8 → NIL</span>\n<span class=\"cm\"># 查找从最高层开始，逐层下降</span>\n<span class=\"cm\"># 类似二分查找的效果</span></pre>",
       "平均时间复杂度：查找/插入/删除均为 <span class=\"num\">O(log n)</span>，期望空间 <span class=\"num\">O(n)</span>",
       "Redis 用跳表而非平衡BST的原因：① 实现更简单（~100行 vs 红黑树~300行）② <span class=\"highlight\">范围查询天然高效</span>（链表直接遍历）③ 性能与平衡树相当",
       "面试要点：理解分层思想和概率平衡即可，手写实现很少考；Redis ZRANGEBYSCORE 底层就是跳表的范围遍历"
     ],
-    "lv": 3
+    "lv": 3,
+    "group": "基础"
   },
   {
     "id": "ds15",
@@ -188,6 +202,7 @@
       "<span class=\"highlight\">布隆过滤器 (Bloom Filter)</span>：概率性成员测试，<span class=\"highlight\">可能有误判(false positive)，绝不漏判(no false negative)</span>，空间极省 → 适合URL去重、缓存穿透防护",
       "选型口诀：精确匹配→Hash | 前缀搜索→Trie | 子串查找→后缀结构 | 大规模存在性判断→Bloom Filter"
     ],
-    "lv": 2
+    "lv": 2,
+    "group": "基础"
   }
 ]
