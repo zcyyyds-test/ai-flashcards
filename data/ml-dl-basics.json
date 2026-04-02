@@ -1,0 +1,111 @@
+[
+  {
+    "id": "m01",
+    "cat": "ML/DL基础",
+    "q": "优化器对比：SGD / Adam / AdamW",
+    "bullets": [
+      "SGD：最基础，lr × gradient。需要精心调lr和momentum。收敛慢但泛化可能更好",
+      "Adam：自适应学习率，维护一阶(动量)和二阶(方差)矩估计。收敛快，默认首选",
+      "<span class=\"highlight\">AdamW</span>：Adam + 正确的weight decay（Adam的L2不等价于weight decay）→ LLM标准选择",
+      "学习率：LLM训练通常用cosine schedule + warmup（前几百步线性升温，防止开始时梯度爆炸）",
+      "LoRA微调常用lr=2e-4~2e-5，比全量微调高一个量级"
+    ]
+  },
+  {
+    "id": "m02",
+    "cat": "ML/DL基础",
+    "q": "过拟合与正则化",
+    "bullets": [
+      "过拟合：训练loss低但验证loss高 → 模型记住了训练数据而非学到规律",
+      "Dropout：训练时随机丢弃神经元(通常p=0.1)，推理时关闭 → 集成效果",
+      "Weight Decay(L2)：loss += λ||w||² → 惩罚大权重，AdamW中解耦实现",
+      "Early Stopping：验证loss不再下降时停止训练 → 最简单有效",
+      "数据增强：增加训练数据多样性 → 图像(翻转/裁剪)、NLP(同义替换/回译)",
+      "LLM场景：LoRA本身就是正则化（低秩约束限制了参数自由度）"
+    ]
+  },
+  {
+    "id": "m03",
+    "cat": "ML/DL基础",
+    "q": "损失函数选择",
+    "bullets": [
+      "<span class=\"highlight\">Cross-Entropy</span>：分类标准loss，-Σy·log(p)。LLM预训练就是对next token做CE",
+      "MSE：回归任务，(y-ŷ)²。对异常值敏感",
+      "Focal Loss：给简单样本低权重，难样本高权重 → 解决类别不平衡",
+      "Contrastive Loss：拉近正样本对、推远负样本对 → Embedding训练核心",
+      "Triplet Loss：(anchor, positive, negative)三元组 → 你的bge-m3微调用的"
+    ]
+  },
+  {
+    "id": "m04",
+    "cat": "ML/DL基础",
+    "q": "CNN 核心概念",
+    "bullets": [
+      "卷积核(filter)：滑动窗口提取局部特征 → 参数共享（比全连接参数少得多）",
+      "池化(Pooling)：降低空间分辨率，MaxPool保留最强特征",
+      "经典架构演进：LeNet→AlexNet→VGG→ResNet(残差连接)→EfficientNet",
+      "ResNet的残差连接：y = F(x) + x → 让深层网络可训练（和Transformer的residual connection相同思想）",
+      "你的Edge AI项目：用TensorRT对视觉模型做量化加速部署到Jetson Nano"
+    ]
+  },
+  {
+    "id": "m05",
+    "cat": "ML/DL基础",
+    "q": "RNN / LSTM / GRU",
+    "bullets": [
+      "RNN：h_t = f(W_h·h_{t-1} + W_x·x_t)。梯度消失/爆炸 → 长序列失效",
+      "<span class=\"highlight\">LSTM</span>：引入Cell State + 三个门(遗忘/输入/输出) → 解决长期依赖",
+      "GRU：LSTM简化版，两个门(重置/更新) → 参数少，效果接近LSTM",
+      "已被Transformer大部分取代，但在低资源/实时场景仍有价值",
+      "你的经验：PowerTS中LSTM精度比LLM高13倍，推理~1ms vs ~5-10s → <span class=\"highlight\">简单模型在特定场景仍是最优解</span>"
+    ]
+  },
+  {
+    "id": "m06",
+    "cat": "ML/DL基础",
+    "q": "Batch Norm vs Layer Norm",
+    "bullets": [
+      "Batch Norm：对一个batch内的同一特征维度做归一化。依赖batch size，不适合序列任务",
+      "<span class=\"highlight\">Layer Norm</span>：对单个样本的所有特征维度做归一化。不依赖batch size → Transformer标准选择",
+      "RMSNorm：Layer Norm的简化版，只做缩放不做平移 → Llama/Qwen使用，更快",
+      "Pre-Norm vs Post-Norm：Transformer中Layer Norm放在Attention前(Pre)还是后(Post)",
+      "Pre-Norm训练更稳定（主流选择），Post-Norm理论上效果更好但难训练"
+    ]
+  },
+  {
+    "id": "m07",
+    "cat": "ML/DL基础",
+    "q": "GAN 原理与应用",
+    "bullets": [
+      "Generator生成假数据 vs Discriminator判断真假 → 对抗训练",
+      "训练难点：模式崩塌(generator只输出少数样本) / 训练不稳定 / 评估困难(FID/IS)",
+      "WGAN：用Wasserstein距离替代JS散度 → 更稳定的训练信号",
+      "应用：图像生成 / 数据增强 / 风格迁移 / 超分辨率",
+      "你的经验：本科项目用GAN做电力系统稀有事件数据增强 → 解决类别不平衡问题"
+    ]
+  },
+  {
+    "id": "m08",
+    "cat": "ML/DL基础",
+    "q": "强化学习基础：PPO / DDPG",
+    "bullets": [
+      "RL核心：Agent在Environment中执行Action获得Reward，目标是最大化累计Reward",
+      "Policy Gradient：直接优化策略函数 → REINFORCE算法（高方差）",
+      "<span class=\"highlight\">PPO</span>：加clip限制策略更新幅度 → 稳定训练。RLHF的标准选择",
+      "<span class=\"highlight\">DDPG</span>：Actor-Critic + 连续动作空间 → 适合机器人/电力控制",
+      "你的经验：①本科用DDPG/PPO做电力系统实时控制 ②理解RLHF中PPO的作用"
+    ]
+  },
+  {
+    "id": "m09",
+    "cat": "ML/DL基础",
+    "q": "对比学习（Contrastive Learning）",
+    "bullets": [
+      "核心思想：<span class=\"highlight\">拉近正样本对，推远负样本对</span>在embedding空间中",
+      "SimCLR：同一图像的两个增强版本互为正样本，其他图像为负样本",
+      "CLIP：图像和文本配对做对比学习 → 跨模态理解",
+      "SimCSE：用dropout制造正样本对 → 简单有效的句向量方法",
+      "你的应用：bge-m3微调用MultipleNegativesRankingLoss（对比学习变体），in-batch negatives提高效率"
+    ]
+  }
+]

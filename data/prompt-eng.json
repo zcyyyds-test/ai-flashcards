@@ -1,0 +1,63 @@
+[
+  {
+    "id": "pe01",
+    "cat": "Prompt工程",
+    "q": "Few-shot 设计原则",
+    "bullets": [
+      "示例数量：不是越多越好（你的实验：<span class=\"num\">1-shot > 3-shot</span>），多了会稀释attention",
+      "示例选择：选和当前任务最相似的示例 → 动态few-shot(从向量库检索)",
+      "示例顺序：最相关的放最后（recency bias），或打乱测试影响",
+      "格式一致：示例的输入输出格式要和实际任务完全一致",
+      "Zero-shot足够时不加示例——简单才是最优解"
+    ]
+  },
+  {
+    "id": "pe02",
+    "cat": "Prompt工程",
+    "q": "Chain-of-Thought (CoT) 变体",
+    "bullets": [
+      "标准CoT：\"Let's think step by step\" → 引导模型展示推理过程",
+      "Self-Consistency：多次采样CoT → 投票选最常见答案 → 准确率+10-20%",
+      "Tree-of-Thought：多条推理路径并行探索 → 复杂推理任务",
+      "ReAct：CoT + Action（思考-行动-观察循环）→ <span class=\"highlight\">你的SiLR-Agent核心范式</span>",
+      "何时用：需要多步推理的任务。简单任务加CoT反而慢且可能更差"
+    ]
+  },
+  {
+    "id": "pe03",
+    "cat": "Prompt工程",
+    "q": "Structured Output 技巧",
+    "bullets": [
+      "JSON Mode：强制LLM输出有效JSON → OpenAI支持response_format",
+      "Function Calling：更严格的结构化输出 → 定义schema，输出必须符合",
+      "XML标签：用<tag>标记不同部分 → Claude擅长",
+      "输出约束：在prompt中明确格式要求 + 给示例 + 末尾开始输出格式引导",
+      "兜底：总是做输出解析和验证 → 你的三层ActionParser就是处理结构化输出不可靠的问题"
+    ]
+  },
+  {
+    "id": "pe04",
+    "cat": "Prompt工程",
+    "q": "System Prompt 设计",
+    "bullets": [
+      "角色设定：明确AI的身份、能力边界、行为规范",
+      "任务定义：清晰描述要做什么、输出格式、约束条件",
+      "工具说明：可用工具列表 + 使用时机 + 参数说明",
+      "<span class=\"highlight\">MUST/NEVER规则</span>：关键行为用强制语言（你的经验：Agent不调judge→加MUST call）",
+      "动态注入：根据用户输入/上下文动态调整system prompt的部分内容 → Context Engineering"
+    ]
+  },
+  {
+    "id": "pe05",
+    "cat": "Prompt工程",
+    "q": "Prompt Injection 攻防",
+    "bullets": [
+      "攻击：用户在输入中嵌入\"忽略之前的指令\"等内容，劫持模型行为",
+      "防御①：输入过滤 → 检测可疑模式（\"ignore previous\"/\"you are now\"）",
+      "防御②：分隔符 → 用```或XML标签明确区分system/user内容",
+      "防御③：LLM-as-Guard → 用另一个模型检测输入是否含注入",
+      "防御④：<span class=\"highlight\">最小权限</span> → Agent的工具权限按任务分配，即使被注入也无法执行危险操作",
+      "你的方案：SiLR验证器在执行层拦截 → 即使prompt被劫持，危险动作也不会通过验证"
+    ]
+  }
+]

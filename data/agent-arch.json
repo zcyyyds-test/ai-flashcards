@@ -1,0 +1,99 @@
+[
+  {
+    "id": "a01",
+    "cat": "Agent架构",
+    "q": "Agent 四要素",
+    "bullets": [
+      "<span class=\"highlight\">LLM</span>：大脑，负责推理和决策",
+      "<span class=\"highlight\">Tools</span>：手和脚，执行外部操作（API调用/代码执行/搜索/数据库查询）",
+      "<span class=\"highlight\">Memory</span>：短期(对话历史) + 长期(向量数据库/文件) + 工作记忆(当前任务状态)",
+      "<span class=\"highlight\">Planning</span>：任务分解和执行策略（ReAct/Plan-and-Execute/反思）",
+      "你的项目覆盖全部四要素：SiLR(LLM+仿真工具+观测记忆+ReAct规划)，RAG(LLM+10工具+检索记忆+意图路由)"
+    ]
+  },
+  {
+    "id": "a02",
+    "cat": "Agent架构",
+    "q": "Function Calling 实现机制",
+    "bullets": [
+      "原理：System Prompt中定义工具的JSON Schema → LLM输出结构化的工具调用请求 → 系统执行 → 结果返回LLM",
+      "OpenAI格式：tool_calls: [{function: {name, arguments}}]",
+      "关键挑战：①LLM可能生成无效参数 ②可能调用不存在的工具 ③可能不调工具直接回答",
+      "你的解决方案：三层ActionParser（原生/JSON/正则兜底）+ 强制调用guardrails",
+      "<span class=\"highlight\">Structured Output</span>：限制LLM只能输出符合Schema的JSON，减少解析错误"
+    ]
+  },
+  {
+    "id": "a03",
+    "cat": "Agent架构",
+    "q": "Memory 系统分类",
+    "bullets": [
+      "<span class=\"highlight\">短期记忆</span>：对话历史，直接放在context window中。受限于上下文长度",
+      "<span class=\"highlight\">长期记忆</span>：向量数据库存储过去的经验，按相似度检索。如MemGPT",
+      "<span class=\"highlight\">工作记忆</span>：当前任务的中间状态（scratchpad），类似人的\"脑中暂存\"",
+      "<span class=\"highlight\">情景记忆</span>：记录成功/失败的完整episode，用于未来类似任务参考",
+      "你的实现：SiLR用观测压缩做工作记忆；RAG用向量DB做长期记忆；EdgeRouter用滑动窗口做时序记忆"
+    ]
+  },
+  {
+    "id": "a04",
+    "cat": "Agent架构",
+    "q": "Context Engineering vs Prompt Engineering",
+    "bullets": [
+      "Prompt Engineering：优化单次输入的措辞和格式",
+      "<span class=\"highlight\">Context Engineering</span>（2025新趋势）：设计整个信息流——什么信息在什么时候以什么形式进入context",
+      "包括：工具结果的格式化 / 记忆检索的时机 / 观测数据的压缩 / 系统提示的动态调整",
+      "你做过的：Observation压缩(2000→300 tokens) / Escalation Hint(只在REJECT时注入) / RRF权重调整",
+      "核心理念：<span class=\"highlight\">控制模型\"看到什么\"比\"怎么问\"更重要</span>"
+    ]
+  },
+  {
+    "id": "a05",
+    "cat": "Agent架构",
+    "q": "Multi-Agent 通信模式",
+    "bullets": [
+      "①<span class=\"highlight\">中心化</span>：一个Orchestrator分派任务给Worker Agent → 简单可控，单点瓶颈",
+      "②<span class=\"highlight\">层级式</span>：Manager→SubManager→Worker → 适合复杂组织结构",
+      "③<span class=\"highlight\">对等式</span>：Agent之间直接通信协商 → 灵活但难以调试",
+      "④<span class=\"highlight\">黑板模式</span>：共享状态空间，各Agent读写 → 解耦通信",
+      "框架：AutoGen(对话式) / CrewAI(角色分工) / LangGraph(图状态机)"
+    ]
+  },
+  {
+    "id": "a06",
+    "cat": "Agent架构",
+    "q": "Agent Evaluation 方法",
+    "bullets": [
+      "①<span class=\"highlight\">任务完成率</span>：最终结果是否正确（SiLR: 97.0%恢复成功率）",
+      "②<span class=\"highlight\">效率</span>：完成任务所需步骤数/token数/时间（SiLR: 平均3.2步）",
+      "③<span class=\"highlight\">安全性</span>：是否触发危险动作/违反约束（SiLR: 0%违规率）",
+      "④<span class=\"highlight\">鲁棒性</span>：输入变化时表现稳定性（PowerTS: 仅+2.2%退化）",
+      "⑤<span class=\"highlight\">成本</span>：API调用/推理成本（SiLR: 比GPT低100×）",
+      "难点：Agent行为是随机的，需要多次运行取统计量，不能只跑一次"
+    ]
+  },
+  {
+    "id": "a07",
+    "cat": "Agent架构",
+    "q": "Guardrails 设计模式",
+    "bullets": [
+      "输入Guardrails：过滤恶意/不安全的用户输入（prompt injection检测）",
+      "输出Guardrails：检查LLM输出的安全性/合规性/格式正确性",
+      "动作Guardrails：<span class=\"highlight\">在执行前验证动作安全性</span>（SiLR验证器就是这类）",
+      "回退Guardrails：失败时的兜底策略（Failsafe、默认回答、人工转接）",
+      "实现方式：规则(正则/关键词) / 分类器(fine-tuned) / LLM-as-Judge / 仿真器验证"
+    ]
+  },
+  {
+    "id": "a08",
+    "cat": "Agent架构",
+    "q": "Agent 常见失败模式",
+    "bullets": [
+      "①<span class=\"highlight\">无限循环</span>：没有终止条件或步数上限 → Bounded ReAct解决",
+      "②<span class=\"highlight\">工具滥用</span>：反复调用同一工具期待不同结果 → 重试上限+失败反馈",
+      "③<span class=\"highlight\">最短路径</span>：跳过关键步骤直接回答 → 强制调用guardrails",
+      "④<span class=\"highlight\">幻觉动作</span>：调用不存在的工具或生成无效参数 → Schema验证+解析兜底",
+      "⑤<span class=\"highlight\">上下文污染</span>：错误信息积累在context中影响后续判断 → 观测压缩+状态重置"
+    ]
+  }
+]

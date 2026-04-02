@@ -1,0 +1,433 @@
+[
+  {
+    "id": "al01",
+    "cat": "算法",
+    "q": "二分查找 — 模板与边界处理",
+    "bullets": [
+      "前提：<span class=\"highlight\">有序数组</span>。时间O(log n)，空间O(1)",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">binary_search</span>(nums, target):\\n    lo, hi = 0, len(nums) - 1\\n    <span class=\"kw\">while</span> lo <= hi:\\n        mid = lo + (hi - lo) // 2  <span class=\"cm\"># 防溢出</span>\\n        <span class=\"kw\">if</span> nums[mid] == target:\\n            <span class=\"kw\">return</span> mid\\n        <span class=\"kw\">elif</span> nums[mid] < target:\\n            lo = mid + 1\\n        <span class=\"kw\">else</span>:\\n            hi = mid - 1\\n    <span class=\"kw\">return</span> -1</pre>",
+      "关键边界：lo <= hi（闭区间）vs lo < hi（左闭右开）",
+      "变体：找第一个>=target → lo=mid+1/hi=mid，返回lo"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "al02",
+    "cat": "算法",
+    "q": "排序算法对比 — 稳定性与复杂度",
+    "bullets": [
+      "冒泡排序：O(n²)，稳定。相邻比较交换，简单但慢",
+      "选择排序：O(n²)，不稳定。每次选最小放前面",
+      "插入排序：O(n²)，稳定。适合<span class=\"highlight\">近乎有序</span>的数据，实际常数小",
+      "快速排序：平均O(n log n)，最坏O(n²)，不稳定。实际最快，Python sorted()用Timsort",
+      "归并排序：O(n log n)，稳定，需要O(n)额外空间",
+      "Python <code>sorted()</code> 用 <span class=\"highlight\">Timsort</span>（归并+插入混合），稳定，最坏O(n log n)"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "al03",
+    "cat": "算法",
+    "q": "反转链表 — 迭代法",
+    "bullets": [
+      "<pre><span class=\"kw\">class</span> ListNode:\\n    <span class=\"kw\">def</span> __init__(self, val=0, next=None):\\n        self.val = val\\n        self.next = next\\n\\n<span class=\"kw\">def</span> <span class=\"fn\">reverse_list</span>(head):\\n    prev = None\\n    curr = head\\n    <span class=\"kw\">while</span> curr:\\n        nxt = curr.next   <span class=\"cm\"># 先保存下一个</span>\\n        curr.next = prev  <span class=\"cm\"># 反转指针</span>\\n        prev = curr       <span class=\"cm\"># prev前移</span>\\n        curr = nxt        <span class=\"cm\"># curr前移</span>\\n    <span class=\"kw\">return</span> prev</pre>",
+      "时间O(n)，空间O(1)。三个指针：prev, curr, nxt",
+      "面试高频(LC206)，变体：反转链表II(部分反转)、K个一组反转"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "al04",
+    "cat": "算法",
+    "q": "有效括号 — 栈的经典应用",
+    "bullets": [
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">is_valid</span>(s):\\n    stack = []\\n    pairs = {<span class=\"str\">\")\"</span>:<span class=\"str\">\"(\"</span>, <span class=\"str\">\"]\"</span>:<span class=\"str\">\"[\"</span>, <span class=\"str\">\"}\"</span>:<span class=\"str\">\"{\"</span>}\\n    <span class=\"kw\">for</span> c <span class=\"kw\">in</span> s:\\n        <span class=\"kw\">if</span> c <span class=\"kw\">in</span> pairs:\\n            <span class=\"kw\">if not</span> stack <span class=\"kw\">or</span> stack[-1] != pairs[c]:\\n                <span class=\"kw\">return</span> False\\n            stack.pop()\\n        <span class=\"kw\">else</span>:\\n            stack.append(c)\\n    <span class=\"kw\">return</span> len(stack) == 0</pre>",
+      "LC20，时间O(n)空间O(n)。用哈希表映射右括号→左括号",
+      "思路：遇到左括号入栈，遇到右括号检查栈顶是否匹配"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "al05",
+    "cat": "算法",
+    "q": "快速排序 — 分治思想与实现",
+    "bullets": [
+      "思想：选pivot → 小的放左边大的放右边 → 递归排左右",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">quicksort</span>(arr):\\n    <span class=\"kw\">if</span> len(arr) <= 1:\\n        <span class=\"kw\">return</span> arr\\n    pivot = arr[len(arr)//2]\\n    left = [x <span class=\"kw\">for</span> x <span class=\"kw\">in</span> arr <span class=\"kw\">if</span> x < pivot]\\n    mid  = [x <span class=\"kw\">for</span> x <span class=\"kw\">in</span> arr <span class=\"kw\">if</span> x == pivot]\\n    right= [x <span class=\"kw\">for</span> x <span class=\"kw\">in</span> arr <span class=\"kw\">if</span> x > pivot]\\n    <span class=\"kw\">return</span> quicksort(left) + mid + quicksort(right)</pre>",
+      "平均O(n log n)，最坏O(n²)（已排序+选首元素做pivot）",
+      "优化：随机选pivot / 三路快排（处理大量重复元素）/ 小数组切换插入排序",
+      "原地版本用Lomuto/Hoare partition，不需要额外数组"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al06",
+    "cat": "算法",
+    "q": "双指针 — 三种模式",
+    "bullets": [
+      "①<span class=\"highlight\">对撞指针</span>：两端向中间靠拢 → 两数之和(有序)、接雨水",
+      "②<span class=\"highlight\">快慢指针</span>：快指针每次2步慢指针1步 → 链表环检测、找中点",
+      "③<span class=\"highlight\">同向双指针</span>：两个从左出发 → 滑动窗口、去重",
+      "<pre><span class=\"cm\"># 接雨水 (LC42) — 对撞指针</span>\\n<span class=\"kw\">def</span> <span class=\"fn\">trap</span>(height):\\n    l, r = 0, len(height)-1\\n    l_max = r_max = res = 0\\n    <span class=\"kw\">while</span> l < r:\\n        <span class=\"kw\">if</span> height[l] < height[r]:\\n            l_max = max(l_max, height[l])\\n            res += l_max - height[l]\\n            l += 1\\n        <span class=\"kw\">else</span>:\\n            r_max = max(r_max, height[r])\\n            res += r_max - height[r]\\n            r -= 1\\n    <span class=\"kw\">return</span> res</pre>"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al07",
+    "cat": "算法",
+    "q": "滑动窗口 — 模板与应用",
+    "bullets": [
+      "用于：连续子数组/子串的最大/最小/满足条件问题",
+      "<pre><span class=\"cm\"># 无重复字符的最长子串 (LC3)</span>\\n<span class=\"kw\">def</span> <span class=\"fn\">length_of_longest</span>(s):\\n    seen = {}\\n    left = res = 0\\n    <span class=\"kw\">for</span> right, c <span class=\"kw\">in</span> enumerate(s):\\n        <span class=\"kw\">if</span> c <span class=\"kw\">in</span> seen <span class=\"kw\">and</span> seen[c] >= left:\\n            left = seen[c] + 1\\n        seen[c] = right\\n        res = max(res, right - left + 1)\\n    <span class=\"kw\">return</span> res</pre>",
+      "模式：右指针扩张 → 不满足条件时左指针收缩 → 维护窗口内状态",
+      "时间O(n)——每个元素最多被左右指针各访问一次"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al08",
+    "cat": "算法",
+    "q": "BFS vs DFS — 选择与实现",
+    "bullets": [
+      "BFS：队列实现，<span class=\"highlight\">逐层扩展</span>。找最短路径用BFS",
+      "DFS：栈/递归实现，<span class=\"highlight\">一条路走到底</span>。探索所有路径/检测环用DFS",
+      "<pre><span class=\"cm\"># BFS 模板 — 图最短路径</span>\\n<span class=\"kw\">def</span> <span class=\"fn\">bfs</span>(graph, start):\\n    visited = {start}\\n    q = deque([(start, 0)])  <span class=\"cm\"># (节点, 距离)</span>\\n    <span class=\"kw\">while</span> q:\\n        node, dist = q.popleft()\\n        <span class=\"kw\">for</span> nei <span class=\"kw\">in</span> graph[node]:\\n            <span class=\"kw\">if</span> nei <span class=\"kw\">not in</span> visited:\\n                visited.add(nei)\\n                q.append((nei, dist+1))</pre>",
+      "BFS空间O(宽度)，DFS空间O(深度)。树的宽度可能比深度大得多"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al09",
+    "cat": "算法",
+    "q": "动态规划 — 思路与模板",
+    "bullets": [
+      "核心：将问题分解为重叠子问题 → 记忆化避免重复计算",
+      "步骤：①定义状态 ②找状态转移方程 ③确定初始条件 ④确定遍历顺序",
+      "<pre><span class=\"cm\"># 0-1背包</span>\\n<span class=\"kw\">def</span> <span class=\"fn\">knapsack</span>(W, weights, values):\\n    n = len(weights)\\n    dp = [0] * (W + 1)\\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(n):\\n        <span class=\"kw\">for</span> w <span class=\"kw\">in</span> range(W, weights[i]-1, -1):  <span class=\"cm\"># 逆序！</span>\\n            dp[w] = max(dp[w], dp[w-weights[i]] + values[i])\\n    <span class=\"kw\">return</span> dp[W]</pre>",
+      "0-1背包逆序遍历保证每个物品只用一次；完全背包正序遍历",
+      "经典题：爬楼梯/零钱兑换/最长公共子序列/编辑距离/最长递增子序列"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "al10",
+    "cat": "算法",
+    "q": "LRU Cache — 哈希表 + 双向链表",
+    "bullets": [
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> OrderedDict\\n<span class=\"kw\">class</span> <span class=\"fn\">LRUCache</span>:\\n    <span class=\"kw\">def</span> __init__(self, capacity):\\n        self.cache = OrderedDict()\\n        self.cap = capacity\\n    <span class=\"kw\">def</span> <span class=\"fn\">get</span>(self, key):\\n        <span class=\"kw\">if</span> key <span class=\"kw\">not in</span> self.cache: <span class=\"kw\">return</span> -1\\n        self.cache.move_to_end(key)\\n        <span class=\"kw\">return</span> self.cache[key]\\n    <span class=\"kw\">def</span> <span class=\"fn\">put</span>(self, key, val):\\n        <span class=\"kw\">if</span> key <span class=\"kw\">in</span> self.cache:\\n            self.cache.move_to_end(key)\\n        self.cache[key] = val\\n        <span class=\"kw\">if</span> len(self.cache) > self.cap:\\n            self.cache.popitem(last=False)</pre>",
+      "get/put 均 <span class=\"num\">O(1)</span>。OrderedDict底层就是哈希表+双向链表",
+      "LC146高频题，面试可能要求不用OrderedDict手写双向链表"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "al11",
+    "cat": "算法",
+    "q": "Trie树 — 前缀匹配",
+    "bullets": [
+      "<pre><span class=\"kw\">class</span> <span class=\"fn\">TrieNode</span>:\\n    <span class=\"kw\">def</span> __init__(self):\\n        self.children = {}\\n        self.is_end = False\\n\\n<span class=\"kw\">class</span> <span class=\"fn\">Trie</span>:\\n    <span class=\"kw\">def</span> __init__(self): self.root = TrieNode()\\n    <span class=\"kw\">def</span> <span class=\"fn\">insert</span>(self, word):\\n        node = self.root\\n        <span class=\"kw\">for</span> c <span class=\"kw\">in</span> word:\\n            <span class=\"kw\">if</span> c <span class=\"kw\">not in</span> node.children:\\n                node.children[c] = TrieNode()\\n            node = node.children[c]\\n        node.is_end = True\\n    <span class=\"kw\">def</span> <span class=\"fn\">starts_with</span>(self, prefix):\\n        node = self.root\\n        <span class=\"kw\">for</span> c <span class=\"kw\">in</span> prefix:\\n            <span class=\"kw\">if</span> c <span class=\"kw\">not in</span> node.children: <span class=\"kw\">return</span> False\\n            node = node.children[c]\\n        <span class=\"kw\">return</span> True</pre>",
+      "插入/查找O(m)，m=字符串长度。空间换时间",
+      "应用：自动补全、拼写检查、IP路由表、搜索引擎前缀匹配"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "al12",
+    "cat": "算法",
+    "q": "图 — Dijkstra 最短路径",
+    "bullets": [
+      "<pre><span class=\"kw\">import</span> heapq\\n<span class=\"kw\">def</span> <span class=\"fn\">dijkstra</span>(graph, start):\\n    dist = {start: 0}\\n    pq = [(0, start)]  <span class=\"cm\"># (距离, 节点)</span>\\n    <span class=\"kw\">while</span> pq:\\n        d, u = heapq.heappop(pq)\\n        <span class=\"kw\">if</span> d > dist.get(u, float(<span class=\"str\">'inf'</span>)):\\n            <span class=\"kw\">continue</span>\\n        <span class=\"kw\">for</span> v, w <span class=\"kw\">in</span> graph[u]:  <span class=\"cm\"># (邻居, 边权)</span>\\n            nd = d + w\\n            <span class=\"kw\">if</span> nd < dist.get(v, float(<span class=\"str\">'inf'</span>)):\\n                dist[v] = nd\\n                heapq.heappush(pq, (nd, v))\\n    <span class=\"kw\">return</span> dist</pre>",
+      "时间 O((V+E) log V)（优先队列实现），<span class=\"highlight\">不能处理负权边</span>",
+      "负权边用 Bellman-Ford O(VE)；全源最短路用 Floyd-Warshall O(V³)"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "al13",
+    "cat": "算法",
+    "q": "并查集 (Union-Find)",
+    "bullets": [
+      "<pre><span class=\"kw\">class</span> <span class=\"fn\">UnionFind</span>:\\n    <span class=\"kw\">def</span> __init__(self, n):\\n        self.parent = list(range(n))\\n        self.rank = [0] * n\\n    <span class=\"kw\">def</span> <span class=\"fn\">find</span>(self, x):  <span class=\"cm\"># 路径压缩</span>\\n        <span class=\"kw\">if</span> self.parent[x] != x:\\n            self.parent[x] = self.find(self.parent[x])\\n        <span class=\"kw\">return</span> self.parent[x]\\n    <span class=\"kw\">def</span> <span class=\"fn\">union</span>(self, x, y):  <span class=\"cm\"># 按秩合并</span>\\n        px, py = self.find(x), self.find(y)\\n        <span class=\"kw\">if</span> px == py: <span class=\"kw\">return</span>\\n        <span class=\"kw\">if</span> self.rank[px] < self.rank[py]: px, py = py, px\\n        self.parent[py] = px\\n        <span class=\"kw\">if</span> self.rank[px] == self.rank[py]: self.rank[px] += 1</pre>",
+      "路径压缩+按秩合并 → find/union 近似 <span class=\"num\">O(1)</span>（反Ackermann函数）",
+      "应用：连通分量、朋友圈问题、冗余连接检测"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "al14",
+    "cat": "算法",
+    "q": "回溯 — 子集/排列/组合模板",
+    "bullets": [
+      "回溯三件套模板：<span class=\"highlight\">做选择 → 递归 → 撤销选择</span>",
+      "<pre><span class=\"cm\"># LC78 子集 — 回溯模板</span>\n<span class=\"kw\">def</span> <span class=\"fn\">subsets</span>(nums):\n    res = []\n    <span class=\"kw\">def</span> <span class=\"fn\">bt</span>(start, path):\n        res.append(path[:])  <span class=\"cm\"># 每个节点都是答案</span>\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(start, len(nums)):\n            path.append(nums[i])   <span class=\"cm\"># 做选择</span>\n            bt(i + <span class=\"num\">1</span>, path)       <span class=\"cm\"># 递归(i+1避免重复)</span>\n            path.pop()             <span class=\"cm\"># 撤销选择</span>\n    bt(<span class=\"num\">0</span>, [])\n    <span class=\"kw\">return</span> res</pre>",
+      "三种变体区别：<span class=\"highlight\">子集</span>→start index不回头；<span class=\"highlight\">排列</span>→visited数组允许回头；<span class=\"highlight\">组合</span>→start index + 剪枝",
+      "时间复杂度：子集O(2ⁿ)，排列O(n!)，组合O(C(n,k))"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al15",
+    "cat": "算法",
+    "q": "N-Queens — 回溯经典",
+    "bullets": [
+      "LC51：在n×n棋盘放n个皇后，使其不能互相攻击（同行/同列/同对角线）",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">solveNQueens</span>(n):\n    res = []\n    cols = <span class=\"fn\">set</span>()        <span class=\"cm\"># 列冲突</span>\n    diag1 = <span class=\"fn\">set</span>()      <span class=\"cm\"># 主对角线 row-col</span>\n    diag2 = <span class=\"fn\">set</span>()      <span class=\"cm\"># 副对角线 row+col</span>\n    board = [[<span class=\"str\">\".\"</span>]*n <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(n)]\n\n    <span class=\"kw\">def</span> <span class=\"fn\">bt</span>(row):\n        <span class=\"kw\">if</span> row == n:\n            res.append([<span class=\"str\">\"\"</span>.join(r) <span class=\"kw\">for</span> r <span class=\"kw\">in</span> board])\n            <span class=\"kw\">return</span>\n        <span class=\"kw\">for</span> col <span class=\"kw\">in</span> range(n):\n            <span class=\"kw\">if</span> col <span class=\"kw\">in</span> cols <span class=\"kw\">or</span> row-col <span class=\"kw\">in</span> diag1 <span class=\"kw\">or</span> row+col <span class=\"kw\">in</span> diag2:\n                <span class=\"kw\">continue</span>\n            cols.add(col); diag1.add(row-col); diag2.add(row+col)\n            board[row][col] = <span class=\"str\">\"Q\"</span>\n            bt(row + <span class=\"num\">1</span>)\n            board[row][col] = <span class=\"str\">\".\"</span>\n            cols.remove(col); diag1.remove(row-col); diag2.remove(row+col)\n    bt(<span class=\"num\">0</span>)\n    <span class=\"kw\">return</span> res</pre>",
+      "对角线判定：同一<span class=\"highlight\">主对角线row-col相同</span>，同一<span class=\"highlight\">副对角线row+col相同</span>，用set O(1)查重",
+      "时间O(n!)：每行放1个，第1行n种，第2行≤n-1种…逐行递减"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "al16",
+    "cat": "算法",
+    "q": "贪心 — 区间调度问题",
+    "bullets": [
+      "LC56 合并区间：排序后依次检查重叠，贪心合并",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">merge</span>(intervals):\n    intervals.sort(key=<span class=\"kw\">lambda</span> x: x[<span class=\"num\">0</span>])\n    merged = [intervals[<span class=\"num\">0</span>]]\n    <span class=\"kw\">for</span> s, e <span class=\"kw\">in</span> intervals[<span class=\"num\">1</span>:]:\n        <span class=\"kw\">if</span> s <= merged[-<span class=\"num\">1</span>][<span class=\"num\">1</span>]:  <span class=\"cm\"># 有重叠</span>\n            merged[-<span class=\"num\">1</span>][<span class=\"num\">1</span>] = max(merged[-<span class=\"num\">1</span>][<span class=\"num\">1</span>], e)\n        <span class=\"kw\">else</span>:\n            merged.append([s, e])\n    <span class=\"kw\">return</span> merged</pre>",
+      "LC435 无重叠区间：按<span class=\"highlight\">结束时间</span>排序，贪心选结束最早的，count需要移除的",
+      "核心洞察：贪心成立条件 = <span class=\"highlight\">局部最优 → 全局最优</span>。区间问题中，尽早结束 = 给后续留最多空间"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al17",
+    "cat": "算法",
+    "q": "贪心 — 跳跃游戏",
+    "bullets": [
+      "LC55：数组每个元素表示最大跳跃距离，判断能否到达最后一个位置",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">canJump</span>(nums):\n    farthest = <span class=\"num\">0</span>\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(nums)):\n        <span class=\"kw\">if</span> i > farthest:      <span class=\"cm\"># 当前位置不可达</span>\n            <span class=\"kw\">return</span> <span class=\"kw\">False</span>\n        farthest = max(farthest, i + nums[i])\n    <span class=\"kw\">return</span> <span class=\"kw\">True</span></pre>",
+      "贪心思路：维护<span class=\"highlight\">当前能到达的最远位置</span>，遍历时不断更新",
+      "时间O(n)，空间O(1)。变体LC45跳跃游戏II求最少步数，用BFS层次思想"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al18",
+    "cat": "算法",
+    "q": "二分查找变体 — 旋转排序数组",
+    "bullets": [
+      "LC33：在 [4,5,6,7,0,1,2] 中搜索 target，O(log n)",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">search</span>(nums, target):\n    lo, hi = <span class=\"num\">0</span>, len(nums) - <span class=\"num\">1</span>\n    <span class=\"kw\">while</span> lo <= hi:\n        mid = (lo + hi) // <span class=\"num\">2</span>\n        <span class=\"kw\">if</span> nums[mid] == target:\n            <span class=\"kw\">return</span> mid\n        <span class=\"kw\">if</span> nums[lo] <= nums[mid]:  <span class=\"cm\"># 左半有序</span>\n            <span class=\"kw\">if</span> nums[lo] <= target < nums[mid]:\n                hi = mid - <span class=\"num\">1</span>\n            <span class=\"kw\">else</span>:\n                lo = mid + <span class=\"num\">1</span>\n        <span class=\"kw\">else</span>:                      <span class=\"cm\"># 右半有序</span>\n            <span class=\"kw\">if</span> nums[mid] < target <= nums[hi]:\n                lo = mid + <span class=\"num\">1</span>\n            <span class=\"kw\">else</span>:\n                hi = mid - <span class=\"num\">1</span>\n    <span class=\"kw\">return</span> -<span class=\"num\">1</span></pre>",
+      "核心洞察：<span class=\"highlight\">旋转后必有一半是有序的</span>，判断target在有序的一半还是另一半",
+      "注意 nums[lo] <= nums[mid] 用 <= 处理lo==mid的情况"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al19",
+    "cat": "算法",
+    "q": "二分查找变体 — 峰值元素",
+    "bullets": [
+      "LC162：数组相邻元素不等，找任意一个峰值(比左右邻居都大)的下标",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">findPeakElement</span>(nums):\n    lo, hi = <span class=\"num\">0</span>, len(nums) - <span class=\"num\">1</span>\n    <span class=\"kw\">while</span> lo < hi:\n        mid = (lo + hi) // <span class=\"num\">2</span>\n        <span class=\"kw\">if</span> nums[mid] < nums[mid + <span class=\"num\">1</span>]:  <span class=\"cm\"># 上坡→峰在右边</span>\n            lo = mid + <span class=\"num\">1</span>\n        <span class=\"kw\">else</span>:                          <span class=\"cm\"># 下坡→峰在左边(含mid)</span>\n            hi = mid\n    <span class=\"kw\">return</span> lo</pre>",
+      "关键：只需找<span class=\"highlight\">任意一个</span>峰值，不需要全局最大。比较mid与mid+1决定爬坡方向",
+      "时间O(log n)。用 lo < hi（不是<=），最终lo==hi即为答案"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al20",
+    "cat": "算法",
+    "q": "拓扑排序 — BFS (Kahn算法)",
+    "bullets": [
+      "LC207 课程表：判断是否能完成所有课程（有向图是否有环）",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict, deque\n\n<span class=\"kw\">def</span> <span class=\"fn\">canFinish</span>(numCourses, prerequisites):\n    graph = defaultdict(list)\n    indegree = [<span class=\"num\">0</span>] * numCourses\n    <span class=\"kw\">for</span> u, v <span class=\"kw\">in</span> prerequisites:\n        graph[v].append(u)\n        indegree[u] += <span class=\"num\">1</span>\n    q = deque(i <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(numCourses) <span class=\"kw\">if</span> indegree[i] == <span class=\"num\">0</span>)\n    count = <span class=\"num\">0</span>\n    <span class=\"kw\">while</span> q:\n        node = q.popleft()\n        count += <span class=\"num\">1</span>\n        <span class=\"kw\">for</span> nb <span class=\"kw\">in</span> graph[node]:\n            indegree[nb] -= <span class=\"num\">1</span>\n            <span class=\"kw\">if</span> indegree[nb] == <span class=\"num\">0</span>:\n                q.append(nb)\n    <span class=\"kw\">return</span> count == numCourses</pre>",
+      "Kahn算法：<span class=\"highlight\">入度为0的节点入队 → 弹出并减少邻居入度 → 重复</span>",
+      "时间O(V+E)，空间O(V+E)。应用：依赖解析、构建系统、课程安排"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al21",
+    "cat": "算法",
+    "q": "最小生成树 — Kruskal算法",
+    "bullets": [
+      "思路：按边权<span class=\"highlight\">从小到大排序</span>，逐条加入，用<span class=\"highlight\">并查集</span>检查是否成环",
+      "<pre><span class=\"kw\">class</span> <span class=\"fn\">UnionFind</span>:\n    <span class=\"kw\">def</span> __init__(self, n):\n        self.parent = list(range(n))\n        self.rank = [<span class=\"num\">0</span>] * n\n    <span class=\"kw\">def</span> <span class=\"fn\">find</span>(self, x):\n        <span class=\"kw\">if</span> self.parent[x] != x:\n            self.parent[x] = self.find(self.parent[x])  <span class=\"cm\"># 路径压缩</span>\n        <span class=\"kw\">return</span> self.parent[x]\n    <span class=\"kw\">def</span> <span class=\"fn\">union</span>(self, x, y):\n        px, py = self.find(x), self.find(y)\n        <span class=\"kw\">if</span> px == py: <span class=\"kw\">return</span> <span class=\"kw\">False</span>\n        <span class=\"kw\">if</span> self.rank[px] < self.rank[py]: px, py = py, px\n        self.parent[py] = px\n        <span class=\"kw\">if</span> self.rank[px] == self.rank[py]: self.rank[px] += <span class=\"num\">1</span>\n        <span class=\"kw\">return</span> <span class=\"kw\">True</span>\n\n<span class=\"kw\">def</span> <span class=\"fn\">kruskal</span>(n, edges):\n    edges.sort(key=<span class=\"kw\">lambda</span> x: x[<span class=\"num\">2</span>])  <span class=\"cm\"># (u, v, w)</span>\n    uf = UnionFind(n)\n    mst_cost = <span class=\"num\">0</span>\n    <span class=\"kw\">for</span> u, v, w <span class=\"kw\">in</span> edges:\n        <span class=\"kw\">if</span> uf.union(u, v):\n            mst_cost += w\n    <span class=\"kw\">return</span> mst_cost</pre>",
+      "时间O(E log E)（排序主导），并查集操作近似O(1)（Ackermann逆函数）",
+      "Kruskal适合<span class=\"highlight\">稀疏图</span>（边少），Prim适合<span class=\"highlight\">稠密图</span>（用邻接矩阵 O(V²)）"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "al22",
+    "cat": "算法",
+    "q": "图的环检测 — DFS三色标记",
+    "bullets": [
+      "有向图环检测：<span class=\"highlight\">白(0)未访问 / 灰(1)正在访问 / 黑(2)已完成</span>",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">has_cycle</span>(graph, n):\n    color = [<span class=\"num\">0</span>] * n  <span class=\"cm\"># 0=白 1=灰 2=黑</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">dfs</span>(u):\n        color[u] = <span class=\"num\">1</span>  <span class=\"cm\"># 标记为灰色(进入)</span>\n        <span class=\"kw\">for</span> v <span class=\"kw\">in</span> graph[u]:\n            <span class=\"kw\">if</span> color[v] == <span class=\"num\">1</span>:  <span class=\"cm\"># 遇到灰色 → 有环!</span>\n                <span class=\"kw\">return</span> <span class=\"kw\">True</span>\n            <span class=\"kw\">if</span> color[v] == <span class=\"num\">0</span> <span class=\"kw\">and</span> dfs(v):\n                <span class=\"kw\">return</span> <span class=\"kw\">True</span>\n        color[u] = <span class=\"num\">2</span>  <span class=\"cm\"># 标记为黑色(完成)</span>\n        <span class=\"kw\">return</span> <span class=\"kw\">False</span>\n\n    <span class=\"kw\">return</span> any(color[i] == <span class=\"num\">0</span> <span class=\"kw\">and</span> dfs(i) <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(n))</pre>",
+      "核心：DFS过程中再次遇到<span class=\"highlight\">灰色节点</span>说明存在回边（环）",
+      "无向图环检测更简单：DFS时遇到已访问且不是parent的节点即有环，不需要三色"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al23",
+    "cat": "算法",
+    "q": "DP — 零钱兑换 (完全背包)",
+    "bullets": [
+      "LC322：用给定面额硬币凑出amount的<span class=\"highlight\">最少硬币数</span>",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">coinChange</span>(coins, amount):\n    dp = [float(<span class=\"str\">\"inf\"</span>)] * (amount + <span class=\"num\">1</span>)\n    dp[<span class=\"num\">0</span>] = <span class=\"num\">0</span>\n    <span class=\"kw\">for</span> coin <span class=\"kw\">in</span> coins:\n        <span class=\"kw\">for</span> x <span class=\"kw\">in</span> range(coin, amount + <span class=\"num\">1</span>):  <span class=\"cm\"># 正向遍历!</span>\n            dp[x] = min(dp[x], dp[x - coin] + <span class=\"num\">1</span>)\n    <span class=\"kw\">return</span> dp[amount] <span class=\"kw\">if</span> dp[amount] != float(<span class=\"str\">\"inf\"</span>) <span class=\"kw\">else</span> -<span class=\"num\">1</span></pre>",
+      "状态：dp[i] = 凑出金额i所需最少硬币。转移：dp[i] = min(dp[i], dp[i-coin]+1)",
+      "与0-1背包的区别：<span class=\"highlight\">完全背包正向遍历</span>（每个硬币可重复用），<span class=\"highlight\">0-1背包逆向遍历</span>（每个物品只能用一次）"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al24",
+    "cat": "算法",
+    "q": "DP — 最长递增子序列 (LIS)",
+    "bullets": [
+      "LC300：找数组中最长严格递增子序列的长度",
+      "O(n²) DP解法：dp[i] = 以nums[i]结尾的LIS长度\n<pre><span class=\"kw\">def</span> <span class=\"fn\">lengthOfLIS</span>(nums):\n    dp = [<span class=\"num\">1</span>] * len(nums)\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(nums)):\n        <span class=\"kw\">for</span> j <span class=\"kw\">in</span> range(i):\n            <span class=\"kw\">if</span> nums[j] < nums[i]:\n                dp[i] = max(dp[i], dp[j] + <span class=\"num\">1</span>)\n    <span class=\"kw\">return</span> max(dp)</pre>",
+      "O(n log n) 贪心+二分优化：维护一个尽量小的tails数组\n<pre><span class=\"kw\">import</span> bisect\n\n<span class=\"kw\">def</span> <span class=\"fn\">lengthOfLIS</span>(nums):\n    tails = []\n    <span class=\"kw\">for</span> x <span class=\"kw\">in</span> nums:\n        pos = bisect.bisect_left(tails, x)\n        <span class=\"kw\">if</span> pos == len(tails):\n            tails.append(x)     <span class=\"cm\"># x比所有都大，延长</span>\n        <span class=\"kw\">else</span>:\n            tails[pos] = x      <span class=\"cm\"># 替换，保持tails尽量小</span>\n    <span class=\"kw\">return</span> len(tails)</pre>",
+      "bisect优化的核心：<span class=\"highlight\">tails[i]</span> = 长度为i+1的递增子序列的最小末尾元素，tails始终有序，用二分查找插入位置"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al25",
+    "cat": "算法",
+    "q": "DP — 编辑距离",
+    "bullets": [
+      "LC72 Edit Distance：将word1转换为word2的<span class=\"highlight\">最少操作次数</span>（插入/删除/替换）",
+      "2D DP：dp[i][j] = word1[:i] 与 word2[:j] 的编辑距离",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">minDistance</span>(word1, word2):\\n    m, n = len(word1), len(word2)\\n    dp = [[<span class=\"num\">0</span>] * (n+1) <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(m+1)]\\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(m+1):\\n        dp[i][<span class=\"num\">0</span>] = i  <span class=\"cm\"># 删除i个字符</span>\\n    <span class=\"kw\">for</span> j <span class=\"kw\">in</span> range(n+1):\\n        dp[<span class=\"num\">0</span>][j] = j  <span class=\"cm\"># 插入j个字符</span>\\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(<span class=\"num\">1</span>, m+1):\\n        <span class=\"kw\">for</span> j <span class=\"kw\">in</span> range(<span class=\"num\">1</span>, n+1):\\n            <span class=\"kw\">if</span> word1[i-1] == word2[j-1]:\\n                dp[i][j] = dp[i-1][j-1]\\n            <span class=\"kw\">else</span>:\\n                dp[i][j] = <span class=\"num\">1</span> + min(\\n                    dp[i-1][j],   <span class=\"cm\"># 删除</span>\\n                    dp[i][j-1],   <span class=\"cm\"># 插入</span>\\n                    dp[i-1][j-1]  <span class=\"cm\"># 替换</span>\\n                )\\n    <span class=\"kw\">return</span> dp[m][n]</pre>",
+      "三种操作对应：dp[i-1][j]+1(删)、dp[i][j-1]+1(增)、dp[i-1][j-1]+1(替换)",
+      "时间O(mn)，空间O(mn)。可用滚动数组优化到O(min(m,n))"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al26",
+    "cat": "算法",
+    "q": "DP — 打家劫舍",
+    "bullets": [
+      "LC198 House Robber：相邻房屋不能同时偷，求<span class=\"highlight\">最大金额</span>",
+      "状态转移：dp[i] = max(dp[i-1], dp[i-2] + nums[i]) — 偷或不偷当前房",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">rob</span>(nums):\\n    <span class=\"kw\">if not</span> nums:\\n        <span class=\"kw\">return</span> <span class=\"num\">0</span>\\n    prev2, prev1 = <span class=\"num\">0</span>, <span class=\"num\">0</span>  <span class=\"cm\"># 空间优化到O(1)</span>\\n    <span class=\"kw\">for</span> num <span class=\"kw\">in</span> nums:\\n        curr = max(prev1, prev2 + num)\\n        prev2 = prev1\\n        prev1 = curr\\n    <span class=\"kw\">return</span> prev1</pre>",
+      "变体 LC213 House Robber II（环形）：拆成两次线性 DP，分别<span class=\"highlight\">排除第一间</span>和<span class=\"highlight\">排除最后一间</span>，取最大值",
+      "空间从O(n)优化到O(1)：只需记住前两个状态"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al27",
+    "cat": "算法",
+    "q": "树 — 二叉树最大路径和",
+    "bullets": [
+      "LC124 Binary Tree Maximum Path Sum：路径可以经过任意节点（不一定过根），求<span class=\"highlight\">最大路径和</span>",
+      "DFS 返回从当前节点向下的最大单侧增益；同时用全局变量记录经过当前节点的最大路径和",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">maxPathSum</span>(root):\\n    max_sum = float(<span class=\"str\">'-inf'</span>)\\n\\n    <span class=\"kw\">def</span> <span class=\"fn\">dfs</span>(node):\\n        <span class=\"kw\">nonlocal</span> max_sum\\n        <span class=\"kw\">if not</span> node:\\n            <span class=\"kw\">return</span> <span class=\"num\">0</span>\\n        left = max(dfs(node.left), <span class=\"num\">0</span>)   <span class=\"cm\"># 负数不取</span>\\n        right = max(dfs(node.right), <span class=\"num\">0</span>)\\n        <span class=\"cm\"># 经过当前节点的完整路径</span>\\n        max_sum = max(max_sum, left + node.val + right)\\n        <span class=\"cm\"># 返回单侧最大增益</span>\\n        <span class=\"kw\">return</span> node.val + max(left, right)\\n\\n    dfs(root)\\n    <span class=\"kw\">return</span> max_sum</pre>",
+      "关键：路径可以 left→root→right（更新全局最大值），但<span class=\"highlight\">返回值只能选一侧</span>（否则不构成路径）",
+      "时间O(n)，空间O(h)。注意负数节点的处理：max(gain, 0)"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "al28",
+    "cat": "算法",
+    "q": "树 — 最近公共祖先 (LCA)",
+    "bullets": [
+      "LC236 Lowest Common Ancestor：在二叉树中找 p 和 q 的<span class=\"highlight\">最低公共祖先</span>",
+      "递归思路：若 root 是 p 或 q，直接返回；否则在左右子树分别找",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">lowestCommonAncestor</span>(root, p, q):\\n    <span class=\"kw\">if not</span> root <span class=\"kw\">or</span> root == p <span class=\"kw\">or</span> root == q:\\n        <span class=\"kw\">return</span> root\\n    left = lowestCommonAncestor(root.left, p, q)\\n    right = lowestCommonAncestor(root.right, p, q)\\n    <span class=\"kw\">if</span> left <span class=\"kw\">and</span> right:\\n        <span class=\"kw\">return</span> root     <span class=\"cm\"># p和q分布在两侧，root是LCA</span>\\n    <span class=\"kw\">return</span> left <span class=\"kw\">if</span> left <span class=\"kw\">else</span> right</pre>",
+      "三种情况：①p、q在两侧→root是LCA ②都在左子树→左子树结果即LCA ③都在右子树→同理",
+      "时间O(n)，空间O(h)。BST版本(LC235)可利用大小关系剪枝到O(h)"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al29",
+    "cat": "算法",
+    "q": "树 — 序列化与反序列化",
+    "bullets": [
+      "LC297 Serialize and Deserialize Binary Tree：将二叉树转为字符串再还原",
+      "BFS层序遍历：用队列逐层处理，None节点标记为<span class=\"str\">\"null\"</span>",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> deque\\n\\n<span class=\"kw\">def</span> <span class=\"fn\">serialize</span>(root):\\n    <span class=\"kw\">if not</span> root:\\n        <span class=\"kw\">return</span> <span class=\"str\">\"[]\"</span>\\n    q = deque([root])\\n    res = []\\n    <span class=\"kw\">while</span> q:\\n        node = q.popleft()\\n        <span class=\"kw\">if</span> node:\\n            res.append(str(node.val))\\n            q.append(node.left)\\n            q.append(node.right)\\n        <span class=\"kw\">else</span>:\\n            res.append(<span class=\"str\">\"null\"</span>)\\n    <span class=\"kw\">return</span> <span class=\"str\">\"[\"</span> + <span class=\"str\">\",\"</span>.join(res) + <span class=\"str\">\"]\"</span></pre>",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">deserialize</span>(data):\\n    <span class=\"kw\">if</span> data == <span class=\"str\">\"[]\"</span>:\\n        <span class=\"kw\">return</span> <span class=\"kw\">None</span>\\n    vals = data[<span class=\"num\">1</span>:-<span class=\"num\">1</span>].split(<span class=\"str\">\",\"</span>)\\n    root = TreeNode(int(vals[<span class=\"num\">0</span>]))\\n    q = deque([root])\\n    i = <span class=\"num\">1</span>\\n    <span class=\"kw\">while</span> q:\\n        node = q.popleft()\\n        <span class=\"kw\">if</span> vals[i] != <span class=\"str\">\"null\"</span>:\\n            node.left = TreeNode(int(vals[i]))\\n            q.append(node.left)\\n        i += <span class=\"num\">1</span>\\n        <span class=\"kw\">if</span> vals[i] != <span class=\"str\">\"null\"</span>:\\n            node.right = TreeNode(int(vals[i]))\\n            q.append(node.right)\\n        i += <span class=\"num\">1</span>\\n    <span class=\"kw\">return</span> root</pre>",
+      "为什么BFS：层序遍历直觉清晰，<span class=\"highlight\">null节点位置对应子节点</span>，反序列化时按序还原即可"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al30",
+    "cat": "算法",
+    "q": "位运算 — 常用技巧",
+    "bullets": [
+      "LC136 Single Number：<span class=\"highlight\">XOR</span>所有数，成对消除 → a ^ a = 0, a ^ 0 = a",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">singleNumber</span>(nums):\\n    res = <span class=\"num\">0</span>\\n    <span class=\"kw\">for</span> n <span class=\"kw\">in</span> nums:\\n        res ^= n\\n    <span class=\"kw\">return</span> res</pre>",
+      "判断2的幂：<span class=\"highlight\">n & (n-1) == 0</span>（且n>0）。原理：2的幂只有一个1位，减1后全变1",
+      "计算1的个数（Hamming Weight）：循环执行 n &= (n-1) 并计数，每次<span class=\"highlight\">消除最低位的1</span>",
+      "<pre><span class=\"cm\"># 获取/设置/清除第i位</span>\\nget_bit  = (n >> i) & <span class=\"num\">1</span>      <span class=\"cm\"># 取第i位</span>\\nset_bit  = n | (<span class=\"num\">1</span> << i)     <span class=\"cm\"># 第i位置1</span>\\nclear_bit= n & ~(<span class=\"num\">1</span> << i)    <span class=\"cm\"># 第i位清0</span>\\ntoggle   = n ^ (<span class=\"num\">1</span> << i)     <span class=\"cm\"># 第i位取反</span></pre>"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "al31",
+    "cat": "算法",
+    "q": "字符串 — KMP 模式匹配",
+    "bullets": [
+      "KMP 算法：利用<span class=\"highlight\">前缀函数(failure function)</span>避免重复比较，O(n+m) vs 暴力O(nm)",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">build_lps</span>(pattern):\\n    m = len(pattern)\\n    lps = [<span class=\"num\">0</span>] * m  <span class=\"cm\"># longest proper prefix which is also suffix</span>\\n    length = <span class=\"num\">0</span>\\n    i = <span class=\"num\">1</span>\\n    <span class=\"kw\">while</span> i < m:\\n        <span class=\"kw\">if</span> pattern[i] == pattern[length]:\\n            length += <span class=\"num\">1</span>\\n            lps[i] = length\\n            i += <span class=\"num\">1</span>\\n        <span class=\"kw\">elif</span> length != <span class=\"num\">0</span>:\\n            length = lps[length - <span class=\"num\">1</span>]  <span class=\"cm\"># 回退，不增加i</span>\\n        <span class=\"kw\">else</span>:\\n            lps[i] = <span class=\"num\">0</span>\\n            i += <span class=\"num\">1</span>\\n    <span class=\"kw\">return</span> lps</pre>",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">kmp_search</span>(text, pattern):\\n    lps = build_lps(pattern)\\n    i = j = <span class=\"num\">0</span>  <span class=\"cm\"># i→text, j→pattern</span>\\n    <span class=\"kw\">while</span> i < len(text):\\n        <span class=\"kw\">if</span> text[i] == pattern[j]:\\n            i += <span class=\"num\">1</span>\\n            j += <span class=\"num\">1</span>\\n        <span class=\"kw\">if</span> j == len(pattern):\\n            <span class=\"kw\">return</span> i - j  <span class=\"cm\"># 找到匹配</span>\\n        <span class=\"kw\">elif</span> i < len(text) <span class=\"kw\">and</span> text[i] != pattern[j]:\\n            <span class=\"kw\">if</span> j != <span class=\"num\">0</span>:\\n                j = lps[j - <span class=\"num\">1</span>]  <span class=\"cm\"># 利用前缀表回退</span>\\n            <span class=\"kw\">else</span>:\\n                i += <span class=\"num\">1</span>\\n    <span class=\"kw\">return</span> -<span class=\"num\">1</span></pre>",
+      "核心思想：前缀表告诉我们不匹配时<span class=\"highlight\">从哪里重新开始匹配</span>，避免回退text指针",
+      "面试中如果只需 O(nm) 可用 Python <code>str.find()</code>，但要能讲清 KMP 原理"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "al32",
+    "cat": "算法",
+    "q": "字符串 — 最长回文子串",
+    "bullets": [
+      "LC5 Longest Palindromic Substring：找字符串中的<span class=\"highlight\">最长回文子串</span>",
+      "中心扩展法：以每个字符(奇数长度)和每对相邻字符(偶数长度)为中心向两边扩展",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">longestPalindrome</span>(s):\\n    <span class=\"kw\">def</span> <span class=\"fn\">expand</span>(l, r):\\n        <span class=\"kw\">while</span> l >= <span class=\"num\">0</span> <span class=\"kw\">and</span> r < len(s) <span class=\"kw\">and</span> s[l] == s[r]:\\n            l -= <span class=\"num\">1</span>\\n            r += <span class=\"num\">1</span>\\n        <span class=\"kw\">return</span> s[l+<span class=\"num\">1</span>:r]  <span class=\"cm\"># 回退一步</span>\\n\\n    res = <span class=\"str\">\"\"</span>\\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(s)):\\n        odd = expand(i, i)       <span class=\"cm\"># 奇数长度</span>\\n        even = expand(i, i+<span class=\"num\">1</span>)    <span class=\"cm\"># 偶数长度</span>\\n        res = max(res, odd, even, key=len)\\n    <span class=\"kw\">return</span> res</pre>",
+      "时间O(n²)，空间O(1)。比DP解法更直观且空间更优",
+      "进阶：Manacher算法可达O(n)，但面试中<span class=\"highlight\">极少要求实现</span>，知道存在即可"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al33",
+    "cat": "算法",
+    "q": "单调栈 — 下一个更大元素",
+    "bullets": [
+      "LC496/LC739 模式：对每个元素找<span class=\"highlight\">右边第一个比它大的元素</span>",
+      "单调栈：栈中存索引，保持栈内对应值<span class=\"highlight\">单调递减</span>；遇到更大的元素则弹出并记录结果",
+      "<pre><span class=\"cm\"># LC739 每日温度</span>\\n<span class=\"kw\">def</span> <span class=\"fn\">dailyTemperatures</span>(temperatures):\\n    n = len(temperatures)\\n    res = [<span class=\"num\">0</span>] * n\\n    stack = []  <span class=\"cm\"># 存索引，栈内温度单调递减</span>\\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(n):\\n        <span class=\"kw\">while</span> stack <span class=\"kw\">and</span> temperatures[i] > temperatures[stack[-<span class=\"num\">1</span>]]:\\n            j = stack.pop()\\n            res[j] = i - j  <span class=\"cm\"># 等待天数</span>\\n        stack.append(i)\\n    <span class=\"kw\">return</span> res</pre>",
+      "时间O(n)：每个元素<span class=\"highlight\">最多入栈一次出栈一次</span>。空间O(n)",
+      "变体：下一个更小元素 → 维护单调递增栈；循环数组 → 遍历两遍(i % n)"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "al34",
+    "cat": "算法",
+    "q": "前缀和 — 子数组和问题",
+    "bullets": [
+      "LC560 Subarray Sum Equals K：找和为k的<span class=\"highlight\">连续子数组个数</span>",
+      "核心思想：若 prefix[j] - prefix[i] == k，则子数组 (i, j] 的和为 k",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\\n\\n<span class=\"kw\">def</span> <span class=\"fn\">subarraySum</span>(nums, k):\\n    count = <span class=\"num\">0</span>\\n    prefix = <span class=\"num\">0</span>\\n    seen = defaultdict(int)\\n    seen[<span class=\"num\">0</span>] = <span class=\"num\">1</span>  <span class=\"cm\"># 前缀和为0出现1次（空前缀）</span>\\n    <span class=\"kw\">for</span> num <span class=\"kw\">in</span> nums:\\n        prefix += num\\n        <span class=\"cm\"># 查找是否存在前缀和 = prefix - k</span>\\n        count += seen[prefix - k]\\n        seen[prefix] += <span class=\"num\">1</span>\\n    <span class=\"kw\">return</span> count</pre>",
+      "关键：用<span class=\"highlight\">哈希表记录每个前缀和出现的次数</span>，一次遍历即可",
+      "时间O(n)，空间O(n)。注意初始化 seen[0]=1 处理从下标0开始的子数组"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "al35",
+    "cat": "算法",
+    "q": "图 — 最短路径算法总结",
+    "bullets": [
+      "四种常见最短路径算法的<span class=\"highlight\">适用场景与复杂度对比</span>：",
+      "• <span class=\"highlight\">BFS</span>（无权图）：O(V+E)，最简单，队列实现，边权全为1时使用",
+      "• <span class=\"highlight\">Dijkstra</span>（非负权重）：O((V+E)log V) 用最小堆。贪心思想，不能处理负权边",
+      "• <span class=\"highlight\">Bellman-Ford</span>（可有负权）：O(VE)，松弛V-1轮。可检测负环。SPFA是其队列优化版本，平均更快但最坏仍为O(VE)",
+      "• <span class=\"highlight\">Floyd-Warshall</span>（全源最短路）：O(V³)，三重循环DP。适合小图求所有点对间距离",
+      "选择策略：无权→BFS | 正权单源→Dijkstra | 有负权→Bellman-Ford | 全源→Floyd",
+      "面试常考：Dijkstra（LC743 Network Delay Time）+ BFS最短路（LC127 Word Ladder）"
+    ],
+    "lv": 3
+  }
+]

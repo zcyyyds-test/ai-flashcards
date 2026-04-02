@@ -1,0 +1,206 @@
+[
+  {
+    "id": "g01",
+    "cat": "SiLR-Agent",
+    "q": "SiLR-Agent 核心数字",
+    "bullets": [
+      "恢复成功率 <span class=\"num\">97.0%</span>（64/66 IEEE 39-bus场景）",
+      "安全违规率 <span class=\"num\">0%</span>（所有危险动作被SiLR拦截）",
+      "平均 <span class=\"num\">3.2</span> 步完成恢复，max_steps=8",
+      "超过GPT-5.4 zero-shot(82.1%) / few-shot-3(94.2%) / 1-shot(96.7%)",
+      "推理成本低 <span class=\"num\">100倍</span>（本地14B vs GPT API）"
+    ]
+  },
+  {
+    "id": "g02",
+    "cat": "SiLR-Agent",
+    "q": "SiLR = Simulation-in-the-Loop Reasoning，解决什么问题？",
+    "bullets": [
+      "核心痛点：LLM能推理但会\"幻觉动作\"——在安全关键领域（电网、金融、医疗）不可接受",
+      "现有方案：要么盲目信任LLM，要么静态规则（漏检动态违规）",
+      "SiLR：每步先在仿真器中验证安全性再执行，把安全保障从\"信任模型\"变成\"验证模型\"",
+      "可迁移：任何有仿真器/规则引擎的场景（金融合规、医疗用药、代码沙箱）"
+    ]
+  },
+  {
+    "id": "g03",
+    "cat": "SiLR-Agent",
+    "q": "Bounded ReAct 的5步执行循环",
+    "bullets": [
+      "① OBSERVE：观测工具获取系统状态，压缩到~200-300 tokens",
+      "② REASON+ACT：LLM推理 + 三层ActionParser解析输出",
+      "③ VERIFY：SiLR验证器在影子仿真中执行，检查4类约束",
+      "④ PASS→执行 / FAIL→Escalation Hint+重试（每步最多3次）/ 3次失败→failsafe",
+      "⑤ CHECK：check_stability() → 未恢复则回到Step 1"
+    ]
+  },
+  {
+    "id": "g04",
+    "cat": "SiLR-Agent",
+    "q": "Bounded ReAct vs 标准 ReAct",
+    "bullets": [
+      "标准ReAct：没有明确终止条件，可能无限循环",
+      "三层边界：步数上限(max_steps=8) / 重试上限(每步max 3次) / Failsafe兜底",
+      "保证系统永远有兜底，不会陷入无限循环或做出危险决策",
+      "为什么选ReAct不选Plan-and-Execute：电力恢复是动态的，每次操作后系统状态变化，不能提前规划所有步骤"
+    ]
+  },
+  {
+    "id": "g05",
+    "cat": "SiLR-Agent",
+    "q": "三层 ActionParser 是什么？",
+    "bullets": [
+      "Layer 1：原生tool_calls解析（GPT格式）",
+      "Layer 2：JSON block解析（Qwen3格式：```json {...} ```）",
+      "Layer 3：正则匹配（兜底）",
+      "目的：跨模型兼容性，避免浪费重试次数在解析错误上，能快速切换模型做消融"
+    ]
+  },
+  {
+    "id": "g06",
+    "cat": "SiLR-Agent",
+    "q": "SiLR 验证机制的完整流程",
+    "bullets": [
+      "① 克隆当前状态 → Shadow Copy（DAE数组快照，非deepcopy因PyCapsule不可序列化）",
+      "② 在影子系统执行动作 → 运行潮流计算(~100ms)",
+      "③ 4个约束检查：电压(0.90-1.10pu) / 频率(±0.5Hz) / 线路负载(<100%) / 转子角(<180°)",
+      "全部PASS → 主系统执行；任一FAIL → 结构化违规报告（偏离多少、调整建议）"
+    ]
+  },
+  {
+    "id": "g07",
+    "cat": "SiLR-Agent",
+    "q": "Escalation Hint 机制 — 如何从92.4%→97.0%",
+    "bullets": [
+      "发现：5个失败场景全是同一问题——magnitude不够被拒绝后，模型不会自主加码",
+      "三层机制（零重训）：引导层(具体提示\"100MW不够，至少150MW\") / 系统层(提示层) / 兜底层(强制2×或min 100MW)",
+      "关键洞察：12轮SFT无法教会\"被拒→加码\"的多步行为，系统层引导比重训更有效",
+      "消融：progress feedback(PASS时也提示)反而退步——只在REJECT时介入"
+    ]
+  },
+  {
+    "id": "g08",
+    "cat": "SiLR-Agent",
+    "q": "训练数据：怎么来的？规模多大？",
+    "bullets": [
+      "用Gemini-3-Flash作为Teacher Model（Kimi被淘汰：38%恢复率+56%拓扑幻觉）",
+      "14个基础场景×SiLR循环→56-68条 + 52个参数化变体→179-181条 + 专家数据15条 + 修复2条",
+      "总计 <span class=\"num\">248条</span> SFT数据",
+      "先用Teacher生成，再SiLR验证过滤，再人工修正少量关键样本（蒸馏+主动学习）"
+    ]
+  },
+  {
+    "id": "g09",
+    "cat": "SiLR-Agent",
+    "q": "数据质量的实验证据",
+    "bullets": [
+      "删除7条错误标注(−7条) → 恢复率 <span class=\"num\">+6pp</span>",
+      "添加2条s01修复数据 → 修复了一个一直失败的场景",
+      "结论：<span class=\"highlight\">7条坏数据的伤害 > 100条好数据的贡献</span>",
+      "对客户的意义：500条精心标注的行业QA，效果可能超过5000条噪音数据"
+    ]
+  },
+  {
+    "id": "g10",
+    "cat": "SiLR-Agent",
+    "q": "为什么14B比32B效果好？",
+    "bullets": [
+      "248条数据下：14B SFT=92.4%，32B只有87.9%（3种配置结论一致）",
+      "原因①：同一LoRA rank对更大模型的表达比例更低(r=64: 14B≈0.5% vs 32B≈0.3%)",
+      "原因②：32B预训练知识更强，可能与SFT数据的领域策略存在冲突",
+      "9B(视觉语言模型)=87.9%，文本推理弱于纯语言14B"
+    ]
+  },
+  {
+    "id": "g11",
+    "cat": "SiLR-Agent",
+    "q": "DPO 三个坑",
+    "bullets": [
+      "坑①：shed_load回避(−7.6pp)：63%偏好对惩罚了切负荷 → 模型学会\"永远不切负荷\"",
+      "坑②：Qwen3 <think>模式激活：DPO后每个输出前加think标签 → 302次解析错误，修复：enable_thinking=False",
+      "坑③：动作幅度分布偏移：close_line专家数据中adjust_gen都~20MW → 模型学到\"所有调整都是20MW\"",
+      "最终结论：修复所有坑后DPO净贡献仅+0.6pp，投入产出比不高。不是所有场景都需要DPO"
+    ]
+  },
+  {
+    "id": "g12",
+    "cat": "SiLR-Agent",
+    "q": "LoRA 配置",
+    "bullets": [
+      "model: Qwen3-14B，quantization: NF4(QLoRA)",
+      "lora_r=64, lora_alpha=128(scaling=2)，7个target_modules",
+      "trainable params: ~100M / 14B = <1%",
+      "训练时间: ~70-100 min on RTX PRO Blackwell 96GB",
+      "r=64因为任务复杂度高（多工具选择+数值参数生成）"
+    ]
+  },
+  {
+    "id": "g13",
+    "cat": "SiLR-Agent",
+    "q": "Observation压缩策略",
+    "bullets": [
+      "电力系统全状态~2000 tokens，直接塞入context太浪费",
+      "正常设备只报数量：\"32/39 buses normal\"",
+      "违规设备报详细数值+动作提示：\"Bus 9: 0.87 p.u. < 0.90, consider adjust_gen nearby\"",
+      "压缩后~200-300 tokens，信息保留率90%+",
+      "核心：给模型看<span class=\"highlight\">需要关注的信息</span>，不是所有信息"
+    ]
+  },
+  {
+    "id": "g14",
+    "cat": "SiLR-Agent",
+    "q": "Few-shot 实验发现",
+    "bullets": [
+      "GPT-5.4实验：<span class=\"num\">1个示例(96.7%) > 3个示例(94.2%)</span>",
+      "原因：多示例稀释context，示例占用更多token，压缩了对当前问题的注意力",
+      "教训：few-shot不是越多越好，需要实验验证"
+    ]
+  },
+  {
+    "id": "g15",
+    "cat": "SiLR-Agent",
+    "q": "SiLR框架可迁移到哪些场景？",
+    "bullets": [
+      "核心抽象：<span class=\"highlight\">LLM负责推理 + 仿真器负责验证 = 可信AI决策</span>",
+      "金融：Agent生成交易策略 → 合规引擎验证 → 通过才执行",
+      "医疗：LLM给出用药建议 → 药物冲突检查系统验证",
+      "自动驾驶：规划路径 → 碰撞预测仿真验证",
+      "代码执行：LLM生成代码 → 沙箱验证 → 通过才运行",
+      "已验证：电力系统（物理仿真）+ 网络路由（离散事件仿真）"
+    ]
+  },
+  {
+    "id": "g16",
+    "cat": "SiLR-Agent",
+    "q": "为什么不直接用GPT-5.4调API？",
+    "bullets": [
+      "成本：API按token计费，每个场景多轮交互，成本不可控",
+      "延迟：API网络延迟，电力系统需要实时决策",
+      "确定性：GPT每次输出不同(±2.6pp)，关键系统需要确定性行为",
+      "隐私：电力系统=关键基础设施信息，不能上传第三方",
+      "数据：本地14B+Escalation <span class=\"num\">97.0%</span> > GPT-5.4 1-shot <span class=\"num\">96.7%</span>，成本低100倍"
+    ]
+  },
+  {
+    "id": "g17",
+    "cat": "SiLR-Agent",
+    "q": "如果客户说\"我不信AI能做关键决策\"，你怎么回？",
+    "bullets": [
+      "AI不是替代人做决策，而是<span class=\"highlight\">辅助</span>人做决策，每个建议都有验证报告",
+      "安全违规率0%——不是因为AI完美，而是不完美的动作会被拦截",
+      "有failsafe兜底——最坏情况执行保守规则化策略",
+      "给客户看验证报告样例——透明可解释"
+    ]
+  },
+  {
+    "id": "g18",
+    "cat": "SiLR-Agent",
+    "q": "Failsafe三层保护",
+    "bullets": [
+      "① SiLR拦截：危险动作不会执行",
+      "② 3次重试：每步最多3次LLM尝试，基于结构化反馈调整策略",
+      "③ DefaultFailsafe：全部失败后切换到规则化策略（基于最严重违规类型，执行保守恢复动作）",
+      "系统永远有兜底方案，最坏情况也是走failsafe，不是做出危险决策"
+    ]
+  }
+]

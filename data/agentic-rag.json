@@ -1,0 +1,179 @@
+[
+  {
+    "id": "r01",
+    "cat": "Agentic RAG",
+    "q": "Agentic RAG 核心数字",
+    "bullets": [
+      "Recall@5 = <span class=\"num\">96.4%</span>（加Rerank后）",
+      "Embedding微调：Recall@1 从47.3% → <span class=\"num\">63.6%</span>（+16.4pp）",
+      "10工具Agent框架，支持多跳QA、自反思重试",
+      "55个日语电力领域查询，160+文档→359 chunks",
+      "完整检索pipeline：BM25(Char 3-gram) + Dense(fine-tuned bge-m3) + RRF + Reranker"
+    ]
+  },
+  {
+    "id": "r02",
+    "cat": "Agentic RAG",
+    "q": "BM25 vs Dense检索 — 小语料的教训",
+    "bullets": [
+      "BM25 Recall@1 = <span class=\"num\">81.8%</span>（最高！）；Dense未微调只有47.3%，微调后63.6%",
+      "小语料（359 chunks）上，n-gram模糊匹配比精确形态素更鲁棒",
+      "<span class=\"highlight\">\"更精确\"≠\"更好\"</span>，需要实验验证",
+      "Dense微调后仍低于BM25，但两者互补（Dense能找到语义相关的文档）"
+    ]
+  },
+  {
+    "id": "r03",
+    "cat": "Agentic RAG",
+    "q": "为什么BM25用Char 3-gram而不是MeCab？",
+    "bullets": [
+      "Char 3-gram Recall@1 = <span class=\"num\">81.8%</span> vs MeCab = 74.5%，高7.3pp",
+      "小语料上n-gram的模糊匹配比精确形态素更鲁棒",
+      "MeCab漏掉复合词中间部分（\"需給調整\"→\"需給\"+\"調整\"，丢失组合信息）",
+      "n-gram对Query和Document用相同tokenizer，一致性好"
+    ]
+  },
+  {
+    "id": "r04",
+    "cat": "Agentic RAG",
+    "q": "Hybrid RRF 反直觉结果",
+    "bullets": [
+      "Hybrid Recall@1 = <span class=\"num\">72.7%</span> < BM25 = 81.8%（Hybrid反而更差！）",
+      "原因：Dense把错误文档排很高，RRF融合时这些高排名错误文档挤掉了BM25的正确Top-1",
+      "加Rerank后差异消失，全部收敛到96.4%",
+      "教训：Hybrid的价值在Recall@5+（不漏掉好文档），不是Top-1准确率",
+      "RRF权重(BM25=0.75, Dense=1.0)是反直觉的——给更弱的Dense更高权重"
+    ]
+  },
+  {
+    "id": "r05",
+    "cat": "Agentic RAG",
+    "q": "Reranker 为什么叫\"均衡器\"？",
+    "bullets": [
+      "无Rerank：BM25(81.8%) >> Hybrid(72.7%) >> Dense(63.6%)，差距悬殊",
+      "有Rerank：<span class=\"highlight\">全部收敛到80.0% / 96.4%</span>",
+      "Cross-Encoder消除了第一阶段所有方法的差异",
+      "是RAG pipeline的安全网——即使第一阶段不完美，Reranker从Top-50中把正确文档捞上来",
+      "模型：bge-reranker-v2-m3（80M参数），延迟~0.25s"
+    ]
+  },
+  {
+    "id": "r06",
+    "cat": "Agentic RAG",
+    "q": "bge-m3 微调配置",
+    "bullets": [
+      "数据：<span class=\"num\">29,799条</span> 日语三元组，来自9个开源数据集（零领域标注成本）",
+      "Loss：MultipleNegativesRankingLoss（in-batch negatives + hard negatives）",
+      "训练：batch_size=64, epochs=3, lr=2e-5, FP16，<span class=\"num\">~27.6分钟</span>",
+      "效果：Recall@1 <span class=\"num\">+16.4pp</span>，MAP@10 +0.130",
+      "关键教训：训练中断时Recall@5 -3.6%，跑完才+5.5%——<span class=\"highlight\">中途checkpoint可能比基线更差</span>"
+    ]
+  },
+  {
+    "id": "r07",
+    "cat": "Agentic RAG",
+    "q": "10个工具列表",
+    "bullets": [
+      "① expand_query(~5.5s) — LLM查询改写",
+      "② retrieve(~0.2s) — BM25/Dense/Hybrid检索",
+      "③ rerank(~0.25s) — Cross-Encoder精排",
+      "④ generate_answer(~10.7s) — LLM生成回答",
+      "⑤ judge_answer(~5.3s) — LLM-as-Judge 5维度评分",
+      "⑥ read_chunk / ⑦ search_by_doc / ⑧ summarize_context / ⑨ decompose_query / ⑩ reflect_and_retry"
+    ]
+  },
+  {
+    "id": "r08",
+    "cat": "Agentic RAG",
+    "q": "为什么不用LangChain？",
+    "bullets": [
+      "已有代码覆盖80%（retriever/LLM/reranker），LangChain包装层价值有限",
+      "需要完全控制prompt和guardrails（<span class=\"highlight\">强制调用judge、强制使用retrieve</span>）",
+      "避免依赖膨胀（LangChain引入60+包）",
+      "双协议支持（Gemini + OpenAI）自定义更容易"
+    ]
+  },
+  {
+    "id": "r09",
+    "cat": "Agentic RAG",
+    "q": "LLM-as-Judge 5个评估维度",
+    "bullets": [
+      "① Faithfulness — 回答是否忠于检索到的文档",
+      "② Relevance — 回答是否切题",
+      "③ Completeness — 信息是否完整",
+      "④ Context Relevance — 检索到的文档是否够用",
+      "⑤ Overall — 整体质量",
+      "overall≤3 → 自动触发reflect_and_retry，最多重试2次"
+    ]
+  },
+  {
+    "id": "r10",
+    "cat": "Agentic RAG",
+    "q": "Agent不调judge_answer的问题怎么解决？",
+    "bullets": [
+      "问题：LLM只用retrieve+generate_answer就直接回答，走最短路径",
+      "Prompt层：添加\"MUST call judge_answer\"/\"NEVER write answer as plain text\"",
+      "Code层：如果LLM输出文本但没调judge，强制注入一次judge调用",
+      "教训：<span class=\"highlight\">LLM会走最短路径，关键步骤不能靠\"建议\"，要靠强制</span>"
+    ]
+  },
+  {
+    "id": "r11",
+    "cat": "Agentic RAG",
+    "q": "完整检索结果对比表",
+    "bullets": [
+      "BM25：Recall@1 <span class=\"num\">81.8%</span> / Recall@5 94.5%（小语料王者）",
+      "Dense(fine-tuned)：Recall@1 63.6% / Recall@5 87.3%",
+      "Hybrid RRF：Recall@1 72.7% / Recall@5 92.7%（不如BM25！）",
+      "BM25+Rerank：Recall@1 80.0% / Recall@5 <span class=\"num\">96.4%</span>",
+      "Dense+Rerank：Recall@1 80.0% / Recall@5 96.4% / nDCG <span class=\"num\">0.961</span>（最高）",
+      "推荐：BM25+Rerank（简单高效）或Dense+Rerank（nDCG最高）"
+    ]
+  },
+  {
+    "id": "r12",
+    "cat": "Agentic RAG",
+    "q": "RAG诊断框架（客户说效果不好时）",
+    "bullets": [
+      "① Chunking：切分策略是否合理？语义完整性？",
+      "② 检索：Recall@K量化，正确文档能被检索到吗？",
+      "③ Embedding：通用模型对领域术语是否有效？需要微调？",
+      "④ Reranking：有没有Reranker？没有加一个可能直接+10pp",
+      "⑤ 生成：Prompt是否有效？Faithfulness约束？",
+      "通常最大问题在<span class=\"highlight\">Chunking和Embedding</span>——这是基础"
+    ]
+  },
+  {
+    "id": "r13",
+    "cat": "Agentic RAG",
+    "q": "日语RAG的特殊挑战",
+    "bullets": [
+      "无空格分词：需要专门分词工具或n-gram",
+      "三种字符混用：汉字/平假名/片假名，同一概念多种写法",
+      "复合词问题：\"需給調整\"被MeCab分成两个词，丢失意义",
+      "NFKC正规化：全角→半角（\"ＡＢＣ\"→\"ABC\"），统一空白字符",
+      "发现：在小语料上，暴力Char n-gram比精细形态素解析更好"
+    ]
+  },
+  {
+    "id": "r14",
+    "cat": "Agentic RAG",
+    "q": "多跳QA怎么实现？",
+    "bullets": [
+      "decompose_query工具把复杂问题拆成2-4个独立子问题",
+      "分别检索 → 合并去重（by chunk_id）→ 生成综合回答",
+      "Query意图分类（规则）自动识别comparative类问题 → 触发decompose_query",
+      "例：\"A规定和B规定有什么冲突\" → [\"A规定目的？\", \"B规定目的？\", \"两者差异？\"]"
+    ]
+  },
+  {
+    "id": "r15",
+    "cat": "Agentic RAG",
+    "q": "客户预算有限，只能做一件事提升RAG效果，推荐什么？",
+    "bullets": [
+      "首选：<span class=\"highlight\">加Reranker</span>——把所有方法Recall@5统一提升到96.4%，延迟只+0.25s，开箱即用",
+      "次选：<span class=\"highlight\">Embedding微调</span>——+16.4pp Recall@1，27分钟训练，用开源数据零标注成本",
+      "bge-m3开源可微调本地部署；OpenAI embedding不可微调，日本企业数据不出设备是硬需求"
+    ]
+  }
+]

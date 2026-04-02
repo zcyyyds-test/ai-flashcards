@@ -1,0 +1,173 @@
+[
+  {
+    "id": "l01",
+    "cat": "LLM基础",
+    "q": "Transformer 架构核心组件",
+    "bullets": [
+      "Encoder-Decoder结构（原始），现在主流：Decoder-only（GPT系列）/ Encoder-only（BERT）",
+      "核心组件：Multi-Head Self-Attention + FFN + Layer Norm + Residual Connection",
+      "Self-Attention：每个token关注序列中所有其他token，捕捉长距离依赖",
+      "FFN：两层全连接（扩展到4倍再压缩），负责非线性变换和知识存储",
+      "Residual Connection：防止梯度消失，让深层网络可训练；Layer Norm：稳定训练"
+    ]
+  },
+  {
+    "id": "l02",
+    "cat": "LLM基础",
+    "q": "Self-Attention 计算过程",
+    "bullets": [
+      "输入X → 线性映射得到 Q(Query), K(Key), V(Value)",
+      "Attention(Q,K,V) = softmax(QK^T / √d_k) × V",
+      "√d_k 缩放防止点积过大导致 softmax 饱和（梯度消失）",
+      "Multi-Head：并行多组QKV，不同head关注不同类型的关系（语法/语义/位置）",
+      "复杂度 O(n²d)：序列长度的平方，这是长文本处理的瓶颈"
+    ]
+  },
+  {
+    "id": "l03",
+    "cat": "LLM基础",
+    "q": "Tokenization 方法对比",
+    "bullets": [
+      "BPE(Byte-Pair Encoding)：从字符开始，不断合并最频繁的相邻pair → GPT系列使用",
+      "WordPiece：类似BPE但用似然而非频率选择合并 → BERT使用",
+      "SentencePiece：直接处理原始文本（不需要预分词），支持BPE/Unigram → 多语言友好",
+      "中文/日语：无空格，SentencePiece直接按字符和子词处理",
+      "Vocab大小 trade-off：大→覆盖率高但embedding矩阵大；小→OOV多但参数少。通常32K-128K"
+    ]
+  },
+  {
+    "id": "l04",
+    "cat": "LLM基础",
+    "q": "预训练 → SFT → RLHF/DPO 全流程",
+    "bullets": [
+      "<span class=\"highlight\">Pre-training</span>：海量文本，CLM(因果语言模型)预测下一个token，学习世界知识。成本：数百万$",
+      "<span class=\"highlight\">SFT</span>(Supervised Fine-Tuning)：指令-回答对，教模型\"如何有用地回答\"。数据量：几千~几万条",
+      "<span class=\"highlight\">RLHF</span>：训练Reward Model(偏好排序) → PPO优化策略使输出更符合人类偏好。复杂、不稳定",
+      "<span class=\"highlight\">DPO</span>：跳过RM，直接用偏好对训练。更简单稳定，但对数据质量敏感",
+      "你的经验：SFT 248条效果好，DPO反而−7.6pp → <span class=\"highlight\">不是所有场景都需要对齐</span>"
+    ]
+  },
+  {
+    "id": "l05",
+    "cat": "LLM基础",
+    "q": "Scaling Laws（缩放定律）",
+    "bullets": [
+      "Kaplan(2020)：Loss ∝ N^(-0.076) × D^(-0.095) × C^(-0.050)，N参数量/D数据量/C计算量",
+      "Chinchilla(2022)：最优分配 → 参数量和数据量应同比例增长。70B模型需要1.4T tokens",
+      "含义：<span class=\"highlight\">不是模型越大越好，而是算力分配要合理</span>",
+      "实践影响：Llama系列（更小模型+更多数据）比GPT-3（大模型+少数据）效率高",
+      "对客户的意义：14B充分训练可能比32B欠训练效果好（你的实验验证了这点）"
+    ]
+  },
+  {
+    "id": "l06",
+    "cat": "LLM基础",
+    "q": "KV Cache 机制",
+    "bullets": [
+      "自回归生成时，每个新token需要attend所有之前的token",
+      "不用cache：每步重算所有token的K/V → O(n²) 重复计算",
+      "用cache：缓存已计算的K/V → 每步只算新token的Q与所有K/V → O(n) 增量",
+      "显存占用：2 × n_layers × d_model × seq_len × batch_size × sizeof(dtype)",
+      "<span class=\"highlight\">Paged Attention</span>(vLLM)：像OS虚拟内存一样管理KV Cache，减少碎片，支持更大batch"
+    ]
+  },
+  {
+    "id": "l07",
+    "cat": "LLM基础",
+    "q": "Flash Attention 为什么快？",
+    "bullets": [
+      "标准Attention：QK^T生成n×n矩阵存到HBM(显存) → 读出来softmax → 再存回去 → 再乘V",
+      "瓶颈不是计算而是<span class=\"highlight\">内存带宽</span>（HBM读写慢，SRAM快但小）",
+      "Flash Attention：分块(tiling)在SRAM中完成QKV运算，不在HBM存中间矩阵",
+      "效果：速度2-4x，显存从O(n²)降到O(n)，<span class=\"highlight\">精确计算不是近似</span>",
+      "Flash Attention 2/3：进一步优化并行策略和GPU利用率"
+    ]
+  },
+  {
+    "id": "l08",
+    "cat": "LLM基础",
+    "q": "量化方法对比",
+    "bullets": [
+      "FP16/BF16：半精度，标准训练格式。BF16范围更大（指数位多），训练更稳定",
+      "INT8(W8A8)：权重和激活都8位，~2×压缩，精度损失极小",
+      "INT4/NF4(QLoRA)：权重4位，~4×压缩。NF4：正态分位数量化，对正态分布权重最优",
+      "GPTQ：逐层量化+Hessian补偿（post-training），GPU推理用",
+      "AWQ：只保护1%的\"重要权重\"不量化，效果好于GPTQ",
+      "GGUF：llama.cpp格式，Q4_K_M/Q8_0等，<span class=\"highlight\">专为CPU推理优化</span>"
+    ]
+  },
+  {
+    "id": "l09",
+    "cat": "LLM基础",
+    "q": "Hallucination（幻觉）原因与缓解",
+    "bullets": [
+      "原因①：训练数据噪声/矛盾 → 模型学到错误关联",
+      "原因②：自回归生成的exposure bias → 早期小错误雪球式放大",
+      "原因③：softmax只能选已有token，不能\"说不知道\"",
+      "缓解：<span class=\"highlight\">RAG</span>(用事实文档grounding) / Guardrails(检查事实性) / Self-consistency(多次采样投票)",
+      "缓解：Fine-tuning让模型学会说\"我不知道\" / 降Temperature减少随机性",
+      "你的做法：SiLR验证器 = 用仿真器事实检查LLM的\"幻觉动作\""
+    ]
+  },
+  {
+    "id": "l10",
+    "cat": "LLM基础",
+    "q": "采样策略：Temperature / Top-p / Top-k",
+    "bullets": [
+      "Temperature：控制softmax分布的锐度。T→0=贪心(确定性)，T→∞=均匀(随机)",
+      "Top-k：只从概率最高的k个token中采样。k=1=贪心，k大→更多样",
+      "Top-p(Nucleus)：从累积概率达到p的最小token集中采样。<span class=\"highlight\">动态调整候选数量</span>",
+      "Beam Search：同时维护beam_size条候选序列，选总概率最高的。适合翻译，不适合对话",
+      "实践：对话用Top-p=0.9+T=0.7；代码/工具调用用T=0(确定性输出)"
+    ]
+  },
+  {
+    "id": "l11",
+    "cat": "LLM基础",
+    "q": "MoE（Mixture of Experts）架构",
+    "bullets": [
+      "每个FFN层替换为多个\"专家\"子网络（如16个），每次只激活其中k个（如2个）",
+      "Router网络决定每个token发给哪些专家 → <span class=\"highlight\">稀疏激活</span>",
+      "优势：总参数量大（知识容量大），但每次推理只用一部分（计算量小）",
+      "典型：Mixtral 8x7B = 47B总参数但每次只激活~13B",
+      "挑战：负载均衡（某些专家过载）/ 通信开销（分布式训练）/ 显存仍需存所有专家"
+    ]
+  },
+  {
+    "id": "l12",
+    "cat": "LLM基础",
+    "q": "位置编码：RoPE vs ALiBi",
+    "bullets": [
+      "为什么需要：Attention本身不包含位置信息，\"ABCD\"和\"DCBA\"注意力相同",
+      "Sinusoidal(原始)：固定函数生成，不可学习，外推能力差",
+      "<span class=\"highlight\">RoPE</span>(Rotary)：用旋转矩阵编码相对位置，支持长度外推（配合NTK scaling）→ 主流选择",
+      "ALiBi：不加位置编码，而是给远距离token的attention分数加线性惩罚 → 训练简单",
+      "长文本处理：RoPE+Dynamic NTK/YaRN可扩展到128K+；ALiBi天然支持外推"
+    ]
+  },
+  {
+    "id": "l13",
+    "cat": "LLM基础",
+    "q": "RLHF vs DPO 详细对比",
+    "bullets": [
+      "RLHF：训练Reward Model → PPO优化policy。优点：灵活，可迭代。缺点：<span class=\"highlight\">训练不稳定，需要4个模型同时在线</span>",
+      "DPO：直接用偏好对优化，loss = -log σ(β(logπ(yw)-logπ(yl)))。优点：简单一步训练",
+      "DPO缺点：<span class=\"highlight\">对数据质量极敏感</span>（你的经验：63%偏好对的偏差→模型学错）",
+      "DPO缺点：没有显式reward信号，难以诊断哪里出了问题",
+      "新趋势：SimPO/ORPO等直接用reference-free偏好优化，更简单",
+      "你的结论：修复所有问题后DPO仅+0.6pp，工具调用场景不推荐"
+    ]
+  },
+  {
+    "id": "l14",
+    "cat": "LLM基础",
+    "q": "Embedding 原理与应用",
+    "bullets": [
+      "将离散token/句子映射到连续向量空间，语义相近→向量距离近",
+      "Word2Vec(2013)：Skip-gram/CBOW，学习词级别embedding",
+      "句向量：平均池化 / [CLS] token / 对比学习(SimCSE, sentence-transformers)",
+      "bge-m3：多语言多粒度多功能embedding模型，<span class=\"highlight\">支持Dense+Sparse+ColBERT三种检索</span>",
+      "Embedding微调：用三元组(query,positive,negative)+对比Loss，你的经验：Recall@1 +16.4pp"
+    ]
+  }
+]

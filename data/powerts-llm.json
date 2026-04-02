@@ -1,0 +1,93 @@
+[
+  {
+    "id": "p01",
+    "cat": "PowerTS-LLM",
+    "q": "PowerTS-LLM 核心发现",
+    "bullets": [
+      "LLM精度 <span class=\"num\">不如LSTM</span>（干净数据MAE差13倍：LLM 2968MW vs LSTM 228MW）",
+      "但LLM鲁棒性好 <span class=\"num\">48.51倍</span>（噪声σ=5%：LSTM +107.7% vs LLM +2.2%）",
+      "结论：<span class=\"highlight\">LLM不是时序预测最优解，但在恶劣条件下是最鲁棒的解</span>",
+      "48.51× = LSTM退化幅度107.7% / LLM退化幅度2.2%"
+    ]
+  },
+  {
+    "id": "p02",
+    "cat": "PowerTS-LLM",
+    "q": "Token离散化为什么鲁棒（核心机制）",
+    "bullets": [
+      "数值经tokenize→离散token序列，相近数值在embedding空间表示接近，噪声衰减",
+      "数值精度被token粒度截断——LLM内部看到的是\"大约28\"而非精确浮点数",
+      "LSTM直接处理浮点数，噪声通过自回归链<span class=\"highlight\">传播并放大</span>（每步误差是下步输入）",
+      "这是第一个定量证明LLM token离散化具有噪声过滤效果的工作"
+    ]
+  },
+  {
+    "id": "p03",
+    "cat": "PowerTS-LLM",
+    "q": "RAG为什么在时序预测上失败？（退化7.3%）",
+    "bullets": [
+      "相似天气≠相似负荷动态（3月15日和22日天气相似，但一个有特殊事件）",
+      "额外context干扰：微调后LLM已学会从输入直接预测，\"参考日\"成为噪声",
+      "<span class=\"highlight\">RAG适合\"有答案需要找到\"的任务，不适合\"需要计算\"的任务</span>",
+      "SA意义：客户说\"我要做XXX加个RAG\"，要先判断任务类型再推方案"
+    ]
+  },
+  {
+    "id": "p04",
+    "cat": "PowerTS-LLM",
+    "q": "LSTM vs LLM：分别什么场景用？",
+    "bullets": [
+      "LSTM：数据质量高、实时性要求高、资源受限 → 传统电力预测（MAE低13倍，推理~1ms）",
+      "LLM：数据质量不稳定、对鲁棒性要求高、可接受较高延迟（需要GPU，~5-10s）",
+      "混合方案：LSTM做主力，LLM做鲁棒性校验——两者预测值差距大说明数据可能有问题",
+      "建议：大多数情况推荐LSTM，不推荐直接用LLM替代LSTM"
+    ]
+  },
+  {
+    "id": "p05",
+    "cat": "PowerTS-LLM",
+    "q": "训练配置",
+    "bullets": [
+      "model: Qwen2.5-14B-Instruct，LoRA rank=64, alpha=128",
+      "trainable_params: 68.8M (0.49%)",
+      "training_data: <span class=\"num\">542K</span> 日语结构化prompt（TEPCO历史数据）",
+      "epochs: 1（loss在0.4 epoch处就收敛了）",
+      "训练时间: <span class=\"num\">~38小时</span>（单卡RTX 6000 96GB）",
+      "framework: LLaMA-Factory + DeepSpeed ZeRO-2"
+    ]
+  },
+  {
+    "id": "p06",
+    "cat": "PowerTS-LLM",
+    "q": "三个最重要的教训（最适合SA场景的答案）",
+    "bullets": [
+      "① <span class=\"highlight\">新技术≠最优解</span>：LLM很热门，但时序预测上LSTM精度高13倍",
+      "② <span class=\"highlight\">弱点可以是优点</span>：Token离散化被认为是\"缺陷\"，但恰好成为噪声滤波器",
+      "③ <span class=\"highlight\">RAG有适用边界</span>：回归任务加RAG反而有害，技术选型必须看场景",
+      "这些教训让我在面对客户时做出更准确的技术判断"
+    ]
+  },
+  {
+    "id": "p07",
+    "cat": "PowerTS-LLM",
+    "q": "如何向客户回应\"LLM时序预测精度太差\"？",
+    "bullets": [
+      "诚实承认：干净数据上LSTM确实精度高13倍",
+      "\"但请考虑：你的数据质量始终完美吗？传感器故障/通信中断/极端天气都会引入噪声\"",
+      "\"在噪声条件下，LSTM退化108%，LLM只退化2.2%\"",
+      "建议：LSTM做主力 + LLM做鲁棒性校验，两者互补"
+    ]
+  },
+  {
+    "id": "p08",
+    "cat": "PowerTS-LLM",
+    "q": "如何给客户定方案（时序预测场景）",
+    "bullets": [
+      "① 先问清：精度优先还是鲁棒性优先？数据质量？实时性要求？",
+      "② 先跑基线：LSTM 30分钟出结果，先看干净数据精度",
+      "③ 评估风险：对历史数据加噪测试，看退化幅度",
+      "④ 推荐：大多数情况推荐LSTM+异常检测；数据质量差→加LLM备用",
+      "⑤ 不推荐直接用LLM替代LSTM"
+    ]
+  }
+]

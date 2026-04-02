@@ -1,0 +1,139 @@
+[
+  {
+    "id": "db01",
+    "cat": "数据库",
+    "q": "SQL 基础查询 — SELECT/WHERE/ORDER BY",
+    "bullets": [
+      "<pre><span class=\"kw\">SELECT</span> name, age, salary\\n<span class=\"kw\">FROM</span> employees\\n<span class=\"kw\">WHERE</span> department = <span class=\"str\">'Engineering'</span>\\n  <span class=\"kw\">AND</span> age > 25\\n  <span class=\"kw\">AND</span> name <span class=\"kw\">LIKE</span> <span class=\"str\">'%zhou%'</span>  <span class=\"cm\">-- 模糊匹配</span>\\n<span class=\"kw\">ORDER BY</span> salary <span class=\"kw\">DESC</span>\\n<span class=\"kw\">LIMIT</span> 10 <span class=\"kw\">OFFSET</span> 20;  <span class=\"cm\">-- 分页：跳过20条取10条</span></pre>",
+      "执行顺序：FROM → WHERE → SELECT → ORDER BY → LIMIT",
+      "NULL比较用 IS NULL / IS NOT NULL，不能用 = NULL",
+      "LIKE通配符：% 任意字符，_ 单个字符"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "db02",
+    "cat": "数据库",
+    "q": "增删改 — INSERT/UPDATE/DELETE",
+    "bullets": [
+      "<pre><span class=\"cm\">-- 插入</span>\\n<span class=\"kw\">INSERT INTO</span> users (name, email) <span class=\"kw\">VALUES</span> (<span class=\"str\">'Zhou'</span>, <span class=\"str\">'z@mail.com'</span>);\\n<span class=\"cm\">-- 批量插入</span>\\n<span class=\"kw\">INSERT INTO</span> users (name, email) <span class=\"kw\">VALUES</span>\\n  (<span class=\"str\">'A'</span>, <span class=\"str\">'a@m.com'</span>), (<span class=\"str\">'B'</span>, <span class=\"str\">'b@m.com'</span>);\\n<span class=\"cm\">-- 更新</span>\\n<span class=\"kw\">UPDATE</span> users <span class=\"kw\">SET</span> age = 26 <span class=\"kw\">WHERE</span> id = 1;\\n<span class=\"cm\">-- 删除（⚠️ 没有WHERE会删全表！）</span>\\n<span class=\"kw\">DELETE FROM</span> users <span class=\"kw\">WHERE</span> id = 1;</pre>",
+      "<span class=\"highlight\">永远在UPDATE/DELETE前先用SELECT确认影响范围</span>",
+      "TRUNCATE vs DELETE：TRUNCATE清空全表更快（不记录行日志），但不能回滚"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "db03",
+    "cat": "数据库",
+    "q": "主键与外键 — 表关系基础",
+    "bullets": [
+      "<pre><span class=\"kw\">CREATE TABLE</span> departments (\\n    id <span class=\"kw\">INT PRIMARY KEY AUTO_INCREMENT</span>,\\n    name <span class=\"kw\">VARCHAR</span>(100) <span class=\"kw\">NOT NULL UNIQUE</span>\\n);\\n<span class=\"kw\">CREATE TABLE</span> employees (\\n    id <span class=\"kw\">INT PRIMARY KEY AUTO_INCREMENT</span>,\\n    name <span class=\"kw\">VARCHAR</span>(100) <span class=\"kw\">NOT NULL</span>,\\n    dept_id <span class=\"kw\">INT</span>,\\n    <span class=\"kw\">FOREIGN KEY</span> (dept_id) <span class=\"kw\">REFERENCES</span> departments(id)\\n);</pre>",
+      "主键(PK)：唯一标识行，不能为NULL。自增或UUID",
+      "外键(FK)：引用另一张表的主键 → 建立表间关系 → 保证参照完整性"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "db04",
+    "cat": "数据库",
+    "q": "JOIN 类型对比 — 图解与场景",
+    "bullets": [
+      "<pre><span class=\"cm\">-- INNER JOIN: 只返回两表都匹配的行</span>\\n<span class=\"kw\">SELECT</span> e.name, d.name <span class=\"kw\">AS</span> dept\\n<span class=\"kw\">FROM</span> employees e\\n<span class=\"kw\">INNER JOIN</span> departments d <span class=\"kw\">ON</span> e.dept_id = d.id;\\n\\n<span class=\"cm\">-- LEFT JOIN: 左表全部 + 右表匹配（不匹配为NULL）</span>\\n<span class=\"kw\">SELECT</span> e.name, d.name\\n<span class=\"kw\">FROM</span> employees e\\n<span class=\"kw\">LEFT JOIN</span> departments d <span class=\"kw\">ON</span> e.dept_id = d.id;</pre>",
+      "INNER：交集 | LEFT：左表全部 | RIGHT：右表全部 | FULL：并集",
+      "LEFT JOIN找\"没有部门的员工\" → WHERE d.id IS NULL",
+      "性能：JOIN比子查询通常更快（优化器可以选择更好的执行计划）"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "db05",
+    "cat": "数据库",
+    "q": "GROUP BY / HAVING / 聚合函数",
+    "bullets": [
+      "<pre><span class=\"cm\">-- 每个部门的平均薪资（只显示>50000的）</span>\\n<span class=\"kw\">SELECT</span> department,\\n       <span class=\"fn\">COUNT</span>(*) <span class=\"kw\">AS</span> cnt,\\n       <span class=\"fn\">AVG</span>(salary) <span class=\"kw\">AS</span> avg_sal,\\n       <span class=\"fn\">MAX</span>(salary) <span class=\"kw\">AS</span> max_sal\\n<span class=\"kw\">FROM</span> employees\\n<span class=\"kw\">WHERE</span> age > 20          <span class=\"cm\">-- 先过滤行</span>\\n<span class=\"kw\">GROUP BY</span> department\\n<span class=\"kw\">HAVING</span> <span class=\"fn\">AVG</span>(salary) > 50000  <span class=\"cm\">-- 再过滤组</span>\\n<span class=\"kw\">ORDER BY</span> avg_sal <span class=\"kw\">DESC</span>;</pre>",
+      "<span class=\"highlight\">WHERE过滤行（分组前），HAVING过滤组（分组后）</span>",
+      "聚合函数：COUNT / SUM / AVG / MAX / MIN",
+      "执行顺序：FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "db06",
+    "cat": "数据库",
+    "q": "索引原理 — B+Tree 与使用场景",
+    "bullets": [
+      "B+Tree：多路平衡树，叶子节点链表相连 → 范围查询高效",
+      "为什么不用Hash索引？Hash只支持等值查询，不支持范围(>/</BETWEEN/ORDER BY)",
+      "<pre><span class=\"cm\">-- 创建索引</span>\\n<span class=\"kw\">CREATE INDEX</span> idx_email <span class=\"kw\">ON</span> users(email);\\n<span class=\"cm\">-- 联合索引（最左匹配原则）</span>\\n<span class=\"kw\">CREATE INDEX</span> idx_name_age <span class=\"kw\">ON</span> users(name, age);\\n<span class=\"cm\">-- 可以加速 WHERE name=? / WHERE name=? AND age=?</span>\\n<span class=\"cm\">-- 不能加速 WHERE age=?（没有最左列）</span></pre>",
+      "<span class=\"highlight\">最左匹配原则</span>：联合索引(A,B,C)可用于查A / A+B / A+B+C，不能跳过A直接查B",
+      "索引代价：写入变慢（要维护索引） + 占存储空间 → 不要滥建"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "db07",
+    "cat": "数据库",
+    "q": "事务 ACID — 四大特性",
+    "bullets": [
+      "<span class=\"highlight\">A</span>tomicity(原子性)：事务要么全成功要么全回滚，不存在做一半",
+      "<span class=\"highlight\">C</span>onsistency(一致性)：事务前后数据满足所有约束",
+      "<span class=\"highlight\">I</span>solation(隔离性)：并发事务互不干扰",
+      "<span class=\"highlight\">D</span>urability(持久性)：提交后数据不丢失（写入磁盘）",
+      "<pre><span class=\"kw\">BEGIN TRANSACTION</span>;\\n<span class=\"kw\">UPDATE</span> accounts <span class=\"kw\">SET</span> balance = balance - 100 <span class=\"kw\">WHERE</span> id = 1;\\n<span class=\"kw\">UPDATE</span> accounts <span class=\"kw\">SET</span> balance = balance + 100 <span class=\"kw\">WHERE</span> id = 2;\\n<span class=\"kw\">COMMIT</span>;  <span class=\"cm\">-- 或 ROLLBACK</span></pre>",
+      "隔离级别：Read Uncommitted → Read Committed → Repeatable Read(MySQL默认) → Serializable"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "db08",
+    "cat": "数据库",
+    "q": "EXPLAIN — 查询性能分析",
+    "bullets": [
+      "<pre><span class=\"kw\">EXPLAIN SELECT</span> * <span class=\"kw\">FROM</span> users <span class=\"kw\">WHERE</span> email = <span class=\"str\">'z@mail.com'</span>;\\n<span class=\"cm\">-- 关注: type, key, rows, Extra</span>\\n<span class=\"cm\">-- type: ALL(全表扫描,最差) → index → range → ref → const(最好)</span>\\n<span class=\"cm\">-- key: 实际使用的索引（NULL=没用索引）</span>\\n<span class=\"cm\">-- rows: 预估扫描行数（越少越好）</span>\\n<span class=\"cm\">-- Extra: Using filesort(需优化) / Using index(覆盖索引,好)</span></pre>",
+      "看到 type=ALL 就要考虑加索引",
+      "看到 Using filesort 可能需要调整 ORDER BY 的索引",
+      "<span class=\"highlight\">覆盖索引</span>：查询的列都在索引中 → 不需要回表 → 最快"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "db09",
+    "cat": "数据库",
+    "q": "SQL 优化 — 常见技巧",
+    "bullets": [
+      "①<span class=\"highlight\">避免SELECT *</span>：只查需要的列 → 减少IO + 可能用覆盖索引",
+      "②<span class=\"highlight\">索引失效场景</span>：函数包裹列(WHERE YEAR(date)=2026) / LIKE以%开头 / 隐式类型转换 / OR条件",
+      "③<span class=\"highlight\">分页优化</span>：LIMIT 10000,10 很慢 → 改用 WHERE id > last_id LIMIT 10（游标分页）",
+      "④<span class=\"highlight\">批量操作</span>：循环INSERT 1000次 → 一条INSERT 1000行（减少网络往返）",
+      "⑤<span class=\"highlight\">JOIN优化</span>：小表驱动大表 / 确保JOIN列有索引"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "db10",
+    "cat": "数据库",
+    "q": "NoSQL vs SQL — 选型指南",
+    "bullets": [
+      "SQL(MySQL/PostgreSQL)：结构化数据、复杂查询、事务要求高 → 金融/ERP/大部分业务",
+      "MongoDB(文档型)：半结构化数据、Schema灵活 → 内容管理/日志/用户画像",
+      "Redis(KV型)：超低延迟(<1ms)、内存存储 → 缓存/会话/排行榜/限流",
+      "Elasticsearch(搜索型)：全文搜索+聚合分析 → 日志分析/搜索引擎",
+      "向量数据库(FAISS/Qdrant)：相似度检索 → RAG/推荐/图像搜索",
+      "原则：<span class=\"highlight\">先SQL，有明确理由再用NoSQL</span>"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "db11",
+    "cat": "数据库",
+    "q": "Redis 核心数据结构与应用",
+    "bullets": [
+      "<pre><span class=\"cm\"># 5种核心数据结构</span>\\nString: SET key val / GET key          <span class=\"cm\"># 缓存/计数器</span>\\nHash:   HSET user:1 name Zhou          <span class=\"cm\"># 对象存储</span>\\nList:   LPUSH queue task1              <span class=\"cm\"># 消息队列</span>\\nSet:    SADD tags python               <span class=\"cm\"># 去重/交并集</span>\\nZSet:   ZADD rank 100 user1            <span class=\"cm\"># 排行榜</span></pre>",
+      "所有操作O(1)或O(log n)（ZSet基于跳表），内存存储 → 读写<1ms",
+      "持久化：RDB(定时快照) + AOF(追加写日志) → 重启后恢复",
+      "过期策略：惰性删除 + 定期删除。设置TTL：<code>EXPIRE key 3600</code>",
+      "AI项目应用：KV Cache管理 / Agent记忆存储 / API限流 / 特征缓存"
+    ],
+    "lv": 3
+  }
+]

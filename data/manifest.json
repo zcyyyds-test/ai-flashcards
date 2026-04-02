@@ -1,0 +1,87 @@
+[
+  {
+    "file": "self-intro.json",
+    "cat": "自我介绍",
+    "count": 8
+  },
+  {
+    "file": "silr-agent.json",
+    "cat": "SiLR-Agent",
+    "count": 18
+  },
+  {
+    "file": "agentic-rag.json",
+    "cat": "Agentic RAG",
+    "count": 15
+  },
+  {
+    "file": "edge-cloud.json",
+    "cat": "云边协同",
+    "count": 13
+  },
+  {
+    "file": "powerts-llm.json",
+    "cat": "PowerTS-LLM",
+    "count": 8
+  },
+  {
+    "file": "sa-business.json",
+    "cat": "SA商業",
+    "count": 10
+  },
+  {
+    "file": "deep-thinking.json",
+    "cat": "深度思考",
+    "count": 7
+  },
+  {
+    "file": "model-eval.json",
+    "cat": "模型评测",
+    "count": 12
+  },
+  {
+    "file": "tech-concepts.json",
+    "cat": "技术概念",
+    "count": 10
+  },
+  {
+    "file": "llm-basics.json",
+    "cat": "LLM基础",
+    "count": 14
+  },
+  {
+    "file": "agent-arch.json",
+    "cat": "Agent架构",
+    "count": 8
+  },
+  {
+    "file": "ml-dl-basics.json",
+    "cat": "ML/DL基础",
+    "count": 9
+  },
+  {
+    "file": "prompt-eng.json",
+    "cat": "Prompt工程",
+    "count": 5
+  },
+  {
+    "file": "data-structures.json",
+    "cat": "数据结构",
+    "count": 15
+  },
+  {
+    "file": "algorithms.json",
+    "cat": "算法",
+    "count": 35
+  },
+  {
+    "file": "git.json",
+    "cat": "Git",
+    "count": 11
+  },
+  {
+    "file": "databases.json",
+    "cat": "数据库",
+    "count": 11
+  }
+]

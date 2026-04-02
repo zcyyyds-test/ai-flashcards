@@ -1,0 +1,123 @@
+[
+  {
+    "id": "t01",
+    "cat": "技术概念",
+    "q": "FastAPI / Streamlit / SSE 是什么？",
+    "bullets": [
+      "FastAPI：Python高性能Web框架，原生异步+自动API文档+类型校验，性能接近Go/Node",
+      "FastAPI vs Flask：Flask更老但不支持原生异步，FastAPI更适合AI服务",
+      "Streamlit：Python快速搭前端，适合PoC和demo（不适合生产环境）",
+      "SSE(Server-Sent Events)：服务器→客户端单向推送，LLM逐token流式输出用SSE就够了",
+      "SSE vs WebSocket：SSE单向，WebSocket双向"
+    ]
+  },
+  {
+    "id": "t02",
+    "cat": "技术概念",
+    "q": "Docker核心概念（5个）",
+    "bullets": [
+      "Image镜像：打包好的应用模板（安装光盘）",
+      "Container容器：镜像的运行实例（安装好的系统）",
+      "Dockerfile：描述怎么构建镜像的脚本",
+      "Docker Compose：同时管理多个容器（一键部署FastAPI+向量数据库+前端）",
+      "Registry仓库：存储和分发镜像的地方（Docker Hub）",
+      "核心价值：解决\"在我机器上能跑\"问题，保证交付物稳定运行"
+    ]
+  },
+  {
+    "id": "t03",
+    "cat": "技术概念",
+    "q": "Kubernetes(K8s)是什么，为什么用？",
+    "bullets": [
+      "容器编排平台，管理大量Docker容器的部署/扩缩容/负载均衡",
+      "Docker解决单机部署，K8s解决\"100台机器上跑1000个容器怎么管\"",
+      "自动扩缩容：流量大自动加容器，流量小自动减",
+      "自动恢复：容器挂了自动重启；滚动更新：不停机更新服务",
+      "SA需要知道的深度：知道是什么、为什么用，不需要会写YAML"
+    ]
+  },
+  {
+    "id": "t04",
+    "cat": "技术概念",
+    "q": "向量数据库是什么，为什么RAG需要它？",
+    "bullets": [
+      "专门存储和检索高维向量（embedding）的数据库",
+      "支持相似度搜索（Cosine/L2），比传统数据库快得多",
+      "常见：Chroma（轻量级，本地开发）/ Qdrant / Weaviate / Pinecone（云端）/ FAISS（库）",
+      "RAG流程：文档→embedding→存向量数据库→查询时检索相似向量→取对应文本",
+      "FAISS：Facebook AI的开源库，IndexFlatIP（精确）→IndexIVFPQ（近似，大规模用）"
+    ]
+  },
+  {
+    "id": "t05",
+    "cat": "技术概念",
+    "q": "vLLM vs Ollama — 什么场景用哪个？",
+    "bullets": [
+      "Ollama：优化易用性和本地/边缘部署，支持GGUF(Q4/Q8)，CPU-only可运行，单请求优化",
+      "vLLM：优化高吞吐云端服务，Continuous Batching，需要GPU，支持GPTQ/AWQ量化",
+      "Prefix Caching：System Prompt对所有请求相同→KV Cache复用，计算量减少~30%",
+      "Tensor Parallelism(TP=2)：大模型跨多卡并行，vLLM支持",
+      "SA场景：edge用Ollama，cloud/企业API用vLLM"
+    ]
+  },
+  {
+    "id": "t06",
+    "cat": "技术概念",
+    "q": "LoRA / QLoRA 机制",
+    "bullets": [
+      "LoRA：在原始权重旁添加低秩矩阵A和B（秩r），只训练AB，原始权重冻结",
+      "可训练参数：r=64时约<1%，大幅减少显存需求",
+      "QLoRA：在LoRA基础上，原始权重用4-bit NF4量化，进一步降低显存",
+      "lora_alpha：缩放系数，通常=2r（alpha=128对应r=64）",
+      "target_modules：q_proj/k_proj/v_proj/o_proj + gate/up/down_proj（7个）"
+    ]
+  },
+  {
+    "id": "t07",
+    "cat": "技术概念",
+    "q": "Agent框架对比（面试时的回答）",
+    "bullets": [
+      "LangChain/LangGraph：生态最全，但抽象层重、调试困难、\"黑盒\"感强",
+      "LlamaIndex：RAG场景最强，索引检索抽象好，但Agent能力相对弱",
+      "AutoGen：多Agent协作好，适合复杂工作流，但上手成本高",
+      "ADK(Google)：和Google Cloud集成好，较新",
+      "自研：完全可控，但要自己造轮子（SiLR-Agent选择自研的原因）",
+      "选哪个取决于客户需求和团队熟悉度，不存在\"最好的框架\""
+    ]
+  },
+  {
+    "id": "t08",
+    "cat": "技术概念",
+    "q": "ReAct / Plan-and-Execute / Multi-Agent 区别",
+    "bullets": [
+      "ReAct：思考-行动-观察循环，适合步骤不确定、需根据反馈调整的任务（SiLR-Agent用这个）",
+      "Plan-and-Execute：先整体规划再执行，适合步骤较明确的复杂任务，但计划有误会连锁出错",
+      "Multi-Agent：多个专门化Agent协作（规划/执行/审核），适合角色分工明确的场景",
+      "实际项目经常混合使用，不是非此即彼"
+    ]
+  },
+  {
+    "id": "t09",
+    "cat": "技术概念",
+    "q": "RAG vs Fine-tuning — 什么时候用哪个？",
+    "bullets": [
+      "RAG：知识经常更新 / 需要引用来源 / 数据量大但不能全训练进模型",
+      "Fine-tuning：需要特定输出格式和风格 / 领域知识需要内化 / 低延迟（减少prompt长度）",
+      "RAG失败场景：回归任务（时序预测）/ 答案需要计算而非检索",
+      "结合使用：先RAG检索相关文档，再用fine-tuned模型生成（JP-DocRAG的做法）",
+      "帮客户判断：问题是\"找答案\"还是\"计算/推理\"？"
+    ]
+  },
+  {
+    "id": "t10",
+    "cat": "技术概念",
+    "q": "如何做模型评测（3层框架）",
+    "bullets": [
+      "① 自动指标：准确率/Recall@K/MRR/延迟/token成本",
+      "② LLM-as-Judge：用强模型评估弱模型输出，适合开放式生成任务",
+      "③ 人工评估：领域专家最终验证，金融/医疗等高风险场景必须",
+      "关键：先定义\"好\"的标准——电商文案的\"好\"和金融报告的\"好\"差别很大",
+      "A/B测试：最终用业务指标（CTR/转化率）验证，不只是技术指标"
+    ]
+  }
+]
