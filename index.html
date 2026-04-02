@@ -75,14 +75,22 @@
   .card-back .num { color: #f0c060; font-weight: 700; font-family: monospace; }
 
   /* ── Action buttons ── */
-  .card-actions { display: flex; gap: 12px; margin-top: 20px; justify-content: center; }
-  .action-btn { border: none; border-radius: 10px; padding: 10px 28px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
-  .btn-known { background: #1d4a2a; color: #5dca7a; border: 1px solid #2a6a3a; }
-  .btn-known:hover { background: #2a6a3a; color: #7aea9a; }
-  .btn-unknown { background: #4a1d1d; color: #ca5d5d; border: 1px solid #6a2a2a; }
-  .btn-unknown:hover { background: #6a2a2a; color: #ea7a7a; }
+  .card-actions { display: flex; gap: 8px; margin-top: 20px; justify-content: center; flex-wrap: wrap; }
+  .action-btn { border: none; border-radius: 10px; padding: 10px 18px; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.15s; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 72px; }
+  .action-btn .interval { font-size: 0.65rem; font-weight: 400; opacity: 0.7; }
+  .btn-again { background: #4a1d1d; color: #ea7a7a; border: 1px solid #6a2a2a; }
+  .btn-again:hover { background: #6a2a2a; color: #ff9a9a; }
+  .btn-hard { background: #3a2a10; color: #e0a040; border: 1px solid #5a4a2a; }
+  .btn-hard:hover { background: #5a4a2a; color: #f0c060; }
+  .btn-good { background: #1d4a2a; color: #5dca7a; border: 1px solid #2a6a3a; }
+  .btn-good:hover { background: #2a6a3a; color: #7aea9a; }
+  .btn-easy { background: #1e2d4a; color: #7eb8f7; border: 1px solid #2a4a7a; }
+  .btn-easy:hover { background: #2a4a7a; color: #aad4ff; }
   .btn-next { background: #1e2d4a; color: #7eb8f7; border: 1px solid #2a4a7a; }
   .btn-next:hover { background: #2a4a7a; color: #aad4ff; }
+  .card-actions.need-flip { display: none; }
+  .rate-hint { font-size: 0.72rem; color: #555; margin-top: 8px; text-align: center; display: none; }
+  .rate-hint.show { display: block; }
 
   /* ── No cards message ── */
   .no-cards { text-align: center; color: #555; padding: 60px 20px; }
@@ -152,9 +160,10 @@
   <h1>AI 技术面试卡片</h1>
   <div class="stats-bar">
     <div class="stat-chip">总计 <span id="total-count">0</span> 张</div>
+    <div class="stat-chip" style="color:#ea7a7a">待复习 <span id="due-count" style="color:#ea7a7a">0</span></div>
+    <div class="stat-chip">学习中 <span id="learning-count">0</span></div>
     <div class="stat-chip">已掌握 <span id="known-count">0</span> 张</div>
-    <div class="stat-chip">不熟 <span id="unknown-count">0</span> 张</div>
-    <div class="stat-chip">未标记 <span id="unmarked-count">0</span> 张</div>
+    <div class="stat-chip">新卡 <span id="new-count">0</span></div>
   </div>
   <div class="overall-progress">
     <span id="overall-pct">0%</span>
@@ -174,27 +183,27 @@
 
 <div class="controls">
   <button class="mode-btn active" id="mode-all" onclick="setMode('all')">全部</button>
-  <button class="mode-btn" id="mode-unknown" onclick="setMode('unknown')">仅不熟</button>
-  <button class="mode-btn" id="mode-unmarked" onclick="setMode('unmarked')">未标记</button>
+  <button class="mode-btn" id="mode-unknown" onclick="setMode('unknown')">待复习</button>
+  <button class="mode-btn" id="mode-unmarked" onclick="setMode('unmarked')">新卡片</button>
   <button class="mode-btn" id="mode-shuffle" onclick="toggleShuffle()">随机</button>
   <span class="sep">|</span>
   <button class="mode-btn" id="diff-1" onclick="toggleDiff(1)">★ 初级</button>
   <button class="mode-btn" id="diff-2" onclick="toggleDiff(2)">★★ 中级</button>
   <button class="mode-btn" id="diff-3" onclick="toggleDiff(3)">★★★ 高级</button>
   <span class="sep">|</span>
-  <button class="mode-btn" id="mode-daily" onclick="startDailyPractice()" style="color:#7eb8f7">每日练习</button>
+  <button class="mode-btn" id="mode-review" onclick="startReviewSession()" style="color:#7eb8f7">开始复习</button>
   <button class="mode-btn" onclick="resetProgress()">重置进度</button>
-  <span class="shortcut-hint"><kbd>空格</kbd> 翻转 &nbsp; <kbd>←</kbd><kbd>→</kbd> 切换 &nbsp; <kbd>1</kbd> 已掌握 &nbsp; <kbd>2</kbd> 不熟</span>
+  <span class="shortcut-hint"><kbd>空格</kbd> 翻转 &nbsp; <kbd>←</kbd><kbd>→</kbd> 切换 &nbsp; <kbd>1</kbd>重来 <kbd>2</kbd>困难 <kbd>3</kbd>良好 <kbd>4</kbd>简单</span>
 </div>
 
 <main>
-  <div class="daily-banner" id="daily-banner">
-    <h3 id="daily-title">每日练习</h3>
-    <p>按难度分配，优先复习不熟的卡片</p>
+  <div class="daily-banner" id="review-banner">
+    <h3 id="review-title">复习模式</h3>
+    <p>FSRS 间隔重复：到期卡片 + 新卡片</p>
     <div class="daily-stats">
-      <div class="ds">初级 <span id="daily-e">0</span></div>
-      <div class="ds">中级 <span id="daily-m">0</span></div>
-      <div class="ds">高级 <span id="daily-h">0</span></div>
+      <div class="ds">到期 <span id="review-due">0</span></div>
+      <div class="ds">新卡 <span id="review-new">0</span></div>
+      <div class="ds">7天预测 <span id="review-forecast">0</span></div>
     </div>
   </div>
   <div class="card-counter"><span id="card-pos">0</span> / <span id="card-total">0</span></div>
@@ -214,11 +223,14 @@
     </div>
   </div>
 
-  <div class="card-actions">
-    <button class="action-btn btn-unknown" onclick="mark('unknown')">不熟 (2)</button>
+  <div class="card-actions" id="card-actions">
+    <button class="action-btn btn-again" onclick="rate(1)">重来<span class="interval" id="iv-1"></span></button>
+    <button class="action-btn btn-hard" onclick="rate(2)">困难<span class="interval" id="iv-2"></span></button>
+    <button class="action-btn btn-good" onclick="rate(3)">良好<span class="interval" id="iv-3"></span></button>
+    <button class="action-btn btn-easy" onclick="rate(4)">简单<span class="interval" id="iv-4"></span></button>
     <button class="action-btn btn-next" onclick="navigate(1)">下一张 →</button>
-    <button class="action-btn btn-known" onclick="mark('known')">掌握 (1)</button>
   </div>
+  <div class="rate-hint" id="rate-hint">翻转卡片后显示评分按钮</div>
 
   <div class="cat-progress" id="cat-progress-panel">
     <div class="cat-progress-title">各分类掌握进度</div>
@@ -246,14 +258,19 @@
 </div>
 
 <script src="data/cards.js"></script>
+<script src="fsrs.js"></script>
 <script>
 
 // ═══════════════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════════════
-const PROGRESS_KEY = 'ai_fc_progress_v2';
+const FSRS_KEY = 'ai_fc_fsrs_states';
+const LOG_KEY  = 'ai_fc_fsrs_log';
+const SCHEMA_KEY = 'ai_fc_schema_v';
 const CUSTOM_KEY = 'ai_fc_custom_cards';
-let progress = {};
+
+let fsrsStates = {};   // {cardId: {state, due, stability, difficulty, ...}}
+let reviewLog = [];    // [{cardId, rating, review_time, ...}]
 let customCards = [];
 let currentCat = 'ALL';
 let mode = 'all';
@@ -262,24 +279,87 @@ let displayList = [];
 let curIdx = 0;
 let isFlipped = false;
 let searchQuery = '';
-let diffFilter = 0; // 0=all, 1/2/3=specific level
-let dailyMode = false;
+let diffFilter = 0;
+let reviewMode = false;
 
 function getAllCards() {
   return [...BUILTIN_CARDS, ...customCards];
 }
 
-function loadProgress() {
-  try { progress = JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{}'); } catch(e) { progress = {}; }
+// ── Persistence ──
+function loadFsrsStates() {
+  try { fsrsStates = JSON.parse(localStorage.getItem(FSRS_KEY) || '{}'); } catch(e) { fsrsStates = {}; }
 }
-function saveProgress() {
-  localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+function saveFsrsStates() {
+  localStorage.setItem(FSRS_KEY, JSON.stringify(fsrsStates));
+}
+function loadReviewLog() {
+  try { reviewLog = JSON.parse(localStorage.getItem(LOG_KEY) || '[]'); } catch(e) { reviewLog = []; }
+}
+function saveReviewLog() {
+  localStorage.setItem(LOG_KEY, JSON.stringify(reviewLog));
 }
 function loadCustomCards() {
   try { customCards = JSON.parse(localStorage.getItem(CUSTOM_KEY) || '[]'); } catch(e) { customCards = []; }
 }
 function saveCustomCards() {
   localStorage.setItem(CUSTOM_KEY, JSON.stringify(customCards));
+}
+
+// ── Migration from v1 (binary known/unknown) to v2 (FSRS) ──
+function migrateIfNeeded() {
+  const version = localStorage.getItem(SCHEMA_KEY);
+  if (version === '2') return;
+
+  const oldProgress = {};
+  try {
+    const raw = localStorage.getItem('ai_fc_progress_v2');
+    if (raw) Object.assign(oldProgress, JSON.parse(raw));
+  } catch(e) {}
+
+  if (Object.keys(oldProgress).length > 0) {
+    const now = new Date();
+    for (const [cardId, status] of Object.entries(oldProgress)) {
+      if (status === 'known') {
+        fsrsStates[cardId] = {
+          state: State.Review, due: now.toISOString(),
+          stability: 21, difficulty: 5, elapsed_days: 0,
+          scheduled_days: 21, reps: 3, lapses: 0,
+          last_review: now.toISOString(),
+        };
+      } else if (status === 'unknown') {
+        fsrsStates[cardId] = {
+          state: State.Relearning, due: now.toISOString(),
+          stability: 0.5, difficulty: 7, elapsed_days: 0,
+          scheduled_days: 0, reps: 1, lapses: 1,
+          last_review: now.toISOString(),
+        };
+      }
+    }
+    saveFsrsStates();
+  }
+  localStorage.setItem(SCHEMA_KEY, '2');
+}
+
+/** Get FSRS state for a card, creating New state if not exists */
+function getCardState(cardId) {
+  if (!fsrsStates[cardId]) {
+    fsrsStates[cardId] = createNewCard();
+  }
+  return fsrsStates[cardId];
+}
+
+/** Helper: is card "mastered" (in Review state with stability > 21 days) */
+function isMastered(cardId) {
+  const st = fsrsStates[cardId];
+  return st && st.state === State.Review && st.stability > 21;
+}
+
+/** Helper: is card due for review */
+function isDue(cardId) {
+  const st = fsrsStates[cardId];
+  if (!st || st.state === State.New) return false;
+  return new Date(st.due) <= new Date();
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -326,9 +406,12 @@ function buildList() {
   let base = getAllCards().filter(c => currentCat === 'ALL' || c.cat === currentCat);
   base = base.filter(matchesSearch);
   if(diffFilter > 0) base = base.filter(c => c.lv === diffFilter);
-  if(mode === 'known') base = base.filter(c => progress[c.id] === 'known');
-  else if(mode === 'unknown') base = base.filter(c => progress[c.id] === 'unknown');
-  else if(mode === 'unmarked') base = base.filter(c => !progress[c.id]);
+  if(mode === 'known') base = base.filter(c => isMastered(c.id));
+  else if(mode === 'unknown') base = base.filter(c => isDue(c.id));
+  else if(mode === 'unmarked') base = base.filter(c => {
+    const st = fsrsStates[c.id];
+    return !st || st.state === State.New;
+  });
   if(shuffled) base = [...base].sort(() => Math.random() - 0.5);
   displayList = base.map(c => c.id);
   curIdx = 0;
@@ -346,20 +429,21 @@ function render() {
 
   if(!card) {
     document.getElementById('card-wrap').style.display = 'none';
-    document.querySelector('.card-actions').style.display = 'none';
+    document.getElementById('card-actions').style.display = 'none';
+    document.getElementById('rate-hint').classList.remove('show');
     document.querySelector('.card-counter').innerHTML = '<span style="color:#666">没有符合条件的卡片</span>';
     updateStats(); updateCatProgress();
     return;
   }
   document.getElementById('card-wrap').style.display = '';
-  document.querySelector('.card-actions').style.display = '';
 
   isFlipped = false;
   document.getElementById('card-inner').classList.remove('flipped');
+  updateRateButtons();
 
-  const isKnown = progress[card.id] === 'known';
+  const mastered = isMastered(card.id);
   const wrap = document.getElementById('card-wrap');
-  if(isKnown) wrap.classList.add('is-known'); else wrap.classList.remove('is-known');
+  if(mastered) wrap.classList.add('is-known'); else wrap.classList.remove('is-known');
 
   const lvLabels = {1:'★ 初级', 2:'★★ 中级', 3:'★★★ 高级'};
   const lvClass = card.lv ? ` <span class="diff-badge diff-${card.lv}">${lvLabels[card.lv]}</span>` : '';
@@ -374,17 +458,53 @@ function render() {
   updateCatProgress();
 }
 
+function updateRateButtons() {
+  const card = currentCard();
+  const actions = document.getElementById('card-actions');
+  const hint = document.getElementById('rate-hint');
+
+  if (!card) { actions.style.display = 'none'; hint.classList.remove('show'); return; }
+
+  if (!isFlipped) {
+    // Hide rating buttons, show hint
+    actions.style.display = 'none';
+    hint.classList.add('show');
+    return;
+  }
+
+  // Show rating buttons with interval previews
+  actions.style.display = '';
+  hint.classList.remove('show');
+  const st = getCardState(card.id);
+  const previews = getIntervalPreview(st, new Date());
+  [1,2,3,4].forEach(r => {
+    const el = document.getElementById('iv-' + r);
+    if (el) el.textContent = previews[r];
+  });
+}
+
 function updateStats() {
   const all = getAllCards();
   const total = all.length;
-  const known = all.filter(c => progress[c.id] === 'known').length;
-  const unknown = all.filter(c => progress[c.id] === 'unknown').length;
-  const unmarked = total - known - unknown;
+  const now = new Date();
+  let dueCount = 0, learningCount = 0, masteredCount = 0, newCount = 0;
+
+  all.forEach(c => {
+    const st = fsrsStates[c.id];
+    if (!st || st.state === State.New) { newCount++; return; }
+    if (st.state === State.Learning || st.state === State.Relearning) { learningCount++; }
+    if (st.state === State.Review && st.stability > 21) { masteredCount++; }
+    if (new Date(st.due) <= now) { dueCount++; }
+  });
+
   document.getElementById('total-count').textContent = total;
-  document.getElementById('known-count').textContent = known;
-  document.getElementById('unknown-count').textContent = unknown;
-  document.getElementById('unmarked-count').textContent = unmarked;
-  const pct = total > 0 ? Math.round(known / total * 100) : 0;
+  document.getElementById('due-count').textContent = dueCount;
+  document.getElementById('learning-count').textContent = learningCount;
+  document.getElementById('known-count').textContent = masteredCount;
+  document.getElementById('new-count').textContent = newCount;
+
+  const reviewed = total - newCount;
+  const pct = total > 0 ? Math.round(reviewed / total * 100) : 0;
   document.getElementById('overall-pct').textContent = pct + '%';
   document.getElementById('overall-fill').style.width = pct + '%';
 }
@@ -395,8 +515,8 @@ function updateCatProgress() {
   const rows = document.getElementById('cat-rows');
   rows.innerHTML = cats.map(cat => {
     const catCards = all.filter(c => c.cat === cat);
-    const known = catCards.filter(c => progress[c.id] === 'known').length;
-    const pct = catCards.length > 0 ? Math.round(known / catCards.length * 100) : 0;
+    const mastered = catCards.filter(c => isMastered(c.id)).length;
+    const pct = catCards.length > 0 ? Math.round(mastered / catCards.length * 100) : 0;
     return `<div class="cat-row">
       <div class="cat-row-name">${cat}</div>
       <div class="cat-row-bar"><div class="cat-row-fill" style="width:${pct}%"></div></div>
@@ -412,6 +532,7 @@ function flipCard() {
   if(!currentCard()) return;
   isFlipped = !isFlipped;
   document.getElementById('card-inner').classList.toggle('flipped', isFlipped);
+  updateRateButtons();
 }
 
 function navigate(dir) {
@@ -420,20 +541,44 @@ function navigate(dir) {
   render();
 }
 
-function mark(state) {
+function rate(rating) {
   const card = currentCard();
-  if(!card) return;
-  progress[card.id] = progress[card.id] === state ? undefined : state;
-  saveProgress();
-  if(mode !== 'all') {
-    const nextIdx = Math.min(curIdx, displayList.length - 2);
-    buildList();
-    curIdx = Math.max(0, Math.min(nextIdx, displayList.length - 1));
+  if(!card || !isFlipped) return;
+
+  const st = getCardState(card.id);
+  const result = schedule(st, rating, new Date());
+  fsrsStates[card.id] = result.card;
+  reviewLog.push({ cardId: card.id, ...result.log });
+
+  saveFsrsStates();
+  saveReviewLog();
+
+  if (reviewMode) {
+    // Remove rated card from review list, advance
+    displayList.splice(curIdx, 1);
+    // If Again/Hard in learning, re-add to end for re-review this session
+    if (result.card.scheduled_days === 0) {
+      displayList.push(card.id);
+    }
+    if (displayList.length === 0) {
+      reviewMode = false;
+      document.getElementById('review-banner').classList.remove('show');
+      document.getElementById('mode-review').classList.remove('active');
+      buildList();
+    }
+    curIdx = Math.min(curIdx, displayList.length - 1);
+    curIdx = Math.max(0, curIdx);
+    render();
+  } else {
+    // Browse mode: just re-render current card
+    render();
   }
-  render();
 }
 
 function setMode(m) {
+  reviewMode = false;
+  document.getElementById('review-banner').classList.remove('show');
+  document.getElementById('mode-review').classList.remove('active');
   mode = m;
   ['mode-all','mode-unknown','mode-unmarked'].forEach(id => {
     document.getElementById(id).classList.remove('active');
@@ -452,9 +597,11 @@ function toggleShuffle() {
 }
 
 function resetProgress() {
-  if(!confirm('确认重置所有进度？')) return;
-  progress = {};
-  saveProgress();
+  if(!confirm('确认重置所有 FSRS 进度和复习记录？')) return;
+  fsrsStates = {};
+  reviewLog = [];
+  saveFsrsStates();
+  saveReviewLog();
   buildList();
   render();
 }
@@ -504,7 +651,9 @@ function saveCard() {
 function exportCards() {
   const data = {
     customCards,
-    progress,
+    fsrsStates,
+    reviewLog,
+    schemaVersion: 2,
     exportDate: new Date().toISOString()
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
@@ -522,16 +671,33 @@ function importCards(event) {
     try {
       const data = JSON.parse(e.target.result);
       if(data.customCards) {
-        // merge: keep existing, add new
         const existingIds = new Set(customCards.map(c => c.id));
         data.customCards.forEach(c => {
           if(!existingIds.has(c.id)) customCards.push(c);
         });
         saveCustomCards();
       }
-      if(data.progress) {
-        Object.assign(progress, data.progress);
-        saveProgress();
+      if(data.fsrsStates) {
+        Object.assign(fsrsStates, data.fsrsStates);
+        saveFsrsStates();
+      }
+      if(data.reviewLog) {
+        reviewLog = reviewLog.concat(data.reviewLog);
+        saveReviewLog();
+      }
+      // Support importing old v1 format
+      if(data.progress && !data.fsrsStates) {
+        for (const [cardId, status] of Object.entries(data.progress)) {
+          if (!fsrsStates[cardId]) {
+            const now = new Date();
+            if (status === 'known') {
+              fsrsStates[cardId] = { state: State.Review, due: now.toISOString(), stability: 21, difficulty: 5, elapsed_days: 0, scheduled_days: 21, reps: 3, lapses: 0, last_review: now.toISOString() };
+            } else if (status === 'unknown') {
+              fsrsStates[cardId] = { state: State.Relearning, due: now.toISOString(), stability: 0.5, difficulty: 7, elapsed_days: 0, scheduled_days: 0, reps: 1, lapses: 1, last_review: now.toISOString() };
+            }
+          }
+        }
+        saveFsrsStates();
       }
       buildNav(); buildList(); render();
       alert('导入成功！');
@@ -545,63 +711,45 @@ function importCards(event) {
 // DIFFICULTY FILTER
 // ═══════════════════════════════════════════════════════════════
 function toggleDiff(lv) {
-  dailyMode = false;
-  document.getElementById('daily-banner').classList.remove('show');
+  reviewMode = false;
+  document.getElementById('review-banner').classList.remove('show');
   if(diffFilter === lv) { diffFilter = 0; } else { diffFilter = lv; }
   [1,2,3].forEach(l => document.getElementById('diff-'+l).classList.toggle('active', diffFilter === l));
-  document.getElementById('mode-daily').classList.remove('active');
+  document.getElementById('mode-review').classList.remove('active');
   buildList(); render();
 }
 
 // ═══════════════════════════════════════════════════════════════
-// DAILY PRACTICE
+// REVIEW SESSION (FSRS-driven)
 // ═══════════════════════════════════════════════════════════════
-function startDailyPractice() {
-  dailyMode = !dailyMode;
-  document.getElementById('mode-daily').classList.toggle('active', dailyMode);
-  document.getElementById('daily-banner').classList.toggle('show', dailyMode);
+function startReviewSession() {
+  reviewMode = !reviewMode;
+  document.getElementById('mode-review').classList.toggle('active', reviewMode);
+  document.getElementById('review-banner').classList.toggle('show', reviewMode);
   diffFilter = 0;
   [1,2,3].forEach(l => document.getElementById('diff-'+l).classList.remove('active'));
 
-  if(!dailyMode) { buildList(); render(); return; }
+  if(!reviewMode) { buildList(); render(); return; }
 
   const all = getAllCards();
-  // Prioritize: unknown > unmarked > known
-  const score = (c) => {
-    if(progress[c.id] === 'unknown') return 0;
-    if(!progress[c.id]) return 1;
-    return 2;
-  };
+  const { due, newCards } = getDueCards(all, fsrsStates, new Date());
 
-  // Pick cards by level: 6 easy + 4 medium + 2 hard = 12 cards
-  const pick = (cards, n) => {
-    const sorted = [...cards].sort((a,b) => score(a) - score(b));
-    return sorted.slice(0, n);
-  };
+  // Build review list: due cards first, then up to 10 new cards
+  const maxNew = 10;
+  const newToStudy = newCards.slice(0, maxNew);
+  let reviewList = [...due, ...newToStudy];
 
-  const lv1 = all.filter(c => c.lv === 1);
-  const lv2 = all.filter(c => c.lv === 2);
-  const lv3 = all.filter(c => c.lv === 3);
-  const noLv = all.filter(c => !c.lv);
-
-  let daily = [
-    ...pick(lv1, 5),
-    ...pick(lv2, 4),
-    ...pick(lv3, 2),
-    ...pick(noLv, 4)
-  ];
-
-  // Shuffle
-  daily = daily.sort(() => Math.random() - 0.5);
-  displayList = daily.map(c => c.id);
+  displayList = reviewList.map(c => c.id);
   curIdx = 0;
 
-  document.getElementById('daily-e').textContent = daily.filter(c => getCard(c.id)?.lv === 1).length;
-  document.getElementById('daily-m').textContent = daily.filter(c => getCard(c.id)?.lv === 2).length;
-  document.getElementById('daily-h').textContent = daily.filter(c => getCard(c.id)?.lv === 3).length;
+  document.getElementById('review-due').textContent = due.length;
+  document.getElementById('review-new').textContent = newToStudy.length;
+
+  const forecast = getReviewForecast(all, fsrsStates, 7);
+  document.getElementById('review-forecast').textContent = forecast.reduce((a,b) => a+b, 0);
 
   const today = new Date().toLocaleDateString('zh-CN');
-  document.getElementById('daily-title').textContent = `每日练习 — ${today}`;
+  document.getElementById('review-title').textContent = `复习模式 — ${today}`;
 
   render();
 }
@@ -619,8 +767,10 @@ document.addEventListener('keydown', e => {
     case ' ': case 'Enter': e.preventDefault(); flipCard(); break;
     case 'ArrowRight': case 'l': navigate(1); break;
     case 'ArrowLeft': case 'h': navigate(-1); break;
-    case '1': mark('known'); break;
-    case '2': mark('unknown'); break;
+    case '1': rate(1); break;
+    case '2': rate(2); break;
+    case '3': rate(3); break;
+    case '4': rate(4); break;
     case 'Escape': document.getElementById('search-input').value = ''; searchQuery = ''; buildList(); render(); break;
   }
 });
@@ -628,8 +778,10 @@ document.addEventListener('keydown', e => {
 // ═══════════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════════
-loadProgress();
+loadFsrsStates();
+loadReviewLog();
 loadCustomCards();
+migrateIfNeeded();
 buildNav();
 buildList();
 render();
