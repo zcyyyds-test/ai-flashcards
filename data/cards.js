@@ -1,5 +1,5 @@
 // Auto-generated from data/*.json — edit the JSON files, then run: bash build-cards.sh
-// Generated: 2026-04-02T18:59:04
+// Generated: 2026-04-02T19:26:09
 const BUILTIN_CARDS = [
   {
     "id": "s01",
@@ -2714,5 +2714,471 @@ const BUILTIN_CARDS = [
     ],
     "lv": 3,
     "group": "工程"
+  },
+  {
+    "id": "gs01",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：你在 feature 分支开发到一半，突然要修一个紧急 bug",
+    "bullets": [
+      "<pre><span class=\"cm\"># 1. 暂存当前未完成的工作</span>\ngit stash push -m <span class=\"str\">\"WIP: feature-login halfway\"</span>\n\n<span class=\"cm\"># 2. 切到主分支，创建 hotfix</span>\ngit switch main\ngit switch -c hotfix/payment-crash\n\n<span class=\"cm\"># 3. 修复 bug，提交并合并</span>\ngit add .\ngit commit -m <span class=\"str\">\"fix: payment null pointer crash\"</span>\ngit switch main\ngit merge --no-ff hotfix/payment-crash\n\n<span class=\"cm\"># 4. 回到 feature 分支，恢复工作</span>\ngit switch feature-login\ngit stash pop</pre>",
+      "stash 是一个<span class=\"highlight\">栈结构</span>，可以存多个：<code>git stash list</code> 查看所有条目",
+      "<code>git stash pop</code> = 恢复并删除 | <code>git stash apply</code> = 恢复但保留（更安全）",
+      "给 stash 加 message（<code>-m</code>）是好习惯，否则多个 stash 分不清哪个是哪个",
+      "替代方案：直接 <code>git commit -m \"WIP\"</code> 然后走了再 <code>git reset --soft HEAD~1</code> 恢复"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "gs02",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：你 commit 了一个包含密码的 .env 文件到 Git 历史",
+    "bullets": [
+      "仅仅 <code>git rm --cached .env</code> + 加 .gitignore <span class=\"highlight\">是不够的</span> — 密码仍然在历史 commit 里！",
+      "<pre><span class=\"cm\"># 方案A：BFG Repo Cleaner（推荐，快）</span>\njava -jar bfg.jar --delete-files .env\ngit reflog expire --expire=now --all\ngit gc --prune=now --aggressive\n\n<span class=\"cm\"># 方案B：git filter-repo（官方推荐替代 filter-branch）</span>\ngit filter-repo --path .env --invert-paths\n\n<span class=\"cm\"># 清理完必须 force push</span>\ngit push --force --all</pre>",
+      "Force push 后<span class=\"highlight\">通知所有团队成员重新 clone</span>，否则他们 push 会把旧历史带回来",
+      "善后：<span class=\"highlight\">立即轮换所有泄露的密码/token</span>，因为 Git 历史可能已被 fork 或缓存",
+      "预防：.gitignore 模板 + <code>pre-commit</code> hook 扫描敏感关键词（detect-secrets / gitleaks）"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "gs03",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：你发现昨天的 commit message 写错了",
+    "bullets": [
+      "<pre><span class=\"cm\"># 情况1：修改最后一条 commit message</span>\ngit commit --amend -m <span class=\"str\">\"fix: correct error handling in payment module\"</span>\n\n<span class=\"cm\"># 情况2：修改更早的 commit（比如倒数第3个）</span>\ngit rebase -i HEAD~3\n<span class=\"cm\"># 在编辑器中把目标 commit 前的 \"pick\" 改成 \"reword\"</span>\n<span class=\"cm\"># 保存退出后 Git 会让你编辑该 commit message</span></pre>",
+      "<span class=\"highlight\">黄金法则：只能改还没 push 的 commit！</span>已 push 的 = 改写共享历史 = 队友灾难",
+      "如果已经 push 了呢？两个选择：①接受错误 message ②force push 并通知团队",
+      "amend 本质是<span class=\"highlight\">替换旧 commit</span>（新 hash），不是\"编辑\" — 旧 commit 仍存在于 reflog 中"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "gs04",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：你的 PR 有 20 个零碎 commit，reviewer 要求整理成 3 个有意义的 commit",
+    "bullets": [
+      "<pre><span class=\"cm\"># 方案A：Interactive rebase（精确控制）</span>\ngit rebase -i HEAD~20\n<span class=\"cm\"># 编辑器中的操作：</span>\n<span class=\"cm\"># pick abc1234 feat: add user model        ← 保留</span>\n<span class=\"cm\"># squash def5678 fix typo in model         ← 合入上一个</span>\n<span class=\"cm\"># squash ghi9012 add validation            ← 合入上一个</span>\n<span class=\"cm\"># pick jkl3456 feat: add user API          ← 第二组开始</span>\n<span class=\"cm\"># fixup mno7890 fix API response format    ← 合入，丢弃message</span>\n<span class=\"cm\"># pick pqr1234 test: add user tests        ← 第三组</span></pre>",
+      "<pre><span class=\"cm\"># 方案B：soft reset 重新提交（更简单粗暴）</span>\ngit reset --soft origin/main\n<span class=\"cm\"># 此时所有改动都在暂存区</span>\ngit commit -m <span class=\"str\">\"feat: add user model with validation\"</span>\ngit commit -m <span class=\"str\">\"feat: add user REST API\"</span>\ngit commit -m <span class=\"str\">\"test: add user module tests\"</span></pre>",
+      "squash vs fixup：<span class=\"highlight\">squash 保留 message 让你编辑，fixup 直接丢弃 message</span>",
+      "整理完后需要 <code>git push --force-with-lease</code>（比 --force 安全，会检查远端是否有新提交）",
+      "好的 commit 粒度：一个 commit = 一个逻辑变更 = 能独立 revert 不破坏其他功能"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "gs05",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：git pull 后发现一堆合并冲突，你想先回到 pull 之前的状态",
+    "bullets": [
+      "<pre><span class=\"cm\"># 情况1：merge 还没完成（正在冲突中）</span>\ngit merge --abort\n<span class=\"cm\"># 一切回到 merge 前的状态，冲突标记消失</span>\n\n<span class=\"cm\"># 情况2：merge 已经完成（手滑 commit 了）</span>\ngit reset --hard ORIG_HEAD\n<span class=\"cm\"># ORIG_HEAD 指向 merge/rebase 前的位置</span>\n\n<span class=\"cm\"># 情况3：不确定要回到哪里</span>\ngit reflog\n<span class=\"cm\"># 找到 pull 之前的 commit hash</span>\ngit reset --hard abc1234</pre>",
+      "⚠️ <code>--hard</code> 会<span class=\"highlight\">丢弃所有未提交的修改</span>，确保没有重要的未提交工作",
+      "更安全的做法：先 <code>git stash</code> 保存未提交修改，再 reset",
+      "<code>git pull --rebase</code> 遇到冲突时用 <code>git rebase --abort</code> 取消",
+      "预防：养成 pull 前先 <code>git stash</code> 或先 commit 的习惯"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "gs06",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：你 commit 了但还没 push，发现少了一个文件",
+    "bullets": [
+      "<pre><span class=\"cm\"># 方案A：amend 追加到上一个 commit（推荐）</span>\ngit add forgotten_file.py\ngit commit --amend --no-edit\n<span class=\"cm\"># --no-edit 保持原来的 commit message 不变</span>\n<span class=\"cm\"># 文件被追加进最后一个 commit</span>\n\n<span class=\"cm\"># 方案B：单独新建一个 commit（更简单）</span>\ngit add forgotten_file.py\ngit commit -m <span class=\"str\">\"chore: add forgotten_file.py\"</span></pre>",
+      "amend 实质是<span class=\"highlight\">创建一个新 commit 替换旧的</span>（hash 变了），而不是\"编辑\"",
+      "方案A 优点：历史干净 | 方案B 优点：更安全，不改写历史",
+      "如果已经 push 了：<span class=\"highlight\">别 amend！直接新建 commit</span>，否则需要 force push"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "gs07",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：两个人同时改了同一个文件的同一行，如何解决冲突",
+    "bullets": [
+      "<pre><span class=\"cm\"># Git 标记冲突的格式</span>\ndef calculate_price(item):\n<<<<<<< HEAD\n    return item.price * 0.9    <span class=\"cm\"># 你的改动：9折</span>\n=======\n    return item.price * 0.85   <span class=\"cm\"># 同事的改动：85折</span>\n>>>>>>> feature-discount</pre>",
+      "<pre><span class=\"cm\"># 解决步骤</span>\n<span class=\"cm\"># 1. 理解双方改动的意图（不要盲目选一个！）</span>\n<span class=\"cm\"># 2. 手动编辑：保留一方 / 合并两者 / 重写</span>\ndef calculate_price(item, vip=False):\n    return item.price * (0.85 if vip else 0.9)\n\n<span class=\"cm\"># 3. 标记解决并提交</span>\ngit add pricing.py\ngit commit  <span class=\"cm\"># Git 自动生成 merge commit message</span></pre>",
+      "工具推荐：<span class=\"highlight\">VS Code 三向合并编辑器</span>（上方显示双方，下方编辑结果）、<code>git mergetool</code>",
+      "预防冲突的团队实践：小粒度提交 + 频繁 pull/rebase + 模块职责划分清晰",
+      "冲突不是错误，是<span class=\"highlight\">正常的协作信号</span> — 解决时要和同事沟通确认意图"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "gs08",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：你想查看某一行代码是谁在什么时候写的",
+    "bullets": [
+      "<pre><span class=\"cm\"># 查看每一行的作者和提交信息</span>\ngit blame file.py\n<span class=\"cm\"># 输出示例：</span>\n<span class=\"cm\"># a1b2c3d4 (张三 2025-12-01) def calculate():</span>\n<span class=\"cm\"># e5f6g7h8 (李四 2026-01-15)     return x * 0.9</span>\n\n<span class=\"cm\"># 只看某几行</span>\ngit blame -L 10,20 file.py\n\n<span class=\"cm\"># 搜索某段代码是什么时候加入/删除的</span>\ngit log -p -S <span class=\"str\">\"calculate_price\"</span>\n\n<span class=\"cm\"># 追踪文件改名历史</span>\ngit log --follow --oneline utils/pricing.py</pre>",
+      "实际用途：<span class=\"highlight\">线上 bug 定位</span>（谁改的？为什么改？当时的 PR 是什么？）",
+      "<code>git log -p -S \"string\"</code> 是\"pickaxe\" 搜索 — 找到<span class=\"highlight\">添加或删除</span>某个字符串的所有 commit",
+      "<code>git blame -w</code> 忽略空白变更，<code>-M</code> 检测行移动，<code>-C</code> 检测跨文件复制",
+      "VS Code / JetBrains 内置 blame 注解 — 鼠标悬停即可查看，无需命令行"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "gs09",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：你误用 git reset --hard 丢了本地改动，如何恢复",
+    "bullets": [
+      "<pre><span class=\"cm\"># 情况1：丢失的改动曾经 commit 过</span>\ngit reflog\n<span class=\"cm\"># 找到 reset 之前的 commit hash</span>\n<span class=\"cm\"># e.g. abc1234 HEAD@{1}: commit: add feature X</span>\ngit reset --hard abc1234\n<span class=\"cm\"># 恢复成功！reflog 保留约 90 天</span>\n\n<span class=\"cm\"># 情况2：改动只 git add 过（未 commit）</span>\ngit fsck --lost-found\n<span class=\"cm\"># 在 .git/lost-found/other/ 中寻找 blob</span>\ngit show &lt;blob-hash&gt;  <span class=\"cm\"># 查看内容</span></pre>",
+      "情况3：改动<span class=\"highlight\">从未 add 也从未 commit → 无法恢复！Git 从未记录过它</span>",
+      "<code>git reflog</code> 是你的<span class=\"highlight\">后悔药</span>：记录 HEAD 的每一次移动（commit/reset/checkout/rebase）",
+      "教训：<span class=\"highlight\">commit early, commit often</span> — 哪怕是 WIP commit，有 commit 就有恢复的可能",
+      "团队规范：用 <code>git reset --soft</code> 代替 <code>--hard</code>，除非你100%确定要丢弃改动"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "gs10",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：你要把别的分支上的某一个 commit 拿过来，但不要整个分支",
+    "bullets": [
+      "<pre><span class=\"cm\"># 找到目标 commit 的 hash</span>\ngit log --oneline main\n<span class=\"cm\"># abc1234 fix: payment timeout handling</span>\n\n<span class=\"cm\"># cherry-pick 到当前分支</span>\ngit cherry-pick abc1234\n\n<span class=\"cm\"># 如果有冲突</span>\n<span class=\"cm\"># 解决冲突 → git add → git cherry-pick --continue</span>\n<span class=\"cm\"># 或放弃：git cherry-pick --abort</span>\n\n<span class=\"cm\"># cherry-pick 多个 commit</span>\ngit cherry-pick abc1234 def5678\n<span class=\"cm\"># 或连续范围（不含起点）</span>\ngit cherry-pick abc1234..ghi9012</pre>",
+      "典型场景：hotfix 已合入 main，release 分支也需要同一个修复",
+      "⚠️ cherry-pick <span class=\"highlight\">创建全新的 commit（不同 hash）</span>，不是引用 — 两个分支上是独立的副本",
+      "如果后续两个分支 merge，Git 通常能自动处理重复改动，但偶尔会冲突",
+      "替代方案：如果需要拿整个分支的部分改动，考虑 <code>git rebase --onto</code>"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "gs11",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：线上出 bug 了，你需要找出是哪个 commit 引入的",
+    "bullets": [
+      "<pre><span class=\"cm\"># 1. 启动二分查找</span>\ngit bisect start\ngit bisect bad               <span class=\"cm\"># 当前版本有 bug</span>\ngit bisect good v2.0.0       <span class=\"cm\"># 这个版本是好的</span>\n\n<span class=\"cm\"># 2. Git 自动 checkout 中间的 commit</span>\n<span class=\"cm\">#    你测试 → 告诉 Git 结果</span>\ngit bisect good              <span class=\"cm\"># 这个没 bug</span>\ngit bisect bad               <span class=\"cm\"># 这个有 bug</span>\n<span class=\"cm\"># ... 重复几次</span>\n\n<span class=\"cm\"># 3. Git 定位到罪魁祸首 commit</span>\n<span class=\"cm\"># abc1234 is the first bad commit</span>\n\ngit bisect reset             <span class=\"cm\"># 退出 bisect，回到原分支</span></pre>",
+      "<pre><span class=\"cm\"># 自动化：让脚本代替人工测试</span>\ngit bisect start HEAD v2.0.0\ngit bisect run python test_payment.py\n<span class=\"cm\"># Git 自动跑测试，自动标记 good/bad</span>\n<span class=\"cm\"># 退出码 0 = good, 非0 = bad</span></pre>",
+      "效率：1000 个 commit 只需测试 ~<span class=\"highlight\">10 次</span>（O(log n) 二分搜索 vs 线性 O(n)）",
+      "找到 commit 后：<code>git show abc1234</code> 看改了什么 → <code>git revert abc1234</code> 快速回滚",
+      "适用于：能明确判断\"有 bug / 没 bug\"的场景 — 最好有自动化测试脚本配合"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "gs12",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：团队用 GitFlow，你的 feature 分支落后 develop 50 个 commit，如何同步",
+    "bullets": [
+      "<pre><span class=\"cm\"># 方案A：Merge（安全，保留完整历史）</span>\ngit switch feature-login\ngit merge develop\n<span class=\"cm\"># 产生一个 merge commit</span>\n<span class=\"cm\"># 历史中能看到\"何时同步了 develop\"</span>\ngit push origin feature-login\n\n<span class=\"cm\"># 方案B：Rebase（历史更干净）</span>\ngit switch feature-login\ngit rebase develop\n<span class=\"cm\"># 你的 commit 被\"搬\"到 develop 最新位置之后</span>\n<span class=\"cm\"># 必须 force push（因为历史被改写了）</span>\ngit push --force-with-lease origin feature-login</pre>",
+      "经验法则：<span class=\"highlight\">共享分支 → merge | 个人分支 → rebase</span>",
+      "<code>--force-with-lease</code> 比 <code>--force</code> 安全：如果远端有别人新 push 的提交会拒绝，防止覆盖他人工作",
+      "Rebase 冲突处理：每个 commit 可能单独冲突 → <code>解决 → git add → git rebase --continue</code>，太多冲突可以 <code>git rebase --abort</code> 放弃",
+      "团队应统一策略：在 PR 描述 / CONTRIBUTING.md 中写清楚用 merge 还是 rebase"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "ce01",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC1 两数之和 (Two Sum)",
+    "bullets": [
+      "给定整数数组和目标值target，找出数组中和为target的<span class=\"highlight\">两个数的下标</span>",
+      "示例：nums=[2,7,11,15], target=9 → 返回[0,1]（因为2+7=9）",
+      "核心思路：用<span class=\"highlight\">哈希表</span>存储已遍历的值→下标映射，一次遍历中查找 target-num 是否已存在",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">twoSum</span>(nums, target):\n    seen = {}  <span class=\"cm\"># val -> index</span>\n    <span class=\"kw\">for</span> i, num <span class=\"kw\">in</span> enumerate(nums):\n        complement = target - num\n        <span class=\"kw\">if</span> complement <span class=\"kw\">in</span> seen:\n            <span class=\"kw\">return</span> [seen[complement], i]\n        seen[num] = i\n    <span class=\"kw\">return</span> []</pre>",
+      "时间O(n)，空间O(n)。暴力解O(n²)会超时",
+      "易错点：不能用同一个元素两次；返回的是下标不是值"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce02",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC21 合并两个有序链表 (Merge Two Sorted Lists)",
+    "bullets": [
+      "将两个升序链表合并为一个新的<span class=\"highlight\">升序链表</span>并返回",
+      "示例：l1=[1,2,4], l2=[1,3,4] → [1,1,2,3,4,4]",
+      "核心思路：创建<span class=\"highlight\">dummy head</span>，逐个比较两个链表头节点，较小的接上去",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">mergeTwoLists</span>(l1, l2):\n    dummy = ListNode(0)\n    curr = dummy\n    <span class=\"kw\">while</span> l1 <span class=\"kw\">and</span> l2:\n        <span class=\"kw\">if</span> l1.val <= l2.val:\n            curr.next = l1\n            l1 = l1.next\n        <span class=\"kw\">else</span>:\n            curr.next = l2\n            l2 = l2.next\n        curr = curr.next\n    curr.next = l1 <span class=\"kw\">if</span> l1 <span class=\"kw\">else</span> l2  <span class=\"cm\"># 接上剩余部分</span>\n    <span class=\"kw\">return</span> dummy.next</pre>",
+      "时间O(m+n)，空间O(1)。dummy head技巧避免处理头节点为空的边界",
+      "变体：LC23 合并K个有序链表（用堆/分治）"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce03",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC70 爬楼梯 (Climbing Stairs)",
+    "bullets": [
+      "每次爬 <span class=\"num\">1</span> 或 <span class=\"num\">2</span> 个台阶，问到第n阶有多少种不同方法",
+      "示例：n=3 → 3种（1+1+1, 1+2, 2+1）",
+      "核心思路：<span class=\"highlight\">动态规划</span>，状态转移 dp[i]=dp[i-1]+dp[i-2]，本质就是斐波那契数列",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">climbStairs</span>(n):\n    <span class=\"kw\">if</span> n <= 2:\n        <span class=\"kw\">return</span> n\n    a, b = 1, 2  <span class=\"cm\"># dp[1]=1, dp[2]=2</span>\n    <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(3, n + 1):\n        a, b = b, a + b\n    <span class=\"kw\">return</span> b</pre>",
+      "时间O(n)，空间O(1)。滚动变量优化掉数组",
+      "DP入门经典题，面试常用来考察DP思维。变体：每次可爬1~k步"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce04",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC121 买卖股票的最佳时机 (Best Time to Buy and Sell Stock)",
+    "bullets": [
+      "给定股价数组，只能买卖<span class=\"highlight\">一次</span>，求最大利润（不能先卖后买）",
+      "示例：prices=[7,1,5,3,6,4] → 5（第2天买入价1，第5天卖出价6）",
+      "核心思路：一次遍历，维护<span class=\"highlight\">历史最低价min_price</span>，每天计算当前价-最低价更新最大利润",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">maxProfit</span>(prices):\n    min_price = float(<span class=\"str\">'inf'</span>)\n    max_profit = 0\n    <span class=\"kw\">for</span> price <span class=\"kw\">in</span> prices:\n        min_price = min(min_price, price)\n        max_profit = max(max_profit, price - min_price)\n    <span class=\"kw\">return</span> max_profit</pre>",
+      "时间O(n)，空间O(1)。贪心思想：在最低点买，在之后的最高点卖",
+      "变体：LC122 可多次买卖；LC123 最多两次买卖（DP状态机）"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce05",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC141 环形链表 (Linked List Cycle)",
+    "bullets": [
+      "判断链表中是否存在<span class=\"highlight\">环</span>",
+      "示例：head=[3,2,0,-4], pos=1 → true（尾部连接到第2个节点）",
+      "核心思路：<span class=\"highlight\">快慢指针</span>，快指针每次走2步，慢指针走1步，若有环必相遇",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">hasCycle</span>(head):\n    slow = fast = head\n    <span class=\"kw\">while</span> fast <span class=\"kw\">and</span> fast.next:\n        slow = slow.next\n        fast = fast.next.next\n        <span class=\"kw\">if</span> slow == fast:\n            <span class=\"kw\">return</span> <span class=\"kw\">True</span>\n    <span class=\"kw\">return</span> <span class=\"kw\">False</span></pre>",
+      "时间O(n)，空间O(1)。用set存访问过的节点也行但空间O(n)",
+      "变体：LC142 环形链表II — 找入环节点（相遇后再走一个指针从head出发，再次相遇点即入口）"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce06",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC206 反转链表 (Reverse Linked List)",
+    "bullets": [
+      "将单链表<span class=\"highlight\">就地反转</span>并返回新的头节点",
+      "示例：[1,2,3,4,5] → [5,4,3,2,1]",
+      "核心思路：<span class=\"highlight\">三指针迭代</span>——prev、curr、nxt，每次把curr.next指向prev，三个指针同步前移",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">reverseList</span>(head):\n    prev = <span class=\"kw\">None</span>\n    curr = head\n    <span class=\"kw\">while</span> curr:\n        nxt = curr.next   <span class=\"cm\"># 先保存下一个</span>\n        curr.next = prev  <span class=\"cm\"># 反转指针</span>\n        prev = curr       <span class=\"cm\"># prev前移</span>\n        curr = nxt        <span class=\"cm\"># curr前移</span>\n    <span class=\"kw\">return</span> prev</pre>",
+      "时间O(n)，空间O(1)。递归写法也行但空间O(n)",
+      "面试最高频链表题之一。变体：LC92 反转部分链表、LC25 K个一组反转"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce07",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC226 翻转二叉树 (Invert Binary Tree)",
+    "bullets": [
+      "将二叉树的每个节点的左右子树<span class=\"highlight\">交换</span>（镜像翻转）",
+      "示例：[4,2,7,1,3,6,9] → [4,7,2,9,6,3,1]",
+      "核心思路：<span class=\"highlight\">递归</span>——先翻转左右子树，再交换左右子节点",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">invertTree</span>(root):\n    <span class=\"kw\">if not</span> root:\n        <span class=\"kw\">return</span> <span class=\"kw\">None</span>\n    root.left, root.right = invertTree(root.right), invertTree(root.left)\n    <span class=\"kw\">return</span> root</pre>",
+      "时间O(n)，空间O(h)，h为树高。最简洁的递归三行代码",
+      "也可用BFS/DFS迭代实现。面试经典题，Homebrew作者因此题被Google拒"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce08",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC543 二叉树的直径 (Diameter of Binary Tree)",
+    "bullets": [
+      "求二叉树中任意两节点之间的<span class=\"highlight\">最长路径长度</span>（边数），路径不一定经过根",
+      "示例：[1,2,3,4,5] → 3（路径为4→2→1→3或5→2→1→3）",
+      "核心思路：<span class=\"highlight\">DFS后序遍历</span>，每个节点处 直径=左深度+右深度，用全局变量记录最大值",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">diameterOfBinaryTree</span>(root):\n    ans = 0\n    <span class=\"kw\">def</span> <span class=\"fn\">depth</span>(node):\n        <span class=\"kw\">nonlocal</span> ans\n        <span class=\"kw\">if not</span> node:\n            <span class=\"kw\">return</span> 0\n        L = depth(node.left)\n        R = depth(node.right)\n        ans = max(ans, L + R)  <span class=\"cm\"># 更新直径</span>\n        <span class=\"kw\">return</span> max(L, R) + 1     <span class=\"cm\"># 返回深度</span>\n    depth(root)\n    <span class=\"kw\">return</span> ans</pre>",
+      "时间O(n)，空间O(h)。关键区分：函数返回的是<span class=\"highlight\">深度</span>，但更新的是<span class=\"highlight\">直径</span>",
+      "易错点：直径是边数不是节点数；最长路径不一定过根节点"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "cm01",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC3 无重复字符的最长子串 (Longest Substring Without Repeating Characters)",
+    "bullets": [
+      "给定字符串，找出不含重复字符的<span class=\"highlight\">最长子串</span>的长度",
+      "示例：s=\"abcabcbb\" → 3（子串\"abc\"）",
+      "核心思路：<span class=\"highlight\">滑动窗口</span>+哈希集合。右指针扩展窗口，遇到重复字符时左指针收缩直到无重复",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">lengthOfLongestSubstring</span>(s):\n    char_set = set()\n    left = ans = 0\n    <span class=\"kw\">for</span> right <span class=\"kw\">in</span> range(len(s)):\n        <span class=\"kw\">while</span> s[right] <span class=\"kw\">in</span> char_set:\n            char_set.remove(s[left])\n            left += 1\n        char_set.add(s[right])\n        ans = max(ans, right - left + 1)\n    <span class=\"kw\">return</span> ans</pre>",
+      "时间O(n)，空间O(min(n,m))，m为字符集大小",
+      "优化：用dict记录字符最后出现的位置，left可直接跳转而非逐个移动"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm02",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC15 三数之和 (3Sum)",
+    "bullets": [
+      "从数组中找出所有和为 <span class=\"num\">0</span> 的<span class=\"highlight\">不重复三元组</span>",
+      "示例：nums=[-1,0,1,2,-1,-4] → [[-1,-1,2],[-1,0,1]]",
+      "核心思路：先<span class=\"highlight\">排序</span>，固定一个数，对剩余部分用<span class=\"highlight\">双指针</span>找两数之和。跳过重复值去重",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">threeSum</span>(nums):\n    nums.sort()\n    res = []\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(nums) - 2):\n        <span class=\"kw\">if</span> i > 0 <span class=\"kw\">and</span> nums[i] == nums[i-1]:  <span class=\"cm\"># 跳过重复</span>\n            <span class=\"kw\">continue</span>\n        l, r = i + 1, len(nums) - 1\n        <span class=\"kw\">while</span> l < r:\n            s = nums[i] + nums[l] + nums[r]\n            <span class=\"kw\">if</span> s < 0:\n                l += 1\n            <span class=\"kw\">elif</span> s > 0:\n                r -= 1\n            <span class=\"kw\">else</span>:\n                res.append([nums[i], nums[l], nums[r]])\n                <span class=\"kw\">while</span> l < r <span class=\"kw\">and</span> nums[l] == nums[l+1]: l += 1\n                <span class=\"kw\">while</span> l < r <span class=\"kw\">and</span> nums[r] == nums[r-1]: r -= 1\n                l += 1; r -= 1\n    <span class=\"kw\">return</span> res</pre>",
+      "时间O(n²)，空间O(1)（不计输出）。排序O(n log n)被O(n²)覆盖",
+      "易错点：去重逻辑必须在找到解之后和外层循环开头两处都做"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm03",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC46 全排列 (Permutations)",
+    "bullets": [
+      "给定不重复整数数组，返回所有可能的<span class=\"highlight\">全排列</span>",
+      "示例：nums=[1,2,3] → [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]",
+      "核心思路：<span class=\"highlight\">回溯法</span>。每次从剩余元素中选一个加入路径，递归到底则收集结果",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">permute</span>(nums):\n    res = []\n    <span class=\"kw\">def</span> <span class=\"fn\">backtrack</span>(path, used):\n        <span class=\"kw\">if</span> len(path) == len(nums):\n            res.append(path[:])\n            <span class=\"kw\">return</span>\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(nums)):\n            <span class=\"kw\">if</span> used[i]:\n                <span class=\"kw\">continue</span>\n            used[i] = <span class=\"kw\">True</span>\n            path.append(nums[i])\n            backtrack(path, used)\n            path.pop()       <span class=\"cm\"># 撤销选择</span>\n            used[i] = <span class=\"kw\">False</span>  <span class=\"cm\"># 恢复状态</span>\n    backtrack([], [<span class=\"kw\">False</span>] * len(nums))\n    <span class=\"kw\">return</span> res</pre>",
+      "时间O(n·n!)，空间O(n)。回溯三要素：选择列表、路径、结束条件",
+      "变体：LC47 有重复数字的全排列（排序+剪枝）"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm04",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC49 字母异位词分组 (Group Anagrams)",
+    "bullets": [
+      "将字母异位词（字母相同但顺序不同）<span class=\"highlight\">分组</span>",
+      "示例：[\"eat\",\"tea\",\"tan\",\"ate\",\"nat\",\"bat\"] → [[\"eat\",\"tea\",\"ate\"],[\"tan\",\"nat\"],[\"bat\"]]",
+      "核心思路：异位词排序后相同，用<span class=\"highlight\">排序后的字符串做key</span>，哈希表归类",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\n\n<span class=\"kw\">def</span> <span class=\"fn\">groupAnagrams</span>(strs):\n    groups = defaultdict(list)\n    <span class=\"kw\">for</span> s <span class=\"kw\">in</span> strs:\n        key = tuple(sorted(s))  <span class=\"cm\"># 排序作为key</span>\n        groups[key].append(s)\n    <span class=\"kw\">return</span> list(groups.values())</pre>",
+      "时间O(n·k·log k)，n为字符串数，k为最长字符串长度。空间O(nk)",
+      "优化：用26位字母计数元组做key可降到O(nk)，但实测排序法更快（k通常很小）"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm05",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC53 最大子数组和 (Maximum Subarray)",
+    "bullets": [
+      "找出整数数组中和最大的<span class=\"highlight\">连续子数组</span>并返回其和",
+      "示例：nums=[-2,1,-3,4,-1,2,1,-5,4] → 6（子数组[4,-1,2,1]）",
+      "核心思路：<span class=\"highlight\">Kadane算法</span>——维护以当前元素结尾的最大子数组和，若前面的和为负则丢弃",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">maxSubArray</span>(nums):\n    curr_sum = max_sum = nums[0]\n    <span class=\"kw\">for</span> num <span class=\"kw\">in</span> nums[1:]:\n        curr_sum = max(num, curr_sum + num)  <span class=\"cm\"># 要么接上，要么重新开始</span>\n        max_sum = max(max_sum, curr_sum)\n    <span class=\"kw\">return</span> max_sum</pre>",
+      "时间O(n)，空间O(1)。DP视角：dp[i]=max(nums[i], dp[i-1]+nums[i])",
+      "变体：要求返回子数组本身（记录start/end索引）；分治法O(n log n)"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm06",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC56 合并区间 (Merge Intervals)",
+    "bullets": [
+      "给定若干区间集合，合并所有<span class=\"highlight\">重叠的区间</span>",
+      "示例：intervals=[[1,3],[2,6],[8,10],[15,18]] → [[1,6],[8,10],[15,18]]",
+      "核心思路：按<span class=\"highlight\">起点排序</span>，遍历时比较当前区间起点与上一个区间终点，重叠则合并（取更大的终点）",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">merge</span>(intervals):\n    intervals.sort(key=<span class=\"kw\">lambda</span> x: x[0])\n    merged = [intervals[0]]\n    <span class=\"kw\">for</span> start, end <span class=\"kw\">in</span> intervals[1:]:\n        <span class=\"kw\">if</span> start <= merged[-1][1]:  <span class=\"cm\"># 有重叠</span>\n            merged[-1][1] = max(merged[-1][1], end)\n        <span class=\"kw\">else</span>:\n            merged.append([start, end])\n    <span class=\"kw\">return</span> merged</pre>",
+      "时间O(n log n)排序主导，空间O(n)。注意边界：start <= end（等号意味着相邻也合并）",
+      "变体：LC57 插入区间、LC986 区间列表交集"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm07",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC102 二叉树的层序遍历 (Binary Tree Level Order Traversal)",
+    "bullets": [
+      "返回二叉树的<span class=\"highlight\">层序遍历</span>结果（逐层从左到右）",
+      "示例：root=[3,9,20,null,null,15,7] → [[3],[9,20],[15,7]]",
+      "核心思路：<span class=\"highlight\">BFS</span>用队列，每层处理前记录队列大小，循环该大小次数即为一层",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> deque\n\n<span class=\"kw\">def</span> <span class=\"fn\">levelOrder</span>(root):\n    <span class=\"kw\">if not</span> root:\n        <span class=\"kw\">return</span> []\n    res, queue = [], deque([root])\n    <span class=\"kw\">while</span> queue:\n        level = []\n        <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(len(queue)):  <span class=\"cm\"># 当前层的节点数</span>\n            node = queue.popleft()\n            level.append(node.val)\n            <span class=\"kw\">if</span> node.left:  queue.append(node.left)\n            <span class=\"kw\">if</span> node.right: queue.append(node.right)\n        res.append(level)\n    <span class=\"kw\">return</span> res</pre>",
+      "时间O(n)，空间O(n)。BFS模板题，deque比list.pop(0)快（O(1) vs O(n)）",
+      "变体：LC107 自底向上层序、LC103 锯齿形层序、LC199 右视图"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm08",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC146 LRU缓存 (LRU Cache)",
+    "bullets": [
+      "设计一个满足<span class=\"highlight\">LRU(最近最少使用)</span>缓存约束的数据结构，get和put均O(1)",
+      "示例：LRUCache(2) → put(1,1) → put(2,2) → get(1)=1 → put(3,3) → get(2)=-1（被淘汰）",
+      "核心思路：<span class=\"highlight\">哈希表+双向链表</span>。哈希表O(1)查找，双向链表O(1)增删和调整顺序",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> OrderedDict\n\n<span class=\"kw\">class</span> <span class=\"fn\">LRUCache</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, capacity):\n        self.cache = OrderedDict()\n        self.cap = capacity\n\n    <span class=\"kw\">def</span> <span class=\"fn\">get</span>(self, key):\n        <span class=\"kw\">if</span> key <span class=\"kw\">not in</span> self.cache:\n            <span class=\"kw\">return</span> -1\n        self.cache.move_to_end(key)  <span class=\"cm\"># 标记为最近使用</span>\n        <span class=\"kw\">return</span> self.cache[key]\n\n    <span class=\"kw\">def</span> <span class=\"fn\">put</span>(self, key, value):\n        <span class=\"kw\">if</span> key <span class=\"kw\">in</span> self.cache:\n            self.cache.move_to_end(key)\n        self.cache[key] = value\n        <span class=\"kw\">if</span> len(self.cache) > self.cap:\n            self.cache.popitem(last=<span class=\"kw\">False</span>)  <span class=\"cm\"># 淘汰最久未用</span></pre>",
+      "时间O(1)，空间O(capacity)。Python用OrderedDict最简洁，面试可能要求手写双向链表",
+      "字节跳动高频题。面试官可能追问：如何手写双向链表实现？线程安全版本？"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm09",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC200 岛屿数量 (Number of Islands)",
+    "bullets": [
+      "给定 '1'(陆地) 和 '0'(水) 组成的二维网格，计算<span class=\"highlight\">岛屿数量</span>",
+      "示例：grid=[[\"1\",\"1\",\"0\"],[\"0\",\"1\",\"0\"],[\"0\",\"0\",\"1\"]] → 2",
+      "核心思路：遍历网格，遇到'1'就<span class=\"highlight\">DFS/BFS淹没</span>整个连通区域（标记为'0'），岛屿计数+1",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">numIslands</span>(grid):\n    <span class=\"kw\">if not</span> grid:\n        <span class=\"kw\">return</span> 0\n    rows, cols = len(grid), len(grid[0])\n    count = 0\n\n    <span class=\"kw\">def</span> <span class=\"fn\">dfs</span>(r, c):\n        <span class=\"kw\">if</span> r < 0 <span class=\"kw\">or</span> r >= rows <span class=\"kw\">or</span> c < 0 <span class=\"kw\">or</span> c >= cols <span class=\"kw\">or</span> grid[r][c] != <span class=\"str\">'1'</span>:\n            <span class=\"kw\">return</span>\n        grid[r][c] = <span class=\"str\">'0'</span>  <span class=\"cm\"># 淹没</span>\n        dfs(r+1, c); dfs(r-1, c)\n        dfs(r, c+1); dfs(r, c-1)\n\n    <span class=\"kw\">for</span> r <span class=\"kw\">in</span> range(rows):\n        <span class=\"kw\">for</span> c <span class=\"kw\">in</span> range(cols):\n            <span class=\"kw\">if</span> grid[r][c] == <span class=\"str\">'1'</span>:\n                dfs(r, c)\n                count += 1\n    <span class=\"kw\">return</span> count</pre>",
+      "时间O(m×n)，空间O(m×n)最坏递归栈深度。也可用BFS或并查集",
+      "变体：LC695 岛屿最大面积、LC463 岛屿周长、LC827 最大人工岛"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm10",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC236 二叉树的最近公共祖先 (Lowest Common Ancestor of a Binary Tree)",
+    "bullets": [
+      "给定二叉树和两个节点p、q，找到它们的<span class=\"highlight\">最近公共祖先(LCA)</span>",
+      "示例：root=[3,5,1,6,2,0,8,null,null,7,4], p=5, q=1 → LCA=3",
+      "核心思路：<span class=\"highlight\">后序递归</span>——左右子树分别查找p和q，若分居两侧则当前节点就是LCA",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">lowestCommonAncestor</span>(root, p, q):\n    <span class=\"kw\">if not</span> root <span class=\"kw\">or</span> root == p <span class=\"kw\">or</span> root == q:\n        <span class=\"kw\">return</span> root\n    left = lowestCommonAncestor(root.left, p, q)\n    right = lowestCommonAncestor(root.right, p, q)\n    <span class=\"kw\">if</span> left <span class=\"kw\">and</span> right:  <span class=\"cm\"># p和q分居两侧</span>\n        <span class=\"kw\">return</span> root\n    <span class=\"kw\">return</span> left <span class=\"kw\">if</span> left <span class=\"kw\">else</span> right</pre>",
+      "时间O(n)，空间O(h)。递归含义：在以root为根的子树中查找p或q，找到就返回",
+      "易错点：LCA可以是p或q本身。变体：LC235 BST的LCA（利用BST性质更简单）"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm11",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC322 零钱兑换 (Coin Change)",
+    "bullets": [
+      "给定不同面额硬币和总金额amount，求凑出总金额所需的<span class=\"highlight\">最少硬币数</span>，凑不出返回-1",
+      "示例：coins=[1,2,5], amount=11 → 3（5+5+1）",
+      "核心思路：<span class=\"highlight\">完全背包DP</span>。dp[i]=凑出金额i的最少硬币数，dp[i]=min(dp[i-c]+1) for c in coins",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">coinChange</span>(coins, amount):\n    dp = [float(<span class=\"str\">'inf'</span>)] * (amount + 1)\n    dp[0] = 0  <span class=\"cm\"># base case: 凑0元需要0枚</span>\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(1, amount + 1):\n        <span class=\"kw\">for</span> c <span class=\"kw\">in</span> coins:\n            <span class=\"kw\">if</span> c <= i:\n                dp[i] = min(dp[i], dp[i - c] + 1)\n    <span class=\"kw\">return</span> dp[amount] <span class=\"kw\">if</span> dp[amount] != float(<span class=\"str\">'inf'</span>) <span class=\"kw\">else</span> -1</pre>",
+      "时间O(amount × n)，空间O(amount)，n为硬币种类数",
+      "贪心不可行（如coins=[1,3,4], amount=6，贪心4+1+1=3枚，DP 3+3=2枚）。变体：LC518 零钱兑换II（求方案数）"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm12",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC560 和为K的子数组 (Subarray Sum Equals K)",
+    "bullets": [
+      "给定整数数组和整数k，统计和为k的<span class=\"highlight\">连续子数组</span>个数",
+      "示例：nums=[1,1,1], k=2 → 2（[1,1]出现两次）",
+      "核心思路：<span class=\"highlight\">前缀和+哈希表</span>。prefix[j]-prefix[i]=k ↔ prefix[i]=prefix[j]-k，用哈希表记录每个前缀和出现的次数",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\n\n<span class=\"kw\">def</span> <span class=\"fn\">subarraySum</span>(nums, k):\n    count = 0\n    prefix_sum = 0\n    seen = defaultdict(int)\n    seen[0] = 1  <span class=\"cm\"># 前缀和为0出现1次（空前缀）</span>\n    <span class=\"kw\">for</span> num <span class=\"kw\">in</span> nums:\n        prefix_sum += num\n        count += seen[prefix_sum - k]  <span class=\"cm\"># 有多少个前缀和等于当前-k</span>\n        seen[prefix_sum] += 1\n    <span class=\"kw\">return</span> count</pre>",
+      "时间O(n)，空间O(n)。注意：数组含负数所以<span class=\"highlight\">不能用滑动窗口</span>",
+      "易错点：seen[0]=1不能忘（处理从头开始的子数组）；暴力O(n²)会超时"
+    ],
+    "lv": 2
   }
 ];

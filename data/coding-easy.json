@@ -1,0 +1,122 @@
+[
+  {
+    "id": "ce01",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC1 两数之和 (Two Sum)",
+    "bullets": [
+      "给定整数数组和目标值target，找出数组中和为target的<span class=\"highlight\">两个数的下标</span>",
+      "示例：nums=[2,7,11,15], target=9 → 返回[0,1]（因为2+7=9）",
+      "核心思路：用<span class=\"highlight\">哈希表</span>存储已遍历的值→下标映射，一次遍历中查找 target-num 是否已存在",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">twoSum</span>(nums, target):\n    seen = {}  <span class=\"cm\"># val -> index</span>\n    <span class=\"kw\">for</span> i, num <span class=\"kw\">in</span> enumerate(nums):\n        complement = target - num\n        <span class=\"kw\">if</span> complement <span class=\"kw\">in</span> seen:\n            <span class=\"kw\">return</span> [seen[complement], i]\n        seen[num] = i\n    <span class=\"kw\">return</span> []</pre>",
+      "时间O(n)，空间O(n)。暴力解O(n²)会超时",
+      "易错点：不能用同一个元素两次；返回的是下标不是值"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce02",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC21 合并两个有序链表 (Merge Two Sorted Lists)",
+    "bullets": [
+      "将两个升序链表合并为一个新的<span class=\"highlight\">升序链表</span>并返回",
+      "示例：l1=[1,2,4], l2=[1,3,4] → [1,1,2,3,4,4]",
+      "核心思路：创建<span class=\"highlight\">dummy head</span>，逐个比较两个链表头节点，较小的接上去",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">mergeTwoLists</span>(l1, l2):\n    dummy = ListNode(0)\n    curr = dummy\n    <span class=\"kw\">while</span> l1 <span class=\"kw\">and</span> l2:\n        <span class=\"kw\">if</span> l1.val <= l2.val:\n            curr.next = l1\n            l1 = l1.next\n        <span class=\"kw\">else</span>:\n            curr.next = l2\n            l2 = l2.next\n        curr = curr.next\n    curr.next = l1 <span class=\"kw\">if</span> l1 <span class=\"kw\">else</span> l2  <span class=\"cm\"># 接上剩余部分</span>\n    <span class=\"kw\">return</span> dummy.next</pre>",
+      "时间O(m+n)，空间O(1)。dummy head技巧避免处理头节点为空的边界",
+      "变体：LC23 合并K个有序链表（用堆/分治）"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce03",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC70 爬楼梯 (Climbing Stairs)",
+    "bullets": [
+      "每次爬 <span class=\"num\">1</span> 或 <span class=\"num\">2</span> 个台阶，问到第n阶有多少种不同方法",
+      "示例：n=3 → 3种（1+1+1, 1+2, 2+1）",
+      "核心思路：<span class=\"highlight\">动态规划</span>，状态转移 dp[i]=dp[i-1]+dp[i-2]，本质就是斐波那契数列",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">climbStairs</span>(n):\n    <span class=\"kw\">if</span> n <= 2:\n        <span class=\"kw\">return</span> n\n    a, b = 1, 2  <span class=\"cm\"># dp[1]=1, dp[2]=2</span>\n    <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(3, n + 1):\n        a, b = b, a + b\n    <span class=\"kw\">return</span> b</pre>",
+      "时间O(n)，空间O(1)。滚动变量优化掉数组",
+      "DP入门经典题，面试常用来考察DP思维。变体：每次可爬1~k步"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce04",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC121 买卖股票的最佳时机 (Best Time to Buy and Sell Stock)",
+    "bullets": [
+      "给定股价数组，只能买卖<span class=\"highlight\">一次</span>，求最大利润（不能先卖后买）",
+      "示例：prices=[7,1,5,3,6,4] → 5（第2天买入价1，第5天卖出价6）",
+      "核心思路：一次遍历，维护<span class=\"highlight\">历史最低价min_price</span>，每天计算当前价-最低价更新最大利润",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">maxProfit</span>(prices):\n    min_price = float(<span class=\"str\">'inf'</span>)\n    max_profit = 0\n    <span class=\"kw\">for</span> price <span class=\"kw\">in</span> prices:\n        min_price = min(min_price, price)\n        max_profit = max(max_profit, price - min_price)\n    <span class=\"kw\">return</span> max_profit</pre>",
+      "时间O(n)，空间O(1)。贪心思想：在最低点买，在之后的最高点卖",
+      "变体：LC122 可多次买卖；LC123 最多两次买卖（DP状态机）"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce05",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC141 环形链表 (Linked List Cycle)",
+    "bullets": [
+      "判断链表中是否存在<span class=\"highlight\">环</span>",
+      "示例：head=[3,2,0,-4], pos=1 → true（尾部连接到第2个节点）",
+      "核心思路：<span class=\"highlight\">快慢指针</span>，快指针每次走2步，慢指针走1步，若有环必相遇",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">hasCycle</span>(head):\n    slow = fast = head\n    <span class=\"kw\">while</span> fast <span class=\"kw\">and</span> fast.next:\n        slow = slow.next\n        fast = fast.next.next\n        <span class=\"kw\">if</span> slow == fast:\n            <span class=\"kw\">return</span> <span class=\"kw\">True</span>\n    <span class=\"kw\">return</span> <span class=\"kw\">False</span></pre>",
+      "时间O(n)，空间O(1)。用set存访问过的节点也行但空间O(n)",
+      "变体：LC142 环形链表II — 找入环节点（相遇后再走一个指针从head出发，再次相遇点即入口）"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce06",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC206 反转链表 (Reverse Linked List)",
+    "bullets": [
+      "将单链表<span class=\"highlight\">就地反转</span>并返回新的头节点",
+      "示例：[1,2,3,4,5] → [5,4,3,2,1]",
+      "核心思路：<span class=\"highlight\">三指针迭代</span>——prev、curr、nxt，每次把curr.next指向prev，三个指针同步前移",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">reverseList</span>(head):\n    prev = <span class=\"kw\">None</span>\n    curr = head\n    <span class=\"kw\">while</span> curr:\n        nxt = curr.next   <span class=\"cm\"># 先保存下一个</span>\n        curr.next = prev  <span class=\"cm\"># 反转指针</span>\n        prev = curr       <span class=\"cm\"># prev前移</span>\n        curr = nxt        <span class=\"cm\"># curr前移</span>\n    <span class=\"kw\">return</span> prev</pre>",
+      "时间O(n)，空间O(1)。递归写法也行但空间O(n)",
+      "面试最高频链表题之一。变体：LC92 反转部分链表、LC25 K个一组反转"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce07",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC226 翻转二叉树 (Invert Binary Tree)",
+    "bullets": [
+      "将二叉树的每个节点的左右子树<span class=\"highlight\">交换</span>（镜像翻转）",
+      "示例：[4,2,7,1,3,6,9] → [4,7,2,9,6,3,1]",
+      "核心思路：<span class=\"highlight\">递归</span>——先翻转左右子树，再交换左右子节点",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">invertTree</span>(root):\n    <span class=\"kw\">if not</span> root:\n        <span class=\"kw\">return</span> <span class=\"kw\">None</span>\n    root.left, root.right = invertTree(root.right), invertTree(root.left)\n    <span class=\"kw\">return</span> root</pre>",
+      "时间O(n)，空间O(h)，h为树高。最简洁的递归三行代码",
+      "也可用BFS/DFS迭代实现。面试经典题，Homebrew作者因此题被Google拒"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce08",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC543 二叉树的直径 (Diameter of Binary Tree)",
+    "bullets": [
+      "求二叉树中任意两节点之间的<span class=\"highlight\">最长路径长度</span>（边数），路径不一定经过根",
+      "示例：[1,2,3,4,5] → 3（路径为4→2→1→3或5→2→1→3）",
+      "核心思路：<span class=\"highlight\">DFS后序遍历</span>，每个节点处 直径=左深度+右深度，用全局变量记录最大值",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">diameterOfBinaryTree</span>(root):\n    ans = 0\n    <span class=\"kw\">def</span> <span class=\"fn\">depth</span>(node):\n        <span class=\"kw\">nonlocal</span> ans\n        <span class=\"kw\">if not</span> node:\n            <span class=\"kw\">return</span> 0\n        L = depth(node.left)\n        R = depth(node.right)\n        ans = max(ans, L + R)  <span class=\"cm\"># 更新直径</span>\n        <span class=\"kw\">return</span> max(L, R) + 1     <span class=\"cm\"># 返回深度</span>\n    depth(root)\n    <span class=\"kw\">return</span> ans</pre>",
+      "时间O(n)，空间O(h)。关键区分：函数返回的是<span class=\"highlight\">深度</span>，但更新的是<span class=\"highlight\">直径</span>",
+      "易错点：直径是边数不是节点数；最长路径不一定过根节点"
+    ],
+    "lv": 1
+  }
+]

@@ -1,0 +1,182 @@
+[
+  {
+    "id": "cm01",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC3 无重复字符的最长子串 (Longest Substring Without Repeating Characters)",
+    "bullets": [
+      "给定字符串，找出不含重复字符的<span class=\"highlight\">最长子串</span>的长度",
+      "示例：s=\"abcabcbb\" → 3（子串\"abc\"）",
+      "核心思路：<span class=\"highlight\">滑动窗口</span>+哈希集合。右指针扩展窗口，遇到重复字符时左指针收缩直到无重复",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">lengthOfLongestSubstring</span>(s):\n    char_set = set()\n    left = ans = 0\n    <span class=\"kw\">for</span> right <span class=\"kw\">in</span> range(len(s)):\n        <span class=\"kw\">while</span> s[right] <span class=\"kw\">in</span> char_set:\n            char_set.remove(s[left])\n            left += 1\n        char_set.add(s[right])\n        ans = max(ans, right - left + 1)\n    <span class=\"kw\">return</span> ans</pre>",
+      "时间O(n)，空间O(min(n,m))，m为字符集大小",
+      "优化：用dict记录字符最后出现的位置，left可直接跳转而非逐个移动"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm02",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC15 三数之和 (3Sum)",
+    "bullets": [
+      "从数组中找出所有和为 <span class=\"num\">0</span> 的<span class=\"highlight\">不重复三元组</span>",
+      "示例：nums=[-1,0,1,2,-1,-4] → [[-1,-1,2],[-1,0,1]]",
+      "核心思路：先<span class=\"highlight\">排序</span>，固定一个数，对剩余部分用<span class=\"highlight\">双指针</span>找两数之和。跳过重复值去重",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">threeSum</span>(nums):\n    nums.sort()\n    res = []\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(nums) - 2):\n        <span class=\"kw\">if</span> i > 0 <span class=\"kw\">and</span> nums[i] == nums[i-1]:  <span class=\"cm\"># 跳过重复</span>\n            <span class=\"kw\">continue</span>\n        l, r = i + 1, len(nums) - 1\n        <span class=\"kw\">while</span> l < r:\n            s = nums[i] + nums[l] + nums[r]\n            <span class=\"kw\">if</span> s < 0:\n                l += 1\n            <span class=\"kw\">elif</span> s > 0:\n                r -= 1\n            <span class=\"kw\">else</span>:\n                res.append([nums[i], nums[l], nums[r]])\n                <span class=\"kw\">while</span> l < r <span class=\"kw\">and</span> nums[l] == nums[l+1]: l += 1\n                <span class=\"kw\">while</span> l < r <span class=\"kw\">and</span> nums[r] == nums[r-1]: r -= 1\n                l += 1; r -= 1\n    <span class=\"kw\">return</span> res</pre>",
+      "时间O(n²)，空间O(1)（不计输出）。排序O(n log n)被O(n²)覆盖",
+      "易错点：去重逻辑必须在找到解之后和外层循环开头两处都做"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm03",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC46 全排列 (Permutations)",
+    "bullets": [
+      "给定不重复整数数组，返回所有可能的<span class=\"highlight\">全排列</span>",
+      "示例：nums=[1,2,3] → [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]",
+      "核心思路：<span class=\"highlight\">回溯法</span>。每次从剩余元素中选一个加入路径，递归到底则收集结果",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">permute</span>(nums):\n    res = []\n    <span class=\"kw\">def</span> <span class=\"fn\">backtrack</span>(path, used):\n        <span class=\"kw\">if</span> len(path) == len(nums):\n            res.append(path[:])\n            <span class=\"kw\">return</span>\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(nums)):\n            <span class=\"kw\">if</span> used[i]:\n                <span class=\"kw\">continue</span>\n            used[i] = <span class=\"kw\">True</span>\n            path.append(nums[i])\n            backtrack(path, used)\n            path.pop()       <span class=\"cm\"># 撤销选择</span>\n            used[i] = <span class=\"kw\">False</span>  <span class=\"cm\"># 恢复状态</span>\n    backtrack([], [<span class=\"kw\">False</span>] * len(nums))\n    <span class=\"kw\">return</span> res</pre>",
+      "时间O(n·n!)，空间O(n)。回溯三要素：选择列表、路径、结束条件",
+      "变体：LC47 有重复数字的全排列（排序+剪枝）"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm04",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC49 字母异位词分组 (Group Anagrams)",
+    "bullets": [
+      "将字母异位词（字母相同但顺序不同）<span class=\"highlight\">分组</span>",
+      "示例：[\"eat\",\"tea\",\"tan\",\"ate\",\"nat\",\"bat\"] → [[\"eat\",\"tea\",\"ate\"],[\"tan\",\"nat\"],[\"bat\"]]",
+      "核心思路：异位词排序后相同，用<span class=\"highlight\">排序后的字符串做key</span>，哈希表归类",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\n\n<span class=\"kw\">def</span> <span class=\"fn\">groupAnagrams</span>(strs):\n    groups = defaultdict(list)\n    <span class=\"kw\">for</span> s <span class=\"kw\">in</span> strs:\n        key = tuple(sorted(s))  <span class=\"cm\"># 排序作为key</span>\n        groups[key].append(s)\n    <span class=\"kw\">return</span> list(groups.values())</pre>",
+      "时间O(n·k·log k)，n为字符串数，k为最长字符串长度。空间O(nk)",
+      "优化：用26位字母计数元组做key可降到O(nk)，但实测排序法更快（k通常很小）"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm05",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC53 最大子数组和 (Maximum Subarray)",
+    "bullets": [
+      "找出整数数组中和最大的<span class=\"highlight\">连续子数组</span>并返回其和",
+      "示例：nums=[-2,1,-3,4,-1,2,1,-5,4] → 6（子数组[4,-1,2,1]）",
+      "核心思路：<span class=\"highlight\">Kadane算法</span>——维护以当前元素结尾的最大子数组和，若前面的和为负则丢弃",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">maxSubArray</span>(nums):\n    curr_sum = max_sum = nums[0]\n    <span class=\"kw\">for</span> num <span class=\"kw\">in</span> nums[1:]:\n        curr_sum = max(num, curr_sum + num)  <span class=\"cm\"># 要么接上，要么重新开始</span>\n        max_sum = max(max_sum, curr_sum)\n    <span class=\"kw\">return</span> max_sum</pre>",
+      "时间O(n)，空间O(1)。DP视角：dp[i]=max(nums[i], dp[i-1]+nums[i])",
+      "变体：要求返回子数组本身（记录start/end索引）；分治法O(n log n)"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm06",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC56 合并区间 (Merge Intervals)",
+    "bullets": [
+      "给定若干区间集合，合并所有<span class=\"highlight\">重叠的区间</span>",
+      "示例：intervals=[[1,3],[2,6],[8,10],[15,18]] → [[1,6],[8,10],[15,18]]",
+      "核心思路：按<span class=\"highlight\">起点排序</span>，遍历时比较当前区间起点与上一个区间终点，重叠则合并（取更大的终点）",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">merge</span>(intervals):\n    intervals.sort(key=<span class=\"kw\">lambda</span> x: x[0])\n    merged = [intervals[0]]\n    <span class=\"kw\">for</span> start, end <span class=\"kw\">in</span> intervals[1:]:\n        <span class=\"kw\">if</span> start <= merged[-1][1]:  <span class=\"cm\"># 有重叠</span>\n            merged[-1][1] = max(merged[-1][1], end)\n        <span class=\"kw\">else</span>:\n            merged.append([start, end])\n    <span class=\"kw\">return</span> merged</pre>",
+      "时间O(n log n)排序主导，空间O(n)。注意边界：start <= end（等号意味着相邻也合并）",
+      "变体：LC57 插入区间、LC986 区间列表交集"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm07",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC102 二叉树的层序遍历 (Binary Tree Level Order Traversal)",
+    "bullets": [
+      "返回二叉树的<span class=\"highlight\">层序遍历</span>结果（逐层从左到右）",
+      "示例：root=[3,9,20,null,null,15,7] → [[3],[9,20],[15,7]]",
+      "核心思路：<span class=\"highlight\">BFS</span>用队列，每层处理前记录队列大小，循环该大小次数即为一层",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> deque\n\n<span class=\"kw\">def</span> <span class=\"fn\">levelOrder</span>(root):\n    <span class=\"kw\">if not</span> root:\n        <span class=\"kw\">return</span> []\n    res, queue = [], deque([root])\n    <span class=\"kw\">while</span> queue:\n        level = []\n        <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(len(queue)):  <span class=\"cm\"># 当前层的节点数</span>\n            node = queue.popleft()\n            level.append(node.val)\n            <span class=\"kw\">if</span> node.left:  queue.append(node.left)\n            <span class=\"kw\">if</span> node.right: queue.append(node.right)\n        res.append(level)\n    <span class=\"kw\">return</span> res</pre>",
+      "时间O(n)，空间O(n)。BFS模板题，deque比list.pop(0)快（O(1) vs O(n)）",
+      "变体：LC107 自底向上层序、LC103 锯齿形层序、LC199 右视图"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm08",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC146 LRU缓存 (LRU Cache)",
+    "bullets": [
+      "设计一个满足<span class=\"highlight\">LRU(最近最少使用)</span>缓存约束的数据结构，get和put均O(1)",
+      "示例：LRUCache(2) → put(1,1) → put(2,2) → get(1)=1 → put(3,3) → get(2)=-1（被淘汰）",
+      "核心思路：<span class=\"highlight\">哈希表+双向链表</span>。哈希表O(1)查找，双向链表O(1)增删和调整顺序",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> OrderedDict\n\n<span class=\"kw\">class</span> <span class=\"fn\">LRUCache</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, capacity):\n        self.cache = OrderedDict()\n        self.cap = capacity\n\n    <span class=\"kw\">def</span> <span class=\"fn\">get</span>(self, key):\n        <span class=\"kw\">if</span> key <span class=\"kw\">not in</span> self.cache:\n            <span class=\"kw\">return</span> -1\n        self.cache.move_to_end(key)  <span class=\"cm\"># 标记为最近使用</span>\n        <span class=\"kw\">return</span> self.cache[key]\n\n    <span class=\"kw\">def</span> <span class=\"fn\">put</span>(self, key, value):\n        <span class=\"kw\">if</span> key <span class=\"kw\">in</span> self.cache:\n            self.cache.move_to_end(key)\n        self.cache[key] = value\n        <span class=\"kw\">if</span> len(self.cache) > self.cap:\n            self.cache.popitem(last=<span class=\"kw\">False</span>)  <span class=\"cm\"># 淘汰最久未用</span></pre>",
+      "时间O(1)，空间O(capacity)。Python用OrderedDict最简洁，面试可能要求手写双向链表",
+      "字节跳动高频题。面试官可能追问：如何手写双向链表实现？线程安全版本？"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm09",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC200 岛屿数量 (Number of Islands)",
+    "bullets": [
+      "给定 '1'(陆地) 和 '0'(水) 组成的二维网格，计算<span class=\"highlight\">岛屿数量</span>",
+      "示例：grid=[[\"1\",\"1\",\"0\"],[\"0\",\"1\",\"0\"],[\"0\",\"0\",\"1\"]] → 2",
+      "核心思路：遍历网格，遇到'1'就<span class=\"highlight\">DFS/BFS淹没</span>整个连通区域（标记为'0'），岛屿计数+1",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">numIslands</span>(grid):\n    <span class=\"kw\">if not</span> grid:\n        <span class=\"kw\">return</span> 0\n    rows, cols = len(grid), len(grid[0])\n    count = 0\n\n    <span class=\"kw\">def</span> <span class=\"fn\">dfs</span>(r, c):\n        <span class=\"kw\">if</span> r < 0 <span class=\"kw\">or</span> r >= rows <span class=\"kw\">or</span> c < 0 <span class=\"kw\">or</span> c >= cols <span class=\"kw\">or</span> grid[r][c] != <span class=\"str\">'1'</span>:\n            <span class=\"kw\">return</span>\n        grid[r][c] = <span class=\"str\">'0'</span>  <span class=\"cm\"># 淹没</span>\n        dfs(r+1, c); dfs(r-1, c)\n        dfs(r, c+1); dfs(r, c-1)\n\n    <span class=\"kw\">for</span> r <span class=\"kw\">in</span> range(rows):\n        <span class=\"kw\">for</span> c <span class=\"kw\">in</span> range(cols):\n            <span class=\"kw\">if</span> grid[r][c] == <span class=\"str\">'1'</span>:\n                dfs(r, c)\n                count += 1\n    <span class=\"kw\">return</span> count</pre>",
+      "时间O(m×n)，空间O(m×n)最坏递归栈深度。也可用BFS或并查集",
+      "变体：LC695 岛屿最大面积、LC463 岛屿周长、LC827 最大人工岛"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm10",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC236 二叉树的最近公共祖先 (Lowest Common Ancestor of a Binary Tree)",
+    "bullets": [
+      "给定二叉树和两个节点p、q，找到它们的<span class=\"highlight\">最近公共祖先(LCA)</span>",
+      "示例：root=[3,5,1,6,2,0,8,null,null,7,4], p=5, q=1 → LCA=3",
+      "核心思路：<span class=\"highlight\">后序递归</span>——左右子树分别查找p和q，若分居两侧则当前节点就是LCA",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">lowestCommonAncestor</span>(root, p, q):\n    <span class=\"kw\">if not</span> root <span class=\"kw\">or</span> root == p <span class=\"kw\">or</span> root == q:\n        <span class=\"kw\">return</span> root\n    left = lowestCommonAncestor(root.left, p, q)\n    right = lowestCommonAncestor(root.right, p, q)\n    <span class=\"kw\">if</span> left <span class=\"kw\">and</span> right:  <span class=\"cm\"># p和q分居两侧</span>\n        <span class=\"kw\">return</span> root\n    <span class=\"kw\">return</span> left <span class=\"kw\">if</span> left <span class=\"kw\">else</span> right</pre>",
+      "时间O(n)，空间O(h)。递归含义：在以root为根的子树中查找p或q，找到就返回",
+      "易错点：LCA可以是p或q本身。变体：LC235 BST的LCA（利用BST性质更简单）"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm11",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC322 零钱兑换 (Coin Change)",
+    "bullets": [
+      "给定不同面额硬币和总金额amount，求凑出总金额所需的<span class=\"highlight\">最少硬币数</span>，凑不出返回-1",
+      "示例：coins=[1,2,5], amount=11 → 3（5+5+1）",
+      "核心思路：<span class=\"highlight\">完全背包DP</span>。dp[i]=凑出金额i的最少硬币数，dp[i]=min(dp[i-c]+1) for c in coins",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">coinChange</span>(coins, amount):\n    dp = [float(<span class=\"str\">'inf'</span>)] * (amount + 1)\n    dp[0] = 0  <span class=\"cm\"># base case: 凑0元需要0枚</span>\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(1, amount + 1):\n        <span class=\"kw\">for</span> c <span class=\"kw\">in</span> coins:\n            <span class=\"kw\">if</span> c <= i:\n                dp[i] = min(dp[i], dp[i - c] + 1)\n    <span class=\"kw\">return</span> dp[amount] <span class=\"kw\">if</span> dp[amount] != float(<span class=\"str\">'inf'</span>) <span class=\"kw\">else</span> -1</pre>",
+      "时间O(amount × n)，空间O(amount)，n为硬币种类数",
+      "贪心不可行（如coins=[1,3,4], amount=6，贪心4+1+1=3枚，DP 3+3=2枚）。变体：LC518 零钱兑换II（求方案数）"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm12",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC560 和为K的子数组 (Subarray Sum Equals K)",
+    "bullets": [
+      "给定整数数组和整数k，统计和为k的<span class=\"highlight\">连续子数组</span>个数",
+      "示例：nums=[1,1,1], k=2 → 2（[1,1]出现两次）",
+      "核心思路：<span class=\"highlight\">前缀和+哈希表</span>。prefix[j]-prefix[i]=k ↔ prefix[i]=prefix[j]-k，用哈希表记录每个前缀和出现的次数",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\n\n<span class=\"kw\">def</span> <span class=\"fn\">subarraySum</span>(nums, k):\n    count = 0\n    prefix_sum = 0\n    seen = defaultdict(int)\n    seen[0] = 1  <span class=\"cm\"># 前缀和为0出现1次（空前缀）</span>\n    <span class=\"kw\">for</span> num <span class=\"kw\">in</span> nums:\n        prefix_sum += num\n        count += seen[prefix_sum - k]  <span class=\"cm\"># 有多少个前缀和等于当前-k</span>\n        seen[prefix_sum] += 1\n    <span class=\"kw\">return</span> count</pre>",
+      "时间O(n)，空间O(n)。注意：数组含负数所以<span class=\"highlight\">不能用滑动窗口</span>",
+      "易错点：seen[0]=1不能忘（处理从头开始的子数组）；暴力O(n²)会超时"
+    ],
+    "lv": 2
+  }
+]
