@@ -204,5 +204,142 @@
     ],
     "lv": 2,
     "group": "基础"
+  },
+  {
+    "id": "ds16",
+    "cat": "数据结构",
+    "q": "并查集 (Union-Find) — 结构与优化",
+    "bullets": [
+      "核心操作：<span class=\"highlight\">find(x)</span> 查询x所属集合的代表元素；<span class=\"highlight\">union(x,y)</span> 合并x和y所在集合",
+      "<pre><span class=\"kw\">class</span> <span class=\"fn\">UnionFind</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, n):\n        self.parent = list(range(n))\n        self.rank = [<span class=\"num\">0</span>] * n\n        self.count = n  <span class=\"cm\"># 连通分量个数</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">find</span>(self, x):  <span class=\"cm\"># 路径压缩</span>\n        <span class=\"kw\">if</span> self.parent[x] != x:\n            self.parent[x] = self.find(self.parent[x])\n        <span class=\"kw\">return</span> self.parent[x]\n\n    <span class=\"kw\">def</span> <span class=\"fn\">union</span>(self, x, y):  <span class=\"cm\"># 按秩合并</span>\n        px, py = self.find(x), self.find(y)\n        <span class=\"kw\">if</span> px == py: <span class=\"kw\">return</span> <span class=\"kw\">False</span>\n        <span class=\"kw\">if</span> self.rank[px] < self.rank[py]: px, py = py, px\n        self.parent[py] = px\n        <span class=\"kw\">if</span> self.rank[px] == self.rank[py]: self.rank[px] += <span class=\"num\">1</span>\n        self.count -= <span class=\"num\">1</span>\n        <span class=\"kw\">return</span> <span class=\"kw\">True</span></pre>",
+      "两大优化：<span class=\"highlight\">路径压缩</span>（find时将节点直接指向根）+ <span class=\"highlight\">按秩合并</span>（矮树挂高树下）→ 近似 <span class=\"num\">O(α(n))</span>，α为反Ackermann函数，实际可视为O(1)",
+      "经典应用：连通分量计数(LC200岛屿数量)、冗余连接检测(LC684)、账户合并(LC721)、朋友圈(LC547)",
+      "扩展：<span class=\"highlight\">带权并查集</span>可维护节点间的相对关系（如LC399除法求值）"
+    ],
+    "lv": 2,
+    "group": "基础"
+  },
+  {
+    "id": "ds17",
+    "cat": "数据结构",
+    "q": "单调栈 — 原理与典型应用",
+    "bullets": [
+      "栈内元素保持<span class=\"highlight\">单调递增或单调递减</span>，用于在O(n)内求「每个元素左/右边第一个更大/更小的元素」",
+      "单调递减栈（栈底到栈顶递减）：求<span class=\"highlight\">下一个更大元素</span>；单调递增栈：求<span class=\"highlight\">下一个更小元素</span>",
+      "<pre><span class=\"cm\"># 求每个元素右边第一个更大元素的索引</span>\n<span class=\"kw\">def</span> <span class=\"fn\">next_greater</span>(nums):\n    n = len(nums)\n    res = [-<span class=\"num\">1</span>] * n\n    stack = []  <span class=\"cm\"># 存索引，对应值单调递减</span>\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(n):\n        <span class=\"kw\">while</span> stack <span class=\"kw\">and</span> nums[i] > nums[stack[-<span class=\"num\">1</span>]]:\n            j = stack.pop()\n            res[j] = i\n        stack.append(i)\n    <span class=\"kw\">return</span> res</pre>",
+      "每个元素最多入栈一次出栈一次 → 时间 <span class=\"num\">O(n)</span>，空间 <span class=\"num\">O(n)</span>",
+      "经典题：每日温度(LC739)、柱状图最大矩形(LC84)、接雨水(LC42单调栈解法)、下一个更大元素(LC496/503)"
+    ],
+    "lv": 2,
+    "group": "基础"
+  },
+  {
+    "id": "ds18",
+    "cat": "数据结构",
+    "q": "单调队列 — 滑动窗口最大值",
+    "bullets": [
+      "双端队列 deque 维护<span class=\"highlight\">窗口内元素的单调递减序列</span>，队首始终是当前窗口的最大值",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> deque\n\n<span class=\"kw\">def</span> <span class=\"fn\">maxSlidingWindow</span>(nums, k):\n    dq = deque()  <span class=\"cm\"># 存索引，对应值单调递减</span>\n    res = []\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(nums)):\n        <span class=\"cm\"># 移除超出窗口的队首</span>\n        <span class=\"kw\">while</span> dq <span class=\"kw\">and</span> dq[<span class=\"num\">0</span>] <= i - k:\n            dq.popleft()\n        <span class=\"cm\"># 移除比当前值小的队尾（它们不可能成为最大值）</span>\n        <span class=\"kw\">while</span> dq <span class=\"kw\">and</span> nums[dq[-<span class=\"num\">1</span>]] <= nums[i]:\n            dq.pop()\n        dq.append(i)\n        <span class=\"kw\">if</span> i >= k - <span class=\"num\">1</span>:\n            res.append(nums[dq[<span class=\"num\">0</span>]])\n    <span class=\"kw\">return</span> res</pre>",
+      "时间 <span class=\"num\">O(n)</span>（每个元素最多入队出队各一次），空间 <span class=\"num\">O(k)</span>",
+      "LC239 高频面试题。暴力O(nk)，堆O(n log k)，单调队列最优O(n)"
+    ],
+    "lv": 2,
+    "group": "基础"
+  },
+  {
+    "id": "ds19",
+    "cat": "数据结构",
+    "q": "LRU Cache — 手写双向链表实现",
+    "bullets": [
+      "LC146：设计一个<span class=\"highlight\">get和put均O(1)</span>的缓存。哈希表定位 + 双向链表维护顺序",
+      "<pre><span class=\"kw\">class</span> <span class=\"fn\">Node</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, k=<span class=\"num\">0</span>, v=<span class=\"num\">0</span>):\n        self.key, self.val = k, v\n        self.prev = self.next = <span class=\"kw\">None</span>\n\n<span class=\"kw\">class</span> <span class=\"fn\">LRUCache</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, capacity):\n        self.cap = capacity\n        self.cache = {}  <span class=\"cm\"># key → Node</span>\n        self.head, self.tail = Node(), Node()  <span class=\"cm\"># 哨兵</span>\n        self.head.next = self.tail\n        self.tail.prev = self.head\n\n    <span class=\"kw\">def</span> <span class=\"fn\">_remove</span>(self, node):\n        node.prev.next = node.next\n        node.next.prev = node.prev\n\n    <span class=\"kw\">def</span> <span class=\"fn\">_add_to_head</span>(self, node):\n        node.next = self.head.next\n        node.prev = self.head\n        self.head.next.prev = node\n        self.head.next = node\n\n    <span class=\"kw\">def</span> <span class=\"fn\">get</span>(self, key):\n        <span class=\"kw\">if</span> key <span class=\"kw\">not in</span> self.cache: <span class=\"kw\">return</span> -<span class=\"num\">1</span>\n        node = self.cache[key]\n        self._remove(node)\n        self._add_to_head(node)\n        <span class=\"kw\">return</span> node.val\n\n    <span class=\"kw\">def</span> <span class=\"fn\">put</span>(self, key, val):\n        <span class=\"kw\">if</span> key <span class=\"kw\">in</span> self.cache:\n            self._remove(self.cache[key])\n        node = Node(key, val)\n        self.cache[key] = node\n        self._add_to_head(node)\n        <span class=\"kw\">if</span> len(self.cache) > self.cap:\n            lru = self.tail.prev\n            self._remove(lru)\n            <span class=\"kw\">del</span> self.cache[lru.key]</pre>",
+      "面试常要求不用 OrderedDict 手写。核心：<span class=\"highlight\">哨兵节点</span>消除边界判断，Node存key用于淘汰时从cache中删除",
+      "LRU淘汰策略：最近最少使用。get/put都将节点移到链表头部，淘汰链表尾部"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "ds20",
+    "cat": "数据结构",
+    "q": "LFU Cache — 最不经常使用缓存",
+    "bullets": [
+      "LC460：淘汰<span class=\"highlight\">使用频率最低</span>的key；频率相同时淘汰最久未使用的（LRU）",
+      "数据结构：<span class=\"highlight\">三个哈希表</span> — key→val, key→freq, freq→OrderedDict(keys)",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict, OrderedDict\n\n<span class=\"kw\">class</span> <span class=\"fn\">LFUCache</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, capacity):\n        self.cap = capacity\n        self.min_freq = <span class=\"num\">0</span>\n        self.key_val = {}       <span class=\"cm\"># key → value</span>\n        self.key_freq = {}      <span class=\"cm\"># key → frequency</span>\n        self.freq_keys = defaultdict(OrderedDict)  <span class=\"cm\"># freq → OrderedDict of keys</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">_update</span>(self, key):\n        freq = self.key_freq[key]\n        <span class=\"kw\">del</span> self.freq_keys[freq][key]\n        <span class=\"kw\">if not</span> self.freq_keys[freq]:\n            <span class=\"kw\">del</span> self.freq_keys[freq]\n            <span class=\"kw\">if</span> self.min_freq == freq: self.min_freq += <span class=\"num\">1</span>\n        self.key_freq[key] = freq + <span class=\"num\">1</span>\n        self.freq_keys[freq + <span class=\"num\">1</span>][key] = <span class=\"kw\">None</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">get</span>(self, key):\n        <span class=\"kw\">if</span> key <span class=\"kw\">not in</span> self.key_val: <span class=\"kw\">return</span> -<span class=\"num\">1</span>\n        self._update(key)\n        <span class=\"kw\">return</span> self.key_val[key]\n\n    <span class=\"kw\">def</span> <span class=\"fn\">put</span>(self, key, val):\n        <span class=\"kw\">if</span> self.cap == <span class=\"num\">0</span>: <span class=\"kw\">return</span>\n        <span class=\"kw\">if</span> key <span class=\"kw\">in</span> self.key_val:\n            self.key_val[key] = val\n            self._update(key)\n            <span class=\"kw\">return</span>\n        <span class=\"kw\">if</span> len(self.key_val) >= self.cap:\n            k, _ = self.freq_keys[self.min_freq].popitem(last=<span class=\"kw\">False</span>)\n            <span class=\"kw\">del</span> self.key_val[k]\n            <span class=\"kw\">del</span> self.key_freq[k]\n        self.key_val[key] = val\n        self.key_freq[key] = <span class=\"num\">1</span>\n        self.freq_keys[<span class=\"num\">1</span>][key] = <span class=\"kw\">None</span>\n        self.min_freq = <span class=\"num\">1</span></pre>",
+      "get/put 均 <span class=\"num\">O(1)</span>。关键维护 <span class=\"highlight\">min_freq</span> 以快速定位淘汰层",
+      "LRU vs LFU：LRU按访问时间淘汰，LFU按访问频率淘汰。实际系统中LRU更常用（LFU有缓存污染问题）"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "ds21",
+    "cat": "数据结构",
+    "q": "B树 vs B+树 — 数据库索引核心",
+    "bullets": [
+      "<span class=\"highlight\">B树</span>：多路平衡搜索树，每个节点存多个key和数据指针，内节点也存数据",
+      "<span class=\"highlight\">B+树</span>：在B树基础上改进 — ①内节点<span class=\"highlight\">只存key不存数据</span>（扇出更大）②所有数据存叶子节点 ③叶子节点用<span class=\"highlight\">双向链表</span>相连",
+      "B+树优于B树的原因：① 内节点不存数据 → 同一页能放更多key → <span class=\"highlight\">树更矮，IO更少</span> ② 叶子链表 → <span class=\"highlight\">范围查询极高效</span>（顺序遍历） ③ 查询性能稳定（都要到叶子）",
+      "MySQL InnoDB 用 <span class=\"highlight\">B+树</span> 作索引结构。聚簇索引叶子存完整行数据，非聚簇索引叶子存主键值",
+      "B+树高度一般 2-4 层：假设一页16KB、一个key+指针16B → 扇出约1000 → 3层可索引约10亿条记录",
+      "面试重点：为什么用B+树而非B树/哈希/二叉树 → 磁盘IO最小化 + 范围查询 + 稳定性能"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "ds22",
+    "cat": "数据结构",
+    "q": "红黑树 — 性质与旋转",
+    "bullets": [
+      "红黑树五条性质：①每个节点红或黑 ②根是黑 ③叶子(NIL)是黑 ④<span class=\"highlight\">红节点的子节点必须是黑</span>（不能连续红） ⑤<span class=\"highlight\">从任意节点到叶子的所有路径黑色节点数相同</span>",
+      "这些性质保证了：<span class=\"highlight\">最长路径不超过最短路径的2倍</span>（最长=红黑交替，最短=全黑），因此查找/插入/删除都是O(log n)",
+      "插入修复（新节点默认红色）：①叔节点红→叔/父变黑、祖变红、向上递归 ②叔黑+折线→先旋转变直线 ③叔黑+直线→旋转+变色",
+      "Java TreeMap/TreeSet、C++ std::map/std::set、Linux CFS调度器底层均为红黑树",
+      "红黑树 vs AVL：红黑树<span class=\"highlight\">插入删除更快</span>（旋转次数O(1) vs AVL最多O(log n)），AVL<span class=\"highlight\">查找略快</span>（更严格平衡）。工程中更常用红黑树"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "ds23",
+    "cat": "数据结构",
+    "q": "Trie (前缀树) — 实现与应用",
+    "bullets": [
+      "每个节点代表一个字符前缀，从根到某节点的路径构成一个前缀。支持 <span class=\"num\">O(m)</span> 的插入/查找/前缀搜索（m=字符串长度）",
+      "<pre><span class=\"kw\">class</span> <span class=\"fn\">Trie</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self):\n        self.children = {}\n        self.is_end = <span class=\"kw\">False</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">insert</span>(self, word):\n        node = self\n        <span class=\"kw\">for</span> c <span class=\"kw\">in</span> word:\n            <span class=\"kw\">if</span> c <span class=\"kw\">not in</span> node.children:\n                node.children[c] = Trie()\n            node = node.children[c]\n        node.is_end = <span class=\"kw\">True</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">search</span>(self, word):\n        node = self._find(word)\n        <span class=\"kw\">return</span> node <span class=\"kw\">is not</span> <span class=\"kw\">None</span> <span class=\"kw\">and</span> node.is_end\n\n    <span class=\"kw\">def</span> <span class=\"fn\">startsWith</span>(self, prefix):\n        <span class=\"kw\">return</span> self._find(prefix) <span class=\"kw\">is not</span> <span class=\"kw\">None</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">_find</span>(self, s):\n        node = self\n        <span class=\"kw\">for</span> c <span class=\"kw\">in</span> s:\n            <span class=\"kw\">if</span> c <span class=\"kw\">not in</span> node.children: <span class=\"kw\">return</span> <span class=\"kw\">None</span>\n            node = node.children[c]\n        <span class=\"kw\">return</span> node</pre>",
+      "空间优化：Python用dict存子节点（按需创建），比固定26数组更灵活",
+      "应用：自动补全(LC208)、搜索引擎前缀提示、拼写检查、单词搜索II(LC212 Trie+回溯)、IP路由最长前缀匹配"
+    ],
+    "lv": 2,
+    "group": "基础"
+  },
+  {
+    "id": "ds24",
+    "cat": "数据结构",
+    "q": "哈希表深入 — 扩容与哈希冲突细节",
+    "bullets": [
+      "负载因子 = 元素数 / 桶数。<span class=\"highlight\">Java HashMap 阈值0.75</span>（桶数加倍），<span class=\"highlight\">Python dict 阈值2/3</span>",
+      "<span class=\"highlight\">链地址法</span>（Java HashMap）：每个桶是链表，冲突时追加。Java 8优化：链表长度>=8时转<span class=\"highlight\">红黑树</span>（O(n)→O(log n)），<=6时退化回链表",
+      "<span class=\"highlight\">开放地址法</span>（Python dict）：冲突时按探测序列找下一个空位。线性探测→聚集问题；Python用<span class=\"highlight\">二次探测</span>变体",
+      "哈希函数设计要点：① 均匀分布（减少冲突） ② 计算快 ③ 确定性。Python对象的 <code>__hash__</code> 可自定义",
+      "面试考点：HashMap put流程（计算hash→定位桶→处理冲突→判断扩容）、线程安全问题（Java ConcurrentHashMap分段锁/CAS）"
+    ],
+    "lv": 2,
+    "group": "基础"
+  },
+  {
+    "id": "ds25",
+    "cat": "数据结构",
+    "q": "图的高级表示 — 加权图与隐式图",
+    "bullets": [
+      "<span class=\"highlight\">加权邻接表</span>：图中边有权重时使用，存储 (邻居, 权重) 对",
+      "<pre><span class=\"cm\"># 加权有向图</span>\n<span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\ngraph = defaultdict(list)\ngraph[<span class=\"num\">0</span>].append((<span class=\"num\">1</span>, <span class=\"num\">5</span>))  <span class=\"cm\"># 0→1 权重5</span>\ngraph[<span class=\"num\">0</span>].append((<span class=\"num\">2</span>, <span class=\"num\">3</span>))  <span class=\"cm\"># 0→2 权重3</span>\ngraph[<span class=\"num\">1</span>].append((<span class=\"num\">2</span>, <span class=\"num\">1</span>))  <span class=\"cm\"># 1→2 权重1</span>\n\n<span class=\"cm\"># 网格图（隐式图）— 不需要显式建图</span>\ndirs = [(<span class=\"num\">0</span>,<span class=\"num\">1</span>),(<span class=\"num\">0</span>,-<span class=\"num\">1</span>),(<span class=\"num\">1</span>,<span class=\"num\">0</span>),(-<span class=\"num\">1</span>,<span class=\"num\">0</span>)]\n<span class=\"kw\">for</span> dx, dy <span class=\"kw\">in</span> dirs:\n    nx, ny = x+dx, y+dy\n    <span class=\"kw\">if</span> <span class=\"num\">0</span> &lt;= nx &lt; m <span class=\"kw\">and</span> <span class=\"num\">0</span> &lt;= ny &lt; n:\n        <span class=\"cm\"># 处理邻居 (nx, ny)</span></pre>",
+      "<span class=\"highlight\">隐式图</span>：不显式存储邻接关系，通过规则动态生成邻居 → 网格BFS/DFS（LC200岛屿数量）、状态空间搜索（LC127单词接龙）",
+      "面试中 80% 的图题使用<span class=\"highlight\">邻接表</span>或<span class=\"highlight\">网格隐式图</span>。记住建图模板是解题的第一步"
+    ],
+    "lv": 1,
+    "group": "基础"
   }
 ]

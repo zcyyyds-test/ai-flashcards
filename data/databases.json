@@ -19,7 +19,7 @@
     "bullets": [
       "<pre><span class=\"cm\">-- 插入</span>\n<span class=\"kw\">INSERT INTO</span> users (name, email) <span class=\"kw\">VALUES</span> (<span class=\"str\">'Zhou'</span>, <span class=\"str\">'z@mail.com'</span>);\n<span class=\"cm\">-- 批量插入</span>\n<span class=\"kw\">INSERT INTO</span> users (name, email) <span class=\"kw\">VALUES</span>\n  (<span class=\"str\">'A'</span>, <span class=\"str\">'a@m.com'</span>), (<span class=\"str\">'B'</span>, <span class=\"str\">'b@m.com'</span>);\n<span class=\"cm\">-- 更新</span>\n<span class=\"kw\">UPDATE</span> users <span class=\"kw\">SET</span> age = 26 <span class=\"kw\">WHERE</span> id = 1;\n<span class=\"cm\">-- 删除（⚠️ 没有WHERE会删全表！）</span>\n<span class=\"kw\">DELETE FROM</span> users <span class=\"kw\">WHERE</span> id = 1;</pre>",
       "<span class=\"highlight\">永远在UPDATE/DELETE前先用SELECT确认影响范围</span>",
-      "TRUNCATE vs DELETE：TRUNCATE清空全表更快（不记录行日志），但不能回滚"
+      "TRUNCATE vs DELETE：TRUNCATE清空全表更快（不记录行日志），MySQL中属于DDL隐式提交不能回滚，PostgreSQL中可在事务内回滚"
     ],
     "lv": 1,
     "group": "工程"
@@ -139,10 +139,128 @@
     "q": "Redis 核心数据结构与应用",
     "bullets": [
       "<pre><span class=\"cm\"># 5种核心数据结构</span>\nString: SET key val / GET key          <span class=\"cm\"># 缓存/计数器</span>\nHash:   HSET user:1 name Zhou          <span class=\"cm\"># 对象存储</span>\nList:   LPUSH queue task1              <span class=\"cm\"># 消息队列</span>\nSet:    SADD tags python               <span class=\"cm\"># 去重/交并集</span>\nZSet:   ZADD rank 100 user1            <span class=\"cm\"># 排行榜</span></pre>",
-      "所有操作O(1)或O(log n)（ZSet基于跳表），内存存储 → 读写<1ms",
+      "常用操作复杂度：GET/SET/HGET O(1)，ZSet操作 O(log n)，LRANGE/SMEMBERS O(n)",
       "持久化：RDB(定时快照) + AOF(追加写日志) → 重启后恢复",
       "过期策略：惰性删除 + 定期删除。设置TTL：<code>EXPIRE key 3600</code>",
       "AI项目应用：KV Cache管理 / Agent记忆存储 / API限流 / 特征缓存"
+    ],
+    "lv": 3,
+    "group": "工程"
+  },
+  {
+    "id": "db12",
+    "cat": "数据库",
+    "q": "数据库范式 — 1NF/2NF/3NF/BCNF",
+    "bullets": [
+      "<span class=\"highlight\">1NF</span>：每列原子性，不可再分（不能在一个字段存\"Java,Python\"）",
+      "<span class=\"highlight\">2NF</span>：满足1NF + 消除部分依赖（非主键列必须完全依赖整个主键，不能只依赖联合主键的一部分）",
+      "<span class=\"highlight\">3NF</span>：满足2NF + 消除传递依赖（非主键列不能依赖另一个非主键列。如：员工表不存部门名，只存dept_id）",
+      "<span class=\"highlight\">BCNF</span>：满足3NF + 每个决定因素都是候选键（比3NF更严格，消除主属性对候选键的部分/传递依赖）",
+      "面试口诀：<span class=\"highlight\">1NF列原子，2NF消除部分依赖，3NF消除传递依赖</span>",
+      "实践中大多遵循3NF，但为了查询性能可适当反范式（冗余字段避免JOIN）"
+    ],
+    "lv": 2,
+    "group": "工程"
+  },
+  {
+    "id": "db13",
+    "cat": "数据库",
+    "q": "子查询 vs JOIN — 性能对比与选择",
+    "bullets": [
+      "<pre><span class=\"cm\">-- 子查询写法（相关子查询，每行执行一次，可能慢）</span>\n<span class=\"kw\">SELECT</span> name <span class=\"kw\">FROM</span> employees e\n<span class=\"kw\">WHERE</span> salary > (\n  <span class=\"kw\">SELECT</span> <span class=\"fn\">AVG</span>(salary) <span class=\"kw\">FROM</span> employees\n  <span class=\"kw\">WHERE</span> dept_id = e.dept_id\n);\n\n<span class=\"cm\">-- JOIN改写（通常更快）</span>\n<span class=\"kw\">SELECT</span> e.name\n<span class=\"kw\">FROM</span> employees e\n<span class=\"kw\">JOIN</span> (<span class=\"kw\">SELECT</span> dept_id, <span class=\"fn\">AVG</span>(salary) <span class=\"kw\">AS</span> avg_sal\n      <span class=\"kw\">FROM</span> employees <span class=\"kw\">GROUP BY</span> dept_id) d\n<span class=\"kw\">ON</span> e.dept_id = d.dept_id\n<span class=\"kw\">WHERE</span> e.salary > d.avg_sal;</pre>",
+      "<span class=\"highlight\">相关子查询</span>（引用外层表）：每行执行一次 → O(n*m)，大表时极慢",
+      "<span class=\"highlight\">非相关子查询</span>（独立执行）：只执行一次，性能可接受",
+      "优化器在很多场景下会将子查询自动改写为JOIN，但<span class=\"highlight\">不能依赖优化器</span>",
+      "选择原则：能用JOIN就用JOIN；EXISTS比IN对大子查询结果集更高效"
+    ],
+    "lv": 2,
+    "group": "工程"
+  },
+  {
+    "id": "db14",
+    "cat": "数据库",
+    "q": "窗口函数 — ROW_NUMBER/RANK/DENSE_RANK",
+    "bullets": [
+      "<pre><span class=\"kw\">SELECT</span> name, department, salary,\n  <span class=\"fn\">ROW_NUMBER</span>() <span class=\"kw\">OVER</span>(<span class=\"kw\">PARTITION BY</span> department <span class=\"kw\">ORDER BY</span> salary <span class=\"kw\">DESC</span>) <span class=\"kw\">AS</span> rn,\n  <span class=\"fn\">RANK</span>()       <span class=\"kw\">OVER</span>(<span class=\"kw\">PARTITION BY</span> department <span class=\"kw\">ORDER BY</span> salary <span class=\"kw\">DESC</span>) <span class=\"kw\">AS</span> rk,\n  <span class=\"fn\">DENSE_RANK</span>() <span class=\"kw\">OVER</span>(<span class=\"kw\">PARTITION BY</span> department <span class=\"kw\">ORDER BY</span> salary <span class=\"kw\">DESC</span>) <span class=\"kw\">AS</span> drk\n<span class=\"kw\">FROM</span> employees;</pre>",
+      "薪资100,100,90时：ROW_NUMBER → 1,2,3 | RANK → 1,1,3 | DENSE_RANK → 1,1,2",
+      "<span class=\"highlight\">ROW_NUMBER</span>：不并列，常用于分页/去重（取每组第一条）",
+      "<span class=\"highlight\">RANK</span>：并列后跳号，适合竞赛排名",
+      "<span class=\"highlight\">DENSE_RANK</span>：并列不跳号，适合连续等级划分",
+      "经典面试题：<span class=\"highlight\">取每个部门薪资TOP 3</span> → ROW_NUMBER + WHERE rn <= 3"
+    ],
+    "lv": 2,
+    "group": "工程"
+  },
+  {
+    "id": "db15",
+    "cat": "数据库",
+    "q": "窗口函数 — LAG/LEAD/SUM OVER",
+    "bullets": [
+      "<pre><span class=\"kw\">SELECT</span> date, revenue,\n  <span class=\"fn\">LAG</span>(revenue, <span class=\"num\">1</span>) <span class=\"kw\">OVER</span>(<span class=\"kw\">ORDER BY</span> date)  <span class=\"kw\">AS</span> prev_rev,  <span class=\"cm\">-- 前一行</span>\n  <span class=\"fn\">LEAD</span>(revenue, <span class=\"num\">1</span>) <span class=\"kw\">OVER</span>(<span class=\"kw\">ORDER BY</span> date) <span class=\"kw\">AS</span> next_rev,  <span class=\"cm\">-- 后一行</span>\n  <span class=\"fn\">SUM</span>(revenue) <span class=\"kw\">OVER</span>(<span class=\"kw\">ORDER BY</span> date\n    <span class=\"kw\">ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</span>\n  ) <span class=\"kw\">AS</span> cumulative_sum  <span class=\"cm\">-- 累计求和</span>\n<span class=\"kw\">FROM</span> daily_sales;</pre>",
+      "<span class=\"highlight\">LAG(col, n)</span>：取前n行的值 | <span class=\"highlight\">LEAD(col, n)</span>：取后n行的值",
+      "环比计算：(revenue - LAG(revenue,1)) / LAG(revenue,1) * 100",
+      "滑动窗口：ROWS BETWEEN 6 PRECEDING AND CURRENT ROW → 7日移动平均",
+      "窗口函数<span class=\"highlight\">不减少行数</span>（与GROUP BY的核心区别），在SELECT阶段执行"
+    ],
+    "lv": 3,
+    "group": "工程"
+  },
+  {
+    "id": "db16",
+    "cat": "数据库",
+    "q": "数据库锁 — 类型与死锁",
+    "bullets": [
+      "<span class=\"highlight\">共享锁(S锁/读锁)</span>：多个事务可同时读，不能写。SELECT ... LOCK IN SHARE MODE",
+      "<span class=\"highlight\">排他锁(X锁/写锁)</span>：持有者独占读写，其他事务不能读写。SELECT ... FOR UPDATE",
+      "锁粒度：<span class=\"highlight\">行锁</span>(InnoDB默认，并发高) → <span class=\"highlight\">表锁</span>(MyISAM，开销小但并发差)",
+      "<span class=\"highlight\">死锁</span>：事务A锁行1等行2，事务B锁行2等行1 → 循环等待",
+      "死锁预防：①固定加锁顺序 ②控制事务大小 ③设置锁超时(innodb_lock_wait_timeout)",
+      "InnoDB死锁检测：自动检测并回滚代价较小的事务（wait-for graph算法）"
+    ],
+    "lv": 3,
+    "group": "工程"
+  },
+  {
+    "id": "db17",
+    "cat": "数据库",
+    "q": "MySQL vs PostgreSQL — 核心差异",
+    "bullets": [
+      "<span class=\"highlight\">MySQL</span>：更轻量、生态大(LAMP)、主从复制成熟 → 互联网业务首选",
+      "<span class=\"highlight\">PostgreSQL</span>：SQL标准更完整、扩展性强(自定义类型/函数)、MVCC实现更优 → 复杂查询/GIS/分析",
+      "MVCC区别：MySQL用undo log回滚段 | PG用多版本元组（旧版本留在表中需VACUUM清理）",
+      "JSON支持：PG的JSONB原生索引查询，性能远优于MySQL的JSON类型",
+      "MySQL默认Repeatable Read(用Gap Lock防幻读) | PG默认Read Committed",
+      "选型建议：简单CRUD选MySQL；复杂查询/数据分析/需要丰富数据类型选PostgreSQL"
+    ],
+    "lv": 3,
+    "group": "工程"
+  },
+  {
+    "id": "db18",
+    "cat": "数据库",
+    "q": "数据库连接池 — 原理与配置",
+    "bullets": [
+      "问题：每次请求新建TCP连接+数据库认证 → 开销大（约10-50ms），高并发下连接数爆炸",
+      "连接池：<span class=\"highlight\">预先创建一批连接放入池中，用完归还而非关闭</span>",
+      "核心参数：<span class=\"highlight\">minIdle</span>(最小空闲) / <span class=\"highlight\">maxActive</span>(最大连接数) / <span class=\"highlight\">maxWait</span>(获取等待超时)",
+      "常见实现：Java(HikariCP/Druid) | Python(SQLAlchemy pool) | Go(database/sql内置)",
+      "maxActive经验公式：<span class=\"highlight\">连接数 ≈ CPU核心数 * 2 + 磁盘数</span>（PostgreSQL官方建议，通常10-30足够）",
+      "连接泄漏：业务代码未归还连接 → 池耗尽 → 需设置泄漏检测(removeAbandoned)和超时回收"
+    ],
+    "lv": 2,
+    "group": "工程"
+  },
+  {
+    "id": "db19",
+    "cat": "数据库",
+    "q": "慢查询排查流程",
+    "bullets": [
+      "①<span class=\"highlight\">开启慢查询日志</span>：SET GLOBAL slow_query_log = ON; long_query_time = 1（单位秒）",
+      "②<span class=\"highlight\">定位慢SQL</span>：mysqldumpslow 或 pt-query-digest 分析慢日志，按耗时/频率排序",
+      "③<span class=\"highlight\">EXPLAIN分析</span>：看type(是否ALL全表扫描)、key(是否命中索引)、rows(扫描行数)",
+      "④<span class=\"highlight\">常见原因</span>：缺索引 / 索引失效(函数/类型转换) / 返回数据量大 / 锁等待 / 深分页",
+      "⑤<span class=\"highlight\">优化手段</span>：加索引 / 改写SQL / 业务层缓存 / 读写分离 / 分库分表",
+      "⑥生产环境用 SHOW PROCESSLIST 查看当前执行中的慢查询，必要时 KILL query_id"
     ],
     "lv": 3,
     "group": "工程"

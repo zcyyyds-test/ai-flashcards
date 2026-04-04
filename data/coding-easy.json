@@ -118,5 +118,65 @@
       "易错点：直径是边数不是节点数；最长路径不一定过根节点"
     ],
     "lv": 1
+  },
+  {
+    "id": "ce09",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC20 有效的括号 (Valid Parentheses) — 栈",
+    "bullets": [
+      "判断只含 <span class=\"str\">'()[]{}'</span> 的字符串中括号是否<span class=\"highlight\">有效匹配</span>",
+      "示例：s=\"({[]})\" → true；s=\"([)]\" → false",
+      "核心思路：用<span class=\"highlight\">栈</span>，遇到左括号入栈，遇到右括号弹栈检查是否匹配",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">isValid</span>(s):\n    stack = []\n    mapping = {<span class=\"str\">')'</span>: <span class=\"str\">'('</span>, <span class=\"str\">'}'</span>: <span class=\"str\">'{'</span>, <span class=\"str\">']'</span>: <span class=\"str\">'['</span>}\n    <span class=\"kw\">for</span> ch <span class=\"kw\">in</span> s:\n        <span class=\"kw\">if</span> ch <span class=\"kw\">in</span> mapping:\n            top = stack.pop() <span class=\"kw\">if</span> stack <span class=\"kw\">else</span> <span class=\"str\">'#'</span>\n            <span class=\"kw\">if</span> mapping[ch] != top:\n                <span class=\"kw\">return</span> <span class=\"kw\">False</span>\n        <span class=\"kw\">else</span>:\n            stack.append(ch)\n    <span class=\"kw\">return</span> <span class=\"kw\">not</span> stack</pre>",
+      "时间O(n)，空间O(n)。栈的经典应用题",
+      "易错点：最后要检查栈是否为空（如 s=\"(\" 只有左括号）；空字符串返回true"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce10",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC101 对称二叉树 (Symmetric Tree) — 递归",
+    "bullets": [
+      "判断一棵二叉树是否是<span class=\"highlight\">镜像对称</span>的",
+      "示例：[1,2,2,3,4,4,3] → true；[1,2,2,null,3,null,3] → false",
+      "核心思路：<span class=\"highlight\">递归比较</span>左子树和右子树，left.left与right.right对比，left.right与right.left对比",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">isSymmetric</span>(root):\n    <span class=\"kw\">def</span> <span class=\"fn\">check</span>(left, right):\n        <span class=\"kw\">if not</span> left <span class=\"kw\">and not</span> right:\n            <span class=\"kw\">return</span> <span class=\"kw\">True</span>\n        <span class=\"kw\">if not</span> left <span class=\"kw\">or not</span> right:\n            <span class=\"kw\">return</span> <span class=\"kw\">False</span>\n        <span class=\"kw\">return</span> (left.val == right.val\n                <span class=\"kw\">and</span> check(left.left, right.right)\n                <span class=\"kw\">and</span> check(left.right, right.left))\n    <span class=\"kw\">return</span> check(root.left, root.right) <span class=\"kw\">if</span> root <span class=\"kw\">else</span> <span class=\"kw\">True</span></pre>",
+      "时间O(n)，空间O(h)。也可用BFS迭代：队列每次取两个节点比较",
+      "与LC226翻转二叉树对比：翻转是操作，对称是判断，但递归结构类似"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce11",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC160 相交链表 (Intersection of Two Linked Lists) — 双指针",
+    "bullets": [
+      "找到两个单链表<span class=\"highlight\">相交的起始节点</span>，不相交则返回null",
+      "示例：listA=[4,1,8,4,5], listB=[5,6,1,8,4,5]，交点为节点8",
+      "核心思路：<span class=\"highlight\">双指针消除长度差</span>——pA走完A走B，pB走完B走A，两者走过的总长度相同，必在交点相遇",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">getIntersectionNode</span>(headA, headB):\n    pA, pB = headA, headB\n    <span class=\"kw\">while</span> pA != pB:\n        pA = pA.next <span class=\"kw\">if</span> pA <span class=\"kw\">else</span> headB\n        pB = pB.next <span class=\"kw\">if</span> pB <span class=\"kw\">else</span> headA\n    <span class=\"kw\">return</span> pA  <span class=\"cm\"># 相交返回交点，不相交两者同时为None</span></pre>",
+      "时间O(m+n)，空间O(1)。数学证明：a+c+b = b+c+a（c为公共部分长度）",
+      "易错点：比较的是节点引用相等（同一个节点），不是值相等"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce12",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC234 回文链表 (Palindrome Linked List) — 快慢指针+反转",
+    "bullets": [
+      "判断单链表是否为<span class=\"highlight\">回文</span>（正读反读相同），要求O(1)空间",
+      "示例：[1,2,2,1] → true；[1,2] → false",
+      "核心思路：①<span class=\"highlight\">快慢指针</span>找中点 ②<span class=\"highlight\">反转后半段</span> ③逐一比较前后两半",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">isPalindrome</span>(head):\n    <span class=\"cm\"># 1. 快慢指针找中点</span>\n    slow = fast = head\n    <span class=\"kw\">while</span> fast <span class=\"kw\">and</span> fast.next:\n        slow = slow.next\n        fast = fast.next.next\n    <span class=\"cm\"># 2. 反转后半段</span>\n    prev = <span class=\"kw\">None</span>\n    <span class=\"kw\">while</span> slow:\n        nxt = slow.next\n        slow.next = prev\n        prev = slow\n        slow = nxt\n    <span class=\"cm\"># 3. 比较前后两半</span>\n    left, right = head, prev\n    <span class=\"kw\">while</span> right:\n        <span class=\"kw\">if</span> left.val != right.val:\n            <span class=\"kw\">return</span> <span class=\"kw\">False</span>\n        left = left.next\n        right = right.next\n    <span class=\"kw\">return</span> <span class=\"kw\">True</span></pre>",
+      "时间O(n)，空间O(1)。综合了快慢指针+链表反转两个核心技巧",
+      "注意：此方法会修改原链表。面试中可追问如何恢复原链表（再反转回来）"
+    ],
+    "lv": 1
   }
 ]

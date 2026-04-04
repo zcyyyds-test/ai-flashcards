@@ -10,7 +10,8 @@
       "<span class=\"highlight\">Planning</span>：任务分解和执行策略（ReAct/Plan-and-Execute/反思）",
       "你的项目覆盖全部四要素：SiLR(LLM+仿真工具+观测记忆+ReAct规划)，RAG(LLM+10工具+检索记忆+意图路由)"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 1
   },
   {
     "id": "a02",
@@ -23,7 +24,8 @@
       "你的解决方案：三层ActionParser（原生/JSON/正则兜底）+ 强制调用guardrails",
       "<span class=\"highlight\">Structured Output</span>：限制LLM只能输出符合Schema的JSON，减少解析错误"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "a03",
@@ -36,7 +38,8 @@
       "<span class=\"highlight\">情景记忆</span>：记录成功/失败的完整episode，用于未来类似任务参考",
       "你的实现：SiLR用观测压缩做工作记忆；RAG用向量DB做长期记忆；EdgeRouter用滑动窗口做时序记忆"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "a04",
@@ -49,7 +52,8 @@
       "你做过的：Observation压缩(2000→300 tokens) / Escalation Hint(只在REJECT时注入) / RRF权重调整",
       "核心理念：<span class=\"highlight\">控制模型\"看到什么\"比\"怎么问\"更重要</span>"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "a05",
@@ -62,7 +66,8 @@
       "④<span class=\"highlight\">黑板模式</span>：共享状态空间，各Agent读写 → 解耦通信",
       "框架：AutoGen(对话式) / CrewAI(角色分工) / LangGraph(图状态机)"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "a06",
@@ -76,7 +81,8 @@
       "⑤<span class=\"highlight\">成本</span>：API调用/推理成本（SiLR: 比GPT低100×）",
       "难点：Agent行为是随机的，需要多次运行取统计量，不能只跑一次"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "a07",
@@ -89,7 +95,8 @@
       "回退Guardrails：失败时的兜底策略（Failsafe、默认回答、人工转接）",
       "实现方式：规则(正则/关键词) / 分类器(fine-tuned) / LLM-as-Judge / 仿真器验证"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "a08",
@@ -102,6 +109,63 @@
       "④<span class=\"highlight\">幻觉动作</span>：调用不存在的工具或生成无效参数 → Schema验证+解析兜底",
       "⑤<span class=\"highlight\">上下文污染</span>：错误信息积累在context中影响后续判断 → 观测压缩+状态重置"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
+  },
+  {
+    "id": "aa09",
+    "cat": "Agent架构",
+    "q": "MCP协议 (Model Context Protocol)",
+    "bullets": [
+      "<span class=\"highlight\">MCP</span>是Anthropic提出的开放协议，标准化LLM与外部工具/数据源的连接方式",
+      "类比：USB-C统一了充电接口 → MCP统一了<span class=\"highlight\">AI与工具的接口</span>。一次实现，所有模型都能用",
+      "三大能力：①<span class=\"highlight\">Tools</span>（模型调用外部函数） ②<span class=\"highlight\">Resources</span>（模型读取外部数据） ③<span class=\"highlight\">Prompts</span>（预定义的交互模板）",
+      "架构：Client(LLM应用) ↔ MCP Server(工具提供者)。传输层支持stdio/HTTP SSE",
+      "优势vs自定义Function Calling：标准化(跨模型复用) / 发现机制(动态列出可用工具) / 安全模型(权限控制内置)"
+    ],
+    "group": "基础",
+    "lv": 2
+  },
+  {
+    "id": "aa10",
+    "cat": "Agent架构",
+    "q": "Agent记忆系统设计（深入）",
+    "bullets": [
+      "记忆三层架构：<span class=\"highlight\">感知层</span>(原始输入) → <span class=\"highlight\">工作记忆层</span>(当前任务上下文) → <span class=\"highlight\">长期记忆层</span>(持久化知识)",
+      "工作记忆管理：context window有限 → 关键技术：①摘要压缩 ②滑动窗口 ③重要性评分后选择性保留",
+      "长期记忆存储：向量数据库(语义检索) + 结构化数据库(精确查询) + 知识图谱(关系推理)",
+      "记忆检索策略：<span class=\"highlight\">相关性</span>(embedding相似度) + <span class=\"highlight\">时效性</span>(时间衰减) + <span class=\"highlight\">重要性</span>(访问频率/情感强度)",
+      "你的实践：SiLR观测压缩(2000→300 tokens)就是工作记忆管理；RAG向量检索就是长期记忆检索"
+    ],
+    "group": "基础",
+    "lv": 3
+  },
+  {
+    "id": "aa11",
+    "cat": "Agent架构",
+    "q": "Multi-Agent协作模式（深入）",
+    "bullets": [
+      "<span class=\"highlight\">辩论模式</span>：多个Agent各持观点，通过多轮辩论达成共识 → 提升推理质量（如Society of Mind）",
+      "<span class=\"highlight\">流水线模式</span>：Agent A的输出作为Agent B的输入 → 适合有明确流程的任务（研究→写作→审查）",
+      "<span class=\"highlight\">投票模式</span>：多个Agent独立完成任务，多数投票选最佳 → Self-Consistency的Agent版本",
+      "协作挑战：①状态同步（共享记忆的一致性） ②任务分配（避免重复工作） ③冲突解决（Agent意见不一致时的仲裁）",
+      "框架对比：LangGraph(最灵活，图定义) / CrewAI(角色驱动，简单) / AutoGen(对话驱动，微软)"
+    ],
+    "group": "基础",
+    "lv": 3
+  },
+  {
+    "id": "aa12",
+    "cat": "Agent架构",
+    "q": "Agent安全与对齐",
+    "bullets": [
+      "核心原则：Agent拥有工具调用能力 → 安全比纯文本生成<span class=\"highlight\">重要10倍</span>（可以真正造成损害）",
+      "<span class=\"highlight\">最小权限</span>：每个Agent/工具只授予完成任务所需的最小权限。读写分离，危险操作需人工确认",
+      "<span class=\"highlight\">沙箱执行</span>：代码执行在隔离环境中运行（Docker/VM），网络访问白名单，文件系统只读挂载",
+      "<span class=\"highlight\">人类在回路</span>(Human-in-the-Loop)：高风险动作（删除/付款/发布）必须人工审批。SiLR验证器就是自动化版HITL",
+      "对齐难题：Agent优化任务目标时可能产生意外行为（specification gaming）→ 需要明确约束+过程监控，不只看最终结果"
+    ],
+    "group": "基础",
+    "lv": 3
   }
 ]

@@ -464,5 +464,146 @@
     ],
     "lv": 3,
     "group": "基础"
+  },
+  {
+    "id": "al36",
+    "cat": "算法",
+    "q": "Prim 最小生成树 — 堆优化",
+    "bullets": [
+      "思路：从任意节点出发，贪心选<span class=\"highlight\">连接已选集合和未选集合的最小边</span>，逐步扩展",
+      "<pre><span class=\"kw\">import</span> heapq\n<span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\n\n<span class=\"kw\">def</span> <span class=\"fn\">prim</span>(n, edges):\n    graph = defaultdict(list)\n    <span class=\"kw\">for</span> u, v, w <span class=\"kw\">in</span> edges:\n        graph[u].append((w, v))\n        graph[v].append((w, u))\n    visited = <span class=\"fn\">set</span>()\n    pq = [(<span class=\"num\">0</span>, <span class=\"num\">0</span>)]  <span class=\"cm\"># (权重, 节点)</span>\n    mst_cost = <span class=\"num\">0</span>\n    <span class=\"kw\">while</span> pq <span class=\"kw\">and</span> len(visited) < n:\n        w, u = heapq.heappop(pq)\n        <span class=\"kw\">if</span> u <span class=\"kw\">in</span> visited: <span class=\"kw\">continue</span>\n        visited.add(u)\n        mst_cost += w\n        <span class=\"kw\">for</span> nw, v <span class=\"kw\">in</span> graph[u]:\n            <span class=\"kw\">if</span> v <span class=\"kw\">not in</span> visited:\n                heapq.heappush(pq, (nw, v))\n    <span class=\"kw\">return</span> mst_cost</pre>",
+      "堆优化Prim时间 <span class=\"num\">O(E log V)</span>，与Kruskal的 <span class=\"num\">O(E log E)</span> 相当",
+      "Kruskal vs Prim：稀疏图(E远小于V²)用Kruskal；稠密图(E接近V²)用Prim朴素版O(V²)更优",
+      "LC1584 连接所有点的最小费用 — Prim典型应用"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "al37",
+    "cat": "算法",
+    "q": "差分数组 — 区间批量修改",
+    "bullets": [
+      "差分数组：<span class=\"highlight\">diff[i] = nums[i] - nums[i-1]</span>，对区间 [l, r] 加 val 只需 diff[l]+=val, diff[r+1]-=val",
+      "<pre><span class=\"cm\"># LC1109 航班预订统计</span>\n<span class=\"kw\">def</span> <span class=\"fn\">corpFlightBookings</span>(bookings, n):\n    diff = [<span class=\"num\">0</span>] * (n + <span class=\"num\">1</span>)\n    <span class=\"kw\">for</span> first, last, seats <span class=\"kw\">in</span> bookings:\n        diff[first - <span class=\"num\">1</span>] += seats      <span class=\"cm\"># 区间起点加</span>\n        diff[last] -= seats            <span class=\"cm\"># 区间终点+1减</span>\n    <span class=\"cm\"># 前缀和还原</span>\n    res = [<span class=\"num\">0</span>] * n\n    res[<span class=\"num\">0</span>] = diff[<span class=\"num\">0</span>]\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(<span class=\"num\">1</span>, n):\n        res[i] = res[i-<span class=\"num\">1</span>] + diff[i]\n    <span class=\"kw\">return</span> res</pre>",
+      "时间 <span class=\"num\">O(n + m)</span>（m次区间操作+一次前缀和还原），暴力需O(nm)",
+      "前缀和与差分是<span class=\"highlight\">互逆操作</span>：前缀和把差分数组→原数组，差分把原数组→变化量",
+      "应用：公交车站上下客、区间加法（LC370）、二维差分（LC2536）"
+    ],
+    "lv": 2,
+    "group": "基础"
+  },
+  {
+    "id": "al38",
+    "cat": "算法",
+    "q": "回溯法 — 全排列与去重",
+    "bullets": [
+      "LC46 全排列：不含重复数字的排列；LC47 全排列II：含重复数字需去重",
+      "<pre><span class=\"cm\"># LC46 全排列（无重复）</span>\n<span class=\"kw\">def</span> <span class=\"fn\">permute</span>(nums):\n    res = []\n    <span class=\"kw\">def</span> <span class=\"fn\">bt</span>(path, used):\n        <span class=\"kw\">if</span> len(path) == len(nums):\n            res.append(path[:])\n            <span class=\"kw\">return</span>\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(nums)):\n            <span class=\"kw\">if</span> used[i]: <span class=\"kw\">continue</span>\n            used[i] = <span class=\"kw\">True</span>\n            path.append(nums[i])\n            bt(path, used)\n            path.pop()\n            used[i] = <span class=\"kw\">False</span>\n    bt([], [<span class=\"kw\">False</span>] * len(nums))\n    <span class=\"kw\">return</span> res</pre>",
+      "<pre><span class=\"cm\"># LC47 含重复元素的去重技巧</span>\n<span class=\"kw\">def</span> <span class=\"fn\">permuteUnique</span>(nums):\n    nums.sort()  <span class=\"cm\"># 排序是去重的前提</span>\n    res = []\n    <span class=\"kw\">def</span> <span class=\"fn\">bt</span>(path, used):\n        <span class=\"kw\">if</span> len(path) == len(nums):\n            res.append(path[:])\n            <span class=\"kw\">return</span>\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(nums)):\n            <span class=\"kw\">if</span> used[i]: <span class=\"kw\">continue</span>\n            <span class=\"cm\"># 去重：相同值且前一个没用过→跳过</span>\n            <span class=\"kw\">if</span> i > <span class=\"num\">0</span> <span class=\"kw\">and</span> nums[i] == nums[i-<span class=\"num\">1</span>] <span class=\"kw\">and not</span> used[i-<span class=\"num\">1</span>]:\n                <span class=\"kw\">continue</span>\n            used[i] = <span class=\"kw\">True</span>\n            path.append(nums[i])\n            bt(path, used)\n            path.pop()\n            used[i] = <span class=\"kw\">False</span>\n    bt([], [<span class=\"kw\">False</span>] * len(nums))\n    <span class=\"kw\">return</span> res</pre>",
+      "去重核心：<span class=\"highlight\">排序 + 跳过同层相同元素</span>。条件 <code>not used[i-1]</code> 保证同一层不重复选",
+      "排列 vs 组合 vs 子集：排列用visited；组合/子集用start index"
+    ],
+    "lv": 2,
+    "group": "基础"
+  },
+  {
+    "id": "al39",
+    "cat": "算法",
+    "q": "贪心算法 — 经典题型总结",
+    "bullets": [
+      "<span class=\"highlight\">贪心成立条件</span>：局部最优选择能导出全局最优解。证明方法：交换论证/归纳法/反证法",
+      "经典贪心题型：① <span class=\"highlight\">区间调度</span>（按结束时间排序） ② <span class=\"highlight\">分配问题</span>（排序后贪心匹配） ③ <span class=\"highlight\">跳跃游戏</span>（维护最远可达） ④ <span class=\"highlight\">加油站</span>（累积剩余油量）",
+      "<pre><span class=\"cm\"># LC455 分发饼干 — 排序+贪心</span>\n<span class=\"kw\">def</span> <span class=\"fn\">findContentChildren</span>(g, s):\n    g.sort()  <span class=\"cm\"># 孩子胃口</span>\n    s.sort()  <span class=\"cm\"># 饼干大小</span>\n    i = j = <span class=\"num\">0</span>\n    <span class=\"kw\">while</span> i < len(g) <span class=\"kw\">and</span> j < len(s):\n        <span class=\"kw\">if</span> s[j] >= g[i]:  <span class=\"cm\"># 饼干满足胃口</span>\n            i += <span class=\"num\">1</span>  <span class=\"cm\"># 喂饱一个孩子</span>\n        j += <span class=\"num\">1</span>  <span class=\"cm\"># 尝试下一块饼干</span>\n    <span class=\"kw\">return</span> i</pre>",
+      "贪心 vs DP：贪心不回溯、无状态转移，时间通常更优；但贪心需要<span class=\"highlight\">证明正确性</span>，不确定时用DP更安全",
+      "面试技巧：遇到求最优+排序后可贪心 → 考虑贪心；不确定时先DP再看能否简化为贪心"
+    ],
+    "lv": 2,
+    "group": "基础"
+  },
+  {
+    "id": "al40",
+    "cat": "算法",
+    "q": "DP分类 — 背包问题全家桶",
+    "bullets": [
+      "<span class=\"highlight\">0-1背包</span>（每个物品选或不选）：dp[w] = max(dp[w], dp[w-wi]+vi)，<span class=\"highlight\">容量逆序遍历</span>",
+      "<span class=\"highlight\">完全背包</span>（每个物品可选无限次）：同上公式，<span class=\"highlight\">容量正序遍历</span>",
+      "<span class=\"highlight\">多重背包</span>（每个物品有数量限制）：二进制拆分优化，将si个物品拆为1,2,4...份的0-1背包",
+      "<pre><span class=\"cm\"># 0-1背包 vs 完全背包 — 唯一区别是遍历方向</span>\n<span class=\"kw\">def</span> <span class=\"fn\">knapsack_01</span>(W, wt, val):\n    dp = [<span class=\"num\">0</span>] * (W+<span class=\"num\">1</span>)\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(wt)):\n        <span class=\"kw\">for</span> w <span class=\"kw\">in</span> range(W, wt[i]-<span class=\"num\">1</span>, -<span class=\"num\">1</span>):  <span class=\"cm\"># 逆序！</span>\n            dp[w] = max(dp[w], dp[w-wt[i]]+val[i])\n\n<span class=\"kw\">def</span> <span class=\"fn\">knapsack_full</span>(W, wt, val):\n    dp = [<span class=\"num\">0</span>] * (W+<span class=\"num\">1</span>)\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(wt)):\n        <span class=\"kw\">for</span> w <span class=\"kw\">in</span> range(wt[i], W+<span class=\"num\">1</span>):  <span class=\"cm\"># 正序！</span>\n            dp[w] = max(dp[w], dp[w-wt[i]]+val[i])</pre>",
+      "变体映射：目标和(LC494)→0-1背包 | 零钱兑换(LC322)→完全背包 | 分割等和子集(LC416)→0-1背包判断可达",
+      "面试中背包问题通常不会直接出现，而是<span class=\"highlight\">变形后考察</span>，关键是识别出背包模型"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "al41",
+    "cat": "算法",
+    "q": "DP分类 — 区间DP与树形DP",
+    "bullets": [
+      "<span class=\"highlight\">区间DP</span>：dp[i][j] 表示区间 [i,j] 上的最优解，枚举分割点k",
+      "<pre><span class=\"cm\"># LC516 最长回文子序列 — 区间DP</span>\n<span class=\"kw\">def</span> <span class=\"fn\">longestPalindromeSubseq</span>(s):\n    n = len(s)\n    dp = [[<span class=\"num\">0</span>]*n <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(n)]\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(n): dp[i][i] = <span class=\"num\">1</span>\n    <span class=\"kw\">for</span> length <span class=\"kw\">in</span> range(<span class=\"num\">2</span>, n+<span class=\"num\">1</span>):  <span class=\"cm\"># 枚举区间长度</span>\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(n-length+<span class=\"num\">1</span>):\n            j = i + length - <span class=\"num\">1</span>\n            <span class=\"kw\">if</span> s[i] == s[j]:\n                dp[i][j] = dp[i+<span class=\"num\">1</span>][j-<span class=\"num\">1</span>] + <span class=\"num\">2</span>\n            <span class=\"kw\">else</span>:\n                dp[i][j] = max(dp[i+<span class=\"num\">1</span>][j], dp[i][j-<span class=\"num\">1</span>])\n    <span class=\"kw\">return</span> dp[<span class=\"num\">0</span>][n-<span class=\"num\">1</span>]</pre>",
+      "<span class=\"highlight\">树形DP</span>：在树结构上做DP，通常DFS后序遍历，子节点结果合并到父节点。典型：打家劫舍III(LC337)、二叉树最大路径和(LC124)",
+      "区间DP特征：<span class=\"highlight\">从小区间推大区间</span>，遍历顺序按区间长度从小到大",
+      "面试中区间DP较少直接考，但回文相关问题（LC516/LC1312）是高频考点"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "al42",
+    "cat": "算法",
+    "q": "位运算进阶 — 状态压缩与技巧",
+    "bullets": [
+      "<span class=\"highlight\">状压DP</span>：用二进制整数表示集合状态，常见于小规模问题（n<=20）",
+      "<pre><span class=\"cm\"># 枚举子集的标准写法</span>\nmask = (<span class=\"num\">1</span> << n) - <span class=\"num\">1</span>  <span class=\"cm\"># 全集</span>\nsub = mask\n<span class=\"kw\">while</span> sub > <span class=\"num\">0</span>:\n    <span class=\"cm\"># 处理子集 sub</span>\n    sub = (sub - <span class=\"num\">1</span>) & mask  <span class=\"cm\"># 枚举下一个子集</span>\n\n<span class=\"cm\"># 常用位运算技巧</span>\nx & (-x)          <span class=\"cm\"># lowbit，取最低位的1</span>\nx & (x - <span class=\"num\">1</span>)       <span class=\"cm\"># 去掉最低位的1</span>\n(x >> i) & <span class=\"num\">1</span>      <span class=\"cm\"># 取第i位</span>\nx | (<span class=\"num\">1</span> << i)      <span class=\"cm\"># 将第i位设为1</span>\nx & ~(<span class=\"num\">1</span> << i)     <span class=\"cm\"># 将第i位设为0</span>\nbin(x).count(<span class=\"str\">'1'</span>) <span class=\"cm\"># Python计算popcount</span></pre>",
+      "LC78 子集可用位运算：用 0 到 2^n-1 的每个数代表一个子集",
+      "实用技巧：<span class=\"highlight\">交换两数</span> a^=b; b^=a; a^=b | <span class=\"highlight\">取绝对值</span>（仅整数）| <span class=\"highlight\">奇偶判断</span> n&1",
+      "面试重点：LC136/137/260（出现次数系列）、子集枚举、状压DP（LC1723任务分配）"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "al43",
+    "cat": "算法",
+    "q": "Floyd-Warshall — 全源最短路",
+    "bullets": [
+      "思想：动态规划，枚举中间节点k，更新所有点对(i,j)的最短距离",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">floyd</span>(n, edges):\n    INF = float(<span class=\"str\">'inf'</span>)\n    dist = [[INF]*n <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(n)]\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(n): dist[i][i] = <span class=\"num\">0</span>\n    <span class=\"kw\">for</span> u, v, w <span class=\"kw\">in</span> edges:\n        dist[u][v] = w  <span class=\"cm\"># 有向图</span>\n    <span class=\"cm\"># 三重循环：k必须在最外层</span>\n    <span class=\"kw\">for</span> k <span class=\"kw\">in</span> range(n):\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(n):\n            <span class=\"kw\">for</span> j <span class=\"kw\">in</span> range(n):\n                <span class=\"kw\">if</span> dist[i][k] + dist[k][j] < dist[i][j]:\n                    dist[i][j] = dist[i][k] + dist[k][j]\n    <span class=\"kw\">return</span> dist</pre>",
+      "时间 <span class=\"num\">O(V³)</span>，空间 <span class=\"num\">O(V²)</span>。<span class=\"highlight\">k必须放最外层</span>（DP状态转移的正确性保证）",
+      "可处理负权边（但不能有负环）。检测负环：Floyd后若 dist[i][i] < 0 则存在负环",
+      "适用场景：V较小（几百以内）的全源最短路、传递闭包计算"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "al44",
+    "cat": "算法",
+    "q": "柱状图最大矩形 — 单调栈经典",
+    "bullets": [
+      "LC84：给定柱状图各柱高度，找<span class=\"highlight\">能围出的最大矩形面积</span>",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">largestRectangleArea</span>(heights):\n    stack = []  <span class=\"cm\"># 单调递增栈，存索引</span>\n    heights.append(<span class=\"num\">0</span>)  <span class=\"cm\"># 哨兵，确保最后全部弹出</span>\n    max_area = <span class=\"num\">0</span>\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(heights)):\n        <span class=\"kw\">while</span> stack <span class=\"kw\">and</span> heights[i] < heights[stack[-<span class=\"num\">1</span>]]:\n            h = heights[stack.pop()]\n            <span class=\"cm\"># 宽度 = 当前i到栈顶的距离</span>\n            w = i <span class=\"kw\">if not</span> stack <span class=\"kw\">else</span> i - stack[-<span class=\"num\">1</span>] - <span class=\"num\">1</span>\n            max_area = max(max_area, h * w)\n        stack.append(i)\n    heights.pop()  <span class=\"cm\"># 恢复原数组</span>\n    <span class=\"kw\">return</span> max_area</pre>",
+      "核心：对每根柱子，找<span class=\"highlight\">左边第一个更矮的</span>和<span class=\"highlight\">右边第一个更矮的</span> → 确定以该柱高度为高的矩形宽度",
+      "时间 <span class=\"num\">O(n)</span>，空间 <span class=\"num\">O(n)</span>。末尾添加哨兵0是技巧，避免处理栈中剩余元素",
+      "变体：LC85 最大矩形（2D矩阵中全1的最大矩形）→ 逐行构建柱状图 + 调用本题解法"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "al45",
+    "cat": "算法",
+    "q": "DP — 最长公共子序列 (LCS)",
+    "bullets": [
+      "LC1143：找两个字符串的<span class=\"highlight\">最长公共子序列</span>长度（子序列可不连续）",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">longestCommonSubsequence</span>(text1, text2):\n    m, n = len(text1), len(text2)\n    dp = [[<span class=\"num\">0</span>] * (n+<span class=\"num\">1</span>) <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(m+<span class=\"num\">1</span>)]\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(<span class=\"num\">1</span>, m+<span class=\"num\">1</span>):\n        <span class=\"kw\">for</span> j <span class=\"kw\">in</span> range(<span class=\"num\">1</span>, n+<span class=\"num\">1</span>):\n            <span class=\"kw\">if</span> text1[i-<span class=\"num\">1</span>] == text2[j-<span class=\"num\">1</span>]:\n                dp[i][j] = dp[i-<span class=\"num\">1</span>][j-<span class=\"num\">1</span>] + <span class=\"num\">1</span>\n            <span class=\"kw\">else</span>:\n                dp[i][j] = max(dp[i-<span class=\"num\">1</span>][j], dp[i][j-<span class=\"num\">1</span>])\n    <span class=\"kw\">return</span> dp[m][n]</pre>",
+      "状态转移：字符相同→左上角+1；不同→取上方和左方的较大值",
+      "时间 <span class=\"num\">O(mn)</span>，空间 <span class=\"num\">O(mn)</span>，可优化到O(min(m,n))",
+      "LCS vs LIS：LIS可转化为LCS问题；LCS是diff算法（git diff）和编辑距离的基础"
+    ],
+    "lv": 2,
+    "group": "基础"
   }
 ]

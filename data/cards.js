@@ -1,5 +1,5 @@
 // Auto-generated from data/*.json — edit the JSON files, then run: bash build-cards.sh
-// Generated: 2026-04-02T19:26:09
+// Generated: 2026-04-04T20:02:03
 const BUILTIN_CARDS = [
   {
     "id": "s01",
@@ -12,7 +12,8 @@ const BUILTIN_CARDS = [
       "每个项目都有端到端实现和量化结果，不只是demo",
       "选SA：想把技术能力用在真实客户场景中，SA是技术和业务的桥梁"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "s02",
@@ -23,7 +24,8 @@ const BUILTIN_CARDS = [
       "BytePlus背靠字节技术积累，面向海外企业市场",
       "我在日本、会日语，能直接参与日本市场客户服务，匹配度高"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "s03",
@@ -35,7 +37,8 @@ const BUILTIN_CARDS = [
       "SA能在更多样的客户场景中做这件事，直接看到技术对客户的价值",
       "避免说\"不想做研究\"，而是强调对\"落地\"的热情"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "s04",
@@ -46,7 +49,8 @@ const BUILTIN_CARDS = [
       "研究方向就是LLM Agent，BytePlus工作会直接反哺研究",
       "毕业后有更强的工业化视角，这是双赢的"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "s05",
@@ -57,7 +61,8 @@ const BUILTIN_CARDS = [
       "通用性层面：框架设计成场景无关的，在网络路由（完全不同领域）验证通过",
       "最大坑：DPO对齐花了一周，结果成功率反降7.6pp——技术选型不能只看理论，要用数据验证"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "s06",
@@ -69,7 +74,8 @@ const BUILTIN_CARDS = [
       "收获：不能假设某个技术一定有效，要快速验证、用数据说话",
       "JP-DocRAG Embedding微调中断教训：训练必须跑完才能下结论"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "s07",
@@ -80,7 +86,8 @@ const BUILTIN_CARDS = [
       "②日本市场客户最常见的需求类型是什么？（推荐/视频/RAG/Agent？）",
       "③您在BytePlus做SA最大的收获或挑战是什么？"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "s08",
@@ -93,7 +100,8 @@ const BUILTIN_CARDS = [
       "③模型选择：任务是否适合当前模型？需要换或微调？",
       "④系统层面：RAG检索不准 → 模型拿到错误上下文"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "b01",
@@ -106,7 +114,8 @@ const BUILTIN_CARDS = [
       "Churn Rate：客户流失率 / MRR/ARR：月/年经常性收入",
       "SA用法：不说\"准确率+5%\"，说\"推荐准确率+5%预计带来GMV增长XX%\""
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "b02",
@@ -118,7 +127,8 @@ const BUILTIN_CARDS = [
       "企业客户不会因为demo好就下单，要经过漫长评估",
       "SA的工作贯穿整个流程，是客户和公司之间的技术桥梁"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "b03",
@@ -130,7 +140,8 @@ const BUILTIN_CARDS = [
       "ToB：长期合作+定制化服务，流失代价极高（一个大客户占收入10%）",
       "<span class=\"highlight\">SA只存在于ToB</span>：因为需求复杂、决策周期长、客单价高，需要懂技术的人全程陪跑"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "b04",
@@ -144,7 +155,8 @@ const BUILTIN_CARDS = [
       "Freemium：基础免费，高级收费（Slack）",
       "SA用法：成果报酬型是很好的卖点——\"效果不好不收钱\""
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "b05",
@@ -156,7 +168,8 @@ const BUILTIN_CARDS = [
       "Recommend=SaaS（客户直接用后台配置）；MediaLive/VoD/RTC=PaaS（SDK集成）",
       "MaaS：模型即服务，SA帮客户判断用哪层（直接调API / LoRA微调 / 自己训练）"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "b06",
@@ -169,7 +182,8 @@ const BUILTIN_CARDS = [
       "更灵活定价（成果报酬型）",
       "对亚洲市场（日本/东南亚）有更强本地化能力"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "b07",
@@ -182,7 +196,8 @@ const BUILTIN_CARDS = [
       "④ 数据安全/合规：on-prem部署、data residency（日本法规）",
       "⑤ 可解释性：给客户看决策依据，金融/医疗生死线"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "b08",
@@ -196,7 +211,8 @@ const BUILTIN_CARDS = [
       "维护：跑完实验就结束 vs 7x24运行+持续更新",
       "你的项目已在往落地方向走（有仿真器验证/前后端/评测体系）"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "b09",
@@ -209,7 +225,8 @@ const BUILTIN_CARDS = [
       "成本优化：缓存策略/prompt优化/模型选型降低总成本",
       "数据安全：企业客户对数据隐私敏感，提供更可控的部署方式"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "b10",
@@ -223,7 +240,8 @@ const BUILTIN_CARDS = [
       "Vendor Lock-in：客户担心用了服务就离不开",
       "Compliance合规 / Multi-tenancy多租户 / Hybrid Cloud混合云"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "d01",
@@ -236,7 +254,8 @@ const BUILTIN_CARDS = [
       "工程方案不可标准化（每个客户都要重新设计）、有保质期、不是产品——这不scale",
       "本质在考察：你有没有<span class=\"highlight\">产品化思维</span>，还是只会做项目制交付"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "d02",
@@ -248,7 +267,8 @@ const BUILTIN_CARDS = [
       "第三层（数据飞轮）：工程方案最大价值不是它本身，而是在真实场景中产生的<span class=\"highlight\">数据和洞察</span>——哪些query失败、哪些决策被拒——这些是训练下一代模型的燃料",
       "判断：<span class=\"highlight\">短期看工程，长期看模型</span>。SA角色会从\"设计工程补丁\"转向\"帮客户做post-training和evaluation\""
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "d03",
@@ -261,7 +281,8 @@ const BUILTIN_CARDS = [
       "评测的产品化价值：帮客户在多个模型中选最适合其场景的那个——这就是MaaS中SA的核心职责",
       "评测→发现短板→数据收集→post-training→模型改进 = <span class=\"highlight\">数据飞轮</span>"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "d04",
@@ -275,7 +296,8 @@ const BUILTIN_CARDS = [
       "④客户场景理解（什么问题用RAG、什么不能用RAG、什么时候LSTM比LLM好）",
       "结论：工程是手段，<span class=\"highlight\">评测方法+数据资产+场景判断力</span>才是不被淘汰的能力"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "d05",
@@ -288,7 +310,8 @@ const BUILTIN_CARDS = [
       "数据权重：行为数据~80%（显示性偏好最强）> 内容属性~15%（冷启动补位）> 用户基本信息~5%（区分度低+隐私限制）",
       "成果报酬型定价是核心卖点——\"效果不好不收钱\""
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "d06",
@@ -301,7 +324,8 @@ const BUILTIN_CARDS = [
       "你做的BM25+Dense+RRF+Reranker+Embedding微调，本质是用工程弥补\"模型不知道该找什么\"",
       "面试官观点：当模型推理能力够强时，固定pipeline会被模型原生tool use能力吞掉"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "d07",
@@ -314,7 +338,8 @@ const BUILTIN_CARDS = [
       "长期：随着模型领域知识增强，传统RAG pipeline价值递减",
       "持久价值不在pipeline本身，而在：评测数据集(55个QA) / 领域微调数据(30K三元组) / \"什么场景RAG有效什么无效\"的判断力"
     ],
-    "group": "面试"
+    "group": "面试",
+    "lv": 2
   },
   {
     "id": "g01",
@@ -327,7 +352,8 @@ const BUILTIN_CARDS = [
       "超过GPT-5.4 zero-shot(82.1%) / few-shot-3(94.2%) / 1-shot(96.7%)",
       "推理成本低 <span class=\"num\">100倍</span>（本地14B vs GPT API）"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "g02",
@@ -339,7 +365,8 @@ const BUILTIN_CARDS = [
       "SiLR：每步先在仿真器中验证安全性再执行，把安全保障从\"信任模型\"变成\"验证模型\"",
       "可迁移：任何有仿真器/规则引擎的场景（金融合规、医疗用药、代码沙箱）"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "g03",
@@ -352,7 +379,8 @@ const BUILTIN_CARDS = [
       "④ PASS→执行 / FAIL→Escalation Hint+重试（每步最多3次）/ 3次失败→failsafe",
       "⑤ CHECK：check_stability() → 未恢复则回到Step 1"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "g04",
@@ -364,7 +392,8 @@ const BUILTIN_CARDS = [
       "保证系统永远有兜底，不会陷入无限循环或做出危险决策",
       "为什么选ReAct不选Plan-and-Execute：电力恢复是动态的，每次操作后系统状态变化，不能提前规划所有步骤"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "g05",
@@ -376,7 +405,8 @@ const BUILTIN_CARDS = [
       "Layer 3：正则匹配（兜底）",
       "目的：跨模型兼容性，避免浪费重试次数在解析错误上，能快速切换模型做消融"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "g06",
@@ -388,7 +418,8 @@ const BUILTIN_CARDS = [
       "③ 4个约束检查：电压(0.90-1.10pu) / 频率(±0.5Hz) / 线路负载(<100%) / 转子角(<180°)",
       "全部PASS → 主系统执行；任一FAIL → 结构化违规报告（偏离多少、调整建议）"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "g07",
@@ -400,7 +431,8 @@ const BUILTIN_CARDS = [
       "关键洞察：12轮SFT无法教会\"被拒→加码\"的多步行为，系统层引导比重训更有效",
       "消融：progress feedback(PASS时也提示)反而退步——只在REJECT时介入"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "g08",
@@ -412,7 +444,8 @@ const BUILTIN_CARDS = [
       "总计 <span class=\"num\">248条</span> SFT数据",
       "先用Teacher生成，再SiLR验证过滤，再人工修正少量关键样本（蒸馏+主动学习）"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "g09",
@@ -424,7 +457,8 @@ const BUILTIN_CARDS = [
       "结论：<span class=\"highlight\">7条坏数据的伤害 > 100条好数据的贡献</span>",
       "对客户的意义：500条精心标注的行业QA，效果可能超过5000条噪音数据"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "g10",
@@ -436,7 +470,8 @@ const BUILTIN_CARDS = [
       "原因②：32B预训练知识更强，可能与SFT数据的领域策略存在冲突",
       "9B(视觉语言模型)=87.9%，文本推理弱于纯语言14B"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "g11",
@@ -448,7 +483,8 @@ const BUILTIN_CARDS = [
       "坑③：动作幅度分布偏移：close_line专家数据中adjust_gen都~20MW → 模型学到\"所有调整都是20MW\"",
       "最终结论：修复所有坑后DPO净贡献仅+0.6pp，投入产出比不高。不是所有场景都需要DPO"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "g12",
@@ -461,7 +497,8 @@ const BUILTIN_CARDS = [
       "训练时间: ~70-100 min on RTX PRO Blackwell 96GB",
       "r=64因为任务复杂度高（多工具选择+数值参数生成）"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "g13",
@@ -474,7 +511,8 @@ const BUILTIN_CARDS = [
       "压缩后~200-300 tokens，信息保留率90%+",
       "核心：给模型看<span class=\"highlight\">需要关注的信息</span>，不是所有信息"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "g14",
@@ -485,7 +523,8 @@ const BUILTIN_CARDS = [
       "原因：多示例稀释context，示例占用更多token，压缩了对当前问题的注意力",
       "教训：few-shot不是越多越好，需要实验验证"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "g15",
@@ -499,7 +538,8 @@ const BUILTIN_CARDS = [
       "代码执行：LLM生成代码 → 沙箱验证 → 通过才运行",
       "已验证：电力系统（物理仿真）+ 网络路由（离散事件仿真）"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "g16",
@@ -512,7 +552,8 @@ const BUILTIN_CARDS = [
       "隐私：电力系统=关键基础设施信息，不能上传第三方",
       "数据：本地14B+Escalation <span class=\"num\">97.0%</span> > GPT-5.4 1-shot <span class=\"num\">96.7%</span>，成本低100倍"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "g17",
@@ -524,7 +565,8 @@ const BUILTIN_CARDS = [
       "有failsafe兜底——最坏情况执行保守规则化策略",
       "给客户看验证报告样例——透明可解释"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "g18",
@@ -536,7 +578,8 @@ const BUILTIN_CARDS = [
       "③ DefaultFailsafe：全部失败后切换到规则化策略（基于最严重违规类型，执行保守恢复动作）",
       "系统永远有兜底方案，最坏情况也是走failsafe，不是做出危险决策"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "r01",
@@ -549,7 +592,8 @@ const BUILTIN_CARDS = [
       "55个日语电力领域查询，160+文档→359 chunks",
       "完整检索pipeline：BM25(Char 3-gram) + Dense(fine-tuned bge-m3) + RRF + Reranker"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "r02",
@@ -561,7 +605,8 @@ const BUILTIN_CARDS = [
       "<span class=\"highlight\">\"更精确\"≠\"更好\"</span>，需要实验验证",
       "Dense微调后仍低于BM25，但两者互补（Dense能找到语义相关的文档）"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "r03",
@@ -573,7 +618,8 @@ const BUILTIN_CARDS = [
       "MeCab漏掉复合词中间部分（\"需給調整\"→\"需給\"+\"調整\"，丢失组合信息）",
       "n-gram对Query和Document用相同tokenizer，一致性好"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "r04",
@@ -586,7 +632,8 @@ const BUILTIN_CARDS = [
       "教训：Hybrid的价值在Recall@5+（不漏掉好文档），不是Top-1准确率",
       "RRF权重(BM25=0.75, Dense=1.0)是反直觉的——给更弱的Dense更高权重"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "r05",
@@ -599,7 +646,8 @@ const BUILTIN_CARDS = [
       "是RAG pipeline的安全网——即使第一阶段不完美，Reranker从Top-50中把正确文档捞上来",
       "模型：bge-reranker-v2-m3（80M参数），延迟~0.25s"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "r06",
@@ -612,7 +660,8 @@ const BUILTIN_CARDS = [
       "效果：Recall@1 <span class=\"num\">+16.4pp</span>，MAP@10 +0.130",
       "关键教训：训练中断时Recall@5 -3.6%，跑完才+5.5%——<span class=\"highlight\">中途checkpoint可能比基线更差</span>"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "r07",
@@ -626,7 +675,8 @@ const BUILTIN_CARDS = [
       "⑤ judge_answer(~5.3s) — LLM-as-Judge 5维度评分",
       "⑥ read_chunk / ⑦ search_by_doc / ⑧ summarize_context / ⑨ decompose_query / ⑩ reflect_and_retry"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "r08",
@@ -638,7 +688,8 @@ const BUILTIN_CARDS = [
       "避免依赖膨胀（LangChain引入60+包）",
       "双协议支持（Gemini + OpenAI）自定义更容易"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "r09",
@@ -652,7 +703,8 @@ const BUILTIN_CARDS = [
       "⑤ Overall — 整体质量",
       "overall≤3 → 自动触发reflect_and_retry，最多重试2次"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "r10",
@@ -664,7 +716,8 @@ const BUILTIN_CARDS = [
       "Code层：如果LLM输出文本但没调judge，强制注入一次judge调用",
       "教训：<span class=\"highlight\">LLM会走最短路径，关键步骤不能靠\"建议\"，要靠强制</span>"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "r11",
@@ -678,7 +731,8 @@ const BUILTIN_CARDS = [
       "Dense+Rerank：Recall@1 80.0% / Recall@5 96.4% / nDCG <span class=\"num\">0.961</span>（最高）",
       "推荐：BM25+Rerank（简单高效）或Dense+Rerank（nDCG最高）"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "r12",
@@ -692,7 +746,8 @@ const BUILTIN_CARDS = [
       "⑤ 生成：Prompt是否有效？Faithfulness约束？",
       "通常最大问题在<span class=\"highlight\">Chunking和Embedding</span>——这是基础"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "r13",
@@ -705,7 +760,8 @@ const BUILTIN_CARDS = [
       "NFKC正规化：全角→半角（\"ＡＢＣ\"→\"ABC\"），统一空白字符",
       "发现：在小语料上，暴力Char n-gram比精细形态素解析更好"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "r14",
@@ -717,7 +773,8 @@ const BUILTIN_CARDS = [
       "Query意图分类（规则）自动识别comparative类问题 → 触发decompose_query",
       "例：\"A规定和B规定有什么冲突\" → [\"A规定目的？\", \"B规定目的？\", \"两者差异？\"]"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "r15",
@@ -728,7 +785,8 @@ const BUILTIN_CARDS = [
       "次选：<span class=\"highlight\">Embedding微调</span>——+16.4pp Recall@1，27分钟训练，用开源数据零标注成本",
       "bge-m3开源可微调本地部署；OpenAI embedding不可微调，日本企业数据不出设备是硬需求"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "e01",
@@ -741,7 +799,8 @@ const BUILTIN_CARDS = [
       "47%请求边缘直出，53%需要级联",
       "并发推理吞吐 <span class=\"num\">2.9×</span> 提升"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "e02",
@@ -755,7 +814,8 @@ const BUILTIN_CARDS = [
       "T4灰色地带：其他所有 → 边缘先做，置信度低则升级",
       "哲学：安全优先(T0/T1) → 效率优化(T2/T3) → 智能决策(T4)"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "e03",
@@ -767,7 +827,8 @@ const BUILTIN_CARDS = [
       "只有T4才真正需要置信度驱动的动态决策",
       "简单阈值：T0紧急请求可能因\"置信度还行\"被边缘处理，延误响应"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "e04",
@@ -779,7 +840,8 @@ const BUILTIN_CARDS = [
       "③ 时序一致性(权重0.4)：滑动窗口检测稳定性，过滤单帧噪声——权重最高",
       "时序权重最高原因：真正异常通常持续多帧，单帧异常大概率是噪声"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "e05",
@@ -791,7 +853,8 @@ const BUILTIN_CARDS = [
       "低估的会因置信度不够高而自动升级到云端",
       "实际效果 = 0漏检 + 86%成本节省"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "e06",
@@ -803,7 +866,8 @@ const BUILTIN_CARDS = [
       "Ollama优势：易用性、本地部署、CPU-only；vLLM优势：高吞吐、Continuous Batching",
       "gRPC用于边缘→云端内部通信（延迟低~30%），REST用于外部API"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "e07",
@@ -815,7 +879,8 @@ const BUILTIN_CARDS = [
       "Edge不用更激进INT4：0.8B模型够小，Q8_0在CPU上也能流畅运行",
       "GGUF是llama.cpp格式，专为CPU推理优化，`ollama pull`一条命令搞定"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "e08",
@@ -828,7 +893,8 @@ const BUILTIN_CARDS = [
       "④ 并发推理(2.9×吞吐) — asyncio + Semaphore",
       "⑤ 推测性预取(~-12%级联延迟) — 有额外成本，看场景"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "e09",
@@ -841,7 +907,8 @@ const BUILTIN_CARDS = [
       "<span class=\"num\">500ms</span>延迟：P50=1124ms，云端成本节省 <span class=\"num\">86.7%</span>",
       "结论：EdgeRouter价值<span class=\"highlight\">不依赖网络条件</span>"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "e10",
@@ -854,7 +921,8 @@ const BUILTIN_CARDS = [
       "原因：边缘快速粗修正(~2s) + 云端精修正 = 两阶段协作超越单一策略",
       "类比：先应急处理，再等专家精细处理"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "e11",
@@ -866,7 +934,8 @@ const BUILTIN_CARDS = [
       "更新方式：threshold += ±learning_rate（EMA平滑）",
       "效果：部署初期保守（多上云），运行后自适应（学会哪些边缘够了）"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "e12",
@@ -879,7 +948,8 @@ const BUILTIN_CARDS = [
       "和BytePlus产品关联：帮客户降低API调用成本 / 保护数据隐私 / 降低延迟",
       "核心模式：<span class=\"highlight\">简单的快速处理 + 复杂的精确处理 = 成本和质量最优平衡</span>"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "e13",
@@ -892,7 +962,8 @@ const BUILTIN_CARDS = [
       "对于架构验证，逻辑正确比部署形式更关键",
       "Prometheus+Grafana监控：6个面板，包含路由分布/级联确认率/置信度分布/云端升级率"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "p01",
@@ -904,7 +975,8 @@ const BUILTIN_CARDS = [
       "结论：<span class=\"highlight\">LLM不是时序预测最优解，但在恶劣条件下是最鲁棒的解</span>",
       "48.51× = LSTM退化幅度107.7% / LLM退化幅度2.2%"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "p02",
@@ -916,7 +988,8 @@ const BUILTIN_CARDS = [
       "LSTM直接处理浮点数，噪声通过自回归链<span class=\"highlight\">传播并放大</span>（每步误差是下步输入）",
       "这是第一个定量证明LLM token离散化具有噪声过滤效果的工作"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "p03",
@@ -928,7 +1001,8 @@ const BUILTIN_CARDS = [
       "<span class=\"highlight\">RAG适合\"有答案需要找到\"的任务，不适合\"需要计算\"的任务</span>",
       "SA意义：客户说\"我要做XXX加个RAG\"，要先判断任务类型再推方案"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "p04",
@@ -940,7 +1014,8 @@ const BUILTIN_CARDS = [
       "混合方案：LSTM做主力，LLM做鲁棒性校验——两者预测值差距大说明数据可能有问题",
       "建议：大多数情况推荐LSTM，不推荐直接用LLM替代LSTM"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "p05",
@@ -954,7 +1029,8 @@ const BUILTIN_CARDS = [
       "训练时间: <span class=\"num\">~38小时</span>（单卡RTX 6000 96GB）",
       "framework: LLaMA-Factory + DeepSpeed ZeRO-2"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "p06",
@@ -966,7 +1042,8 @@ const BUILTIN_CARDS = [
       "③ <span class=\"highlight\">RAG有适用边界</span>：回归任务加RAG反而有害，技术选型必须看场景",
       "这些教训让我在面对客户时做出更准确的技术判断"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "p07",
@@ -978,7 +1055,8 @@ const BUILTIN_CARDS = [
       "\"在噪声条件下，LSTM退化108%，LLM只退化2.2%\"",
       "建议：LSTM做主力 + LLM做鲁棒性校验，两者互补"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "p08",
@@ -991,7 +1069,8 @@ const BUILTIN_CARDS = [
       "④ 推荐：大多数情况推荐LSTM+异常检测；数据质量差→加LLM备用",
       "⑤ 不推荐直接用LLM替代LSTM"
     ],
-    "group": "项目"
+    "group": "项目",
+    "lv": 2
   },
   {
     "id": "al01",
@@ -1460,6 +1539,147 @@ const BUILTIN_CARDS = [
     "group": "基础"
   },
   {
+    "id": "al36",
+    "cat": "算法",
+    "q": "Prim 最小生成树 — 堆优化",
+    "bullets": [
+      "思路：从任意节点出发，贪心选<span class=\"highlight\">连接已选集合和未选集合的最小边</span>，逐步扩展",
+      "<pre><span class=\"kw\">import</span> heapq\n<span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\n\n<span class=\"kw\">def</span> <span class=\"fn\">prim</span>(n, edges):\n    graph = defaultdict(list)\n    <span class=\"kw\">for</span> u, v, w <span class=\"kw\">in</span> edges:\n        graph[u].append((w, v))\n        graph[v].append((w, u))\n    visited = <span class=\"fn\">set</span>()\n    pq = [(<span class=\"num\">0</span>, <span class=\"num\">0</span>)]  <span class=\"cm\"># (权重, 节点)</span>\n    mst_cost = <span class=\"num\">0</span>\n    <span class=\"kw\">while</span> pq <span class=\"kw\">and</span> len(visited) < n:\n        w, u = heapq.heappop(pq)\n        <span class=\"kw\">if</span> u <span class=\"kw\">in</span> visited: <span class=\"kw\">continue</span>\n        visited.add(u)\n        mst_cost += w\n        <span class=\"kw\">for</span> nw, v <span class=\"kw\">in</span> graph[u]:\n            <span class=\"kw\">if</span> v <span class=\"kw\">not in</span> visited:\n                heapq.heappush(pq, (nw, v))\n    <span class=\"kw\">return</span> mst_cost</pre>",
+      "堆优化Prim时间 <span class=\"num\">O(E log V)</span>，与Kruskal的 <span class=\"num\">O(E log E)</span> 相当",
+      "Kruskal vs Prim：稀疏图(E远小于V²)用Kruskal；稠密图(E接近V²)用Prim朴素版O(V²)更优",
+      "LC1584 连接所有点的最小费用 — Prim典型应用"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "al37",
+    "cat": "算法",
+    "q": "差分数组 — 区间批量修改",
+    "bullets": [
+      "差分数组：<span class=\"highlight\">diff[i] = nums[i] - nums[i-1]</span>，对区间 [l, r] 加 val 只需 diff[l]+=val, diff[r+1]-=val",
+      "<pre><span class=\"cm\"># LC1109 航班预订统计</span>\n<span class=\"kw\">def</span> <span class=\"fn\">corpFlightBookings</span>(bookings, n):\n    diff = [<span class=\"num\">0</span>] * (n + <span class=\"num\">1</span>)\n    <span class=\"kw\">for</span> first, last, seats <span class=\"kw\">in</span> bookings:\n        diff[first - <span class=\"num\">1</span>] += seats      <span class=\"cm\"># 区间起点加</span>\n        diff[last] -= seats            <span class=\"cm\"># 区间终点+1减</span>\n    <span class=\"cm\"># 前缀和还原</span>\n    res = [<span class=\"num\">0</span>] * n\n    res[<span class=\"num\">0</span>] = diff[<span class=\"num\">0</span>]\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(<span class=\"num\">1</span>, n):\n        res[i] = res[i-<span class=\"num\">1</span>] + diff[i]\n    <span class=\"kw\">return</span> res</pre>",
+      "时间 <span class=\"num\">O(n + m)</span>（m次区间操作+一次前缀和还原），暴力需O(nm)",
+      "前缀和与差分是<span class=\"highlight\">互逆操作</span>：前缀和把差分数组→原数组，差分把原数组→变化量",
+      "应用：公交车站上下客、区间加法（LC370）、二维差分（LC2536）"
+    ],
+    "lv": 2,
+    "group": "基础"
+  },
+  {
+    "id": "al38",
+    "cat": "算法",
+    "q": "回溯法 — 全排列与去重",
+    "bullets": [
+      "LC46 全排列：不含重复数字的排列；LC47 全排列II：含重复数字需去重",
+      "<pre><span class=\"cm\"># LC46 全排列（无重复）</span>\n<span class=\"kw\">def</span> <span class=\"fn\">permute</span>(nums):\n    res = []\n    <span class=\"kw\">def</span> <span class=\"fn\">bt</span>(path, used):\n        <span class=\"kw\">if</span> len(path) == len(nums):\n            res.append(path[:])\n            <span class=\"kw\">return</span>\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(nums)):\n            <span class=\"kw\">if</span> used[i]: <span class=\"kw\">continue</span>\n            used[i] = <span class=\"kw\">True</span>\n            path.append(nums[i])\n            bt(path, used)\n            path.pop()\n            used[i] = <span class=\"kw\">False</span>\n    bt([], [<span class=\"kw\">False</span>] * len(nums))\n    <span class=\"kw\">return</span> res</pre>",
+      "<pre><span class=\"cm\"># LC47 含重复元素的去重技巧</span>\n<span class=\"kw\">def</span> <span class=\"fn\">permuteUnique</span>(nums):\n    nums.sort()  <span class=\"cm\"># 排序是去重的前提</span>\n    res = []\n    <span class=\"kw\">def</span> <span class=\"fn\">bt</span>(path, used):\n        <span class=\"kw\">if</span> len(path) == len(nums):\n            res.append(path[:])\n            <span class=\"kw\">return</span>\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(nums)):\n            <span class=\"kw\">if</span> used[i]: <span class=\"kw\">continue</span>\n            <span class=\"cm\"># 去重：相同值且前一个没用过→跳过</span>\n            <span class=\"kw\">if</span> i > <span class=\"num\">0</span> <span class=\"kw\">and</span> nums[i] == nums[i-<span class=\"num\">1</span>] <span class=\"kw\">and not</span> used[i-<span class=\"num\">1</span>]:\n                <span class=\"kw\">continue</span>\n            used[i] = <span class=\"kw\">True</span>\n            path.append(nums[i])\n            bt(path, used)\n            path.pop()\n            used[i] = <span class=\"kw\">False</span>\n    bt([], [<span class=\"kw\">False</span>] * len(nums))\n    <span class=\"kw\">return</span> res</pre>",
+      "去重核心：<span class=\"highlight\">排序 + 跳过同层相同元素</span>。条件 <code>not used[i-1]</code> 保证同一层不重复选",
+      "排列 vs 组合 vs 子集：排列用visited；组合/子集用start index"
+    ],
+    "lv": 2,
+    "group": "基础"
+  },
+  {
+    "id": "al39",
+    "cat": "算法",
+    "q": "贪心算法 — 经典题型总结",
+    "bullets": [
+      "<span class=\"highlight\">贪心成立条件</span>：局部最优选择能导出全局最优解。证明方法：交换论证/归纳法/反证法",
+      "经典贪心题型：① <span class=\"highlight\">区间调度</span>（按结束时间排序） ② <span class=\"highlight\">分配问题</span>（排序后贪心匹配） ③ <span class=\"highlight\">跳跃游戏</span>（维护最远可达） ④ <span class=\"highlight\">加油站</span>（累积剩余油量）",
+      "<pre><span class=\"cm\"># LC455 分发饼干 — 排序+贪心</span>\n<span class=\"kw\">def</span> <span class=\"fn\">findContentChildren</span>(g, s):\n    g.sort()  <span class=\"cm\"># 孩子胃口</span>\n    s.sort()  <span class=\"cm\"># 饼干大小</span>\n    i = j = <span class=\"num\">0</span>\n    <span class=\"kw\">while</span> i < len(g) <span class=\"kw\">and</span> j < len(s):\n        <span class=\"kw\">if</span> s[j] >= g[i]:  <span class=\"cm\"># 饼干满足胃口</span>\n            i += <span class=\"num\">1</span>  <span class=\"cm\"># 喂饱一个孩子</span>\n        j += <span class=\"num\">1</span>  <span class=\"cm\"># 尝试下一块饼干</span>\n    <span class=\"kw\">return</span> i</pre>",
+      "贪心 vs DP：贪心不回溯、无状态转移，时间通常更优；但贪心需要<span class=\"highlight\">证明正确性</span>，不确定时用DP更安全",
+      "面试技巧：遇到求最优+排序后可贪心 → 考虑贪心；不确定时先DP再看能否简化为贪心"
+    ],
+    "lv": 2,
+    "group": "基础"
+  },
+  {
+    "id": "al40",
+    "cat": "算法",
+    "q": "DP分类 — 背包问题全家桶",
+    "bullets": [
+      "<span class=\"highlight\">0-1背包</span>（每个物品选或不选）：dp[w] = max(dp[w], dp[w-wi]+vi)，<span class=\"highlight\">容量逆序遍历</span>",
+      "<span class=\"highlight\">完全背包</span>（每个物品可选无限次）：同上公式，<span class=\"highlight\">容量正序遍历</span>",
+      "<span class=\"highlight\">多重背包</span>（每个物品有数量限制）：二进制拆分优化，将si个物品拆为1,2,4...份的0-1背包",
+      "<pre><span class=\"cm\"># 0-1背包 vs 完全背包 — 唯一区别是遍历方向</span>\n<span class=\"kw\">def</span> <span class=\"fn\">knapsack_01</span>(W, wt, val):\n    dp = [<span class=\"num\">0</span>] * (W+<span class=\"num\">1</span>)\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(wt)):\n        <span class=\"kw\">for</span> w <span class=\"kw\">in</span> range(W, wt[i]-<span class=\"num\">1</span>, -<span class=\"num\">1</span>):  <span class=\"cm\"># 逆序！</span>\n            dp[w] = max(dp[w], dp[w-wt[i]]+val[i])\n\n<span class=\"kw\">def</span> <span class=\"fn\">knapsack_full</span>(W, wt, val):\n    dp = [<span class=\"num\">0</span>] * (W+<span class=\"num\">1</span>)\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(wt)):\n        <span class=\"kw\">for</span> w <span class=\"kw\">in</span> range(wt[i], W+<span class=\"num\">1</span>):  <span class=\"cm\"># 正序！</span>\n            dp[w] = max(dp[w], dp[w-wt[i]]+val[i])</pre>",
+      "变体映射：目标和(LC494)→0-1背包 | 零钱兑换(LC322)→完全背包 | 分割等和子集(LC416)→0-1背包判断可达",
+      "面试中背包问题通常不会直接出现，而是<span class=\"highlight\">变形后考察</span>，关键是识别出背包模型"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "al41",
+    "cat": "算法",
+    "q": "DP分类 — 区间DP与树形DP",
+    "bullets": [
+      "<span class=\"highlight\">区间DP</span>：dp[i][j] 表示区间 [i,j] 上的最优解，枚举分割点k",
+      "<pre><span class=\"cm\"># LC516 最长回文子序列 — 区间DP</span>\n<span class=\"kw\">def</span> <span class=\"fn\">longestPalindromeSubseq</span>(s):\n    n = len(s)\n    dp = [[<span class=\"num\">0</span>]*n <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(n)]\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(n): dp[i][i] = <span class=\"num\">1</span>\n    <span class=\"kw\">for</span> length <span class=\"kw\">in</span> range(<span class=\"num\">2</span>, n+<span class=\"num\">1</span>):  <span class=\"cm\"># 枚举区间长度</span>\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(n-length+<span class=\"num\">1</span>):\n            j = i + length - <span class=\"num\">1</span>\n            <span class=\"kw\">if</span> s[i] == s[j]:\n                dp[i][j] = dp[i+<span class=\"num\">1</span>][j-<span class=\"num\">1</span>] + <span class=\"num\">2</span>\n            <span class=\"kw\">else</span>:\n                dp[i][j] = max(dp[i+<span class=\"num\">1</span>][j], dp[i][j-<span class=\"num\">1</span>])\n    <span class=\"kw\">return</span> dp[<span class=\"num\">0</span>][n-<span class=\"num\">1</span>]</pre>",
+      "<span class=\"highlight\">树形DP</span>：在树结构上做DP，通常DFS后序遍历，子节点结果合并到父节点。典型：打家劫舍III(LC337)、二叉树最大路径和(LC124)",
+      "区间DP特征：<span class=\"highlight\">从小区间推大区间</span>，遍历顺序按区间长度从小到大",
+      "面试中区间DP较少直接考，但回文相关问题（LC516/LC1312）是高频考点"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "al42",
+    "cat": "算法",
+    "q": "位运算进阶 — 状态压缩与技巧",
+    "bullets": [
+      "<span class=\"highlight\">状压DP</span>：用二进制整数表示集合状态，常见于小规模问题（n<=20）",
+      "<pre><span class=\"cm\"># 枚举子集的标准写法</span>\nmask = (<span class=\"num\">1</span> << n) - <span class=\"num\">1</span>  <span class=\"cm\"># 全集</span>\nsub = mask\n<span class=\"kw\">while</span> sub > <span class=\"num\">0</span>:\n    <span class=\"cm\"># 处理子集 sub</span>\n    sub = (sub - <span class=\"num\">1</span>) & mask  <span class=\"cm\"># 枚举下一个子集</span>\n\n<span class=\"cm\"># 常用位运算技巧</span>\nx & (-x)          <span class=\"cm\"># lowbit，取最低位的1</span>\nx & (x - <span class=\"num\">1</span>)       <span class=\"cm\"># 去掉最低位的1</span>\n(x >> i) & <span class=\"num\">1</span>      <span class=\"cm\"># 取第i位</span>\nx | (<span class=\"num\">1</span> << i)      <span class=\"cm\"># 将第i位设为1</span>\nx & ~(<span class=\"num\">1</span> << i)     <span class=\"cm\"># 将第i位设为0</span>\nbin(x).count(<span class=\"str\">'1'</span>) <span class=\"cm\"># Python计算popcount</span></pre>",
+      "LC78 子集可用位运算：用 0 到 2^n-1 的每个数代表一个子集",
+      "实用技巧：<span class=\"highlight\">交换两数</span> a^=b; b^=a; a^=b | <span class=\"highlight\">取绝对值</span>（仅整数）| <span class=\"highlight\">奇偶判断</span> n&1",
+      "面试重点：LC136/137/260（出现次数系列）、子集枚举、状压DP（LC1723任务分配）"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "al43",
+    "cat": "算法",
+    "q": "Floyd-Warshall — 全源最短路",
+    "bullets": [
+      "思想：动态规划，枚举中间节点k，更新所有点对(i,j)的最短距离",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">floyd</span>(n, edges):\n    INF = float(<span class=\"str\">'inf'</span>)\n    dist = [[INF]*n <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(n)]\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(n): dist[i][i] = <span class=\"num\">0</span>\n    <span class=\"kw\">for</span> u, v, w <span class=\"kw\">in</span> edges:\n        dist[u][v] = w  <span class=\"cm\"># 有向图</span>\n    <span class=\"cm\"># 三重循环：k必须在最外层</span>\n    <span class=\"kw\">for</span> k <span class=\"kw\">in</span> range(n):\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(n):\n            <span class=\"kw\">for</span> j <span class=\"kw\">in</span> range(n):\n                <span class=\"kw\">if</span> dist[i][k] + dist[k][j] < dist[i][j]:\n                    dist[i][j] = dist[i][k] + dist[k][j]\n    <span class=\"kw\">return</span> dist</pre>",
+      "时间 <span class=\"num\">O(V³)</span>，空间 <span class=\"num\">O(V²)</span>。<span class=\"highlight\">k必须放最外层</span>（DP状态转移的正确性保证）",
+      "可处理负权边（但不能有负环）。检测负环：Floyd后若 dist[i][i] < 0 则存在负环",
+      "适用场景：V较小（几百以内）的全源最短路、传递闭包计算"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "al44",
+    "cat": "算法",
+    "q": "柱状图最大矩形 — 单调栈经典",
+    "bullets": [
+      "LC84：给定柱状图各柱高度，找<span class=\"highlight\">能围出的最大矩形面积</span>",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">largestRectangleArea</span>(heights):\n    stack = []  <span class=\"cm\"># 单调递增栈，存索引</span>\n    heights.append(<span class=\"num\">0</span>)  <span class=\"cm\"># 哨兵，确保最后全部弹出</span>\n    max_area = <span class=\"num\">0</span>\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(heights)):\n        <span class=\"kw\">while</span> stack <span class=\"kw\">and</span> heights[i] < heights[stack[-<span class=\"num\">1</span>]]:\n            h = heights[stack.pop()]\n            <span class=\"cm\"># 宽度 = 当前i到栈顶的距离</span>\n            w = i <span class=\"kw\">if not</span> stack <span class=\"kw\">else</span> i - stack[-<span class=\"num\">1</span>] - <span class=\"num\">1</span>\n            max_area = max(max_area, h * w)\n        stack.append(i)\n    heights.pop()  <span class=\"cm\"># 恢复原数组</span>\n    <span class=\"kw\">return</span> max_area</pre>",
+      "核心：对每根柱子，找<span class=\"highlight\">左边第一个更矮的</span>和<span class=\"highlight\">右边第一个更矮的</span> → 确定以该柱高度为高的矩形宽度",
+      "时间 <span class=\"num\">O(n)</span>，空间 <span class=\"num\">O(n)</span>。末尾添加哨兵0是技巧，避免处理栈中剩余元素",
+      "变体：LC85 最大矩形（2D矩阵中全1的最大矩形）→ 逐行构建柱状图 + 调用本题解法"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "al45",
+    "cat": "算法",
+    "q": "DP — 最长公共子序列 (LCS)",
+    "bullets": [
+      "LC1143：找两个字符串的<span class=\"highlight\">最长公共子序列</span>长度（子序列可不连续）",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">longestCommonSubsequence</span>(text1, text2):\n    m, n = len(text1), len(text2)\n    dp = [[<span class=\"num\">0</span>] * (n+<span class=\"num\">1</span>) <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(m+<span class=\"num\">1</span>)]\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(<span class=\"num\">1</span>, m+<span class=\"num\">1</span>):\n        <span class=\"kw\">for</span> j <span class=\"kw\">in</span> range(<span class=\"num\">1</span>, n+<span class=\"num\">1</span>):\n            <span class=\"kw\">if</span> text1[i-<span class=\"num\">1</span>] == text2[j-<span class=\"num\">1</span>]:\n                dp[i][j] = dp[i-<span class=\"num\">1</span>][j-<span class=\"num\">1</span>] + <span class=\"num\">1</span>\n            <span class=\"kw\">else</span>:\n                dp[i][j] = max(dp[i-<span class=\"num\">1</span>][j], dp[i][j-<span class=\"num\">1</span>])\n    <span class=\"kw\">return</span> dp[m][n]</pre>",
+      "状态转移：字符相同→左上角+1；不同→取上方和左方的较大值",
+      "时间 <span class=\"num\">O(mn)</span>，空间 <span class=\"num\">O(mn)</span>，可优化到O(min(m,n))",
+      "LCS vs LIS：LIS可转化为LCS问题；LCS是diff算法（git diff）和编辑距离的基础"
+    ],
+    "lv": 2,
+    "group": "基础"
+  },
+  {
     "id": "ds01",
     "cat": "数据结构",
     "q": "数组 vs 链表 — 核心区别与适用场景",
@@ -1666,6 +1886,143 @@ const BUILTIN_CARDS = [
     "group": "基础"
   },
   {
+    "id": "ds16",
+    "cat": "数据结构",
+    "q": "并查集 (Union-Find) — 结构与优化",
+    "bullets": [
+      "核心操作：<span class=\"highlight\">find(x)</span> 查询x所属集合的代表元素；<span class=\"highlight\">union(x,y)</span> 合并x和y所在集合",
+      "<pre><span class=\"kw\">class</span> <span class=\"fn\">UnionFind</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, n):\n        self.parent = list(range(n))\n        self.rank = [<span class=\"num\">0</span>] * n\n        self.count = n  <span class=\"cm\"># 连通分量个数</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">find</span>(self, x):  <span class=\"cm\"># 路径压缩</span>\n        <span class=\"kw\">if</span> self.parent[x] != x:\n            self.parent[x] = self.find(self.parent[x])\n        <span class=\"kw\">return</span> self.parent[x]\n\n    <span class=\"kw\">def</span> <span class=\"fn\">union</span>(self, x, y):  <span class=\"cm\"># 按秩合并</span>\n        px, py = self.find(x), self.find(y)\n        <span class=\"kw\">if</span> px == py: <span class=\"kw\">return</span> <span class=\"kw\">False</span>\n        <span class=\"kw\">if</span> self.rank[px] < self.rank[py]: px, py = py, px\n        self.parent[py] = px\n        <span class=\"kw\">if</span> self.rank[px] == self.rank[py]: self.rank[px] += <span class=\"num\">1</span>\n        self.count -= <span class=\"num\">1</span>\n        <span class=\"kw\">return</span> <span class=\"kw\">True</span></pre>",
+      "两大优化：<span class=\"highlight\">路径压缩</span>（find时将节点直接指向根）+ <span class=\"highlight\">按秩合并</span>（矮树挂高树下）→ 近似 <span class=\"num\">O(α(n))</span>，α为反Ackermann函数，实际可视为O(1)",
+      "经典应用：连通分量计数(LC200岛屿数量)、冗余连接检测(LC684)、账户合并(LC721)、朋友圈(LC547)",
+      "扩展：<span class=\"highlight\">带权并查集</span>可维护节点间的相对关系（如LC399除法求值）"
+    ],
+    "lv": 2,
+    "group": "基础"
+  },
+  {
+    "id": "ds17",
+    "cat": "数据结构",
+    "q": "单调栈 — 原理与典型应用",
+    "bullets": [
+      "栈内元素保持<span class=\"highlight\">单调递增或单调递减</span>，用于在O(n)内求「每个元素左/右边第一个更大/更小的元素」",
+      "单调递减栈（栈底到栈顶递减）：求<span class=\"highlight\">下一个更大元素</span>；单调递增栈：求<span class=\"highlight\">下一个更小元素</span>",
+      "<pre><span class=\"cm\"># 求每个元素右边第一个更大元素的索引</span>\n<span class=\"kw\">def</span> <span class=\"fn\">next_greater</span>(nums):\n    n = len(nums)\n    res = [-<span class=\"num\">1</span>] * n\n    stack = []  <span class=\"cm\"># 存索引，对应值单调递减</span>\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(n):\n        <span class=\"kw\">while</span> stack <span class=\"kw\">and</span> nums[i] > nums[stack[-<span class=\"num\">1</span>]]:\n            j = stack.pop()\n            res[j] = i\n        stack.append(i)\n    <span class=\"kw\">return</span> res</pre>",
+      "每个元素最多入栈一次出栈一次 → 时间 <span class=\"num\">O(n)</span>，空间 <span class=\"num\">O(n)</span>",
+      "经典题：每日温度(LC739)、柱状图最大矩形(LC84)、接雨水(LC42单调栈解法)、下一个更大元素(LC496/503)"
+    ],
+    "lv": 2,
+    "group": "基础"
+  },
+  {
+    "id": "ds18",
+    "cat": "数据结构",
+    "q": "单调队列 — 滑动窗口最大值",
+    "bullets": [
+      "双端队列 deque 维护<span class=\"highlight\">窗口内元素的单调递减序列</span>，队首始终是当前窗口的最大值",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> deque\n\n<span class=\"kw\">def</span> <span class=\"fn\">maxSlidingWindow</span>(nums, k):\n    dq = deque()  <span class=\"cm\"># 存索引，对应值单调递减</span>\n    res = []\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(nums)):\n        <span class=\"cm\"># 移除超出窗口的队首</span>\n        <span class=\"kw\">while</span> dq <span class=\"kw\">and</span> dq[<span class=\"num\">0</span>] <= i - k:\n            dq.popleft()\n        <span class=\"cm\"># 移除比当前值小的队尾（它们不可能成为最大值）</span>\n        <span class=\"kw\">while</span> dq <span class=\"kw\">and</span> nums[dq[-<span class=\"num\">1</span>]] <= nums[i]:\n            dq.pop()\n        dq.append(i)\n        <span class=\"kw\">if</span> i >= k - <span class=\"num\">1</span>:\n            res.append(nums[dq[<span class=\"num\">0</span>]])\n    <span class=\"kw\">return</span> res</pre>",
+      "时间 <span class=\"num\">O(n)</span>（每个元素最多入队出队各一次），空间 <span class=\"num\">O(k)</span>",
+      "LC239 高频面试题。暴力O(nk)，堆O(n log k)，单调队列最优O(n)"
+    ],
+    "lv": 2,
+    "group": "基础"
+  },
+  {
+    "id": "ds19",
+    "cat": "数据结构",
+    "q": "LRU Cache — 手写双向链表实现",
+    "bullets": [
+      "LC146：设计一个<span class=\"highlight\">get和put均O(1)</span>的缓存。哈希表定位 + 双向链表维护顺序",
+      "<pre><span class=\"kw\">class</span> <span class=\"fn\">Node</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, k=<span class=\"num\">0</span>, v=<span class=\"num\">0</span>):\n        self.key, self.val = k, v\n        self.prev = self.next = <span class=\"kw\">None</span>\n\n<span class=\"kw\">class</span> <span class=\"fn\">LRUCache</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, capacity):\n        self.cap = capacity\n        self.cache = {}  <span class=\"cm\"># key → Node</span>\n        self.head, self.tail = Node(), Node()  <span class=\"cm\"># 哨兵</span>\n        self.head.next = self.tail\n        self.tail.prev = self.head\n\n    <span class=\"kw\">def</span> <span class=\"fn\">_remove</span>(self, node):\n        node.prev.next = node.next\n        node.next.prev = node.prev\n\n    <span class=\"kw\">def</span> <span class=\"fn\">_add_to_head</span>(self, node):\n        node.next = self.head.next\n        node.prev = self.head\n        self.head.next.prev = node\n        self.head.next = node\n\n    <span class=\"kw\">def</span> <span class=\"fn\">get</span>(self, key):\n        <span class=\"kw\">if</span> key <span class=\"kw\">not in</span> self.cache: <span class=\"kw\">return</span> -<span class=\"num\">1</span>\n        node = self.cache[key]\n        self._remove(node)\n        self._add_to_head(node)\n        <span class=\"kw\">return</span> node.val\n\n    <span class=\"kw\">def</span> <span class=\"fn\">put</span>(self, key, val):\n        <span class=\"kw\">if</span> key <span class=\"kw\">in</span> self.cache:\n            self._remove(self.cache[key])\n        node = Node(key, val)\n        self.cache[key] = node\n        self._add_to_head(node)\n        <span class=\"kw\">if</span> len(self.cache) > self.cap:\n            lru = self.tail.prev\n            self._remove(lru)\n            <span class=\"kw\">del</span> self.cache[lru.key]</pre>",
+      "面试常要求不用 OrderedDict 手写。核心：<span class=\"highlight\">哨兵节点</span>消除边界判断，Node存key用于淘汰时从cache中删除",
+      "LRU淘汰策略：最近最少使用。get/put都将节点移到链表头部，淘汰链表尾部"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "ds20",
+    "cat": "数据结构",
+    "q": "LFU Cache — 最不经常使用缓存",
+    "bullets": [
+      "LC460：淘汰<span class=\"highlight\">使用频率最低</span>的key；频率相同时淘汰最久未使用的（LRU）",
+      "数据结构：<span class=\"highlight\">三个哈希表</span> — key→val, key→freq, freq→OrderedDict(keys)",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict, OrderedDict\n\n<span class=\"kw\">class</span> <span class=\"fn\">LFUCache</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, capacity):\n        self.cap = capacity\n        self.min_freq = <span class=\"num\">0</span>\n        self.key_val = {}       <span class=\"cm\"># key → value</span>\n        self.key_freq = {}      <span class=\"cm\"># key → frequency</span>\n        self.freq_keys = defaultdict(OrderedDict)  <span class=\"cm\"># freq → OrderedDict of keys</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">_update</span>(self, key):\n        freq = self.key_freq[key]\n        <span class=\"kw\">del</span> self.freq_keys[freq][key]\n        <span class=\"kw\">if not</span> self.freq_keys[freq]:\n            <span class=\"kw\">del</span> self.freq_keys[freq]\n            <span class=\"kw\">if</span> self.min_freq == freq: self.min_freq += <span class=\"num\">1</span>\n        self.key_freq[key] = freq + <span class=\"num\">1</span>\n        self.freq_keys[freq + <span class=\"num\">1</span>][key] = <span class=\"kw\">None</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">get</span>(self, key):\n        <span class=\"kw\">if</span> key <span class=\"kw\">not in</span> self.key_val: <span class=\"kw\">return</span> -<span class=\"num\">1</span>\n        self._update(key)\n        <span class=\"kw\">return</span> self.key_val[key]\n\n    <span class=\"kw\">def</span> <span class=\"fn\">put</span>(self, key, val):\n        <span class=\"kw\">if</span> self.cap == <span class=\"num\">0</span>: <span class=\"kw\">return</span>\n        <span class=\"kw\">if</span> key <span class=\"kw\">in</span> self.key_val:\n            self.key_val[key] = val\n            self._update(key)\n            <span class=\"kw\">return</span>\n        <span class=\"kw\">if</span> len(self.key_val) >= self.cap:\n            k, _ = self.freq_keys[self.min_freq].popitem(last=<span class=\"kw\">False</span>)\n            <span class=\"kw\">del</span> self.key_val[k]\n            <span class=\"kw\">del</span> self.key_freq[k]\n        self.key_val[key] = val\n        self.key_freq[key] = <span class=\"num\">1</span>\n        self.freq_keys[<span class=\"num\">1</span>][key] = <span class=\"kw\">None</span>\n        self.min_freq = <span class=\"num\">1</span></pre>",
+      "get/put 均 <span class=\"num\">O(1)</span>。关键维护 <span class=\"highlight\">min_freq</span> 以快速定位淘汰层",
+      "LRU vs LFU：LRU按访问时间淘汰，LFU按访问频率淘汰。实际系统中LRU更常用（LFU有缓存污染问题）"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "ds21",
+    "cat": "数据结构",
+    "q": "B树 vs B+树 — 数据库索引核心",
+    "bullets": [
+      "<span class=\"highlight\">B树</span>：多路平衡搜索树，每个节点存多个key和数据指针，内节点也存数据",
+      "<span class=\"highlight\">B+树</span>：在B树基础上改进 — ①内节点<span class=\"highlight\">只存key不存数据</span>（扇出更大）②所有数据存叶子节点 ③叶子节点用<span class=\"highlight\">双向链表</span>相连",
+      "B+树优于B树的原因：① 内节点不存数据 → 同一页能放更多key → <span class=\"highlight\">树更矮，IO更少</span> ② 叶子链表 → <span class=\"highlight\">范围查询极高效</span>（顺序遍历） ③ 查询性能稳定（都要到叶子）",
+      "MySQL InnoDB 用 <span class=\"highlight\">B+树</span> 作索引结构。聚簇索引叶子存完整行数据，非聚簇索引叶子存主键值",
+      "B+树高度一般 2-4 层：假设一页16KB、一个key+指针16B → 扇出约1000 → 3层可索引约10亿条记录",
+      "面试重点：为什么用B+树而非B树/哈希/二叉树 → 磁盘IO最小化 + 范围查询 + 稳定性能"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "ds22",
+    "cat": "数据结构",
+    "q": "红黑树 — 性质与旋转",
+    "bullets": [
+      "红黑树五条性质：①每个节点红或黑 ②根是黑 ③叶子(NIL)是黑 ④<span class=\"highlight\">红节点的子节点必须是黑</span>（不能连续红） ⑤<span class=\"highlight\">从任意节点到叶子的所有路径黑色节点数相同</span>",
+      "这些性质保证了：<span class=\"highlight\">最长路径不超过最短路径的2倍</span>（最长=红黑交替，最短=全黑），因此查找/插入/删除都是O(log n)",
+      "插入修复（新节点默认红色）：①叔节点红→叔/父变黑、祖变红、向上递归 ②叔黑+折线→先旋转变直线 ③叔黑+直线→旋转+变色",
+      "Java TreeMap/TreeSet、C++ std::map/std::set、Linux CFS调度器底层均为红黑树",
+      "红黑树 vs AVL：红黑树<span class=\"highlight\">插入删除更快</span>（旋转次数O(1) vs AVL最多O(log n)），AVL<span class=\"highlight\">查找略快</span>（更严格平衡）。工程中更常用红黑树"
+    ],
+    "lv": 3,
+    "group": "基础"
+  },
+  {
+    "id": "ds23",
+    "cat": "数据结构",
+    "q": "Trie (前缀树) — 实现与应用",
+    "bullets": [
+      "每个节点代表一个字符前缀，从根到某节点的路径构成一个前缀。支持 <span class=\"num\">O(m)</span> 的插入/查找/前缀搜索（m=字符串长度）",
+      "<pre><span class=\"kw\">class</span> <span class=\"fn\">Trie</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self):\n        self.children = {}\n        self.is_end = <span class=\"kw\">False</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">insert</span>(self, word):\n        node = self\n        <span class=\"kw\">for</span> c <span class=\"kw\">in</span> word:\n            <span class=\"kw\">if</span> c <span class=\"kw\">not in</span> node.children:\n                node.children[c] = Trie()\n            node = node.children[c]\n        node.is_end = <span class=\"kw\">True</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">search</span>(self, word):\n        node = self._find(word)\n        <span class=\"kw\">return</span> node <span class=\"kw\">is not</span> <span class=\"kw\">None</span> <span class=\"kw\">and</span> node.is_end\n\n    <span class=\"kw\">def</span> <span class=\"fn\">startsWith</span>(self, prefix):\n        <span class=\"kw\">return</span> self._find(prefix) <span class=\"kw\">is not</span> <span class=\"kw\">None</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">_find</span>(self, s):\n        node = self\n        <span class=\"kw\">for</span> c <span class=\"kw\">in</span> s:\n            <span class=\"kw\">if</span> c <span class=\"kw\">not in</span> node.children: <span class=\"kw\">return</span> <span class=\"kw\">None</span>\n            node = node.children[c]\n        <span class=\"kw\">return</span> node</pre>",
+      "空间优化：Python用dict存子节点（按需创建），比固定26数组更灵活",
+      "应用：自动补全(LC208)、搜索引擎前缀提示、拼写检查、单词搜索II(LC212 Trie+回溯)、IP路由最长前缀匹配"
+    ],
+    "lv": 2,
+    "group": "基础"
+  },
+  {
+    "id": "ds24",
+    "cat": "数据结构",
+    "q": "哈希表深入 — 扩容与哈希冲突细节",
+    "bullets": [
+      "负载因子 = 元素数 / 桶数。<span class=\"highlight\">Java HashMap 阈值0.75</span>（桶数加倍），<span class=\"highlight\">Python dict 阈值2/3</span>",
+      "<span class=\"highlight\">链地址法</span>（Java HashMap）：每个桶是链表，冲突时追加。Java 8优化：链表长度>=8时转<span class=\"highlight\">红黑树</span>（O(n)→O(log n)），<=6时退化回链表",
+      "<span class=\"highlight\">开放地址法</span>（Python dict）：冲突时按探测序列找下一个空位。线性探测→聚集问题；Python用<span class=\"highlight\">二次探测</span>变体",
+      "哈希函数设计要点：① 均匀分布（减少冲突） ② 计算快 ③ 确定性。Python对象的 <code>__hash__</code> 可自定义",
+      "面试考点：HashMap put流程（计算hash→定位桶→处理冲突→判断扩容）、线程安全问题（Java ConcurrentHashMap分段锁/CAS）"
+    ],
+    "lv": 2,
+    "group": "基础"
+  },
+  {
+    "id": "ds25",
+    "cat": "数据结构",
+    "q": "图的高级表示 — 加权图与隐式图",
+    "bullets": [
+      "<span class=\"highlight\">加权邻接表</span>：图中边有权重时使用，存储 (邻居, 权重) 对",
+      "<pre><span class=\"cm\"># 加权有向图</span>\n<span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\ngraph = defaultdict(list)\ngraph[<span class=\"num\">0</span>].append((<span class=\"num\">1</span>, <span class=\"num\">5</span>))  <span class=\"cm\"># 0→1 权重5</span>\ngraph[<span class=\"num\">0</span>].append((<span class=\"num\">2</span>, <span class=\"num\">3</span>))  <span class=\"cm\"># 0→2 权重3</span>\ngraph[<span class=\"num\">1</span>].append((<span class=\"num\">2</span>, <span class=\"num\">1</span>))  <span class=\"cm\"># 1→2 权重1</span>\n\n<span class=\"cm\"># 网格图（隐式图）— 不需要显式建图</span>\ndirs = [(<span class=\"num\">0</span>,<span class=\"num\">1</span>),(<span class=\"num\">0</span>,-<span class=\"num\">1</span>),(<span class=\"num\">1</span>,<span class=\"num\">0</span>),(-<span class=\"num\">1</span>,<span class=\"num\">0</span>)]\n<span class=\"kw\">for</span> dx, dy <span class=\"kw\">in</span> dirs:\n    nx, ny = x+dx, y+dy\n    <span class=\"kw\">if</span> <span class=\"num\">0</span> &lt;= nx &lt; m <span class=\"kw\">and</span> <span class=\"num\">0</span> &lt;= ny &lt; n:\n        <span class=\"cm\"># 处理邻居 (nx, ny)</span></pre>",
+      "<span class=\"highlight\">隐式图</span>：不显式存储邻接关系，通过规则动态生成邻居 → 网格BFS/DFS（LC200岛屿数量）、状态空间搜索（LC127单词接龙）",
+      "面试中 80% 的图题使用<span class=\"highlight\">邻接表</span>或<span class=\"highlight\">网格隐式图</span>。记住建图模板是解题的第一步"
+    ],
+    "lv": 1,
+    "group": "基础"
+  },
+  {
     "id": "l01",
     "cat": "LLM基础",
     "q": "Transformer 架构核心组件",
@@ -1676,7 +2033,8 @@ const BUILTIN_CARDS = [
       "FFN：两层全连接（扩展到4倍再压缩），负责非线性变换和知识存储",
       "Residual Connection：防止梯度消失，让深层网络可训练；Layer Norm：稳定训练"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "l02",
@@ -1689,7 +2047,8 @@ const BUILTIN_CARDS = [
       "Multi-Head：并行多组QKV，不同head关注不同类型的关系（语法/语义/位置）",
       "复杂度 O(n²d)：序列长度的平方，这是长文本处理的瓶颈"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "l03",
@@ -1702,7 +2061,8 @@ const BUILTIN_CARDS = [
       "中文/日语：无空格，SentencePiece直接按字符和子词处理",
       "Vocab大小 trade-off：大→覆盖率高但embedding矩阵大；小→OOV多但参数少。通常32K-128K"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "l04",
@@ -1715,20 +2075,22 @@ const BUILTIN_CARDS = [
       "<span class=\"highlight\">DPO</span>：跳过RM，直接用偏好对训练。更简单稳定，但对数据质量敏感",
       "你的经验：SFT 248条效果好，DPO反而−7.6pp → <span class=\"highlight\">不是所有场景都需要对齐</span>"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "l05",
     "cat": "LLM基础",
     "q": "Scaling Laws（缩放定律）",
     "bullets": [
-      "Kaplan(2020)：Loss ∝ N^(-0.076) × D^(-0.095) × C^(-0.050)，N参数量/D数据量/C计算量",
+      "Kaplan(2020)：Loss分别关于N(参数量)、D(数据量)、C(计算量)呈幂律下降，如 L(N) ∝ N^{-0.076}",
       "Chinchilla(2022)：最优分配 → 参数量和数据量应同比例增长。70B模型需要1.4T tokens",
       "含义：<span class=\"highlight\">不是模型越大越好，而是算力分配要合理</span>",
       "实践影响：Llama系列（更小模型+更多数据）比GPT-3（大模型+少数据）效率高",
       "对客户的意义：14B充分训练可能比32B欠训练效果好（你的实验验证了这点）"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "l06",
@@ -1741,7 +2103,8 @@ const BUILTIN_CARDS = [
       "显存占用：2 × n_layers × d_model × seq_len × batch_size × sizeof(dtype)",
       "<span class=\"highlight\">Paged Attention</span>(vLLM)：像OS虚拟内存一样管理KV Cache，减少碎片，支持更大batch"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "l07",
@@ -1754,7 +2117,8 @@ const BUILTIN_CARDS = [
       "效果：速度2-4x，显存从O(n²)降到O(n)，<span class=\"highlight\">精确计算不是近似</span>",
       "Flash Attention 2/3：进一步优化并行策略和GPU利用率"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "l08",
@@ -1768,7 +2132,8 @@ const BUILTIN_CARDS = [
       "AWQ：只保护1%的\"重要权重\"不量化，效果好于GPTQ",
       "GGUF：llama.cpp格式，Q4_K_M/Q8_0等，<span class=\"highlight\">专为CPU推理优化</span>"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "l09",
@@ -1782,7 +2147,8 @@ const BUILTIN_CARDS = [
       "缓解：Fine-tuning让模型学会说\"我不知道\" / 降Temperature减少随机性",
       "你的做法：SiLR验证器 = 用仿真器事实检查LLM的\"幻觉动作\""
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "l10",
@@ -1795,7 +2161,8 @@ const BUILTIN_CARDS = [
       "Beam Search：同时维护beam_size条候选序列，选总概率最高的。适合翻译，不适合对话",
       "实践：对话用Top-p=0.9+T=0.7；代码/工具调用用T=0(确定性输出)"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "l11",
@@ -1808,7 +2175,8 @@ const BUILTIN_CARDS = [
       "典型：Mixtral 8x7B = 47B总参数但每次只激活~13B",
       "挑战：负载均衡（某些专家过载）/ 通信开销（分布式训练）/ 显存仍需存所有专家"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "l12",
@@ -1821,7 +2189,8 @@ const BUILTIN_CARDS = [
       "ALiBi：不加位置编码，而是给远距离token的attention分数加线性惩罚 → 训练简单",
       "长文本处理：RoPE+Dynamic NTK/YaRN可扩展到128K+；ALiBi天然支持外推"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "l13",
@@ -1829,13 +2198,14 @@ const BUILTIN_CARDS = [
     "q": "RLHF vs DPO 详细对比",
     "bullets": [
       "RLHF：训练Reward Model → PPO优化policy。优点：灵活，可迭代。缺点：<span class=\"highlight\">训练不稳定，需要4个模型同时在线</span>",
-      "DPO：直接用偏好对优化，loss = -log σ(β(logπ(yw)-logπ(yl)))。优点：简单一步训练",
+      "DPO：loss = -log σ(β(log(π_θ(y_w)/π_ref(y_w)) - log(π_θ(y_l)/π_ref(y_l))))。隐式学习reward，一步训练",
       "DPO缺点：<span class=\"highlight\">对数据质量极敏感</span>（你的经验：63%偏好对的偏差→模型学错）",
       "DPO缺点：没有显式reward信号，难以诊断哪里出了问题",
       "新趋势：SimPO/ORPO等直接用reference-free偏好优化，更简单",
       "你的结论：修复所有问题后DPO仅+0.6pp，工具调用场景不推荐"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "l14",
@@ -1848,7 +2218,128 @@ const BUILTIN_CARDS = [
       "bge-m3：多语言多粒度多功能embedding模型，<span class=\"highlight\">支持Dense+Sparse+ColBERT三种检索</span>",
       "Embedding微调：用三元组(query,positive,negative)+对比Loss，你的经验：Recall@1 +16.4pp"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 1
+  },
+  {
+    "id": "l15",
+    "cat": "LLM基础",
+    "q": "\"Attention is All You Need\" 论文关键创新",
+    "bullets": [
+      "完全抛弃RNN/CNN，<span class=\"highlight\">纯注意力机制</span>实现序列建模 → 并行化训练成为可能",
+      "Multi-Head Attention：多个注意力头并行关注不同子空间信息，concat后线性映射",
+      "Positional Encoding：正弦/余弦函数注入位置信息（解决Attention无位置感知的问题）",
+      "Encoder-Decoder架构：Encoder用双向Self-Attention，Decoder用带Mask的因果Attention + Cross-Attention",
+      "Label Smoothing + Warmup学习率策略：稳定训练的工程技巧",
+      "影响：<span class=\"highlight\">奠定了所有后续LLM的架构基础</span>，GPT/BERT/T5等均为其变体"
+    ],
+    "group": "基础",
+    "lv": 2
+  },
+  {
+    "id": "l16",
+    "cat": "LLM基础",
+    "q": "Pre-training Objectives：CLM vs MLM vs Prefix LM",
+    "bullets": [
+      "<span class=\"highlight\">CLM</span>(Causal LM)：从左到右预测下一个token，Decoder-only架构 → GPT系列、LLaMA、Qwen",
+      "<span class=\"highlight\">MLM</span>(Masked LM)：随机遮蔽15%的token并预测它们，双向上下文 → BERT、RoBERTa",
+      "<span class=\"highlight\">Prefix LM</span>：prefix部分双向attention，生成部分因果attention → T5、GLM",
+      "CLM最适合生成任务（与推理方式一致），MLM最适合理解/分类任务",
+      "Seq2Seq预训练(T5)：将所有任务统一为\"text-to-text\"格式，Encoder-Decoder架构",
+      "趋势：<span class=\"highlight\">Decoder-only CLM成为主流</span>，因为scaling效果最好且通用性强"
+    ],
+    "group": "基础",
+    "lv": 2
+  },
+  {
+    "id": "l17",
+    "cat": "LLM基础",
+    "q": "Instruction Tuning vs RLHF vs DPO 详细对比",
+    "bullets": [
+      "<span class=\"highlight\">Instruction Tuning</span>：用(指令, 回答)对做SFT，教模型遵循指令。代表：FLAN、Alpaca",
+      "RLHF：人类标注偏好排序→训练Reward Model→PPO优化。需要<span class=\"highlight\">4个模型</span>：policy/ref/reward/value",
+      "DPO：将RLHF的RL步骤转化为分类问题，直接从偏好对学习。只需<span class=\"highlight\">2个模型</span>：policy/ref",
+      "效果对比：Instruction Tuning解决\"能力\"问题，RLHF/DPO解决\"对齐\"问题",
+      "工程复杂度：IT < DPO << RLHF。数据需求：IT需要高质量指令对，DPO/RLHF需要偏好对",
+      "实践选择：大部分场景SFT足够；需要精细控制回答风格/安全性时才用RLHF/DPO"
+    ],
+    "group": "基础",
+    "lv": 3
+  },
+  {
+    "id": "l18",
+    "cat": "LLM基础",
+    "q": "LLM推理优化：Speculative Decoding与Continuous Batching",
+    "bullets": [
+      "<span class=\"highlight\">Speculative Decoding</span>：小模型(draft)快速生成候选tokens → 大模型(target)并行验证 → 命中则接受",
+      "原理：验证N个token的成本 ≈ 生成1个token（因为可以并行），加速2-3x且<span class=\"highlight\">输出分布不变</span>",
+      "<span class=\"highlight\">Continuous Batching</span>：请求完成后立即插入新请求，不等整个batch完成 → 提高GPU利用率",
+      "对比Static Batching：等所有请求完成再处理下一批 → 短请求等长请求，GPU空闲浪费",
+      "vLLM/TGI/SGLang等框架都实现了Continuous Batching + Paged Attention组合",
+      "其他优化：Prefix Caching（复用相同system prompt的KV Cache）/ Tensor Parallelism（多卡切分）"
+    ],
+    "group": "基础",
+    "lv": 3
+  },
+  {
+    "id": "l19",
+    "cat": "LLM基础",
+    "q": "RAG（检索增强生成）原理与实现",
+    "bullets": [
+      "核心流程：Query → <span class=\"highlight\">Retrieve</span>(从知识库检索相关文档) → <span class=\"highlight\">Augment</span>(拼入prompt) → <span class=\"highlight\">Generate</span>(LLM生成)",
+      "检索方式：Dense Retrieval(语义向量相似度) / Sparse(BM25关键词) / Hybrid(两者结合)",
+      "向量数据库：FAISS / Milvus / Qdrant / Chroma，存储文档embedding并支持ANN检索",
+      "Chunking策略：固定长度 / 按语义段落 / 递归分割。<span class=\"highlight\">chunk大小和overlap直接影响效果</span>",
+      "进阶：Re-ranking(Cohere/bge-reranker)提升精度 / Multi-hop RAG处理复杂问题",
+      "优势：知识可更新（不用重新训练）/ 减少幻觉 / 可追溯来源"
+    ],
+    "group": "基础",
+    "lv": 2
+  },
+  {
+    "id": "l20",
+    "cat": "LLM基础",
+    "q": "Function Calling / Tool Use 机制",
+    "bullets": [
+      "原理：在system prompt中定义可用工具(JSON Schema) → LLM输出结构化的<span class=\"highlight\">函数调用请求</span> → 外部执行 → 结果返回LLM",
+      "关键能力：模型需要判断<span class=\"highlight\">何时调用</span>（intent detection）和<span class=\"highlight\">参数提取</span>（slot filling）",
+      "训练方式：SFT阶段加入大量function calling数据对，教模型输出特定格式",
+      "Parallel Function Calling：一次输出多个独立的工具调用，减少往返次数",
+      "与Agent的关系：Function Calling是Agent的\"手脚\"，ReAct/Plan-and-Execute是\"大脑\"",
+      "你的经验：SiLR-Agent通过Tool Use连接仿真器，SFT 248条达到95%+ tool call准确率"
+    ],
+    "group": "基础",
+    "lv": 2
+  },
+  {
+    "id": "l21",
+    "cat": "LLM基础",
+    "q": "Long Context处理技术",
+    "bullets": [
+      "核心挑战：标准Attention O(n²)复杂度 + KV Cache显存线性增长",
+      "<span class=\"highlight\">Sliding Window Attention</span>：每个token只attend固定窗口内的token → O(n×w)，Mistral采用",
+      "<span class=\"highlight\">StreamingLLM</span>：保留开头的\"attention sink\" tokens + 近期窗口，丢弃中间 → 支持无限长度推理",
+      "<span class=\"highlight\">Ring Attention</span>：将长序列分段到多个设备，环形传递KV → 分布式处理超长上下文",
+      "RoPE扩展：YaRN/Dynamic NTK Scaling调整RoPE基频，将训练长度外推到更长（如4K→128K）",
+      "工程方案：GQA(Grouped Query Attention)减少KV头数 → 降低KV Cache占用（如Llama 2用GQA）"
+    ],
+    "group": "基础",
+    "lv": 3
+  },
+  {
+    "id": "l22",
+    "cat": "LLM基础",
+    "q": "Safety与Alignment：Constitutional AI与红队测试",
+    "bullets": [
+      "<span class=\"highlight\">Constitutional AI</span>(Anthropic)：定义一组\"宪法原则\" → AI自我批评和修正 → 减少人工标注需求",
+      "CAI流程：LLM生成 → 根据原则自我评估 → 修正有害输出 → 用修正对做RLHF/DPO",
+      "<span class=\"highlight\">Red Teaming</span>：主动攻击模型，发现安全漏洞。方法：手动/自动化(用LLM攻击LLM)",
+      "常见攻击：Prompt Injection / Jailbreak / 多轮诱导 / 编码绕过（Base64等）",
+      "防御：Input/Output Guardrails / Safety训练 / System Prompt防护 / 多层检测",
+      "趋势：从RLHF对齐 → Scalable Oversight(让AI帮助监督AI) → <span class=\"highlight\">对齐要能scale</span>"
+    ],
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "m01",
@@ -1861,7 +2352,8 @@ const BUILTIN_CARDS = [
       "学习率：LLM训练通常用cosine schedule + warmup（前几百步线性升温，防止开始时梯度爆炸）",
       "LoRA微调常用lr=2e-4~2e-5，比全量微调高一个量级"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "m02",
@@ -1875,7 +2367,8 @@ const BUILTIN_CARDS = [
       "数据增强：增加训练数据多样性 → 图像(翻转/裁剪)、NLP(同义替换/回译)",
       "LLM场景：LoRA本身就是正则化（低秩约束限制了参数自由度）"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 1
   },
   {
     "id": "m03",
@@ -1888,7 +2381,8 @@ const BUILTIN_CARDS = [
       "Contrastive Loss：拉近正样本对、推远负样本对 → Embedding训练核心",
       "Triplet Loss：(anchor, positive, negative)三元组 → 你的bge-m3微调用的"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "m04",
@@ -1901,7 +2395,8 @@ const BUILTIN_CARDS = [
       "ResNet的残差连接：y = F(x) + x → 让深层网络可训练（和Transformer的residual connection相同思想）",
       "你的Edge AI项目：用TensorRT对视觉模型做量化加速部署到Jetson Nano"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 1
   },
   {
     "id": "m05",
@@ -1914,7 +2409,8 @@ const BUILTIN_CARDS = [
       "已被Transformer大部分取代，但在低资源/实时场景仍有价值",
       "你的经验：PowerTS中LSTM精度比LLM高13倍，推理~1ms vs ~5-10s → <span class=\"highlight\">简单模型在特定场景仍是最优解</span>"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "m06",
@@ -1927,7 +2423,8 @@ const BUILTIN_CARDS = [
       "Pre-Norm vs Post-Norm：Transformer中Layer Norm放在Attention前(Pre)还是后(Post)",
       "Pre-Norm训练更稳定（主流选择），Post-Norm理论上效果更好但难训练"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "m07",
@@ -1940,7 +2437,8 @@ const BUILTIN_CARDS = [
       "应用：图像生成 / 数据增强 / 风格迁移 / 超分辨率",
       "你的经验：本科项目用GAN做电力系统稀有事件数据增强 → 解决类别不平衡问题"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "m08",
@@ -1953,7 +2451,8 @@ const BUILTIN_CARDS = [
       "<span class=\"highlight\">DDPG</span>：Actor-Critic + 连续动作空间 → 适合机器人/电力控制",
       "你的经验：①本科用DDPG/PPO做电力系统实时控制 ②理解RLHF中PPO的作用"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "m09",
@@ -1966,7 +2465,113 @@ const BUILTIN_CARDS = [
       "SimCSE：用dropout制造正样本对 → 简单有效的句向量方法",
       "你的应用：bge-m3微调用MultipleNegativesRankingLoss（对比学习变体），in-batch negatives提高效率"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
+  },
+  {
+    "id": "m10",
+    "cat": "ML/DL基础",
+    "q": "Attention机制演进",
+    "bullets": [
+      "<span class=\"highlight\">Bahdanau(2014)</span>：加性Attention，score = v^T·tanh(W_1·h_i + W_2·s_j)，首次在Seq2Seq中引入注意力",
+      "<span class=\"highlight\">Luong(2015)</span>：乘性Attention，score = h_i^T·W·s_j，计算更高效。还提出local attention（只关注窗口）",
+      "<span class=\"highlight\">Self-Attention(2017)</span>：Q/K/V来自同一序列，每个位置attend所有位置 → Transformer核心",
+      "<span class=\"highlight\">Multi-Head Attention</span>：将d_model分成h个头，每个头独立计算attention再concat → 捕捉多种关系",
+      "演进逻辑：从\"辅助RNN的对齐工具\" → \"完全替代RNN的序列建模核心\"",
+      "后续优化：MQA(Multi-Query) → GQA(Grouped-Query) → 减少KV头数降低推理成本"
+    ],
+    "group": "基础",
+    "lv": 2
+  },
+  {
+    "id": "m11",
+    "cat": "ML/DL基础",
+    "q": "梯度消失与梯度爆炸",
+    "bullets": [
+      "<span class=\"highlight\">梯度消失</span>：反向传播时梯度连乘 → 趋近于0 → 深层参数无法更新。常见于sigmoid/tanh激活",
+      "<span class=\"highlight\">梯度爆炸</span>：梯度连乘 → 趋向无穷 → 参数更新不稳定。常见于深层RNN",
+      "解决消失：ReLU/GELU激活（导数不缩小）/ Residual Connection（梯度直通路径）/ Layer Norm",
+      "解决爆炸：Gradient Clipping（限制梯度范数，LLM训练标配）/ 适当的权重初始化",
+      "权重初始化：Xavier(适合sigmoid/tanh) / He(适合ReLU) / 保持各层方差一致",
+      "LLM中：Pre-Norm + Residual + Gradient Clipping(通常max_norm=1.0)三板斧"
+    ],
+    "group": "基础",
+    "lv": 2
+  },
+  {
+    "id": "m12",
+    "cat": "ML/DL基础",
+    "q": "学习率调度策略",
+    "bullets": [
+      "<span class=\"highlight\">Warmup</span>：从极小lr线性升温到目标lr。原因：初始参数随机，大lr会破坏预训练权重",
+      "<span class=\"highlight\">Cosine Annealing</span>：lr按余弦曲线从峰值衰减到接近0。平滑衰减，LLM训练最常用",
+      "<span class=\"highlight\">OneCycleLR</span>：先升后降一个完整周期，配合大lr探索 → FastAI推荐，收敛快",
+      "Step Decay：每隔N个epoch将lr乘以γ(如0.1) → 经典但不如cosine平滑",
+      "Warmup+Cosine组合：LLM标准配置。如warmup 2000步 → cosine衰减到0",
+      "实践：warmup步数通常为总步数的1-5%；peak lr与batch size正相关（线性缩放规则）"
+    ],
+    "group": "基础",
+    "lv": 2
+  },
+  {
+    "id": "m13",
+    "cat": "ML/DL基础",
+    "q": "数据增强技术",
+    "bullets": [
+      "CV：翻转/旋转/裁剪/颜色抖动 → 基础几何变换。<span class=\"highlight\">Mixup</span>：两张图线性插值混合",
+      "CV进阶：CutMix(剪切粘贴区域) / AutoAugment(搜索最优增强策略) / RandAugment(随机组合)",
+      "NLP：同义词替换 / 随机删除/交换 / <span class=\"highlight\">回译</span>(翻译到另一语言再翻回来) / EDA",
+      "NLP进阶：用LLM生成改写(paraphrase) / 数据蒸馏(用大模型生成训练数据)",
+      "对比学习中的增强：SimCLR的random crop+color distortion / SimCSE的dropout",
+      "注意：增强不能改变语义标签（NLP中尤其需要小心）"
+    ],
+    "group": "基础",
+    "lv": 1
+  },
+  {
+    "id": "m14",
+    "cat": "ML/DL基础",
+    "q": "模型压缩：剪枝、蒸馏、量化",
+    "bullets": [
+      "<span class=\"highlight\">剪枝(Pruning)</span>：移除冗余参数。非结构化(单个权重置零) vs 结构化(整行/整列/整个head删除)",
+      "结构化剪枝对硬件更友好（实际加速），非结构化剪枝比例高但需要稀疏硬件支持",
+      "<span class=\"highlight\">知识蒸馏(Distillation)</span>：大模型(teacher)的soft label教小模型(student)。KD Loss = CE(student, soft_label)",
+      "蒸馏的关键：Temperature软化teacher的输出分布，让student学到更丰富的\"暗知识\"",
+      "<span class=\"highlight\">量化(Quantization)</span>：降低数值精度。PTQ(训练后量化)简单 / QAT(量化感知训练)精度高",
+      "组合使用：先蒸馏得到小模型 → 再量化部署。如DistilBERT(蒸馏) + INT8(量化)"
+    ],
+    "group": "基础",
+    "lv": 3
+  },
+  {
+    "id": "m15",
+    "cat": "ML/DL基础",
+    "q": "交叉验证与超参搜索",
+    "bullets": [
+      "<span class=\"highlight\">K-Fold CV</span>：数据分K份，每次用K-1份训练、1份验证，轮换K次取平均 → 评估更稳定",
+      "Stratified K-Fold：保持每折中类别比例一致 → 分类任务必选",
+      "Grid Search：穷举所有超参组合 → 简单但组合爆炸",
+      "Random Search：随机采样超参组合 → 高维空间比Grid Search更高效（Bergstra 2012）",
+      "<span class=\"highlight\">Bayesian Optimization</span>：用高斯过程建模超参→性能映射，智能选下一组 → Optuna/Ray Tune",
+      "LLM微调：超参空间小(lr/rank/epochs)，通常小规模grid search即可"
+    ],
+    "group": "基础",
+    "lv": 2
+  },
+  {
+    "id": "m16",
+    "cat": "ML/DL基础",
+    "q": "Transformer架构变体：GPT vs BERT vs T5 vs LLaMA",
+    "bullets": [
+      "<span class=\"highlight\">GPT</span>：Decoder-only，CLM预训练。单向attention，适合生成。GPT-3(175B)开启大模型时代",
+      "<span class=\"highlight\">BERT</span>：Encoder-only，MLM+NSP预训练。双向attention，适合理解/分类。仍是NLU任务首选",
+      "<span class=\"highlight\">T5</span>：Encoder-Decoder，Span Corruption预训练。text-to-text统一框架，适合翻译/摘要",
+      "<span class=\"highlight\">LLaMA</span>：Decoder-only，Pre-Norm + RoPE + SwiGLU + GQA。开源生态核心，训练数据充分(Chinchilla)",
+      "架构选择：纯生成→Decoder-only / 纯理解→Encoder-only / 条件生成(翻译)→Enc-Dec",
+      "趋势：<span class=\"highlight\">Decoder-only统一天下</span>，因为足够大时理解能力也很强"
+    ],
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "a01",
@@ -1979,7 +2584,8 @@ const BUILTIN_CARDS = [
       "<span class=\"highlight\">Planning</span>：任务分解和执行策略（ReAct/Plan-and-Execute/反思）",
       "你的项目覆盖全部四要素：SiLR(LLM+仿真工具+观测记忆+ReAct规划)，RAG(LLM+10工具+检索记忆+意图路由)"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 1
   },
   {
     "id": "a02",
@@ -1992,7 +2598,8 @@ const BUILTIN_CARDS = [
       "你的解决方案：三层ActionParser（原生/JSON/正则兜底）+ 强制调用guardrails",
       "<span class=\"highlight\">Structured Output</span>：限制LLM只能输出符合Schema的JSON，减少解析错误"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "a03",
@@ -2005,7 +2612,8 @@ const BUILTIN_CARDS = [
       "<span class=\"highlight\">情景记忆</span>：记录成功/失败的完整episode，用于未来类似任务参考",
       "你的实现：SiLR用观测压缩做工作记忆；RAG用向量DB做长期记忆；EdgeRouter用滑动窗口做时序记忆"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "a04",
@@ -2018,7 +2626,8 @@ const BUILTIN_CARDS = [
       "你做过的：Observation压缩(2000→300 tokens) / Escalation Hint(只在REJECT时注入) / RRF权重调整",
       "核心理念：<span class=\"highlight\">控制模型\"看到什么\"比\"怎么问\"更重要</span>"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "a05",
@@ -2031,7 +2640,8 @@ const BUILTIN_CARDS = [
       "④<span class=\"highlight\">黑板模式</span>：共享状态空间，各Agent读写 → 解耦通信",
       "框架：AutoGen(对话式) / CrewAI(角色分工) / LangGraph(图状态机)"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "a06",
@@ -2045,7 +2655,8 @@ const BUILTIN_CARDS = [
       "⑤<span class=\"highlight\">成本</span>：API调用/推理成本（SiLR: 比GPT低100×）",
       "难点：Agent行为是随机的，需要多次运行取统计量，不能只跑一次"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "a07",
@@ -2058,7 +2669,8 @@ const BUILTIN_CARDS = [
       "回退Guardrails：失败时的兜底策略（Failsafe、默认回答、人工转接）",
       "实现方式：规则(正则/关键词) / 分类器(fine-tuned) / LLM-as-Judge / 仿真器验证"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "a08",
@@ -2071,7 +2683,64 @@ const BUILTIN_CARDS = [
       "④<span class=\"highlight\">幻觉动作</span>：调用不存在的工具或生成无效参数 → Schema验证+解析兜底",
       "⑤<span class=\"highlight\">上下文污染</span>：错误信息积累在context中影响后续判断 → 观测压缩+状态重置"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
+  },
+  {
+    "id": "aa09",
+    "cat": "Agent架构",
+    "q": "MCP协议 (Model Context Protocol)",
+    "bullets": [
+      "<span class=\"highlight\">MCP</span>是Anthropic提出的开放协议，标准化LLM与外部工具/数据源的连接方式",
+      "类比：USB-C统一了充电接口 → MCP统一了<span class=\"highlight\">AI与工具的接口</span>。一次实现，所有模型都能用",
+      "三大能力：①<span class=\"highlight\">Tools</span>（模型调用外部函数） ②<span class=\"highlight\">Resources</span>（模型读取外部数据） ③<span class=\"highlight\">Prompts</span>（预定义的交互模板）",
+      "架构：Client(LLM应用) ↔ MCP Server(工具提供者)。传输层支持stdio/HTTP SSE",
+      "优势vs自定义Function Calling：标准化(跨模型复用) / 发现机制(动态列出可用工具) / 安全模型(权限控制内置)"
+    ],
+    "group": "基础",
+    "lv": 2
+  },
+  {
+    "id": "aa10",
+    "cat": "Agent架构",
+    "q": "Agent记忆系统设计（深入）",
+    "bullets": [
+      "记忆三层架构：<span class=\"highlight\">感知层</span>(原始输入) → <span class=\"highlight\">工作记忆层</span>(当前任务上下文) → <span class=\"highlight\">长期记忆层</span>(持久化知识)",
+      "工作记忆管理：context window有限 → 关键技术：①摘要压缩 ②滑动窗口 ③重要性评分后选择性保留",
+      "长期记忆存储：向量数据库(语义检索) + 结构化数据库(精确查询) + 知识图谱(关系推理)",
+      "记忆检索策略：<span class=\"highlight\">相关性</span>(embedding相似度) + <span class=\"highlight\">时效性</span>(时间衰减) + <span class=\"highlight\">重要性</span>(访问频率/情感强度)",
+      "你的实践：SiLR观测压缩(2000→300 tokens)就是工作记忆管理；RAG向量检索就是长期记忆检索"
+    ],
+    "group": "基础",
+    "lv": 3
+  },
+  {
+    "id": "aa11",
+    "cat": "Agent架构",
+    "q": "Multi-Agent协作模式（深入）",
+    "bullets": [
+      "<span class=\"highlight\">辩论模式</span>：多个Agent各持观点，通过多轮辩论达成共识 → 提升推理质量（如Society of Mind）",
+      "<span class=\"highlight\">流水线模式</span>：Agent A的输出作为Agent B的输入 → 适合有明确流程的任务（研究→写作→审查）",
+      "<span class=\"highlight\">投票模式</span>：多个Agent独立完成任务，多数投票选最佳 → Self-Consistency的Agent版本",
+      "协作挑战：①状态同步（共享记忆的一致性） ②任务分配（避免重复工作） ③冲突解决（Agent意见不一致时的仲裁）",
+      "框架对比：LangGraph(最灵活，图定义) / CrewAI(角色驱动，简单) / AutoGen(对话驱动，微软)"
+    ],
+    "group": "基础",
+    "lv": 3
+  },
+  {
+    "id": "aa12",
+    "cat": "Agent架构",
+    "q": "Agent安全与对齐",
+    "bullets": [
+      "核心原则：Agent拥有工具调用能力 → 安全比纯文本生成<span class=\"highlight\">重要10倍</span>（可以真正造成损害）",
+      "<span class=\"highlight\">最小权限</span>：每个Agent/工具只授予完成任务所需的最小权限。读写分离，危险操作需人工确认",
+      "<span class=\"highlight\">沙箱执行</span>：代码执行在隔离环境中运行（Docker/VM），网络访问白名单，文件系统只读挂载",
+      "<span class=\"highlight\">人类在回路</span>(Human-in-the-Loop)：高风险动作（删除/付款/发布）必须人工审批。SiLR验证器就是自动化版HITL",
+      "对齐难题：Agent优化任务目标时可能产生意外行为（specification gaming）→ 需要明确约束+过程监控，不只看最终结果"
+    ],
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "pe01",
@@ -2084,7 +2753,8 @@ const BUILTIN_CARDS = [
       "格式一致：示例的输入输出格式要和实际任务完全一致",
       "Zero-shot足够时不加示例——简单才是最优解"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 1
   },
   {
     "id": "pe02",
@@ -2097,7 +2767,8 @@ const BUILTIN_CARDS = [
       "ReAct：CoT + Action（思考-行动-观察循环）→ <span class=\"highlight\">你的SiLR-Agent核心范式</span>",
       "何时用：需要多步推理的任务。简单任务加CoT反而慢且可能更差"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "pe03",
@@ -2110,7 +2781,8 @@ const BUILTIN_CARDS = [
       "输出约束：在prompt中明确格式要求 + 给示例 + 末尾开始输出格式引导",
       "兜底：总是做输出解析和验证 → 你的三层ActionParser就是处理结构化输出不可靠的问题"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "pe04",
@@ -2123,7 +2795,8 @@ const BUILTIN_CARDS = [
       "<span class=\"highlight\">MUST/NEVER规则</span>：关键行为用强制语言（你的经验：Agent不调judge→加MUST call）",
       "动态注入：根据用户输入/上下文动态调整system prompt的部分内容 → Context Engineering"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "pe05",
@@ -2137,7 +2810,50 @@ const BUILTIN_CARDS = [
       "防御④：<span class=\"highlight\">最小权限</span> → Agent的工具权限按任务分配，即使被注入也无法执行危险操作",
       "你的方案：SiLR验证器在执行层拦截 → 即使prompt被劫持，危险动作也不会通过验证"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
+  },
+  {
+    "id": "pe06",
+    "cat": "Prompt工程",
+    "q": "自动Prompt优化（DSPy / OPRO）",
+    "bullets": [
+      "痛点：手动调prompt靠直觉和试错，不可复现、不可扩展",
+      "<span class=\"highlight\">DSPy</span>：将prompt工程变成编程——定义Signature(输入/输出)+Module(推理模式)，编译器自动优化prompt",
+      "<span class=\"highlight\">OPRO</span>(Google)：用LLM优化prompt——给当前prompt和评分，让LLM生成更好的prompt，迭代进化",
+      "对比：DSPy=<span class=\"highlight\">编程范式</span>（结构化、可组合、可测试）；OPRO=<span class=\"highlight\">搜索范式</span>（黑盒优化、简单上手）",
+      "实践建议：先手动写baseline → 效果不够时上自动优化。简单任务手动足够，复杂pipeline用DSPy"
+    ],
+    "group": "基础",
+    "lv": 3
+  },
+  {
+    "id": "pe07",
+    "cat": "Prompt工程",
+    "q": "System Prompt最佳实践清单",
+    "bullets": [
+      "结构模板：<span class=\"highlight\">角色 → 任务 → 约束 → 输出格式 → 示例</span>（由粗到细）",
+      "语言选择：指令语言和目标输出语言一致效果更好。多语言场景需明确指定输出语言",
+      "长度控制：System Prompt过长会降低模型对用户输入的注意力。核心规则放最前面，细节放后面",
+      "版本管理：System Prompt应该<span class=\"highlight\">版本化+A/B测试</span>，不要随意改动。每次改动记录原因和效果",
+      "安全设计：①敏感信息不放system prompt（可被提取） ②关键约束重复强调（头尾各一次） ③用XML/分隔符区分不同section"
+    ],
+    "group": "基础",
+    "lv": 2
+  },
+  {
+    "id": "pe08",
+    "cat": "Prompt工程",
+    "q": "Prompt模板库与复用模式",
+    "bullets": [
+      "<span class=\"highlight\">提取模式</span>：从非结构化文本中提取结构化信息 → \"从以下文本中提取[字段列表]，以JSON格式输出\"",
+      "<span class=\"highlight\">分类模式</span>：将输入分到预定义类别 → 给出类别列表+每类说明+few-shot示例",
+      "<span class=\"highlight\">转换模式</span>：翻译/改写/格式转换 → 明确源格式和目标格式+风格要求",
+      "<span class=\"highlight\">推理模式</span>：需要分析判断 → CoT引导+中间步骤约束+最终结论格式",
+      "复用原则：模板参数化（用变量占位） → 与代码一起版本管理 → 定期评估效果退化"
+    ],
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "v01",
@@ -2149,7 +2865,8 @@ const BUILTIN_CARDS = [
       "③ \"值不值得花这个钱？\" → 成本-性能 trade-off 分析（Pareto图）",
       "评测在MaaS中的角色：客户场景→SA设计评测→跑对比→出报告→客户选型→发现短板→反馈模型团队→<span class=\"highlight\">数据飞轮</span>"
     ],
-    "group": "工程"
+    "group": "工程",
+    "lv": 1
   },
   {
     "id": "v02",
@@ -2163,7 +2880,8 @@ const BUILTIN_CARDS = [
       "⑤ 安全合规（幻觉率/拒答率/敏感信息泄漏率）→ 法务关心",
       "+1 鲁棒性（噪声下退化幅度）→ 不同角色关心不同维度，SA帮客户找最优平衡点"
     ],
-    "group": "工程"
+    "group": "工程",
+    "lv": 2
   },
   {
     "id": "v03",
@@ -2176,7 +2894,8 @@ const BUILTIN_CARDS = [
       "永远不要只用benchmark做推荐。MMLU最高的模型在客户日语QA上可能不是最好的",
       "Benchmark局限：数据污染 / 指标游戏 / 和业务脱节 / 静态不更新"
     ],
-    "group": "工程"
+    "group": "工程",
+    "lv": 2
   },
   {
     "id": "v04",
@@ -2189,7 +2908,8 @@ const BUILTIN_CARDS = [
       "③ 人工评测：盲评+对比评，IRR(Cohen's Kappa)衡量一致性，高风险场景最终验证",
       "④ A/B测试：线上真实流量，用业务指标(CTR/转化率/留存)评价——<span class=\"highlight\">金标准</span>"
     ],
-    "group": "工程"
+    "group": "工程",
+    "lv": 2
   },
   {
     "id": "v05",
@@ -2203,7 +2923,8 @@ const BUILTIN_CARDS = [
       "⑤ 跑评测 → ⑥ 分析（Pareto图+错误分析+边界案例）",
       "⑦ 出报告（推荐方案+数据支撑+trade-off说明）→ ⑧ 决策支持"
     ],
-    "group": "工程"
+    "group": "工程",
+    "lv": 2
   },
   {
     "id": "v06",
@@ -2215,7 +2936,8 @@ const BUILTIN_CARDS = [
       "TCO要算全：API费 + GPU租赁(本地部署) + 运维人力 + 数据标注(微调) + 持续监控",
       "案例：SiLR本地14B成本低100×但效果超过GPT-5.4 → 不是最贵的最好"
     ],
-    "group": "工程"
+    "group": "工程",
+    "lv": 3
   },
   {
     "id": "v07",
@@ -2228,7 +2950,8 @@ const BUILTIN_CARDS = [
       "④ EdgeRouter：准确率×成本×延迟×WAN条件 → 86%成本节省全延迟范围稳定",
       "共同点：不只看\"哪个最好\"，更关注<span class=\"highlight\">\"为什么有些会失败\"</span>——失败模式比最终数字更有价值"
     ],
-    "group": "工程"
+    "group": "工程",
+    "lv": 2
   },
   {
     "id": "v08",
@@ -2241,7 +2964,8 @@ const BUILTIN_CARDS = [
       "④ Benchmark分数≠客户场景效果（MMLU最高的模型日语QA可能不是最好的）",
       "⑤ 忽略成本维度（GPT-5.4最好但API成本100×）"
     ],
-    "group": "工程"
+    "group": "工程",
+    "lv": 2
   },
   {
     "id": "v09",
@@ -2255,7 +2979,8 @@ const BUILTIN_CARDS = [
       "④ 延迟要求：API有网络延迟",
       "然后用客户数据跑对比。14B微调后能超GPT-5.4 few-shot（SiLR就是案例）"
     ],
-    "group": "工程"
+    "group": "工程",
+    "lv": 2
   },
   {
     "id": "v10",
@@ -2268,7 +2993,8 @@ const BUILTIN_CARDS = [
       "④ 换模型（高成本）：更大模型或不同家族",
       "原则：<span class=\"highlight\">先做便宜的，再做贵的，最后才换模型</span>"
     ],
-    "group": "工程"
+    "group": "工程",
+    "lv": 3
   },
   {
     "id": "v11",
@@ -2281,7 +3007,8 @@ const BUILTIN_CARDS = [
       "Chatbot Arena是最可信的排名（人工盲评），但样本偏向英语对话场景",
       "SA做法：Benchmark排除明显不行的 → <span class=\"highlight\">客户数据才是最终裁判</span>"
     ],
-    "group": "工程"
+    "group": "工程",
+    "lv": 1
   },
   {
     "id": "v12",
@@ -2294,7 +3021,50 @@ const BUILTIN_CARDS = [
       "\"评测是连接工程和模型的桥梁：工程方案产生数据→评测发现短板→反馈模型改进→数据飞轮\"",
       "展示：能反思(成长性) + 区分临时/持久价值(产品化思维) + 理解评测角色(契合二面方向)"
     ],
-    "group": "工程"
+    "group": "工程",
+    "lv": 2
+  },
+  {
+    "id": "me13",
+    "cat": "模型评测",
+    "q": "A/B测试设计与统计显著性",
+    "bullets": [
+      "<span class=\"highlight\">A/B测试</span>：将用户随机分为对照组和实验组，分别使用不同模型/策略，比较业务指标",
+      "关键设计要素：①随机分流（避免选择偏差） ②样本量估算（power analysis，通常需1000+样本） ③单一变量（一次只改一个因素）",
+      "统计显著性：p-value < 0.05 表示结果非偶然。<span class=\"highlight\">置信区间不重叠</span>才能说有显著差异",
+      "常见陷阱：①过早停止实验（peeking problem）→预设实验周期 ②辛普森悖论（分组后结论反转）→检查子群 ③多重比较（同时测5个指标p值膨胀）→Bonferroni校正",
+      "实践：LLM场景常用指标——用户满意度评分、任务完成率、对话轮数、留存率"
+    ],
+    "group": "工程",
+    "lv": 3
+  },
+  {
+    "id": "me14",
+    "cat": "模型评测",
+    "q": "偏差-方差权衡 (Bias-Variance Tradeoff)",
+    "bullets": [
+      "总误差 = <span class=\"highlight\">偏差²</span> + <span class=\"highlight\">方差</span> + 不可约噪声",
+      "高偏差(欠拟合)：模型太简单，训练集和测试集误差都高 → 增加模型复杂度/特征",
+      "高方差(过拟合)：模型太复杂，训练集误差低但测试集高 → 正则化/dropout/更多数据/早停",
+      "LLM语境下：小模型高偏差（能力不足）、大模型可能高方差（对prompt措辞敏感）→ 微调=降偏差，prompt ensemble=降方差",
+      "诊断方法：学习曲线（训练集/验证集误差随数据量变化）→ 两条线都高=偏差问题，gap大=方差问题"
+    ],
+    "group": "工程",
+    "lv": 2
+  },
+  {
+    "id": "me15",
+    "cat": "模型评测",
+    "q": "评测集构建方法论",
+    "bullets": [
+      "评测集质量决定评测结论的可信度。<span class=\"highlight\">垃圾数据 → 垃圾评测</span>",
+      "构建步骤：①从真实业务数据采样（保持分布） ②分层采样覆盖各类型（简单/中等/困难、各领域） ③标注gold standard（多人标注+一致性检查）",
+      "规模指南：PoC快速验证50-100条；正式评测200-500条；统计显著性分析需1000+条",
+      "注意事项：①避免数据泄漏（评测集不能出现在训练数据中） ②定期更新（防止模型\"记住\"答案） ③包含<span class=\"highlight\">边界案例</span>（空输入/超长输入/对抗样本）",
+      "评测集版本管理：用hash标识版本，确保不同时期的评测结果可比"
+    ],
+    "group": "工程",
+    "lv": 3
   },
   {
     "id": "t01",
@@ -2307,6 +3077,7 @@ const BUILTIN_CARDS = [
       "SSE(Server-Sent Events)：服务器→客户端单向推送，LLM逐token流式输出用SSE就够了",
       "SSE vs WebSocket：SSE单向，WebSocket双向"
     ],
+    "lv": 2,
     "group": "工程"
   },
   {
@@ -2321,6 +3092,7 @@ const BUILTIN_CARDS = [
       "Registry仓库：存储和分发镜像的地方（Docker Hub）",
       "核心价值：解决\"在我机器上能跑\"问题，保证交付物稳定运行"
     ],
+    "lv": 1,
     "group": "工程"
   },
   {
@@ -2334,6 +3106,7 @@ const BUILTIN_CARDS = [
       "自动恢复：容器挂了自动重启；滚动更新：不停机更新服务",
       "SA需要知道的深度：知道是什么、为什么用，不需要会写YAML"
     ],
+    "lv": 2,
     "group": "工程"
   },
   {
@@ -2347,6 +3120,7 @@ const BUILTIN_CARDS = [
       "RAG流程：文档→embedding→存向量数据库→查询时检索相似向量→取对应文本",
       "FAISS：Facebook AI的开源库，IndexFlatIP（精确）→IndexIVFPQ（近似，大规模用）"
     ],
+    "lv": 2,
     "group": "工程"
   },
   {
@@ -2360,6 +3134,7 @@ const BUILTIN_CARDS = [
       "Tensor Parallelism(TP=2)：大模型跨多卡并行，vLLM支持",
       "SA场景：edge用Ollama，cloud/企业API用vLLM"
     ],
+    "lv": 3,
     "group": "工程"
   },
   {
@@ -2373,6 +3148,7 @@ const BUILTIN_CARDS = [
       "lora_alpha：缩放系数，通常=2r（alpha=128对应r=64）",
       "target_modules：q_proj/k_proj/v_proj/o_proj + gate/up/down_proj（7个）"
     ],
+    "lv": 3,
     "group": "工程"
   },
   {
@@ -2387,6 +3163,7 @@ const BUILTIN_CARDS = [
       "自研：完全可控，但要自己造轮子（SiLR-Agent选择自研的原因）",
       "选哪个取决于客户需求和团队熟悉度，不存在\"最好的框架\""
     ],
+    "lv": 2,
     "group": "工程"
   },
   {
@@ -2399,6 +3176,7 @@ const BUILTIN_CARDS = [
       "Multi-Agent：多个专门化Agent协作（规划/执行/审核），适合角色分工明确的场景",
       "实际项目经常混合使用，不是非此即彼"
     ],
+    "lv": 2,
     "group": "工程"
   },
   {
@@ -2412,6 +3190,7 @@ const BUILTIN_CARDS = [
       "结合使用：先RAG检索相关文档，再用fine-tuned模型生成（JP-DocRAG的做法）",
       "帮客户判断：问题是\"找答案\"还是\"计算/推理\"？"
     ],
+    "lv": 2,
     "group": "工程"
   },
   {
@@ -2425,6 +3204,96 @@ const BUILTIN_CARDS = [
       "关键：先定义\"好\"的标准——电商文案的\"好\"和金融报告的\"好\"差别很大",
       "A/B测试：最终用业务指标（CTR/转化率）验证，不只是技术指标"
     ],
+    "lv": 2,
+    "group": "工程"
+  },
+  {
+    "id": "tc11",
+    "cat": "技术概念",
+    "q": "REST vs GraphQL vs gRPC — API 设计三种范式",
+    "bullets": [
+      "<span class=\"highlight\">REST</span>：资源导向（URL = 资源），HTTP 动词（GET/POST/PUT/DELETE），JSON 格式，最普遍",
+      "<span class=\"highlight\">GraphQL</span>：客户端精确指定需要的字段，一次请求获取多个资源，避免 over-fetching / under-fetching",
+      "<span class=\"highlight\">gRPC</span>：Google 开源，基于 HTTP/2 + Protocol Buffers（二进制序列化），高性能，适合微服务间通信",
+      "选型：<span class=\"highlight\">公开 API / 简单 CRUD → REST</span> | 复杂嵌套查询的前端 → GraphQL | 内部微服务高频调用 → gRPC",
+      "性能对比：gRPC 比 REST 快 2-10 倍（二进制序列化 + HTTP/2 多路复用 + 流式传输）",
+      "面试常见追问：REST 的无状态性（stateless）意味着什么？→ 每个请求包含所有信息，服务端不保存会话状态"
+    ],
+    "lv": 2,
+    "group": "工程"
+  },
+  {
+    "id": "tc12",
+    "cat": "技术概念",
+    "q": "CI/CD 流水线设计 — GitHub Actions / GitLab CI",
+    "bullets": [
+      "<span class=\"highlight\">CI（持续集成）</span>：每次 push 自动跑 lint + 单元测试 + 构建，确保代码随时可合并",
+      "<span class=\"highlight\">CD（持续部署/交付）</span>：CI 通过后自动部署到 staging/production 环境",
+      "<pre><span class=\"cm\"># GitHub Actions 基本结构</span>\nname: CI\non: [push, pull_request]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: pip install -r requirements.txt\n      - run: pytest tests/</pre>",
+      "关键概念：<span class=\"highlight\">Pipeline</span>（流水线）→ <span class=\"highlight\">Stage</span>（阶段：build/test/deploy）→ <span class=\"highlight\">Job</span>（具体任务）→ <span class=\"highlight\">Step</span>（步骤）",
+      "最佳实践：快速失败（lint 在前）+ 缓存依赖（加速构建）+ 并行执行（独立 job 同时跑）+ 环境分离（staging → production）",
+      "GitHub Actions vs GitLab CI：Actions 用 YAML + Marketplace 生态好；GitLab CI 与 GitLab 深度集成，自建 runner 更灵活"
+    ],
+    "lv": 2,
+    "group": "工程"
+  },
+  {
+    "id": "tc13",
+    "cat": "技术概念",
+    "q": "Linux 面试高频命令 — 进程/网络/文件操作",
+    "bullets": [
+      "<pre><span class=\"cm\"># 进程管理</span>\nps aux | grep python     <span class=\"cm\"># 查找进程</span>\ntop / htop               <span class=\"cm\"># 实时资源监控</span>\nkill -9 &lt;PID&gt;            <span class=\"cm\"># 强制终止进程</span>\nnohup python train.py &amp;  <span class=\"cm\"># 后台运行，退出终端不停止</span>\nlsof -i :8080            <span class=\"cm\"># 查看端口占用</span></pre>",
+      "<pre><span class=\"cm\"># 网络诊断</span>\ncurl -X GET http://api/health   <span class=\"cm\"># HTTP 请求测试</span>\nnetstat -tlnp / ss -tlnp        <span class=\"cm\"># 查看监听端口</span>\nping / traceroute               <span class=\"cm\"># 连通性和路由</span>\nwget / curl -O                  <span class=\"cm\"># 下载文件</span></pre>",
+      "<pre><span class=\"cm\"># 文件操作</span>\nfind . -name <span class=\"str\">\"*.log\"</span> -mtime +7 -delete  <span class=\"cm\"># 删除7天前的日志</span>\ngrep -rn <span class=\"str\">\"error\"</span> /var/log/     <span class=\"cm\"># 递归搜索关键词</span>\ntail -f app.log                 <span class=\"cm\"># 实时查看日志</span>\ndu -sh * | sort -rh | head      <span class=\"cm\"># 目录大小排序</span>\nchmod 755 / chown user:group    <span class=\"cm\"># 权限管理</span></pre>",
+      "管道与重定向：<code>|</code>（管道）、<code>></code>（覆盖写入）、<code>>></code>（追加）、<code>2>&1</code>（stderr 合并到 stdout）",
+      "面试必问：<code>grep</code> + <code>awk</code> + <code>sed</code> 文本三剑客 — 至少能读懂基本用法"
+    ],
+    "lv": 2,
+    "group": "工程"
+  },
+  {
+    "id": "tc14",
+    "cat": "技术概念",
+    "q": "网络基础 — HTTP/HTTPS、TCP/UDP、DNS",
+    "bullets": [
+      "<span class=\"highlight\">TCP vs UDP</span>：TCP 可靠有序（三次握手/四次挥手）→ Web/API；UDP 快但不保证到达 → 视频/游戏/DNS查询",
+      "<span class=\"highlight\">HTTP 状态码</span>：2xx 成功 | 3xx 重定向 | 4xx 客户端错误（400 参数错/401 未认证/403 无权限/404 不存在）| 5xx 服务端错误",
+      "<span class=\"highlight\">HTTPS = HTTP + TLS</span>：TLS 握手建立加密通道，证书验证服务器身份，防止中间人攻击",
+      "<span class=\"highlight\">DNS 解析流程</span>：浏览器缓存 → OS 缓存 → 本地 DNS → 根域名服务器 → 顶级域 → 权威 DNS → 返回 IP",
+      "HTTP/1.1 vs HTTP/2 vs HTTP/3：H2 多路复用（一个 TCP 连接并行多个请求）；H3 基于 QUIC（UDP），更快的连接建立",
+      "面试高频问：\"从输入 URL 到页面显示发生了什么？\" → DNS → TCP → TLS → HTTP 请求 → 服务器处理 → 渲染"
+    ],
+    "lv": 2,
+    "group": "工程"
+  },
+  {
+    "id": "tc15",
+    "cat": "技术概念",
+    "q": "认证与授权 — OAuth 2.0 / JWT / Session vs Token",
+    "bullets": [
+      "<span class=\"highlight\">认证(Authentication)</span>：你是谁？ | <span class=\"highlight\">授权(Authorization)</span>：你能干什么？",
+      "<span class=\"highlight\">Session-based</span>：服务端存 session → 返回 session_id cookie → 有状态，需 session 存储，水平扩展难",
+      "<span class=\"highlight\">Token-based (JWT)</span>：服务端生成签名 token → 客户端每次携带 → 无状态，易扩展，但 token 无法主动失效",
+      "JWT 结构：<code>Header.Payload.Signature</code>（Base64 编码，<span class=\"highlight\">不是加密！</span>只是签名防篡改，不要存敏感信息）",
+      "<span class=\"highlight\">OAuth 2.0</span>：第三方授权框架 → \"用 Google 账号登录\"。四种授权模式，最常用 Authorization Code Flow",
+      "最佳实践：短期 Access Token（15min）+ 长期 Refresh Token + HTTPS 必须 + HttpOnly Cookie 存 token"
+    ],
+    "lv": 2,
+    "group": "工程"
+  },
+  {
+    "id": "tc16",
+    "cat": "技术概念",
+    "q": "微服务 vs 单体架构 — 什么时候用哪个？",
+    "bullets": [
+      "<span class=\"highlight\">单体(Monolith)</span>：一个代码库一个部署单元，简单直接 → 适合初创期、小团队、快速迭代",
+      "<span class=\"highlight\">微服务(Microservices)</span>：按业务拆分独立服务，各自部署 → 适合大团队、高并发、需要独立扩缩容",
+      "微服务的代价：网络调用延迟、分布式事务复杂、运维成本高（需要 K8s/服务发现/链路追踪/日志聚合）",
+      "服务间通信：<span class=\"highlight\">同步</span> → REST/gRPC | <span class=\"highlight\">异步</span> → 消息队列（Kafka/RabbitMQ/Redis Pub/Sub）",
+      "常见模式：API Gateway（统一入口）+ Service Mesh（Istio，管理服务间通信）+ 分布式追踪（Jaeger/Zipkin）",
+      "Martin Fowler 原则：<span class=\"highlight\">\"Monolith First\"</span> — 先用单体验证业务，确定边界后再拆微服务"
+    ],
+    "lv": 3,
     "group": "工程"
   },
   {
@@ -2447,7 +3316,7 @@ const BUILTIN_CARDS = [
     "bullets": [
       "<pre><span class=\"cm\">-- 插入</span>\n<span class=\"kw\">INSERT INTO</span> users (name, email) <span class=\"kw\">VALUES</span> (<span class=\"str\">'Zhou'</span>, <span class=\"str\">'z@mail.com'</span>);\n<span class=\"cm\">-- 批量插入</span>\n<span class=\"kw\">INSERT INTO</span> users (name, email) <span class=\"kw\">VALUES</span>\n  (<span class=\"str\">'A'</span>, <span class=\"str\">'a@m.com'</span>), (<span class=\"str\">'B'</span>, <span class=\"str\">'b@m.com'</span>);\n<span class=\"cm\">-- 更新</span>\n<span class=\"kw\">UPDATE</span> users <span class=\"kw\">SET</span> age = 26 <span class=\"kw\">WHERE</span> id = 1;\n<span class=\"cm\">-- 删除（⚠️ 没有WHERE会删全表！）</span>\n<span class=\"kw\">DELETE FROM</span> users <span class=\"kw\">WHERE</span> id = 1;</pre>",
       "<span class=\"highlight\">永远在UPDATE/DELETE前先用SELECT确认影响范围</span>",
-      "TRUNCATE vs DELETE：TRUNCATE清空全表更快（不记录行日志），但不能回滚"
+      "TRUNCATE vs DELETE：TRUNCATE清空全表更快（不记录行日志），MySQL中属于DDL隐式提交不能回滚，PostgreSQL中可在事务内回滚"
     ],
     "lv": 1,
     "group": "工程"
@@ -2567,10 +3436,128 @@ const BUILTIN_CARDS = [
     "q": "Redis 核心数据结构与应用",
     "bullets": [
       "<pre><span class=\"cm\"># 5种核心数据结构</span>\nString: SET key val / GET key          <span class=\"cm\"># 缓存/计数器</span>\nHash:   HSET user:1 name Zhou          <span class=\"cm\"># 对象存储</span>\nList:   LPUSH queue task1              <span class=\"cm\"># 消息队列</span>\nSet:    SADD tags python               <span class=\"cm\"># 去重/交并集</span>\nZSet:   ZADD rank 100 user1            <span class=\"cm\"># 排行榜</span></pre>",
-      "所有操作O(1)或O(log n)（ZSet基于跳表），内存存储 → 读写<1ms",
+      "常用操作复杂度：GET/SET/HGET O(1)，ZSet操作 O(log n)，LRANGE/SMEMBERS O(n)",
       "持久化：RDB(定时快照) + AOF(追加写日志) → 重启后恢复",
       "过期策略：惰性删除 + 定期删除。设置TTL：<code>EXPIRE key 3600</code>",
       "AI项目应用：KV Cache管理 / Agent记忆存储 / API限流 / 特征缓存"
+    ],
+    "lv": 3,
+    "group": "工程"
+  },
+  {
+    "id": "db12",
+    "cat": "数据库",
+    "q": "数据库范式 — 1NF/2NF/3NF/BCNF",
+    "bullets": [
+      "<span class=\"highlight\">1NF</span>：每列原子性，不可再分（不能在一个字段存\"Java,Python\"）",
+      "<span class=\"highlight\">2NF</span>：满足1NF + 消除部分依赖（非主键列必须完全依赖整个主键，不能只依赖联合主键的一部分）",
+      "<span class=\"highlight\">3NF</span>：满足2NF + 消除传递依赖（非主键列不能依赖另一个非主键列。如：员工表不存部门名，只存dept_id）",
+      "<span class=\"highlight\">BCNF</span>：满足3NF + 每个决定因素都是候选键（比3NF更严格，消除主属性对候选键的部分/传递依赖）",
+      "面试口诀：<span class=\"highlight\">1NF列原子，2NF消除部分依赖，3NF消除传递依赖</span>",
+      "实践中大多遵循3NF，但为了查询性能可适当反范式（冗余字段避免JOIN）"
+    ],
+    "lv": 2,
+    "group": "工程"
+  },
+  {
+    "id": "db13",
+    "cat": "数据库",
+    "q": "子查询 vs JOIN — 性能对比与选择",
+    "bullets": [
+      "<pre><span class=\"cm\">-- 子查询写法（相关子查询，每行执行一次，可能慢）</span>\n<span class=\"kw\">SELECT</span> name <span class=\"kw\">FROM</span> employees e\n<span class=\"kw\">WHERE</span> salary > (\n  <span class=\"kw\">SELECT</span> <span class=\"fn\">AVG</span>(salary) <span class=\"kw\">FROM</span> employees\n  <span class=\"kw\">WHERE</span> dept_id = e.dept_id\n);\n\n<span class=\"cm\">-- JOIN改写（通常更快）</span>\n<span class=\"kw\">SELECT</span> e.name\n<span class=\"kw\">FROM</span> employees e\n<span class=\"kw\">JOIN</span> (<span class=\"kw\">SELECT</span> dept_id, <span class=\"fn\">AVG</span>(salary) <span class=\"kw\">AS</span> avg_sal\n      <span class=\"kw\">FROM</span> employees <span class=\"kw\">GROUP BY</span> dept_id) d\n<span class=\"kw\">ON</span> e.dept_id = d.dept_id\n<span class=\"kw\">WHERE</span> e.salary > d.avg_sal;</pre>",
+      "<span class=\"highlight\">相关子查询</span>（引用外层表）：每行执行一次 → O(n*m)，大表时极慢",
+      "<span class=\"highlight\">非相关子查询</span>（独立执行）：只执行一次，性能可接受",
+      "优化器在很多场景下会将子查询自动改写为JOIN，但<span class=\"highlight\">不能依赖优化器</span>",
+      "选择原则：能用JOIN就用JOIN；EXISTS比IN对大子查询结果集更高效"
+    ],
+    "lv": 2,
+    "group": "工程"
+  },
+  {
+    "id": "db14",
+    "cat": "数据库",
+    "q": "窗口函数 — ROW_NUMBER/RANK/DENSE_RANK",
+    "bullets": [
+      "<pre><span class=\"kw\">SELECT</span> name, department, salary,\n  <span class=\"fn\">ROW_NUMBER</span>() <span class=\"kw\">OVER</span>(<span class=\"kw\">PARTITION BY</span> department <span class=\"kw\">ORDER BY</span> salary <span class=\"kw\">DESC</span>) <span class=\"kw\">AS</span> rn,\n  <span class=\"fn\">RANK</span>()       <span class=\"kw\">OVER</span>(<span class=\"kw\">PARTITION BY</span> department <span class=\"kw\">ORDER BY</span> salary <span class=\"kw\">DESC</span>) <span class=\"kw\">AS</span> rk,\n  <span class=\"fn\">DENSE_RANK</span>() <span class=\"kw\">OVER</span>(<span class=\"kw\">PARTITION BY</span> department <span class=\"kw\">ORDER BY</span> salary <span class=\"kw\">DESC</span>) <span class=\"kw\">AS</span> drk\n<span class=\"kw\">FROM</span> employees;</pre>",
+      "薪资100,100,90时：ROW_NUMBER → 1,2,3 | RANK → 1,1,3 | DENSE_RANK → 1,1,2",
+      "<span class=\"highlight\">ROW_NUMBER</span>：不并列，常用于分页/去重（取每组第一条）",
+      "<span class=\"highlight\">RANK</span>：并列后跳号，适合竞赛排名",
+      "<span class=\"highlight\">DENSE_RANK</span>：并列不跳号，适合连续等级划分",
+      "经典面试题：<span class=\"highlight\">取每个部门薪资TOP 3</span> → ROW_NUMBER + WHERE rn <= 3"
+    ],
+    "lv": 2,
+    "group": "工程"
+  },
+  {
+    "id": "db15",
+    "cat": "数据库",
+    "q": "窗口函数 — LAG/LEAD/SUM OVER",
+    "bullets": [
+      "<pre><span class=\"kw\">SELECT</span> date, revenue,\n  <span class=\"fn\">LAG</span>(revenue, <span class=\"num\">1</span>) <span class=\"kw\">OVER</span>(<span class=\"kw\">ORDER BY</span> date)  <span class=\"kw\">AS</span> prev_rev,  <span class=\"cm\">-- 前一行</span>\n  <span class=\"fn\">LEAD</span>(revenue, <span class=\"num\">1</span>) <span class=\"kw\">OVER</span>(<span class=\"kw\">ORDER BY</span> date) <span class=\"kw\">AS</span> next_rev,  <span class=\"cm\">-- 后一行</span>\n  <span class=\"fn\">SUM</span>(revenue) <span class=\"kw\">OVER</span>(<span class=\"kw\">ORDER BY</span> date\n    <span class=\"kw\">ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</span>\n  ) <span class=\"kw\">AS</span> cumulative_sum  <span class=\"cm\">-- 累计求和</span>\n<span class=\"kw\">FROM</span> daily_sales;</pre>",
+      "<span class=\"highlight\">LAG(col, n)</span>：取前n行的值 | <span class=\"highlight\">LEAD(col, n)</span>：取后n行的值",
+      "环比计算：(revenue - LAG(revenue,1)) / LAG(revenue,1) * 100",
+      "滑动窗口：ROWS BETWEEN 6 PRECEDING AND CURRENT ROW → 7日移动平均",
+      "窗口函数<span class=\"highlight\">不减少行数</span>（与GROUP BY的核心区别），在SELECT阶段执行"
+    ],
+    "lv": 3,
+    "group": "工程"
+  },
+  {
+    "id": "db16",
+    "cat": "数据库",
+    "q": "数据库锁 — 类型与死锁",
+    "bullets": [
+      "<span class=\"highlight\">共享锁(S锁/读锁)</span>：多个事务可同时读，不能写。SELECT ... LOCK IN SHARE MODE",
+      "<span class=\"highlight\">排他锁(X锁/写锁)</span>：持有者独占读写，其他事务不能读写。SELECT ... FOR UPDATE",
+      "锁粒度：<span class=\"highlight\">行锁</span>(InnoDB默认，并发高) → <span class=\"highlight\">表锁</span>(MyISAM，开销小但并发差)",
+      "<span class=\"highlight\">死锁</span>：事务A锁行1等行2，事务B锁行2等行1 → 循环等待",
+      "死锁预防：①固定加锁顺序 ②控制事务大小 ③设置锁超时(innodb_lock_wait_timeout)",
+      "InnoDB死锁检测：自动检测并回滚代价较小的事务（wait-for graph算法）"
+    ],
+    "lv": 3,
+    "group": "工程"
+  },
+  {
+    "id": "db17",
+    "cat": "数据库",
+    "q": "MySQL vs PostgreSQL — 核心差异",
+    "bullets": [
+      "<span class=\"highlight\">MySQL</span>：更轻量、生态大(LAMP)、主从复制成熟 → 互联网业务首选",
+      "<span class=\"highlight\">PostgreSQL</span>：SQL标准更完整、扩展性强(自定义类型/函数)、MVCC实现更优 → 复杂查询/GIS/分析",
+      "MVCC区别：MySQL用undo log回滚段 | PG用多版本元组（旧版本留在表中需VACUUM清理）",
+      "JSON支持：PG的JSONB原生索引查询，性能远优于MySQL的JSON类型",
+      "MySQL默认Repeatable Read(用Gap Lock防幻读) | PG默认Read Committed",
+      "选型建议：简单CRUD选MySQL；复杂查询/数据分析/需要丰富数据类型选PostgreSQL"
+    ],
+    "lv": 3,
+    "group": "工程"
+  },
+  {
+    "id": "db18",
+    "cat": "数据库",
+    "q": "数据库连接池 — 原理与配置",
+    "bullets": [
+      "问题：每次请求新建TCP连接+数据库认证 → 开销大（约10-50ms），高并发下连接数爆炸",
+      "连接池：<span class=\"highlight\">预先创建一批连接放入池中，用完归还而非关闭</span>",
+      "核心参数：<span class=\"highlight\">minIdle</span>(最小空闲) / <span class=\"highlight\">maxActive</span>(最大连接数) / <span class=\"highlight\">maxWait</span>(获取等待超时)",
+      "常见实现：Java(HikariCP/Druid) | Python(SQLAlchemy pool) | Go(database/sql内置)",
+      "maxActive经验公式：<span class=\"highlight\">连接数 ≈ CPU核心数 * 2 + 磁盘数</span>（PostgreSQL官方建议，通常10-30足够）",
+      "连接泄漏：业务代码未归还连接 → 池耗尽 → 需设置泄漏检测(removeAbandoned)和超时回收"
+    ],
+    "lv": 2,
+    "group": "工程"
+  },
+  {
+    "id": "db19",
+    "cat": "数据库",
+    "q": "慢查询排查流程",
+    "bullets": [
+      "①<span class=\"highlight\">开启慢查询日志</span>：SET GLOBAL slow_query_log = ON; long_query_time = 1（单位秒）",
+      "②<span class=\"highlight\">定位慢SQL</span>：mysqldumpslow 或 pt-query-digest 分析慢日志，按耗时/频率排序",
+      "③<span class=\"highlight\">EXPLAIN分析</span>：看type(是否ALL全表扫描)、key(是否命中索引)、rows(扫描行数)",
+      "④<span class=\"highlight\">常见原因</span>：缺索引 / 索引失效(函数/类型转换) / 返回数据量大 / 锁等待 / 深分页",
+      "⑤<span class=\"highlight\">优化手段</span>：加索引 / 改写SQL / 业务层缓存 / 读写分离 / 分库分表",
+      "⑥生产环境用 SHOW PROCESSLIST 查看当前执行中的慢查询，必要时 KILL query_id"
     ],
     "lv": 3,
     "group": "工程"
@@ -2629,7 +3616,7 @@ const BUILTIN_CARDS = [
     "cat": "Git",
     "q": "合并冲突解决 — 完整流程",
     "bullets": [
-      "<pre><span class=\"cm\"># 1. 合并触发冲突</span>\ngit merge feature-x\n<span class=\"cm\"># CONFLICT in file.py</span>\n\n<span class=\"cm\"># 2. 打开冲突文件，手动编辑</span>\n<<<<<<< HEAD\n当前分支的代码\n=======\nfeature-x分支的代码\n>>>>>>> feature-x\n\n<span class=\"cm\"># 3. 解决后</span>\ngit add file.py\ngit commit  <span class=\"cm\"># 自动生成merge commit message</span></pre>",
+      "<pre><span class=\"cm\"># 1. 合并触发冲突</span>\ngit merge feature-x\n<span class=\"cm\"># CONFLICT in file.py</span>\n\n<span class=\"cm\"># 2. 打开冲突文件，手动编辑</span>\n&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD\n当前分支的代码\n=======\nfeature-x分支的代码\n&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature-x\n\n<span class=\"cm\"># 3. 解决后</span>\ngit add file.py\ngit commit  <span class=\"cm\"># 自动生成merge commit message</span></pre>",
       "预防冲突：频繁从主分支拉更新(rebase/merge) + 小粒度commit + 避免长生命周期分支",
       "工具：VS Code内置 / git mergetool / IntelliJ三向合并"
     ],
@@ -2716,6 +3703,76 @@ const BUILTIN_CARDS = [
     "group": "工程"
   },
   {
+    "id": "gt12",
+    "cat": "Git",
+    "q": "git submodule — 在仓库中嵌套管理另一个仓库",
+    "bullets": [
+      "<pre>git submodule add &lt;url&gt; libs/sdk   <span class=\"cm\"># 添加子模块</span>\ngit submodule init                  <span class=\"cm\"># 初始化（clone后首次）</span>\ngit submodule update --init --recursive <span class=\"cm\"># 拉取所有子模块</span>\ngit clone --recurse-submodules &lt;url&gt;    <span class=\"cm\"># clone时自动拉子模块</span></pre>",
+      "使用场景：多个项目共用同一个 SDK/工具库，需要<span class=\"highlight\">锁定特定版本</span>独立演进",
+      "子模块记录的是<span class=\"highlight\">具体 commit hash</span>，不会自动更新 — 需要手动 <code>cd libs/sdk &amp;&amp; git pull</code> 然后在父仓库提交新引用",
+      "痛点：submodule 操作繁琐、容易忘记更新 — 现代替代方案：<span class=\"highlight\">git subtree</span>（合入历史）、包管理器（npm/pip）、Monorepo",
+      "面试回答思路：知道 submodule 的原理和局限性，能说清楚什么时候不该用它"
+    ],
+    "lv": 3,
+    "group": "工程"
+  },
+  {
+    "id": "gt13",
+    "cat": "Git",
+    "q": "git worktree — 多分支并行开发",
+    "bullets": [
+      "<pre>git worktree add ../hotfix-dir hotfix/payment  <span class=\"cm\"># 在另一个目录检出分支</span>\ngit worktree list                               <span class=\"cm\"># 查看所有worktree</span>\ngit worktree remove ../hotfix-dir               <span class=\"cm\"># 删除worktree</span></pre>",
+      "解决的问题：切分支需要 stash/commit 未完成的工作 → worktree 让你<span class=\"highlight\">同时在不同目录操作不同分支</span>",
+      "典型场景：一个目录开发 feature，另一个目录做 code review / hotfix，互不干扰",
+      "注意：<span class=\"highlight\">同一个分支不能同时在两个 worktree 中检出</span>，否则会冲突",
+      "对比 git clone 多份：worktree 共享 .git 目录，占用更少磁盘空间且 fetch 一次全部可用"
+    ],
+    "lv": 3,
+    "group": "工程"
+  },
+  {
+    "id": "gt14",
+    "cat": "Git",
+    "q": "git hooks — 自动化代码质量检查",
+    "bullets": [
+      "<pre><span class=\"cm\"># hooks 存放在 .git/hooks/ 目录</span>\n<span class=\"cm\"># 常用 hooks：</span>\npre-commit    <span class=\"cm\"># commit 前运行（lint/format/测试）</span>\ncommit-msg    <span class=\"cm\"># 校验 commit message 格式</span>\npre-push      <span class=\"cm\"># push 前运行（完整测试套件）</span>\nprepare-commit-msg  <span class=\"cm\"># 自动填充 commit message 模板</span></pre>",
+      "<span class=\"highlight\">Husky</span>（JS）/ <span class=\"highlight\">pre-commit</span>（Python）：团队共享 hooks 的工具，配置文件纳入版本控制",
+      "<pre><span class=\"cm\"># pre-commit 配置示例 (.pre-commit-config.yaml)</span>\nrepos:\n  - repo: https://github.com/pre-commit/pre-commit-hooks\n    hooks:\n      - id: trailing-whitespace\n      - id: check-yaml\n  - repo: https://github.com/psf/black\n    hooks:\n      - id: black</pre>",
+      "CI 门禁 vs 本地 hooks：hooks 是<span class=\"highlight\">第一道防线</span>（快速反馈），CI 是第二道（强制执行）",
+      "跳过 hooks：<code>git commit --no-verify</code> — 仅限紧急情况，不要养成习惯"
+    ],
+    "lv": 2,
+    "group": "工程"
+  },
+  {
+    "id": "gt15",
+    "cat": "Git",
+    "q": "git tag — 版本发布与语义化版本",
+    "bullets": [
+      "<pre>git tag v1.0.0                        <span class=\"cm\"># 轻量标签（仅标记）</span>\ngit tag -a v1.0.0 -m <span class=\"str\">\"Release 1.0\"</span>  <span class=\"cm\"># 附注标签（推荐，含作者/日期/信息）</span>\ngit tag -l <span class=\"str\">\"v1.*\"</span>                    <span class=\"cm\"># 列出匹配的标签</span>\ngit push origin v1.0.0                <span class=\"cm\"># 推送单个标签</span>\ngit push origin --tags                <span class=\"cm\"># 推送所有标签</span>\ngit tag -d v1.0.0                     <span class=\"cm\"># 删除本地标签</span>\ngit push origin :refs/tags/v1.0.0     <span class=\"cm\"># 删除远端标签</span></pre>",
+      "<span class=\"highlight\">语义化版本 SemVer</span>：MAJOR.MINOR.PATCH — 1.2.3 → 不兼容改动.新功能.修复",
+      "tag 与 branch 区别：tag 是<span class=\"highlight\">不可变的快照</span>（指向固定 commit），branch 是可移动的指针",
+      "CI/CD 常见模式：push tag 触发自动构建和发布（GitHub Release / Docker Image / PyPI）"
+    ],
+    "lv": 2,
+    "group": "工程"
+  },
+  {
+    "id": "gt16",
+    "cat": "Git",
+    "q": "Monorepo vs Polyrepo — 代码仓库组织策略",
+    "bullets": [
+      "<span class=\"highlight\">Monorepo</span>：所有项目放一个仓库 → Google/Meta/Uber 采用，共享代码方便，原子提交跨项目变更",
+      "<span class=\"highlight\">Polyrepo</span>：每个项目独立仓库 → 权限隔离清晰，CI/CD 独立，团队自治度高",
+      "Monorepo 工具链：<span class=\"highlight\">Nx</span>（JS）/ <span class=\"highlight\">Turborepo</span>（JS）/ <span class=\"highlight\">Bazel</span>（通用）— 解决构建效率和依赖管理",
+      "Monorepo 挑战：仓库体积大、CI 变慢（需增量构建）、权限粒度粗、git clone 慢（用 sparse-checkout / shallow clone 缓解）",
+      "选择建议：<span class=\"highlight\">强耦合多模块</span> → Monorepo | <span class=\"highlight\">独立团队独立部署</span> → Polyrepo",
+      "面试考点：不是非此即彼，很多公司是混合模式 — 核心服务 Monorepo + 独立产品 Polyrepo"
+    ],
+    "lv": 3,
+    "group": "工程"
+  },
+  {
     "id": "gs01",
     "cat": "Git场景题",
     "group": "工程",
@@ -2777,7 +3834,7 @@ const BUILTIN_CARDS = [
     "q": "场景：git pull 后发现一堆合并冲突，你想先回到 pull 之前的状态",
     "bullets": [
       "<pre><span class=\"cm\"># 情况1：merge 还没完成（正在冲突中）</span>\ngit merge --abort\n<span class=\"cm\"># 一切回到 merge 前的状态，冲突标记消失</span>\n\n<span class=\"cm\"># 情况2：merge 已经完成（手滑 commit 了）</span>\ngit reset --hard ORIG_HEAD\n<span class=\"cm\"># ORIG_HEAD 指向 merge/rebase 前的位置</span>\n\n<span class=\"cm\"># 情况3：不确定要回到哪里</span>\ngit reflog\n<span class=\"cm\"># 找到 pull 之前的 commit hash</span>\ngit reset --hard abc1234</pre>",
-      "⚠️ <code>--hard</code> 会<span class=\"highlight\">丢弃所有未提交的修改</span>，确保没有重要的未提交工作",
+      "<code>--hard</code> 会<span class=\"highlight\">丢弃所有未提交的修改</span>，确保没有重要的未提交工作",
       "更安全的做法：先 <code>git stash</code> 保存未提交修改，再 reset",
       "<code>git pull --rebase</code> 遇到冲突时用 <code>git rebase --abort</code> 取消",
       "预防：养成 pull 前先 <code>git stash</code> 或先 commit 的习惯"
@@ -2803,7 +3860,7 @@ const BUILTIN_CARDS = [
     "group": "工程",
     "q": "场景：两个人同时改了同一个文件的同一行，如何解决冲突",
     "bullets": [
-      "<pre><span class=\"cm\"># Git 标记冲突的格式</span>\ndef calculate_price(item):\n<<<<<<< HEAD\n    return item.price * 0.9    <span class=\"cm\"># 你的改动：9折</span>\n=======\n    return item.price * 0.85   <span class=\"cm\"># 同事的改动：85折</span>\n>>>>>>> feature-discount</pre>",
+      "<pre><span class=\"cm\"># Git 标记冲突的格式</span>\ndef calculate_price(item):\n&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD\n    return item.price * 0.9    <span class=\"cm\"># 你的改动：9折</span>\n=======\n    return item.price * 0.85   <span class=\"cm\"># 同事的改动：85折</span>\n&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature-discount</pre>",
       "<pre><span class=\"cm\"># 解决步骤</span>\n<span class=\"cm\"># 1. 理解双方改动的意图（不要盲目选一个！）</span>\n<span class=\"cm\"># 2. 手动编辑：保留一方 / 合并两者 / 重写</span>\ndef calculate_price(item, vip=False):\n    return item.price * (0.85 if vip else 0.9)\n\n<span class=\"cm\"># 3. 标记解决并提交</span>\ngit add pricing.py\ngit commit  <span class=\"cm\"># Git 自动生成 merge commit message</span></pre>",
       "工具推荐：<span class=\"highlight\">VS Code 三向合并编辑器</span>（上方显示双方，下方编辑结果）、<code>git mergetool</code>",
       "预防冲突的团队实践：小粒度提交 + 频繁 pull/rebase + 模块职责划分清晰",
@@ -2847,7 +3904,7 @@ const BUILTIN_CARDS = [
     "bullets": [
       "<pre><span class=\"cm\"># 找到目标 commit 的 hash</span>\ngit log --oneline main\n<span class=\"cm\"># abc1234 fix: payment timeout handling</span>\n\n<span class=\"cm\"># cherry-pick 到当前分支</span>\ngit cherry-pick abc1234\n\n<span class=\"cm\"># 如果有冲突</span>\n<span class=\"cm\"># 解决冲突 → git add → git cherry-pick --continue</span>\n<span class=\"cm\"># 或放弃：git cherry-pick --abort</span>\n\n<span class=\"cm\"># cherry-pick 多个 commit</span>\ngit cherry-pick abc1234 def5678\n<span class=\"cm\"># 或连续范围（不含起点）</span>\ngit cherry-pick abc1234..ghi9012</pre>",
       "典型场景：hotfix 已合入 main，release 分支也需要同一个修复",
-      "⚠️ cherry-pick <span class=\"highlight\">创建全新的 commit（不同 hash）</span>，不是引用 — 两个分支上是独立的副本",
+      "cherry-pick <span class=\"highlight\">创建全新的 commit（不同 hash）</span>，不是引用 — 两个分支上是独立的副本",
       "如果后续两个分支 merge，Git 通常能自动处理重复改动，但偶尔会冲突",
       "替代方案：如果需要拿整个分支的部分改动，考虑 <code>git rebase --onto</code>"
     ],
@@ -2878,6 +3935,78 @@ const BUILTIN_CARDS = [
       "<code>--force-with-lease</code> 比 <code>--force</code> 安全：如果远端有别人新 push 的提交会拒绝，防止覆盖他人工作",
       "Rebase 冲突处理：每个 commit 可能单独冲突 → <code>解决 → git add → git rebase --continue</code>，太多冲突可以 <code>git rebase --abort</code> 放弃",
       "团队应统一策略：在 PR 描述 / CONTRIBUTING.md 中写清楚用 merge 还是 rebase"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "gs13",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：你需要安全地修改已 push 到远端的 commit message",
+    "bullets": [
+      "<pre><span class=\"cm\"># 方案A：修改最后一个 commit（个人分支）</span>\ngit commit --amend -m <span class=\"str\">\"fix: correct message here\"</span>\ngit push --force-with-lease\n\n<span class=\"cm\"># 方案B：修改更早的 commit（interactive rebase）</span>\ngit rebase -i HEAD~5\n<span class=\"cm\"># 将目标 commit 的 \"pick\" 改为 \"reword\"</span>\n<span class=\"cm\"># 保存后 Git 打开编辑器让你修改 message</span>\ngit push --force-with-lease</pre>",
+      "<span class=\"highlight\">核心风险</span>：改写已 push 的历史 = 所有基于旧 commit 的分支都会失效",
+      "安全检查清单：①确认是自己的分支 ②确认没有其他人基于此分支工作 ③用 <code>--force-with-lease</code> 而非 <code>--force</code>",
+      "如果是<span class=\"highlight\">共享分支（main/develop）</span>：不要改！错误的 message 比破坏团队历史好得多",
+      "GitHub/GitLab 上已合并的 PR：commit message 无法修改，只能接受 — 所以 merge 前要仔细检查"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "gs14",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：你只想从另一个分支合并某一个文件，而非整个分支",
+    "bullets": [
+      "<pre><span class=\"cm\"># 方案A：checkout 指定文件（最常用）</span>\ngit checkout feature-branch -- path/to/file.py\n<span class=\"cm\"># 把 feature-branch 上的 file.py 复制到当前工作区和暂存区</span>\ngit commit -m <span class=\"str\">\"feat: bring file.py from feature-branch\"</span>\n\n<span class=\"cm\"># 方案B：用 restore（Git 2.23+ 推荐语法）</span>\ngit restore --source feature-branch -- path/to/file.py\ngit add path/to/file.py\ngit commit -m <span class=\"str\">\"feat: bring file.py from feature-branch\"</span>\n\n<span class=\"cm\"># 方案C：只取某个 commit 对该文件的改动</span>\ngit show abc1234:path/to/file.py &gt; path/to/file.py</pre>",
+      "checkout/restore 方式是<span class=\"highlight\">整个文件覆盖</span>，不是合并差异 — 会丢弃当前分支对该文件的修改",
+      "如果需要<span class=\"highlight\">合并差异而非覆盖</span>：<code>git diff feature-branch -- file.py | git apply</code>",
+      "cherry-pick 只能按 commit 粒度操作，不能按文件 — 所以需要上述方法",
+      "场景：feature 分支还没准备好合并，但其中某个配置文件 / 工具函数需要立即使用"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "gs15",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：仓库里有大文件（模型权重/数据集），clone 越来越慢",
+    "bullets": [
+      "<pre><span class=\"cm\"># Git LFS（Large File Storage）— 标准解决方案</span>\ngit lfs install                          <span class=\"cm\"># 一次性安装</span>\ngit lfs track <span class=\"str\">\"*.pt\"</span> <span class=\"str\">\"*.bin\"</span> <span class=\"str\">\"*.onnx\"</span>  <span class=\"cm\"># 跟踪大文件类型</span>\ngit add .gitattributes                   <span class=\"cm\"># 必须提交此文件</span>\ngit add model.pt\ngit commit -m <span class=\"str\">\"feat: add model with LFS\"</span>\ngit push</pre>",
+      "LFS 原理：Git 仓库只存<span class=\"highlight\">指针文件（~130 bytes）</span>，真正的大文件存在 LFS 服务器上，checkout 时按需下载",
+      "<pre><span class=\"cm\"># 已有大文件的仓库迁移到 LFS</span>\ngit lfs migrate import --include=<span class=\"str\">\"*.pt,*.bin\"</span> --everything\ngit push --force --all  <span class=\"cm\"># 重写历史，需通知团队</span></pre>",
+      "替代方案：<span class=\"highlight\">DVC</span>（Data Version Control）— 更适合 ML 项目，支持 S3/GCS 等远程存储，可版本化数据集和模型",
+      "GitHub LFS 免费额度：1 GB 存储 + 1 GB/月带宽 — 超出需付费或自建 LFS 服务器",
+      "最佳实践：.gitignore 排除超大文件 + LFS 管理中等大文件 + DVC/云存储管理数据集"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "gs16",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：CI/CD 流水线中 Git 操作的最佳实践",
+    "bullets": [
+      "<pre><span class=\"cm\"># CI 中常见的 Git 优化</span>\ngit clone --depth 1 &lt;repo&gt;         <span class=\"cm\"># Shallow clone（只取最新commit，快）</span>\ngit clone --filter=blob:none &lt;repo&gt; <span class=\"cm\"># Partial clone（按需下载blob）</span>\ngit fetch --tags                    <span class=\"cm\"># 拉取 tag 用于版本号</span></pre>",
+      "<span class=\"highlight\">Tag 触发发布</span>：push v1.2.3 tag → CI 自动构建 → 推送 Docker Image / PyPI / npm",
+      "PR 检查流程：push → CI 跑 lint + test → status check 通过 → 允许 merge",
+      "<pre><span class=\"cm\"># GitHub Actions 示例片段</span>\non:\n  push:\n    tags: ['v*']       <span class=\"cm\"># tag push 触发发布</span>\n  pull_request:\n    branches: [main]   <span class=\"cm\"># PR 到 main 触发检查</span></pre>",
+      "保护分支规则：main/develop 禁止直接 push，必须通过 PR + review + CI pass",
+      "Git 在 CI 中的陷阱：<span class=\"highlight\">detached HEAD</span>（CI 默认 checkout 的是 commit 而非分支）— 需要时手动 <code>git checkout $BRANCH</code>"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "gs17",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：你 fork 了开源项目，如何与上游仓库保持同步",
+    "bullets": [
+      "<pre><span class=\"cm\"># 1. 添加上游仓库为 remote</span>\ngit remote add upstream https://github.com/original/repo.git\ngit remote -v  <span class=\"cm\"># 确认 origin(你的fork) + upstream(原仓库)</span>\n\n<span class=\"cm\"># 2. 同步上游更新到本地</span>\ngit fetch upstream\ngit switch main\ngit merge upstream/main\n<span class=\"cm\"># 或 rebase：git rebase upstream/main</span>\n\n<span class=\"cm\"># 3. 推送到你的 fork</span>\ngit push origin main</pre>",
+      "Fork 工作流（开源标准）：fork → clone 自己的 fork → 创建 feature 分支 → 提交 PR 到上游",
+      "保持同步的频率：<span class=\"highlight\">提交 PR 前务必同步</span>，否则可能冲突；日常建议每周同步一次",
+      "<code>git fetch upstream</code> 只下载不合并，<code>git pull upstream main</code> = fetch + merge 一步到位",
+      "GitHub 网页端也能同步：Fork 页面点 \"Sync fork\" 按钮（简单但不如命令行灵活）"
     ],
     "lv": 2
   },
@@ -2998,6 +4127,66 @@ const BUILTIN_CARDS = [
       "<pre><span class=\"kw\">def</span> <span class=\"fn\">diameterOfBinaryTree</span>(root):\n    ans = 0\n    <span class=\"kw\">def</span> <span class=\"fn\">depth</span>(node):\n        <span class=\"kw\">nonlocal</span> ans\n        <span class=\"kw\">if not</span> node:\n            <span class=\"kw\">return</span> 0\n        L = depth(node.left)\n        R = depth(node.right)\n        ans = max(ans, L + R)  <span class=\"cm\"># 更新直径</span>\n        <span class=\"kw\">return</span> max(L, R) + 1     <span class=\"cm\"># 返回深度</span>\n    depth(root)\n    <span class=\"kw\">return</span> ans</pre>",
       "时间O(n)，空间O(h)。关键区分：函数返回的是<span class=\"highlight\">深度</span>，但更新的是<span class=\"highlight\">直径</span>",
       "易错点：直径是边数不是节点数；最长路径不一定过根节点"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce09",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC20 有效的括号 (Valid Parentheses) — 栈",
+    "bullets": [
+      "判断只含 <span class=\"str\">'()[]{}'</span> 的字符串中括号是否<span class=\"highlight\">有效匹配</span>",
+      "示例：s=\"({[]})\" → true；s=\"([)]\" → false",
+      "核心思路：用<span class=\"highlight\">栈</span>，遇到左括号入栈，遇到右括号弹栈检查是否匹配",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">isValid</span>(s):\n    stack = []\n    mapping = {<span class=\"str\">')'</span>: <span class=\"str\">'('</span>, <span class=\"str\">'}'</span>: <span class=\"str\">'{'</span>, <span class=\"str\">']'</span>: <span class=\"str\">'['</span>}\n    <span class=\"kw\">for</span> ch <span class=\"kw\">in</span> s:\n        <span class=\"kw\">if</span> ch <span class=\"kw\">in</span> mapping:\n            top = stack.pop() <span class=\"kw\">if</span> stack <span class=\"kw\">else</span> <span class=\"str\">'#'</span>\n            <span class=\"kw\">if</span> mapping[ch] != top:\n                <span class=\"kw\">return</span> <span class=\"kw\">False</span>\n        <span class=\"kw\">else</span>:\n            stack.append(ch)\n    <span class=\"kw\">return</span> <span class=\"kw\">not</span> stack</pre>",
+      "时间O(n)，空间O(n)。栈的经典应用题",
+      "易错点：最后要检查栈是否为空（如 s=\"(\" 只有左括号）；空字符串返回true"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce10",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC101 对称二叉树 (Symmetric Tree) — 递归",
+    "bullets": [
+      "判断一棵二叉树是否是<span class=\"highlight\">镜像对称</span>的",
+      "示例：[1,2,2,3,4,4,3] → true；[1,2,2,null,3,null,3] → false",
+      "核心思路：<span class=\"highlight\">递归比较</span>左子树和右子树，left.left与right.right对比，left.right与right.left对比",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">isSymmetric</span>(root):\n    <span class=\"kw\">def</span> <span class=\"fn\">check</span>(left, right):\n        <span class=\"kw\">if not</span> left <span class=\"kw\">and not</span> right:\n            <span class=\"kw\">return</span> <span class=\"kw\">True</span>\n        <span class=\"kw\">if not</span> left <span class=\"kw\">or not</span> right:\n            <span class=\"kw\">return</span> <span class=\"kw\">False</span>\n        <span class=\"kw\">return</span> (left.val == right.val\n                <span class=\"kw\">and</span> check(left.left, right.right)\n                <span class=\"kw\">and</span> check(left.right, right.left))\n    <span class=\"kw\">return</span> check(root.left, root.right) <span class=\"kw\">if</span> root <span class=\"kw\">else</span> <span class=\"kw\">True</span></pre>",
+      "时间O(n)，空间O(h)。也可用BFS迭代：队列每次取两个节点比较",
+      "与LC226翻转二叉树对比：翻转是操作，对称是判断，但递归结构类似"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce11",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC160 相交链表 (Intersection of Two Linked Lists) — 双指针",
+    "bullets": [
+      "找到两个单链表<span class=\"highlight\">相交的起始节点</span>，不相交则返回null",
+      "示例：listA=[4,1,8,4,5], listB=[5,6,1,8,4,5]，交点为节点8",
+      "核心思路：<span class=\"highlight\">双指针消除长度差</span>——pA走完A走B，pB走完B走A，两者走过的总长度相同，必在交点相遇",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">getIntersectionNode</span>(headA, headB):\n    pA, pB = headA, headB\n    <span class=\"kw\">while</span> pA != pB:\n        pA = pA.next <span class=\"kw\">if</span> pA <span class=\"kw\">else</span> headB\n        pB = pB.next <span class=\"kw\">if</span> pB <span class=\"kw\">else</span> headA\n    <span class=\"kw\">return</span> pA  <span class=\"cm\"># 相交返回交点，不相交两者同时为None</span></pre>",
+      "时间O(m+n)，空间O(1)。数学证明：a+c+b = b+c+a（c为公共部分长度）",
+      "易错点：比较的是节点引用相等（同一个节点），不是值相等"
+    ],
+    "lv": 1
+  },
+  {
+    "id": "ce12",
+    "cat": "编程题-Easy",
+    "group": "编程题",
+    "q": "LC234 回文链表 (Palindrome Linked List) — 快慢指针+反转",
+    "bullets": [
+      "判断单链表是否为<span class=\"highlight\">回文</span>（正读反读相同），要求O(1)空间",
+      "示例：[1,2,2,1] → true；[1,2] → false",
+      "核心思路：①<span class=\"highlight\">快慢指针</span>找中点 ②<span class=\"highlight\">反转后半段</span> ③逐一比较前后两半",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">isPalindrome</span>(head):\n    <span class=\"cm\"># 1. 快慢指针找中点</span>\n    slow = fast = head\n    <span class=\"kw\">while</span> fast <span class=\"kw\">and</span> fast.next:\n        slow = slow.next\n        fast = fast.next.next\n    <span class=\"cm\"># 2. 反转后半段</span>\n    prev = <span class=\"kw\">None</span>\n    <span class=\"kw\">while</span> slow:\n        nxt = slow.next\n        slow.next = prev\n        prev = slow\n        slow = nxt\n    <span class=\"cm\"># 3. 比较前后两半</span>\n    left, right = head, prev\n    <span class=\"kw\">while</span> right:\n        <span class=\"kw\">if</span> left.val != right.val:\n            <span class=\"kw\">return</span> <span class=\"kw\">False</span>\n        left = left.next\n        right = right.next\n    <span class=\"kw\">return</span> <span class=\"kw\">True</span></pre>",
+      "时间O(n)，空间O(1)。综合了快慢指针+链表反转两个核心技巧",
+      "注意：此方法会修改原链表。面试中可追问如何恢复原链表（再反转回来）"
     ],
     "lv": 1
   },
@@ -3178,6 +4367,81 @@ const BUILTIN_CARDS = [
       "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\n\n<span class=\"kw\">def</span> <span class=\"fn\">subarraySum</span>(nums, k):\n    count = 0\n    prefix_sum = 0\n    seen = defaultdict(int)\n    seen[0] = 1  <span class=\"cm\"># 前缀和为0出现1次（空前缀）</span>\n    <span class=\"kw\">for</span> num <span class=\"kw\">in</span> nums:\n        prefix_sum += num\n        count += seen[prefix_sum - k]  <span class=\"cm\"># 有多少个前缀和等于当前-k</span>\n        seen[prefix_sum] += 1\n    <span class=\"kw\">return</span> count</pre>",
       "时间O(n)，空间O(n)。注意：数组含负数所以<span class=\"highlight\">不能用滑动窗口</span>",
       "易错点：seen[0]=1不能忘（处理从头开始的子数组）；暴力O(n²)会超时"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm13",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC5 最长回文子串 (Longest Palindromic Substring) — 中心扩展",
+    "bullets": [
+      "给定字符串s，找到s中最长的<span class=\"highlight\">回文子串</span>",
+      "示例：s=\"babad\" → \"bab\" 或 \"aba\"；s=\"cbbd\" → \"bb\"",
+      "核心思路：<span class=\"highlight\">中心扩展法</span>——枚举每个字符（和每对相邻字符）作为回文中心，向两边扩展",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">longestPalindrome</span>(s):\n    <span class=\"kw\">def</span> <span class=\"fn\">expand</span>(l, r):\n        <span class=\"kw\">while</span> l >= 0 <span class=\"kw\">and</span> r < len(s) <span class=\"kw\">and</span> s[l] == s[r]:\n            l -= 1\n            r += 1\n        <span class=\"kw\">return</span> s[l+1:r]\n    res = <span class=\"str\">\"\"</span>\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(s)):\n        odd = expand(i, i)       <span class=\"cm\"># 奇数长度回文</span>\n        even = expand(i, i + 1)  <span class=\"cm\"># 偶数长度回文</span>\n        res = max(res, odd, even, key=len)\n    <span class=\"kw\">return</span> res</pre>",
+      "时间O(n²)，空间O(1)。Manacher算法可O(n)但面试中中心扩展已足够",
+      "DP做法：dp[i][j]表示s[i..j]是否回文，时间O(n²)空间O(n²)，不如中心扩展"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm14",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC11 盛最多水的容器 (Container With Most Water) — 双指针",
+    "bullets": [
+      "给定n条垂直线（height数组），找出两条线与x轴围成的容器能容纳<span class=\"highlight\">最多水</span>",
+      "示例：height=[1,8,6,2,5,4,8,3,7] → 49（选第2和第9条线）",
+      "核心思路：<span class=\"highlight\">左右双指针</span>从两端向中间收缩，每次移动<span class=\"highlight\">较短</span>的那一侧（移动较长侧面积只会减小）",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">maxArea</span>(height):\n    l, r = 0, len(height) - 1\n    max_water = 0\n    <span class=\"kw\">while</span> l < r:\n        w = r - l\n        h = min(height[l], height[r])\n        max_water = max(max_water, w * h)\n        <span class=\"kw\">if</span> height[l] < height[r]:\n            l += 1\n        <span class=\"kw\">else</span>:\n            r -= 1\n    <span class=\"kw\">return</span> max_water</pre>",
+      "时间O(n)，空间O(1)。贪心证明：移动短边可能找到更高的边，移动长边不可能增大面积",
+      "与LC42接雨水区分：接雨水需要知道左右最大值，本题只看两端"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm15",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC33 搜索旋转排序数组 (Search in Rotated Sorted Array) — 二分",
+    "bullets": [
+      "在旋转过的有序数组中搜索目标值，要求O(log n)。数组无重复元素",
+      "示例：nums=[4,5,6,7,0,1,2], target=0 → 4",
+      "核心思路：<span class=\"highlight\">改良二分</span>——先判断mid落在哪半段有序区间，再判断target是否在该有序区间内",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">search</span>(nums, target):\n    l, r = 0, len(nums) - 1\n    <span class=\"kw\">while</span> l <= r:\n        mid = (l + r) // 2\n        <span class=\"kw\">if</span> nums[mid] == target:\n            <span class=\"kw\">return</span> mid\n        <span class=\"kw\">if</span> nums[l] <= nums[mid]:  <span class=\"cm\"># 左半段有序</span>\n            <span class=\"kw\">if</span> nums[l] <= target < nums[mid]:\n                r = mid - 1\n            <span class=\"kw\">else</span>:\n                l = mid + 1\n        <span class=\"kw\">else</span>:                     <span class=\"cm\"># 右半段有序</span>\n            <span class=\"kw\">if</span> nums[mid] < target <= nums[r]:\n                l = mid + 1\n            <span class=\"kw\">else</span>:\n                r = mid - 1\n    <span class=\"kw\">return</span> -1</pre>",
+      "时间O(log n)，空间O(1)。关键：旋转数组至少有一半是有序的",
+      "易错点：边界条件 nums[l] <= nums[mid] 的等号处理（l==mid时左半只有一个元素）"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm16",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC148 排序链表 (Sort List) — 归并排序",
+    "bullets": [
+      "对链表进行<span class=\"highlight\">排序</span>，要求O(n log n)时间、O(1)空间",
+      "示例：head=[4,2,1,3] → [1,2,3,4]",
+      "核心思路：<span class=\"highlight\">归并排序</span>——快慢指针找中点→断开→分别排序→合并两个有序链表",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">sortList</span>(head):\n    <span class=\"kw\">if not</span> head <span class=\"kw\">or not</span> head.next:\n        <span class=\"kw\">return</span> head\n    <span class=\"cm\"># 快慢指针找中点</span>\n    slow, fast = head, head.next\n    <span class=\"kw\">while</span> fast <span class=\"kw\">and</span> fast.next:\n        slow = slow.next\n        fast = fast.next.next\n    mid = slow.next\n    slow.next = <span class=\"kw\">None</span>  <span class=\"cm\"># 断开</span>\n    <span class=\"cm\"># 递归排序+合并</span>\n    left = sortList(head)\n    right = sortList(mid)\n    <span class=\"kw\">return</span> mergeTwoLists(left, right)</pre>",
+      "时间O(n log n)，空间O(log n)递归栈。合并函数复用LC21 mergeTwoLists",
+      "链表排序首选归并（不需要随机访问）。数组排序首选快排（cache友好）"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "cm17",
+    "cat": "编程题-Medium",
+    "group": "编程题",
+    "q": "LC215 数组中的第K个最大元素 (Kth Largest Element) — 快速选择",
+    "bullets": [
+      "找出未排序数组中<span class=\"highlight\">第k大</span>的元素（不是第k小）",
+      "示例：nums=[3,2,1,5,6,4], k=2 → 5",
+      "核心思路：<span class=\"highlight\">快速选择(QuickSelect)</span>——基于快排的partition，只递归目标所在的一半",
+      "<pre><span class=\"kw\">import</span> random\n\n<span class=\"kw\">def</span> <span class=\"fn\">findKthLargest</span>(nums, k):\n    target = len(nums) - k  <span class=\"cm\"># 转化为第target小</span>\n    <span class=\"kw\">def</span> <span class=\"fn\">quickselect</span>(l, r):\n        pivot = random.randint(l, r)\n        nums[pivot], nums[r] = nums[r], nums[pivot]\n        store = l\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(l, r):\n            <span class=\"kw\">if</span> nums[i] < nums[r]:\n                nums[store], nums[i] = nums[i], nums[store]\n                store += 1\n        nums[store], nums[r] = nums[r], nums[store]\n        <span class=\"kw\">if</span> store == target: <span class=\"kw\">return</span> nums[store]\n        <span class=\"kw\">elif</span> store < target: <span class=\"kw\">return</span> quickselect(store+1, r)\n        <span class=\"kw\">else</span>: <span class=\"kw\">return</span> quickselect(l, store-1)\n    <span class=\"kw\">return</span> quickselect(0, len(nums)-1)</pre>",
+      "平均O(n)，最坏O(n²)（随机pivot避免）。堆解法O(n log k)也常用",
+      "面试追问：为什么随机pivot？（避免已排序数组退化到O(n²)）。变体：用最小堆维护top-k"
     ],
     "lv": 2
   }

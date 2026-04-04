@@ -10,7 +10,8 @@
       "FFN：两层全连接（扩展到4倍再压缩），负责非线性变换和知识存储",
       "Residual Connection：防止梯度消失，让深层网络可训练；Layer Norm：稳定训练"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "l02",
@@ -23,7 +24,8 @@
       "Multi-Head：并行多组QKV，不同head关注不同类型的关系（语法/语义/位置）",
       "复杂度 O(n²d)：序列长度的平方，这是长文本处理的瓶颈"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "l03",
@@ -36,7 +38,8 @@
       "中文/日语：无空格，SentencePiece直接按字符和子词处理",
       "Vocab大小 trade-off：大→覆盖率高但embedding矩阵大；小→OOV多但参数少。通常32K-128K"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "l04",
@@ -49,20 +52,22 @@
       "<span class=\"highlight\">DPO</span>：跳过RM，直接用偏好对训练。更简单稳定，但对数据质量敏感",
       "你的经验：SFT 248条效果好，DPO反而−7.6pp → <span class=\"highlight\">不是所有场景都需要对齐</span>"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "l05",
     "cat": "LLM基础",
     "q": "Scaling Laws（缩放定律）",
     "bullets": [
-      "Kaplan(2020)：Loss ∝ N^(-0.076) × D^(-0.095) × C^(-0.050)，N参数量/D数据量/C计算量",
+      "Kaplan(2020)：Loss分别关于N(参数量)、D(数据量)、C(计算量)呈幂律下降，如 L(N) ∝ N^{-0.076}",
       "Chinchilla(2022)：最优分配 → 参数量和数据量应同比例增长。70B模型需要1.4T tokens",
       "含义：<span class=\"highlight\">不是模型越大越好，而是算力分配要合理</span>",
       "实践影响：Llama系列（更小模型+更多数据）比GPT-3（大模型+少数据）效率高",
       "对客户的意义：14B充分训练可能比32B欠训练效果好（你的实验验证了这点）"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "l06",
@@ -75,7 +80,8 @@
       "显存占用：2 × n_layers × d_model × seq_len × batch_size × sizeof(dtype)",
       "<span class=\"highlight\">Paged Attention</span>(vLLM)：像OS虚拟内存一样管理KV Cache，减少碎片，支持更大batch"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "l07",
@@ -88,7 +94,8 @@
       "效果：速度2-4x，显存从O(n²)降到O(n)，<span class=\"highlight\">精确计算不是近似</span>",
       "Flash Attention 2/3：进一步优化并行策略和GPU利用率"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "l08",
@@ -102,7 +109,8 @@
       "AWQ：只保护1%的\"重要权重\"不量化，效果好于GPTQ",
       "GGUF：llama.cpp格式，Q4_K_M/Q8_0等，<span class=\"highlight\">专为CPU推理优化</span>"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "l09",
@@ -116,7 +124,8 @@
       "缓解：Fine-tuning让模型学会说\"我不知道\" / 降Temperature减少随机性",
       "你的做法：SiLR验证器 = 用仿真器事实检查LLM的\"幻觉动作\""
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "l10",
@@ -129,7 +138,8 @@
       "Beam Search：同时维护beam_size条候选序列，选总概率最高的。适合翻译，不适合对话",
       "实践：对话用Top-p=0.9+T=0.7；代码/工具调用用T=0(确定性输出)"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "l11",
@@ -142,7 +152,8 @@
       "典型：Mixtral 8x7B = 47B总参数但每次只激活~13B",
       "挑战：负载均衡（某些专家过载）/ 通信开销（分布式训练）/ 显存仍需存所有专家"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "l12",
@@ -155,7 +166,8 @@
       "ALiBi：不加位置编码，而是给远距离token的attention分数加线性惩罚 → 训练简单",
       "长文本处理：RoPE+Dynamic NTK/YaRN可扩展到128K+；ALiBi天然支持外推"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "l13",
@@ -163,13 +175,14 @@
     "q": "RLHF vs DPO 详细对比",
     "bullets": [
       "RLHF：训练Reward Model → PPO优化policy。优点：灵活，可迭代。缺点：<span class=\"highlight\">训练不稳定，需要4个模型同时在线</span>",
-      "DPO：直接用偏好对优化，loss = -log σ(β(logπ(yw)-logπ(yl)))。优点：简单一步训练",
+      "DPO：loss = -log σ(β(log(π_θ(y_w)/π_ref(y_w)) - log(π_θ(y_l)/π_ref(y_l))))。隐式学习reward，一步训练",
       "DPO缺点：<span class=\"highlight\">对数据质量极敏感</span>（你的经验：63%偏好对的偏差→模型学错）",
       "DPO缺点：没有显式reward信号，难以诊断哪里出了问题",
       "新趋势：SimPO/ORPO等直接用reference-free偏好优化，更简单",
       "你的结论：修复所有问题后DPO仅+0.6pp，工具调用场景不推荐"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 3
   },
   {
     "id": "l14",
@@ -182,6 +195,127 @@
       "bge-m3：多语言多粒度多功能embedding模型，<span class=\"highlight\">支持Dense+Sparse+ColBERT三种检索</span>",
       "Embedding微调：用三元组(query,positive,negative)+对比Loss，你的经验：Recall@1 +16.4pp"
     ],
-    "group": "基础"
+    "group": "基础",
+    "lv": 1
+  },
+  {
+    "id": "l15",
+    "cat": "LLM基础",
+    "q": "\"Attention is All You Need\" 论文关键创新",
+    "bullets": [
+      "完全抛弃RNN/CNN，<span class=\"highlight\">纯注意力机制</span>实现序列建模 → 并行化训练成为可能",
+      "Multi-Head Attention：多个注意力头并行关注不同子空间信息，concat后线性映射",
+      "Positional Encoding：正弦/余弦函数注入位置信息（解决Attention无位置感知的问题）",
+      "Encoder-Decoder架构：Encoder用双向Self-Attention，Decoder用带Mask的因果Attention + Cross-Attention",
+      "Label Smoothing + Warmup学习率策略：稳定训练的工程技巧",
+      "影响：<span class=\"highlight\">奠定了所有后续LLM的架构基础</span>，GPT/BERT/T5等均为其变体"
+    ],
+    "group": "基础",
+    "lv": 2
+  },
+  {
+    "id": "l16",
+    "cat": "LLM基础",
+    "q": "Pre-training Objectives：CLM vs MLM vs Prefix LM",
+    "bullets": [
+      "<span class=\"highlight\">CLM</span>(Causal LM)：从左到右预测下一个token，Decoder-only架构 → GPT系列、LLaMA、Qwen",
+      "<span class=\"highlight\">MLM</span>(Masked LM)：随机遮蔽15%的token并预测它们，双向上下文 → BERT、RoBERTa",
+      "<span class=\"highlight\">Prefix LM</span>：prefix部分双向attention，生成部分因果attention → T5、GLM",
+      "CLM最适合生成任务（与推理方式一致），MLM最适合理解/分类任务",
+      "Seq2Seq预训练(T5)：将所有任务统一为\"text-to-text\"格式，Encoder-Decoder架构",
+      "趋势：<span class=\"highlight\">Decoder-only CLM成为主流</span>，因为scaling效果最好且通用性强"
+    ],
+    "group": "基础",
+    "lv": 2
+  },
+  {
+    "id": "l17",
+    "cat": "LLM基础",
+    "q": "Instruction Tuning vs RLHF vs DPO 详细对比",
+    "bullets": [
+      "<span class=\"highlight\">Instruction Tuning</span>：用(指令, 回答)对做SFT，教模型遵循指令。代表：FLAN、Alpaca",
+      "RLHF：人类标注偏好排序→训练Reward Model→PPO优化。需要<span class=\"highlight\">4个模型</span>：policy/ref/reward/value",
+      "DPO：将RLHF的RL步骤转化为分类问题，直接从偏好对学习。只需<span class=\"highlight\">2个模型</span>：policy/ref",
+      "效果对比：Instruction Tuning解决\"能力\"问题，RLHF/DPO解决\"对齐\"问题",
+      "工程复杂度：IT < DPO << RLHF。数据需求：IT需要高质量指令对，DPO/RLHF需要偏好对",
+      "实践选择：大部分场景SFT足够；需要精细控制回答风格/安全性时才用RLHF/DPO"
+    ],
+    "group": "基础",
+    "lv": 3
+  },
+  {
+    "id": "l18",
+    "cat": "LLM基础",
+    "q": "LLM推理优化：Speculative Decoding与Continuous Batching",
+    "bullets": [
+      "<span class=\"highlight\">Speculative Decoding</span>：小模型(draft)快速生成候选tokens → 大模型(target)并行验证 → 命中则接受",
+      "原理：验证N个token的成本 ≈ 生成1个token（因为可以并行），加速2-3x且<span class=\"highlight\">输出分布不变</span>",
+      "<span class=\"highlight\">Continuous Batching</span>：请求完成后立即插入新请求，不等整个batch完成 → 提高GPU利用率",
+      "对比Static Batching：等所有请求完成再处理下一批 → 短请求等长请求，GPU空闲浪费",
+      "vLLM/TGI/SGLang等框架都实现了Continuous Batching + Paged Attention组合",
+      "其他优化：Prefix Caching（复用相同system prompt的KV Cache）/ Tensor Parallelism（多卡切分）"
+    ],
+    "group": "基础",
+    "lv": 3
+  },
+  {
+    "id": "l19",
+    "cat": "LLM基础",
+    "q": "RAG（检索增强生成）原理与实现",
+    "bullets": [
+      "核心流程：Query → <span class=\"highlight\">Retrieve</span>(从知识库检索相关文档) → <span class=\"highlight\">Augment</span>(拼入prompt) → <span class=\"highlight\">Generate</span>(LLM生成)",
+      "检索方式：Dense Retrieval(语义向量相似度) / Sparse(BM25关键词) / Hybrid(两者结合)",
+      "向量数据库：FAISS / Milvus / Qdrant / Chroma，存储文档embedding并支持ANN检索",
+      "Chunking策略：固定长度 / 按语义段落 / 递归分割。<span class=\"highlight\">chunk大小和overlap直接影响效果</span>",
+      "进阶：Re-ranking(Cohere/bge-reranker)提升精度 / Multi-hop RAG处理复杂问题",
+      "优势：知识可更新（不用重新训练）/ 减少幻觉 / 可追溯来源"
+    ],
+    "group": "基础",
+    "lv": 2
+  },
+  {
+    "id": "l20",
+    "cat": "LLM基础",
+    "q": "Function Calling / Tool Use 机制",
+    "bullets": [
+      "原理：在system prompt中定义可用工具(JSON Schema) → LLM输出结构化的<span class=\"highlight\">函数调用请求</span> → 外部执行 → 结果返回LLM",
+      "关键能力：模型需要判断<span class=\"highlight\">何时调用</span>（intent detection）和<span class=\"highlight\">参数提取</span>（slot filling）",
+      "训练方式：SFT阶段加入大量function calling数据对，教模型输出特定格式",
+      "Parallel Function Calling：一次输出多个独立的工具调用，减少往返次数",
+      "与Agent的关系：Function Calling是Agent的\"手脚\"，ReAct/Plan-and-Execute是\"大脑\"",
+      "你的经验：SiLR-Agent通过Tool Use连接仿真器，SFT 248条达到95%+ tool call准确率"
+    ],
+    "group": "基础",
+    "lv": 2
+  },
+  {
+    "id": "l21",
+    "cat": "LLM基础",
+    "q": "Long Context处理技术",
+    "bullets": [
+      "核心挑战：标准Attention O(n²)复杂度 + KV Cache显存线性增长",
+      "<span class=\"highlight\">Sliding Window Attention</span>：每个token只attend固定窗口内的token → O(n×w)，Mistral采用",
+      "<span class=\"highlight\">StreamingLLM</span>：保留开头的\"attention sink\" tokens + 近期窗口，丢弃中间 → 支持无限长度推理",
+      "<span class=\"highlight\">Ring Attention</span>：将长序列分段到多个设备，环形传递KV → 分布式处理超长上下文",
+      "RoPE扩展：YaRN/Dynamic NTK Scaling调整RoPE基频，将训练长度外推到更长（如4K→128K）",
+      "工程方案：GQA(Grouped Query Attention)减少KV头数 → 降低KV Cache占用（如Llama 2用GQA）"
+    ],
+    "group": "基础",
+    "lv": 3
+  },
+  {
+    "id": "l22",
+    "cat": "LLM基础",
+    "q": "Safety与Alignment：Constitutional AI与红队测试",
+    "bullets": [
+      "<span class=\"highlight\">Constitutional AI</span>(Anthropic)：定义一组\"宪法原则\" → AI自我批评和修正 → 减少人工标注需求",
+      "CAI流程：LLM生成 → 根据原则自我评估 → 修正有害输出 → 用修正对做RLHF/DPO",
+      "<span class=\"highlight\">Red Teaming</span>：主动攻击模型，发现安全漏洞。方法：手动/自动化(用LLM攻击LLM)",
+      "常见攻击：Prompt Injection / Jailbreak / 多轮诱导 / 编码绕过（Base64等）",
+      "防御：Input/Output Guardrails / Safety训练 / System Prompt防护 / 多层检测",
+      "趋势：从RLHF对齐 → Scalable Oversight(让AI帮助监督AI) → <span class=\"highlight\">对齐要能scale</span>"
+    ],
+    "group": "基础",
+    "lv": 3
   }
 ]

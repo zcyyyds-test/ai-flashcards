@@ -61,7 +61,7 @@
     "q": "场景：git pull 后发现一堆合并冲突，你想先回到 pull 之前的状态",
     "bullets": [
       "<pre><span class=\"cm\"># 情况1：merge 还没完成（正在冲突中）</span>\ngit merge --abort\n<span class=\"cm\"># 一切回到 merge 前的状态，冲突标记消失</span>\n\n<span class=\"cm\"># 情况2：merge 已经完成（手滑 commit 了）</span>\ngit reset --hard ORIG_HEAD\n<span class=\"cm\"># ORIG_HEAD 指向 merge/rebase 前的位置</span>\n\n<span class=\"cm\"># 情况3：不确定要回到哪里</span>\ngit reflog\n<span class=\"cm\"># 找到 pull 之前的 commit hash</span>\ngit reset --hard abc1234</pre>",
-      "⚠️ <code>--hard</code> 会<span class=\"highlight\">丢弃所有未提交的修改</span>，确保没有重要的未提交工作",
+      "<code>--hard</code> 会<span class=\"highlight\">丢弃所有未提交的修改</span>，确保没有重要的未提交工作",
       "更安全的做法：先 <code>git stash</code> 保存未提交修改，再 reset",
       "<code>git pull --rebase</code> 遇到冲突时用 <code>git rebase --abort</code> 取消",
       "预防：养成 pull 前先 <code>git stash</code> 或先 commit 的习惯"
@@ -87,7 +87,7 @@
     "group": "工程",
     "q": "场景：两个人同时改了同一个文件的同一行，如何解决冲突",
     "bullets": [
-      "<pre><span class=\"cm\"># Git 标记冲突的格式</span>\ndef calculate_price(item):\n<<<<<<< HEAD\n    return item.price * 0.9    <span class=\"cm\"># 你的改动：9折</span>\n=======\n    return item.price * 0.85   <span class=\"cm\"># 同事的改动：85折</span>\n>>>>>>> feature-discount</pre>",
+      "<pre><span class=\"cm\"># Git 标记冲突的格式</span>\ndef calculate_price(item):\n&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD\n    return item.price * 0.9    <span class=\"cm\"># 你的改动：9折</span>\n=======\n    return item.price * 0.85   <span class=\"cm\"># 同事的改动：85折</span>\n&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature-discount</pre>",
       "<pre><span class=\"cm\"># 解决步骤</span>\n<span class=\"cm\"># 1. 理解双方改动的意图（不要盲目选一个！）</span>\n<span class=\"cm\"># 2. 手动编辑：保留一方 / 合并两者 / 重写</span>\ndef calculate_price(item, vip=False):\n    return item.price * (0.85 if vip else 0.9)\n\n<span class=\"cm\"># 3. 标记解决并提交</span>\ngit add pricing.py\ngit commit  <span class=\"cm\"># Git 自动生成 merge commit message</span></pre>",
       "工具推荐：<span class=\"highlight\">VS Code 三向合并编辑器</span>（上方显示双方，下方编辑结果）、<code>git mergetool</code>",
       "预防冲突的团队实践：小粒度提交 + 频繁 pull/rebase + 模块职责划分清晰",
@@ -131,7 +131,7 @@
     "bullets": [
       "<pre><span class=\"cm\"># 找到目标 commit 的 hash</span>\ngit log --oneline main\n<span class=\"cm\"># abc1234 fix: payment timeout handling</span>\n\n<span class=\"cm\"># cherry-pick 到当前分支</span>\ngit cherry-pick abc1234\n\n<span class=\"cm\"># 如果有冲突</span>\n<span class=\"cm\"># 解决冲突 → git add → git cherry-pick --continue</span>\n<span class=\"cm\"># 或放弃：git cherry-pick --abort</span>\n\n<span class=\"cm\"># cherry-pick 多个 commit</span>\ngit cherry-pick abc1234 def5678\n<span class=\"cm\"># 或连续范围（不含起点）</span>\ngit cherry-pick abc1234..ghi9012</pre>",
       "典型场景：hotfix 已合入 main，release 分支也需要同一个修复",
-      "⚠️ cherry-pick <span class=\"highlight\">创建全新的 commit（不同 hash）</span>，不是引用 — 两个分支上是独立的副本",
+      "cherry-pick <span class=\"highlight\">创建全新的 commit（不同 hash）</span>，不是引用 — 两个分支上是独立的副本",
       "如果后续两个分支 merge，Git 通常能自动处理重复改动，但偶尔会冲突",
       "替代方案：如果需要拿整个分支的部分改动，考虑 <code>git rebase --onto</code>"
     ],
@@ -162,6 +162,78 @@
       "<code>--force-with-lease</code> 比 <code>--force</code> 安全：如果远端有别人新 push 的提交会拒绝，防止覆盖他人工作",
       "Rebase 冲突处理：每个 commit 可能单独冲突 → <code>解决 → git add → git rebase --continue</code>，太多冲突可以 <code>git rebase --abort</code> 放弃",
       "团队应统一策略：在 PR 描述 / CONTRIBUTING.md 中写清楚用 merge 还是 rebase"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "gs13",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：你需要安全地修改已 push 到远端的 commit message",
+    "bullets": [
+      "<pre><span class=\"cm\"># 方案A：修改最后一个 commit（个人分支）</span>\ngit commit --amend -m <span class=\"str\">\"fix: correct message here\"</span>\ngit push --force-with-lease\n\n<span class=\"cm\"># 方案B：修改更早的 commit（interactive rebase）</span>\ngit rebase -i HEAD~5\n<span class=\"cm\"># 将目标 commit 的 \"pick\" 改为 \"reword\"</span>\n<span class=\"cm\"># 保存后 Git 打开编辑器让你修改 message</span>\ngit push --force-with-lease</pre>",
+      "<span class=\"highlight\">核心风险</span>：改写已 push 的历史 = 所有基于旧 commit 的分支都会失效",
+      "安全检查清单：①确认是自己的分支 ②确认没有其他人基于此分支工作 ③用 <code>--force-with-lease</code> 而非 <code>--force</code>",
+      "如果是<span class=\"highlight\">共享分支（main/develop）</span>：不要改！错误的 message 比破坏团队历史好得多",
+      "GitHub/GitLab 上已合并的 PR：commit message 无法修改，只能接受 — 所以 merge 前要仔细检查"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "gs14",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：你只想从另一个分支合并某一个文件，而非整个分支",
+    "bullets": [
+      "<pre><span class=\"cm\"># 方案A：checkout 指定文件（最常用）</span>\ngit checkout feature-branch -- path/to/file.py\n<span class=\"cm\"># 把 feature-branch 上的 file.py 复制到当前工作区和暂存区</span>\ngit commit -m <span class=\"str\">\"feat: bring file.py from feature-branch\"</span>\n\n<span class=\"cm\"># 方案B：用 restore（Git 2.23+ 推荐语法）</span>\ngit restore --source feature-branch -- path/to/file.py\ngit add path/to/file.py\ngit commit -m <span class=\"str\">\"feat: bring file.py from feature-branch\"</span>\n\n<span class=\"cm\"># 方案C：只取某个 commit 对该文件的改动</span>\ngit show abc1234:path/to/file.py &gt; path/to/file.py</pre>",
+      "checkout/restore 方式是<span class=\"highlight\">整个文件覆盖</span>，不是合并差异 — 会丢弃当前分支对该文件的修改",
+      "如果需要<span class=\"highlight\">合并差异而非覆盖</span>：<code>git diff feature-branch -- file.py | git apply</code>",
+      "cherry-pick 只能按 commit 粒度操作，不能按文件 — 所以需要上述方法",
+      "场景：feature 分支还没准备好合并，但其中某个配置文件 / 工具函数需要立即使用"
+    ],
+    "lv": 2
+  },
+  {
+    "id": "gs15",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：仓库里有大文件（模型权重/数据集），clone 越来越慢",
+    "bullets": [
+      "<pre><span class=\"cm\"># Git LFS（Large File Storage）— 标准解决方案</span>\ngit lfs install                          <span class=\"cm\"># 一次性安装</span>\ngit lfs track <span class=\"str\">\"*.pt\"</span> <span class=\"str\">\"*.bin\"</span> <span class=\"str\">\"*.onnx\"</span>  <span class=\"cm\"># 跟踪大文件类型</span>\ngit add .gitattributes                   <span class=\"cm\"># 必须提交此文件</span>\ngit add model.pt\ngit commit -m <span class=\"str\">\"feat: add model with LFS\"</span>\ngit push</pre>",
+      "LFS 原理：Git 仓库只存<span class=\"highlight\">指针文件（~130 bytes）</span>，真正的大文件存在 LFS 服务器上，checkout 时按需下载",
+      "<pre><span class=\"cm\"># 已有大文件的仓库迁移到 LFS</span>\ngit lfs migrate import --include=<span class=\"str\">\"*.pt,*.bin\"</span> --everything\ngit push --force --all  <span class=\"cm\"># 重写历史，需通知团队</span></pre>",
+      "替代方案：<span class=\"highlight\">DVC</span>（Data Version Control）— 更适合 ML 项目，支持 S3/GCS 等远程存储，可版本化数据集和模型",
+      "GitHub LFS 免费额度：1 GB 存储 + 1 GB/月带宽 — 超出需付费或自建 LFS 服务器",
+      "最佳实践：.gitignore 排除超大文件 + LFS 管理中等大文件 + DVC/云存储管理数据集"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "gs16",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：CI/CD 流水线中 Git 操作的最佳实践",
+    "bullets": [
+      "<pre><span class=\"cm\"># CI 中常见的 Git 优化</span>\ngit clone --depth 1 &lt;repo&gt;         <span class=\"cm\"># Shallow clone（只取最新commit，快）</span>\ngit clone --filter=blob:none &lt;repo&gt; <span class=\"cm\"># Partial clone（按需下载blob）</span>\ngit fetch --tags                    <span class=\"cm\"># 拉取 tag 用于版本号</span></pre>",
+      "<span class=\"highlight\">Tag 触发发布</span>：push v1.2.3 tag → CI 自动构建 → 推送 Docker Image / PyPI / npm",
+      "PR 检查流程：push → CI 跑 lint + test → status check 通过 → 允许 merge",
+      "<pre><span class=\"cm\"># GitHub Actions 示例片段</span>\non:\n  push:\n    tags: ['v*']       <span class=\"cm\"># tag push 触发发布</span>\n  pull_request:\n    branches: [main]   <span class=\"cm\"># PR 到 main 触发检查</span></pre>",
+      "保护分支规则：main/develop 禁止直接 push，必须通过 PR + review + CI pass",
+      "Git 在 CI 中的陷阱：<span class=\"highlight\">detached HEAD</span>（CI 默认 checkout 的是 commit 而非分支）— 需要时手动 <code>git checkout $BRANCH</code>"
+    ],
+    "lv": 3
+  },
+  {
+    "id": "gs17",
+    "cat": "Git场景题",
+    "group": "工程",
+    "q": "场景：你 fork 了开源项目，如何与上游仓库保持同步",
+    "bullets": [
+      "<pre><span class=\"cm\"># 1. 添加上游仓库为 remote</span>\ngit remote add upstream https://github.com/original/repo.git\ngit remote -v  <span class=\"cm\"># 确认 origin(你的fork) + upstream(原仓库)</span>\n\n<span class=\"cm\"># 2. 同步上游更新到本地</span>\ngit fetch upstream\ngit switch main\ngit merge upstream/main\n<span class=\"cm\"># 或 rebase：git rebase upstream/main</span>\n\n<span class=\"cm\"># 3. 推送到你的 fork</span>\ngit push origin main</pre>",
+      "Fork 工作流（开源标准）：fork → clone 自己的 fork → 创建 feature 分支 → 提交 PR 到上游",
+      "保持同步的频率：<span class=\"highlight\">提交 PR 前务必同步</span>，否则可能冲突；日常建议每周同步一次",
+      "<code>git fetch upstream</code> 只下载不合并，<code>git pull upstream main</code> = fetch + merge 一步到位",
+      "GitHub 网页端也能同步：Fork 页面点 \"Sync fork\" 按钮（简单但不如命令行灵活）"
     ],
     "lv": 2
   }
