@@ -4,6 +4,7 @@
     "cat": "编程题-Easy",
     "group": "编程题",
     "q": "LC1 两数之和 (Two Sum)",
+    "q_ja": "LC1 Two Sum（二数の和）",
     "bullets": [
       "给定整数数组和目标值target，找出数组中和为target的<span class=\"highlight\">两个数的下标</span>",
       "示例：nums=[2,7,11,15], target=9 → 返回[0,1]（因为2+7=9）",
@@ -12,6 +13,14 @@
       "时间O(n)，空间O(n)。暴力解O(n²)会超时",
       "易错点：不能用同一个元素两次；返回的是下标不是值"
     ],
+    "bullets_ja": [
+      "整数配列とtarget値が与えられ、配列の中で和がtargetになる<span class=\"highlight\">2つの数のインデックス</span>を求める",
+      "例：nums=[2,7,11,15], target=9 → [0,1]を返す（2+7=9のため）",
+      "核心アイデア：<span class=\"highlight\">HashMap</span>に走査済みの値→インデックスを格納し、一回の走査でtarget-numが存在するか探索する",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">twoSum</span>(nums, target):\n    seen = {}  <span class=\"cm\"># val -> index</span>\n    <span class=\"kw\">for</span> i, num <span class=\"kw\">in</span> enumerate(nums):\n        complement = target - num\n        <span class=\"kw\">if</span> complement <span class=\"kw\">in</span> seen:\n            <span class=\"kw\">return</span> [seen[complement], i]\n        seen[num] = i\n    <span class=\"kw\">return</span> []</pre>",
+      "時間O(n)、空間O(n)。全探索O(n²)はTLEになる",
+      "注意点：同じ要素を2回使えない；返すのはインデックスであり値ではない"
+    ],
     "lv": 1
   },
   {
@@ -19,6 +28,7 @@
     "cat": "编程题-Easy",
     "group": "编程题",
     "q": "LC21 合并两个有序链表 (Merge Two Sorted Lists)",
+    "q_ja": "LC21 Merge Two Sorted Lists（2つのソート済みリストの結合）",
     "bullets": [
       "将两个升序链表合并为一个新的<span class=\"highlight\">升序链表</span>并返回",
       "示例：l1=[1,2,4], l2=[1,3,4] → [1,1,2,3,4,4]",
@@ -27,6 +37,14 @@
       "时间O(m+n)，空间O(1)。dummy head技巧避免处理头节点为空的边界",
       "变体：LC23 合并K个有序链表（用堆/分治）"
     ],
+    "bullets_ja": [
+      "2つの昇順リストを結合して新しい<span class=\"highlight\">昇順リスト</span>として返す",
+      "例：l1=[1,2,4], l2=[1,3,4] → [1,1,2,3,4,4]",
+      "核心アイデア：<span class=\"highlight\">dummy head</span>を作成し、2つのリストの先頭ノードを逐次比較して小さい方を繋げる",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">mergeTwoLists</span>(l1, l2):\n    dummy = ListNode(0)\n    curr = dummy\n    <span class=\"kw\">while</span> l1 <span class=\"kw\">and</span> l2:\n        <span class=\"kw\">if</span> l1.val <= l2.val:\n            curr.next = l1\n            l1 = l1.next\n        <span class=\"kw\">else</span>:\n            curr.next = l2\n            l2 = l2.next\n        curr = curr.next\n    curr.next = l1 <span class=\"kw\">if</span> l1 <span class=\"kw\">else</span> l2  <span class=\"cm\"># 残りを繋げる</span>\n    <span class=\"kw\">return</span> dummy.next</pre>",
+      "時間O(m+n)、空間O(1)。dummy headにより先頭ノードがnullの境界処理を回避",
+      "派生問題：LC23 K個のソート済みリストの結合（Heap/分割統治）"
+    ],
     "lv": 1
   },
   {
@@ -34,6 +52,7 @@
     "cat": "编程题-Easy",
     "group": "编程题",
     "q": "LC70 爬楼梯 (Climbing Stairs)",
+    "q_ja": "LC70 Climbing Stairs（階段の登り方）",
     "bullets": [
       "每次爬 <span class=\"num\">1</span> 或 <span class=\"num\">2</span> 个台阶，问到第n阶有多少种不同方法",
       "示例：n=3 → 3种（1+1+1, 1+2, 2+1）",
@@ -42,6 +61,14 @@
       "时间O(n)，空间O(1)。滚动变量优化掉数组",
       "DP入门经典题，面试常用来考察DP思维。变体：每次可爬1~k步"
     ],
+    "bullets_ja": [
+      "毎回 <span class=\"num\">1</span> 段または <span class=\"num\">2</span> 段を登れる場合、第n段に到達する方法は何通りあるか",
+      "例：n=3 → 3通り（1+1+1, 1+2, 2+1）",
+      "核心アイデア：<span class=\"highlight\">動的計画法</span>、状態遷移 dp[i]=dp[i-1]+dp[i-2]、本質はフィボナッチ数列",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">climbStairs</span>(n):\n    <span class=\"kw\">if</span> n <= 2:\n        <span class=\"kw\">return</span> n\n    a, b = 1, 2  <span class=\"cm\"># dp[1]=1, dp[2]=2</span>\n    <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(3, n + 1):\n        a, b = b, a + b\n    <span class=\"kw\">return</span> b</pre>",
+      "時間O(n)、空間O(1)。ローリング変数で配列を省略",
+      "DP入門の定番問題。面接ではDP思考力を問う。派生：毎回1~k段登れる場合"
+    ],
     "lv": 1
   },
   {
@@ -49,6 +76,7 @@
     "cat": "编程题-Easy",
     "group": "编程题",
     "q": "LC121 买卖股票的最佳时机 (Best Time to Buy and Sell Stock)",
+    "q_ja": "LC121 Best Time to Buy and Sell Stock（株の売買の最適タイミング）",
     "bullets": [
       "给定股价数组，只能买卖<span class=\"highlight\">一次</span>，求最大利润（不能先卖后买）",
       "示例：prices=[7,1,5,3,6,4] → 5（第2天买入价1，第5天卖出价6）",
@@ -57,6 +85,14 @@
       "时间O(n)，空间O(1)。贪心思想：在最低点买，在之后的最高点卖",
       "变体：LC122 可多次买卖；LC123 最多两次买卖（DP状态机）"
     ],
+    "bullets_ja": [
+      "株価配列が与えられ、<span class=\"highlight\">1回</span>だけ売買可能な場合の最大利益を求める（先に売ってから買うのは不可）",
+      "例：prices=[7,1,5,3,6,4] → 5（2日目に価格1で買い、5日目に価格6で売却）",
+      "核心アイデア：一回の走査で<span class=\"highlight\">過去の最安値min_price</span>を維持し、毎日「現在値-最安値」で最大利益を更新する",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">maxProfit</span>(prices):\n    min_price = float(<span class=\"str\">'inf'</span>)\n    max_profit = 0\n    <span class=\"kw\">for</span> price <span class=\"kw\">in</span> prices:\n        min_price = min(min_price, price)\n        max_profit = max(max_profit, price - min_price)\n    <span class=\"kw\">return</span> max_profit</pre>",
+      "時間O(n)、空間O(1)。貪欲法の考え方：最安値で買い、その後の最高値で売る",
+      "派生問題：LC122 複数回売買可能；LC123 最大2回売買（DP状態機械）"
+    ],
     "lv": 1
   },
   {
@@ -64,6 +100,7 @@
     "cat": "编程题-Easy",
     "group": "编程题",
     "q": "LC141 环形链表 (Linked List Cycle)",
+    "q_ja": "LC141 Linked List Cycle（連結リストの環検出）",
     "bullets": [
       "判断链表中是否存在<span class=\"highlight\">环</span>",
       "示例：head=[3,2,0,-4], pos=1 → true（尾部连接到第2个节点）",
@@ -72,6 +109,14 @@
       "时间O(n)，空间O(1)。用set存访问过的节点也行但空间O(n)",
       "变体：LC142 环形链表II — 找入环节点（相遇后再走一个指针从head出发，再次相遇点即入口）"
     ],
+    "bullets_ja": [
+      "連結リストに<span class=\"highlight\">環</span>が存在するか判定する",
+      "例：head=[3,2,0,-4], pos=1 → true（末尾が2番目のノードに接続）",
+      "核心アイデア：<span class=\"highlight\">高速・低速ポインタ</span>、高速ポインタは毎回2歩、低速ポインタは1歩進み、環があれば必ず合流する",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">hasCycle</span>(head):\n    slow = fast = head\n    <span class=\"kw\">while</span> fast <span class=\"kw\">and</span> fast.next:\n        slow = slow.next\n        fast = fast.next.next\n        <span class=\"kw\">if</span> slow == fast:\n            <span class=\"kw\">return</span> <span class=\"kw\">True</span>\n    <span class=\"kw\">return</span> <span class=\"kw\">False</span></pre>",
+      "時間O(n)、空間O(1)。setで訪問済みノードを記録する方法もあるが空間O(n)",
+      "派生問題：LC142 Linked List Cycle II — 環の入口を探す（合流後headからもう1つポインタを出発させ、再合流点が入口）"
+    ],
     "lv": 1
   },
   {
@@ -79,6 +124,7 @@
     "cat": "编程题-Easy",
     "group": "编程题",
     "q": "LC206 反转链表 (Reverse Linked List)",
+    "q_ja": "LC206 Reverse Linked List（連結リストの反転）",
     "bullets": [
       "将单链表<span class=\"highlight\">就地反转</span>并返回新的头节点",
       "示例：[1,2,3,4,5] → [5,4,3,2,1]",
@@ -87,6 +133,14 @@
       "时间O(n)，空间O(1)。递归写法也行但空间O(n)",
       "面试最高频链表题之一。变体：LC92 反转部分链表、LC25 K个一组反转"
     ],
+    "bullets_ja": [
+      "単方向リストを<span class=\"highlight\">その場で反転</span>し、新しい先頭ノードを返す",
+      "例：[1,2,3,4,5] → [5,4,3,2,1]",
+      "核心アイデア：<span class=\"highlight\">3ポインタの反復</span>——prev、curr、nxt、毎回curr.nextをprevに向け、3つのポインタを同時に前進させる",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">reverseList</span>(head):\n    prev = <span class=\"kw\">None</span>\n    curr = head\n    <span class=\"kw\">while</span> curr:\n        nxt = curr.next   <span class=\"cm\"># 次を保存</span>\n        curr.next = prev  <span class=\"cm\"># ポインタを反転</span>\n        prev = curr       <span class=\"cm\"># prevを前進</span>\n        curr = nxt        <span class=\"cm\"># currを前進</span>\n    <span class=\"kw\">return</span> prev</pre>",
+      "時間O(n)、空間O(1)。再帰でも書けるが空間O(n)",
+      "面接で最頻出のリスト問題の一つ。派生：LC92 部分反転、LC25 K個ごとの反転"
+    ],
     "lv": 1
   },
   {
@@ -94,6 +148,7 @@
     "cat": "编程题-Easy",
     "group": "编程题",
     "q": "LC226 翻转二叉树 (Invert Binary Tree)",
+    "q_ja": "LC226 Invert Binary Tree（二分木の反転）",
     "bullets": [
       "将二叉树的每个节点的左右子树<span class=\"highlight\">交换</span>（镜像翻转）",
       "示例：[4,2,7,1,3,6,9] → [4,7,2,9,6,3,1]",
@@ -102,6 +157,14 @@
       "时间O(n)，空间O(h)，h为树高。最简洁的递归三行代码",
       "也可用BFS/DFS迭代实现。面试经典题，Homebrew作者因此题被Google拒"
     ],
+    "bullets_ja": [
+      "二分木の各ノードの左右部分木を<span class=\"highlight\">交換</span>する（鏡像反転）",
+      "例：[4,2,7,1,3,6,9] → [4,7,2,9,6,3,1]",
+      "核心アイデア：<span class=\"highlight\">再帰</span>——まず左右部分木を反転し、次に左右の子ノードを交換する",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">invertTree</span>(root):\n    <span class=\"kw\">if not</span> root:\n        <span class=\"kw\">return</span> <span class=\"kw\">None</span>\n    root.left, root.right = invertTree(root.right), invertTree(root.left)\n    <span class=\"kw\">return</span> root</pre>",
+      "時間O(n)、空間O(h)、hは木の高さ。最も簡潔な再帰3行コード",
+      "BFS/DFSの反復でも実装可能。面接の定番問題、Homebrewの作者がこの問題でGoogleに落とされた逸話あり"
+    ],
     "lv": 1
   },
   {
@@ -109,6 +172,7 @@
     "cat": "编程题-Easy",
     "group": "编程题",
     "q": "LC543 二叉树的直径 (Diameter of Binary Tree)",
+    "q_ja": "LC543 Diameter of Binary Tree（二分木の直径）",
     "bullets": [
       "求二叉树中任意两节点之间的<span class=\"highlight\">最长路径长度</span>（边数），路径不一定经过根",
       "示例：[1,2,3,4,5] → 3（路径为4→2→1→3或5→2→1→3）",
@@ -117,6 +181,14 @@
       "时间O(n)，空间O(h)。关键区分：函数返回的是<span class=\"highlight\">深度</span>，但更新的是<span class=\"highlight\">直径</span>",
       "易错点：直径是边数不是节点数；最长路径不一定过根节点"
     ],
+    "bullets_ja": [
+      "二分木の任意の2ノード間の<span class=\"highlight\">最長パスの長さ</span>（辺の数）を求める。パスは根を通るとは限らない",
+      "例：[1,2,3,4,5] → 3（パスは4→2→1→3 または 5→2→1→3）",
+      "核心アイデア：<span class=\"highlight\">DFS後順走査</span>、各ノードで 直径=左の深さ+右の深さ とし、グローバル変数で最大値を記録",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">diameterOfBinaryTree</span>(root):\n    ans = 0\n    <span class=\"kw\">def</span> <span class=\"fn\">depth</span>(node):\n        <span class=\"kw\">nonlocal</span> ans\n        <span class=\"kw\">if not</span> node:\n            <span class=\"kw\">return</span> 0\n        L = depth(node.left)\n        R = depth(node.right)\n        ans = max(ans, L + R)  <span class=\"cm\"># 直径を更新</span>\n        <span class=\"kw\">return</span> max(L, R) + 1     <span class=\"cm\"># 深さを返す</span>\n    depth(root)\n    <span class=\"kw\">return</span> ans</pre>",
+      "時間O(n)、空間O(h)。重要な区別：関数が返すのは<span class=\"highlight\">深さ</span>、更新するのは<span class=\"highlight\">直径</span>",
+      "注意点：直径は辺の数でありノード数ではない；最長パスは必ずしも根を通らない"
+    ],
     "lv": 1
   },
   {
@@ -124,6 +196,7 @@
     "cat": "编程题-Easy",
     "group": "编程题",
     "q": "LC20 有效的括号 (Valid Parentheses) — 栈",
+    "q_ja": "LC20 Valid Parentheses（有効な括弧）— Stack",
     "bullets": [
       "判断只含 <span class=\"str\">'()[]{}'</span> 的字符串中括号是否<span class=\"highlight\">有效匹配</span>",
       "示例：s=\"({[]})\" → true；s=\"([)]\" → false",
@@ -132,6 +205,14 @@
       "时间O(n)，空间O(n)。栈的经典应用题",
       "易错点：最后要检查栈是否为空（如 s=\"(\" 只有左括号）；空字符串返回true"
     ],
+    "bullets_ja": [
+      "<span class=\"str\">'()[]{}'</span> のみで構成される文字列で括弧が<span class=\"highlight\">正しく対応しているか</span>を判定する",
+      "例：s=\"({[]})\" → true；s=\"([)]\" → false",
+      "核心アイデア：<span class=\"highlight\">Stack</span>を使い、開き括弧はpush、閉じ括弧はpopして対応を確認",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">isValid</span>(s):\n    stack = []\n    mapping = {<span class=\"str\">')'</span>: <span class=\"str\">'('</span>, <span class=\"str\">'}'</span>: <span class=\"str\">'{'</span>, <span class=\"str\">']'</span>: <span class=\"str\">'['</span>}\n    <span class=\"kw\">for</span> ch <span class=\"kw\">in</span> s:\n        <span class=\"kw\">if</span> ch <span class=\"kw\">in</span> mapping:\n            top = stack.pop() <span class=\"kw\">if</span> stack <span class=\"kw\">else</span> <span class=\"str\">'#'</span>\n            <span class=\"kw\">if</span> mapping[ch] != top:\n                <span class=\"kw\">return</span> <span class=\"kw\">False</span>\n        <span class=\"kw\">else</span>:\n            stack.append(ch)\n    <span class=\"kw\">return</span> <span class=\"kw\">not</span> stack</pre>",
+      "時間O(n)、空間O(n)。Stackの典型的な応用問題",
+      "注意点：最後にStackが空であることを確認する必要がある（例：s=\"(\" のように開き括弧だけの場合）；空文字列はtrueを返す"
+    ],
     "lv": 1
   },
   {
@@ -139,6 +220,7 @@
     "cat": "编程题-Easy",
     "group": "编程题",
     "q": "LC101 对称二叉树 (Symmetric Tree) — 递归",
+    "q_ja": "LC101 Symmetric Tree（対称二分木）— 再帰",
     "bullets": [
       "判断一棵二叉树是否是<span class=\"highlight\">镜像对称</span>的",
       "示例：[1,2,2,3,4,4,3] → true；[1,2,2,null,3,null,3] → false",
@@ -147,6 +229,14 @@
       "时间O(n)，空间O(h)。也可用BFS迭代：队列每次取两个节点比较",
       "与LC226翻转二叉树对比：翻转是操作，对称是判断，但递归结构类似"
     ],
+    "bullets_ja": [
+      "二分木が<span class=\"highlight\">鏡像対称</span>であるか判定する",
+      "例：[1,2,2,3,4,4,3] → true；[1,2,2,null,3,null,3] → false",
+      "核心アイデア：<span class=\"highlight\">再帰的に比較</span>——左部分木と右部分木を比べ、left.leftとright.right、left.rightとright.leftを対比する",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">isSymmetric</span>(root):\n    <span class=\"kw\">def</span> <span class=\"fn\">check</span>(left, right):\n        <span class=\"kw\">if not</span> left <span class=\"kw\">and not</span> right:\n            <span class=\"kw\">return</span> <span class=\"kw\">True</span>\n        <span class=\"kw\">if not</span> left <span class=\"kw\">or not</span> right:\n            <span class=\"kw\">return</span> <span class=\"kw\">False</span>\n        <span class=\"kw\">return</span> (left.val == right.val\n                <span class=\"kw\">and</span> check(left.left, right.right)\n                <span class=\"kw\">and</span> check(left.right, right.left))\n    <span class=\"kw\">return</span> check(root.left, root.right) <span class=\"kw\">if</span> root <span class=\"kw\">else</span> <span class=\"kw\">True</span></pre>",
+      "時間O(n)、空間O(h)。BFSの反復でも可：Queueから毎回2ノードを取り出して比較",
+      "LC226 Invert Binary Treeとの比較：反転は操作、対称は判定だが、再帰構造は類似"
+    ],
     "lv": 1
   },
   {
@@ -154,6 +244,7 @@
     "cat": "编程题-Easy",
     "group": "编程题",
     "q": "LC160 相交链表 (Intersection of Two Linked Lists) — 双指针",
+    "q_ja": "LC160 Intersection of Two Linked Lists（2つのリストの交差点）— Two Pointers",
     "bullets": [
       "找到两个单链表<span class=\"highlight\">相交的起始节点</span>，不相交则返回null",
       "示例：listA=[4,1,8,4,5], listB=[5,6,1,8,4,5]，交点为节点8",
@@ -162,6 +253,14 @@
       "时间O(m+n)，空间O(1)。数学证明：a+c+b = b+c+a（c为公共部分长度）",
       "易错点：比较的是节点引用相等（同一个节点），不是值相等"
     ],
+    "bullets_ja": [
+      "2つの単方向リストの<span class=\"highlight\">交差の開始ノード</span>を見つける。交差しなければnullを返す",
+      "例：listA=[4,1,8,4,5], listB=[5,6,1,8,4,5]、交差点はノード8",
+      "核心アイデア：<span class=\"highlight\">Two Pointersで長さの差を解消</span>——pAはAを走り終えたらBへ、pBはBを走り終えたらAへ。合計歩数が同じになるため、必ず交差点で合流する",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">getIntersectionNode</span>(headA, headB):\n    pA, pB = headA, headB\n    <span class=\"kw\">while</span> pA != pB:\n        pA = pA.next <span class=\"kw\">if</span> pA <span class=\"kw\">else</span> headB\n        pB = pB.next <span class=\"kw\">if</span> pB <span class=\"kw\">else</span> headA\n    <span class=\"kw\">return</span> pA  <span class=\"cm\"># 交差していれば交差点、していなければ両方None</span></pre>",
+      "時間O(m+n)、空間O(1)。数学的証明：a+c+b = b+c+a（cは共通部分の長さ）",
+      "注意点：比較するのはノードの参照（同一ノード）であり、値の等価性ではない"
+    ],
     "lv": 1
   },
   {
@@ -169,6 +268,7 @@
     "cat": "编程题-Easy",
     "group": "编程题",
     "q": "LC234 回文链表 (Palindrome Linked List) — 快慢指针+反转",
+    "q_ja": "LC234 Palindrome Linked List（回文リスト）— 高速・低速ポインタ+反転",
     "bullets": [
       "判断单链表是否为<span class=\"highlight\">回文</span>（正读反读相同），要求O(1)空间",
       "示例：[1,2,2,1] → true；[1,2] → false",
@@ -176,6 +276,14 @@
       "<pre><span class=\"kw\">def</span> <span class=\"fn\">isPalindrome</span>(head):\n    <span class=\"cm\"># 1. 快慢指针找中点</span>\n    slow = fast = head\n    <span class=\"kw\">while</span> fast <span class=\"kw\">and</span> fast.next:\n        slow = slow.next\n        fast = fast.next.next\n    <span class=\"cm\"># 2. 反转后半段</span>\n    prev = <span class=\"kw\">None</span>\n    <span class=\"kw\">while</span> slow:\n        nxt = slow.next\n        slow.next = prev\n        prev = slow\n        slow = nxt\n    <span class=\"cm\"># 3. 比较前后两半</span>\n    left, right = head, prev\n    <span class=\"kw\">while</span> right:\n        <span class=\"kw\">if</span> left.val != right.val:\n            <span class=\"kw\">return</span> <span class=\"kw\">False</span>\n        left = left.next\n        right = right.next\n    <span class=\"kw\">return</span> <span class=\"kw\">True</span></pre>",
       "时间O(n)，空间O(1)。综合了快慢指针+链表反转两个核心技巧",
       "注意：此方法会修改原链表。面试中可追问如何恢复原链表（再反转回来）"
+    ],
+    "bullets_ja": [
+      "単方向リストが<span class=\"highlight\">回文</span>（前から読んでも後ろから読んでも同じ）であるか判定する。O(1)空間が要件",
+      "例：[1,2,2,1] → true；[1,2] → false",
+      "核心アイデア：①<span class=\"highlight\">高速・低速ポインタ</span>で中間点を見つける ②<span class=\"highlight\">後半を反転</span> ③前半と後半を逐一比較する",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">isPalindrome</span>(head):\n    <span class=\"cm\"># 1. 高速・低速ポインタで中間点を探す</span>\n    slow = fast = head\n    <span class=\"kw\">while</span> fast <span class=\"kw\">and</span> fast.next:\n        slow = slow.next\n        fast = fast.next.next\n    <span class=\"cm\"># 2. 後半を反転</span>\n    prev = <span class=\"kw\">None</span>\n    <span class=\"kw\">while</span> slow:\n        nxt = slow.next\n        slow.next = prev\n        prev = slow\n        slow = nxt\n    <span class=\"cm\"># 3. 前半と後半を比較</span>\n    left, right = head, prev\n    <span class=\"kw\">while</span> right:\n        <span class=\"kw\">if</span> left.val != right.val:\n            <span class=\"kw\">return</span> <span class=\"kw\">False</span>\n        left = left.next\n        right = right.next\n    <span class=\"kw\">return</span> <span class=\"kw\">True</span></pre>",
+      "時間O(n)、空間O(1)。高速・低速ポインタとリスト反転の2つの核心テクニックを組み合わせる",
+      "注意：この方法は元のリストを変更する。面接では元のリストの復元方法を追問される可能性がある（再度反転して戻す）"
     ],
     "lv": 1
   }

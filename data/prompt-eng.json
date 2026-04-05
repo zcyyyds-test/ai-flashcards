@@ -3,12 +3,20 @@
     "id": "pe01",
     "cat": "Prompt工程",
     "q": "Few-shot 设计原则",
+    "q_ja": "Few-shotの設計原則",
     "bullets": [
       "示例数量：不是越多越好（你的实验：<span class=\"num\">1-shot > 3-shot</span>），多了会稀释attention",
       "示例选择：选和当前任务最相似的示例 → 动态few-shot(从向量库检索)",
       "示例顺序：最相关的放最后（recency bias），或打乱测试影响",
       "格式一致：示例的输入输出格式要和实际任务完全一致",
       "Zero-shot足够时不加示例——简单才是最优解"
+    ],
+    "bullets_ja": [
+      "例示の数量：多ければ良いわけではない（自身の実験：<span class=\"num\">1-shot > 3-shot</span>）、多すぎるとAttentionが希薄化",
+      "例示の選択：現在のタスクに最も類似した例を選ぶ → 動的Few-shot（ベクトルDBから検索）",
+      "例示の順序：最も関連性の高いものを最後に配置（recency bias）、またはシャッフルして影響をテスト",
+      "フォーマットの一貫性：例示の入出力フォーマットは実際のタスクと完全に一致させる",
+      "Zero-shotで十分な場合は例示を加えない——シンプルが最適解"
     ],
     "group": "基础",
     "lv": 1
@@ -17,12 +25,20 @@
     "id": "pe02",
     "cat": "Prompt工程",
     "q": "Chain-of-Thought (CoT) 变体",
+    "q_ja": "Chain-of-Thought (CoT) のバリエーション",
     "bullets": [
       "标准CoT：\"Let's think step by step\" → 引导模型展示推理过程",
       "Self-Consistency：多次采样CoT → 投票选最常见答案 → 准确率+10-20%",
       "Tree-of-Thought：多条推理路径并行探索 → 复杂推理任务",
       "ReAct：CoT + Action（思考-行动-观察循环）→ <span class=\"highlight\">你的SiLR-Agent核心范式</span>",
       "何时用：需要多步推理的任务。简单任务加CoT反而慢且可能更差"
+    ],
+    "bullets_ja": [
+      "標準CoT：「Let's think step by step」→ モデルに推論過程を示させるよう誘導",
+      "Self-Consistency：CoTを複数回サンプリング → 最も多い回答に投票 → 精度+10-20%",
+      "Tree-of-Thought：複数の推論パスを並列探索 → 複雑な推論タスク向け",
+      "ReAct：CoT + Action（思考-行動-観察のループ）→ <span class=\"highlight\">自身のSiLR-Agentの中核パラダイム</span>",
+      "使用タイミング：多段階推論が必要なタスク。単純なタスクにCoTを加えるとかえって遅く、性能が低下する可能性も"
     ],
     "group": "基础",
     "lv": 2
@@ -31,12 +47,20 @@
     "id": "pe03",
     "cat": "Prompt工程",
     "q": "Structured Output 技巧",
+    "q_ja": "Structured Outputのテクニック",
     "bullets": [
       "JSON Mode：强制LLM输出有效JSON → OpenAI支持response_format",
       "Function Calling：更严格的结构化输出 → 定义schema，输出必须符合",
       "XML标签：用<tag>标记不同部分 → Claude擅长",
       "输出约束：在prompt中明确格式要求 + 给示例 + 末尾开始输出格式引导",
       "兜底：总是做输出解析和验证 → 你的三层ActionParser就是处理结构化输出不可靠的问题"
+    ],
+    "bullets_ja": [
+      "JSON Mode：LLMに有効なJSONを強制出力 → OpenAIがresponse_formatをサポート",
+      "Function Calling：より厳格な構造化出力 → Schemaを定義し、出力はそれに準拠する必要あり",
+      "XMLタグ：<tag>で異なる部分をマークアップ → Claudeが得意",
+      "出力制約：プロンプトでフォーマット要件を明示 + 例示 + 末尾で出力フォーマットを誘導",
+      "フォールバック：常に出力の解析と検証を行う → 自身の三層ActionParserは構造化出力の不確実性に対処"
     ],
     "group": "基础",
     "lv": 2
@@ -45,12 +69,20 @@
     "id": "pe04",
     "cat": "Prompt工程",
     "q": "System Prompt 设计",
+    "q_ja": "System Promptの設計",
     "bullets": [
       "角色设定：明确AI的身份、能力边界、行为规范",
       "任务定义：清晰描述要做什么、输出格式、约束条件",
       "工具说明：可用工具列表 + 使用时机 + 参数说明",
       "<span class=\"highlight\">MUST/NEVER规则</span>：关键行为用强制语言（你的经验：Agent不调judge→加MUST call）",
       "动态注入：根据用户输入/上下文动态调整system prompt的部分内容 → Context Engineering"
+    ],
+    "bullets_ja": [
+      "ロール設定：AIのアイデンティティ、能力の境界、行動規範を明確にする",
+      "タスク定義：何をすべきか、出力フォーマット、制約条件を明確に記述",
+      "ツール説明：利用可能なツール一覧 + 使用タイミング + パラメータ説明",
+      "<span class=\"highlight\">MUST/NEVERルール</span>：重要な行動には強制的な表現を使用（自身の経験：Agentがjudgeを呼ばない → MUST callを追加）",
+      "動的注入：ユーザー入力/コンテキストに基づきsystem promptの一部を動的に調整 → Context Engineering"
     ],
     "group": "基础",
     "lv": 2
@@ -59,6 +91,7 @@
     "id": "pe05",
     "cat": "Prompt工程",
     "q": "Prompt Injection 攻防",
+    "q_ja": "Prompt Injectionの攻防",
     "bullets": [
       "攻击：用户在输入中嵌入\"忽略之前的指令\"等内容，劫持模型行为",
       "防御①：输入过滤 → 检测可疑模式（\"ignore previous\"/\"you are now\"）",
@@ -67,6 +100,14 @@
       "防御④：<span class=\"highlight\">最小权限</span> → Agent的工具权限按任务分配，即使被注入也无法执行危险操作",
       "你的方案：SiLR验证器在执行层拦截 → 即使prompt被劫持，危险动作也不会通过验证"
     ],
+    "bullets_ja": [
+      "攻撃：ユーザーが入力に「前の指示を無視せよ」などを埋め込み、モデルの挙動を乗っ取る",
+      "防御①：入力フィルタリング → 疑わしいパターンを検出（「ignore previous」/「you are now」）",
+      "防御②：デリミタ → ```やXMLタグでsystem/user内容を明確に区別",
+      "防御③：LLM-as-Guard → 別のモデルで入力にインジェクションが含まれるか検出",
+      "防御④：<span class=\"highlight\">最小権限</span> → Agentのツール権限をタスクごとに割り当て、インジェクションされても危険な操作は実行不可",
+      "自身の方式：SiLR検証器が実行層で遮断 → promptが乗っ取られても危険なアクションは検証を通過しない"
+    ],
     "group": "基础",
     "lv": 3
   },
@@ -74,12 +115,20 @@
     "id": "pe06",
     "cat": "Prompt工程",
     "q": "自动Prompt优化（DSPy / OPRO）",
+    "q_ja": "自動Prompt最適化（DSPy / OPRO）",
     "bullets": [
       "痛点：手动调prompt靠直觉和试错，不可复现、不可扩展",
       "<span class=\"highlight\">DSPy</span>：将prompt工程变成编程——定义Signature(输入/输出)+Module(推理模式)，编译器自动优化prompt",
       "<span class=\"highlight\">OPRO</span>(Google)：用LLM优化prompt——给当前prompt和评分，让LLM生成更好的prompt，迭代进化",
       "对比：DSPy=<span class=\"highlight\">编程范式</span>（结构化、可组合、可测试）；OPRO=<span class=\"highlight\">搜索范式</span>（黑盒优化、简单上手）",
       "实践建议：先手动写baseline → 效果不够时上自动优化。简单任务手动足够，复杂pipeline用DSPy"
+    ],
+    "bullets_ja": [
+      "課題：手動でのPrompt調整は直感と試行錯誤に依存、再現不可能でスケールしない",
+      "<span class=\"highlight\">DSPy</span>：Prompt工程をプログラミングに変換——Signature（入出力）+Module（推論パターン）を定義、コンパイラが自動でPromptを最適化",
+      "<span class=\"highlight\">OPRO</span>（Google）：LLMでPromptを最適化——現在のPromptとスコアを渡し、LLMにより良いPromptを生成させ反復的に進化",
+      "比較：DSPy＝<span class=\"highlight\">プログラミングパラダイム</span>（構造化・組み合わせ可能・テスト可能）；OPRO＝<span class=\"highlight\">探索パラダイム</span>（ブラックボックス最適化・手軽）",
+      "実践のアドバイス：まず手動でベースラインを作成 → 効果が不十分なら自動最適化へ。単純なタスクなら手動で十分、複雑なパイプラインにはDSPy"
     ],
     "group": "基础",
     "lv": 3
@@ -88,12 +137,20 @@
     "id": "pe07",
     "cat": "Prompt工程",
     "q": "System Prompt最佳实践清单",
+    "q_ja": "System Promptのベストプラクティス一覧",
     "bullets": [
       "结构模板：<span class=\"highlight\">角色 → 任务 → 约束 → 输出格式 → 示例</span>（由粗到细）",
       "语言选择：指令语言和目标输出语言一致效果更好。多语言场景需明确指定输出语言",
       "长度控制：System Prompt过长会降低模型对用户输入的注意力。核心规则放最前面，细节放后面",
       "版本管理：System Prompt应该<span class=\"highlight\">版本化+A/B测试</span>，不要随意改动。每次改动记录原因和效果",
       "安全设计：①敏感信息不放system prompt（可被提取） ②关键约束重复强调（头尾各一次） ③用XML/分隔符区分不同section"
+    ],
+    "bullets_ja": [
+      "構造テンプレート：<span class=\"highlight\">ロール → タスク → 制約 → 出力フォーマット → 例示</span>（粗から細へ）",
+      "言語選択：指示言語と目標出力言語を一致させると効果が高い。多言語シナリオでは出力言語を明示的に指定",
+      "長さの制御：System Promptが長すぎるとモデルのユーザー入力への注意力が低下。コアルールを先頭に、詳細は後方に配置",
+      "バージョン管理：System Promptは<span class=\"highlight\">バージョン管理+A/Bテスト</span>を行い、安易に変更しない。変更ごとに理由と効果を記録",
+      "セキュリティ設計：①機密情報はsystem promptに入れない（抽出される恐れ） ②重要な制約は繰り返し強調（先頭と末尾で各1回） ③XML/デリミタで各セクションを区別"
     ],
     "group": "基础",
     "lv": 2
@@ -102,12 +159,20 @@
     "id": "pe08",
     "cat": "Prompt工程",
     "q": "Prompt模板库与复用模式",
+    "q_ja": "Promptテンプレートライブラリと再利用パターン",
     "bullets": [
       "<span class=\"highlight\">提取模式</span>：从非结构化文本中提取结构化信息 → \"从以下文本中提取[字段列表]，以JSON格式输出\"",
       "<span class=\"highlight\">分类模式</span>：将输入分到预定义类别 → 给出类别列表+每类说明+few-shot示例",
       "<span class=\"highlight\">转换模式</span>：翻译/改写/格式转换 → 明确源格式和目标格式+风格要求",
       "<span class=\"highlight\">推理模式</span>：需要分析判断 → CoT引导+中间步骤约束+最终结论格式",
       "复用原则：模板参数化（用变量占位） → 与代码一起版本管理 → 定期评估效果退化"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">抽出パターン</span>：非構造化テキストから構造化情報を抽出 → 「以下のテキストから[フィールドリスト]を抽出し、JSON形式で出力」",
+      "<span class=\"highlight\">分類パターン</span>：入力を事前定義カテゴリに分類 → カテゴリ一覧+各カテゴリの説明+Few-shot例示を提示",
+      "<span class=\"highlight\">変換パターン</span>：翻訳/書き換え/フォーマット変換 → ソースフォーマットとターゲットフォーマット+スタイル要件を明示",
+      "<span class=\"highlight\">推論パターン</span>：分析・判断が必要 → CoTで誘導+中間ステップの制約+最終結論のフォーマット",
+      "再利用の原則：テンプレートをパラメータ化（変数プレースホルダー） → コードと一緒にバージョン管理 → 定期的に効果の劣化を評価"
     ],
     "group": "基础",
     "lv": 2

@@ -4,6 +4,7 @@
     "cat": "编程题-Medium",
     "group": "编程题",
     "q": "LC3 无重复字符的最长子串 (Longest Substring Without Repeating Characters)",
+    "q_ja": "LC3 Longest Substring Without Repeating Characters（重複のない最長部分文字列）",
     "bullets": [
       "给定字符串，找出不含重复字符的<span class=\"highlight\">最长子串</span>的长度",
       "示例：s=\"abcabcbb\" → 3（子串\"abc\"）",
@@ -12,6 +13,14 @@
       "时间O(n)，空间O(min(n,m))，m为字符集大小",
       "优化：用dict记录字符最后出现的位置，left可直接跳转而非逐个移动"
     ],
+    "bullets_ja": [
+      "与えられた文字列から重複文字を含まない<span class=\"highlight\">最長部分文字列</span>の長さを求める",
+      "例：s=\"abcabcbb\" → 3（部分文字列\"abc\"）",
+      "核心アイデア：<span class=\"highlight\">Sliding Window</span>+ハッシュ集合。右ポインタでウィンドウを拡張し、重複文字に遭遇したら左ポインタを収縮させて重複を解消",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">lengthOfLongestSubstring</span>(s):\n    char_set = set()\n    left = ans = 0\n    <span class=\"kw\">for</span> right <span class=\"kw\">in</span> range(len(s)):\n        <span class=\"kw\">while</span> s[right] <span class=\"kw\">in</span> char_set:\n            char_set.remove(s[left])\n            left += 1\n        char_set.add(s[right])\n        ans = max(ans, right - left + 1)\n    <span class=\"kw\">return</span> ans</pre>",
+      "時間O(n)、空間O(min(n,m))、mは文字集合のサイズ",
+      "最適化：dictで各文字の最後の出現位置を記録し、leftを直接ジャンプさせることで逐次移動を省略"
+    ],
     "lv": 2
   },
   {
@@ -19,6 +28,7 @@
     "cat": "编程题-Medium",
     "group": "编程题",
     "q": "LC15 三数之和 (3Sum)",
+    "q_ja": "LC15 3Sum（三数の和）",
     "bullets": [
       "从数组中找出所有和为 <span class=\"num\">0</span> 的<span class=\"highlight\">不重复三元组</span>",
       "示例：nums=[-1,0,1,2,-1,-4] → [[-1,-1,2],[-1,0,1]]",
@@ -27,6 +37,14 @@
       "时间O(n²)，空间O(1)（不计输出）。排序O(n log n)被O(n²)覆盖",
       "易错点：去重逻辑必须在找到解之后和外层循环开头两处都做"
     ],
+    "bullets_ja": [
+      "配列から和が <span class=\"num\">0</span> になる<span class=\"highlight\">重複しない三つ組</span>をすべて見つける",
+      "例：nums=[-1,0,1,2,-1,-4] → [[-1,-1,2],[-1,0,1]]",
+      "核心アイデア：まず<span class=\"highlight\">ソート</span>し、1つの数を固定して残りに対し<span class=\"highlight\">Two Pointers</span>で二数の和を探す。重複値はスキップして重複除去",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">threeSum</span>(nums):\n    nums.sort()\n    res = []\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(nums) - 2):\n        <span class=\"kw\">if</span> i > 0 <span class=\"kw\">and</span> nums[i] == nums[i-1]:  <span class=\"cm\"># 重複をスキップ</span>\n            <span class=\"kw\">continue</span>\n        l, r = i + 1, len(nums) - 1\n        <span class=\"kw\">while</span> l < r:\n            s = nums[i] + nums[l] + nums[r]\n            <span class=\"kw\">if</span> s < 0:\n                l += 1\n            <span class=\"kw\">elif</span> s > 0:\n                r -= 1\n            <span class=\"kw\">else</span>:\n                res.append([nums[i], nums[l], nums[r]])\n                <span class=\"kw\">while</span> l < r <span class=\"kw\">and</span> nums[l] == nums[l+1]: l += 1\n                <span class=\"kw\">while</span> l < r <span class=\"kw\">and</span> nums[r] == nums[r-1]: r -= 1\n                l += 1; r -= 1\n    <span class=\"kw\">return</span> res</pre>",
+      "時間O(n²)、空間O(1)（出力を除く）。ソートO(n log n)はO(n²)に吸収される",
+      "注意点：重複除去は解を見つけた直後と外側ループの先頭の2箇所で行う必要がある"
+    ],
     "lv": 2
   },
   {
@@ -34,6 +52,7 @@
     "cat": "编程题-Medium",
     "group": "编程题",
     "q": "LC46 全排列 (Permutations)",
+    "q_ja": "LC46 Permutations（全順列）",
     "bullets": [
       "给定不重复整数数组，返回所有可能的<span class=\"highlight\">全排列</span>",
       "示例：nums=[1,2,3] → [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]",
@@ -42,6 +61,14 @@
       "时间O(n·n!)，空间O(n)。回溯三要素：选择列表、路径、结束条件",
       "变体：LC47 有重复数字的全排列（排序+剪枝）"
     ],
+    "bullets_ja": [
+      "重複のない整数配列が与えられ、すべての<span class=\"highlight\">順列</span>を返す",
+      "例：nums=[1,2,3] → [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]",
+      "核心アイデア：<span class=\"highlight\">バックトラッキング</span>。毎回残りの要素から1つ選んでパスに追加し、末端まで再帰したら結果を収集",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">permute</span>(nums):\n    res = []\n    <span class=\"kw\">def</span> <span class=\"fn\">backtrack</span>(path, used):\n        <span class=\"kw\">if</span> len(path) == len(nums):\n            res.append(path[:])\n            <span class=\"kw\">return</span>\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(nums)):\n            <span class=\"kw\">if</span> used[i]:\n                <span class=\"kw\">continue</span>\n            used[i] = <span class=\"kw\">True</span>\n            path.append(nums[i])\n            backtrack(path, used)\n            path.pop()       <span class=\"cm\"># 選択を取り消す</span>\n            used[i] = <span class=\"kw\">False</span>  <span class=\"cm\"># 状態を復元</span>\n    backtrack([], [<span class=\"kw\">False</span>] * len(nums))\n    <span class=\"kw\">return</span> res</pre>",
+      "時間O(n・n!)、空間O(n)。バックトラッキングの三要素：選択リスト、パス、終了条件",
+      "派生問題：LC47 重複ありの全順列（ソート+枝刈り）"
+    ],
     "lv": 2
   },
   {
@@ -49,6 +76,7 @@
     "cat": "编程题-Medium",
     "group": "编程题",
     "q": "LC49 字母异位词分组 (Group Anagrams)",
+    "q_ja": "LC49 Group Anagrams（アナグラムのグループ化）",
     "bullets": [
       "将字母异位词（字母相同但顺序不同）<span class=\"highlight\">分组</span>",
       "示例：[\"eat\",\"tea\",\"tan\",\"ate\",\"nat\",\"bat\"] → [[\"eat\",\"tea\",\"ate\"],[\"tan\",\"nat\"],[\"bat\"]]",
@@ -57,6 +85,14 @@
       "时间O(n·k·log k)，n为字符串数，k为最长字符串长度。空间O(nk)",
       "优化：用26位字母计数元组做key可降到O(nk)，但实测排序法更快（k通常很小）"
     ],
+    "bullets_ja": [
+      "アナグラム（同じ文字で構成されるが順番が異なる単語）を<span class=\"highlight\">グループ化</span>する",
+      "例：[\"eat\",\"tea\",\"tan\",\"ate\",\"nat\",\"bat\"] → [[\"eat\",\"tea\",\"ate\"],[\"tan\",\"nat\"],[\"bat\"]]",
+      "核心アイデア：アナグラムはソート後に同一文字列になるので、<span class=\"highlight\">ソート済み文字列をkey</span>にHashMapで分類",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\n\n<span class=\"kw\">def</span> <span class=\"fn\">groupAnagrams</span>(strs):\n    groups = defaultdict(list)\n    <span class=\"kw\">for</span> s <span class=\"kw\">in</span> strs:\n        key = tuple(sorted(s))  <span class=\"cm\"># ソートしてkeyにする</span>\n        groups[key].append(s)\n    <span class=\"kw\">return</span> list(groups.values())</pre>",
+      "時間O(n・k・log k)、nは文字列数、kは最長文字列の長さ。空間O(nk)",
+      "最適化：26文字のカウントタプルをkeyにすればO(nk)に下がるが、実測ではソート法の方が速い（kは通常小さい）"
+    ],
     "lv": 2
   },
   {
@@ -64,6 +100,7 @@
     "cat": "编程题-Medium",
     "group": "编程题",
     "q": "LC53 最大子数组和 (Maximum Subarray)",
+    "q_ja": "LC53 Maximum Subarray（最大部分配列和）",
     "bullets": [
       "找出整数数组中和最大的<span class=\"highlight\">连续子数组</span>并返回其和",
       "示例：nums=[-2,1,-3,4,-1,2,1,-5,4] → 6（子数组[4,-1,2,1]）",
@@ -72,6 +109,14 @@
       "时间O(n)，空间O(1)。DP视角：dp[i]=max(nums[i], dp[i-1]+nums[i])",
       "变体：要求返回子数组本身（记录start/end索引）；分治法O(n log n)"
     ],
+    "bullets_ja": [
+      "整数配列の中で和が最大となる<span class=\"highlight\">連続部分配列</span>を見つけ、その和を返す",
+      "例：nums=[-2,1,-3,4,-1,2,1,-5,4] → 6（部分配列[4,-1,2,1]）",
+      "核心アイデア：<span class=\"highlight\">Kadaneアルゴリズム</span>——現在の要素で終わる最大部分配列和を維持し、前の和が負なら捨てる",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">maxSubArray</span>(nums):\n    curr_sum = max_sum = nums[0]\n    <span class=\"kw\">for</span> num <span class=\"kw\">in</span> nums[1:]:\n        curr_sum = max(num, curr_sum + num)  <span class=\"cm\"># 繋げるか、新たに始めるか</span>\n        max_sum = max(max_sum, curr_sum)\n    <span class=\"kw\">return</span> max_sum</pre>",
+      "時間O(n)、空間O(1)。DPの観点：dp[i]=max(nums[i], dp[i-1]+nums[i])",
+      "派生：部分配列自体を返す場合（start/endインデックスを記録）；分割統治法O(n log n)"
+    ],
     "lv": 2
   },
   {
@@ -79,6 +124,7 @@
     "cat": "编程题-Medium",
     "group": "编程题",
     "q": "LC56 合并区间 (Merge Intervals)",
+    "q_ja": "LC56 Merge Intervals（区間の結合）",
     "bullets": [
       "给定若干区间集合，合并所有<span class=\"highlight\">重叠的区间</span>",
       "示例：intervals=[[1,3],[2,6],[8,10],[15,18]] → [[1,6],[8,10],[15,18]]",
@@ -87,6 +133,14 @@
       "时间O(n log n)排序主导，空间O(n)。注意边界：start <= end（等号意味着相邻也合并）",
       "变体：LC57 插入区间、LC986 区间列表交集"
     ],
+    "bullets_ja": [
+      "複数の区間が与えられ、<span class=\"highlight\">重複する区間</span>をすべて結合する",
+      "例：intervals=[[1,3],[2,6],[8,10],[15,18]] → [[1,6],[8,10],[15,18]]",
+      "核心アイデア：<span class=\"highlight\">始点でソート</span>し、走査時に現在の区間の始点と前の区間の終点を比較し、重複があれば結合（より大きい終点を採用）",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">merge</span>(intervals):\n    intervals.sort(key=<span class=\"kw\">lambda</span> x: x[0])\n    merged = [intervals[0]]\n    <span class=\"kw\">for</span> start, end <span class=\"kw\">in</span> intervals[1:]:\n        <span class=\"kw\">if</span> start <= merged[-1][1]:  <span class=\"cm\"># 重複あり</span>\n            merged[-1][1] = max(merged[-1][1], end)\n        <span class=\"kw\">else</span>:\n            merged.append([start, end])\n    <span class=\"kw\">return</span> merged</pre>",
+      "時間O(n log n)ソートが支配的、空間O(n)。境界に注意：start <= end（等号は隣接も結合する意味）",
+      "派生問題：LC57 Insert Interval、LC986 Interval List Intersections"
+    ],
     "lv": 2
   },
   {
@@ -94,6 +148,7 @@
     "cat": "编程题-Medium",
     "group": "编程题",
     "q": "LC102 二叉树的层序遍历 (Binary Tree Level Order Traversal)",
+    "q_ja": "LC102 Binary Tree Level Order Traversal（二分木のレベル順走査）",
     "bullets": [
       "返回二叉树的<span class=\"highlight\">层序遍历</span>结果（逐层从左到右）",
       "示例：root=[3,9,20,null,null,15,7] → [[3],[9,20],[15,7]]",
@@ -102,6 +157,14 @@
       "时间O(n)，空间O(n)。BFS模板题，deque比list.pop(0)快（O(1) vs O(n)）",
       "变体：LC107 自底向上层序、LC103 锯齿形层序、LC199 右视图"
     ],
+    "bullets_ja": [
+      "二分木の<span class=\"highlight\">レベル順走査</span>結果を返す（各レベルを左から右へ）",
+      "例：root=[3,9,20,null,null,15,7] → [[3],[9,20],[15,7]]",
+      "核心アイデア：<span class=\"highlight\">BFS</span>でQueueを使い、各レベルの処理前にQueueのサイズを記録し、そのサイズ分ループすれば1レベル分",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> deque\n\n<span class=\"kw\">def</span> <span class=\"fn\">levelOrder</span>(root):\n    <span class=\"kw\">if not</span> root:\n        <span class=\"kw\">return</span> []\n    res, queue = [], deque([root])\n    <span class=\"kw\">while</span> queue:\n        level = []\n        <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(len(queue)):  <span class=\"cm\"># 現在のレベルのノード数</span>\n            node = queue.popleft()\n            level.append(node.val)\n            <span class=\"kw\">if</span> node.left:  queue.append(node.left)\n            <span class=\"kw\">if</span> node.right: queue.append(node.right)\n        res.append(level)\n    <span class=\"kw\">return</span> res</pre>",
+      "時間O(n)、空間O(n)。BFSのテンプレート問題、dequeはlist.pop(0)より高速（O(1) vs O(n)）",
+      "派生問題：LC107 下からのレベル順走査、LC103 ジグザグレベル順走査、LC199 右側ビュー"
+    ],
     "lv": 2
   },
   {
@@ -109,6 +172,7 @@
     "cat": "编程题-Medium",
     "group": "编程题",
     "q": "LC146 LRU缓存 (LRU Cache)",
+    "q_ja": "LC146 LRU Cache（LRUキャッシュ）",
     "bullets": [
       "设计一个满足<span class=\"highlight\">LRU(最近最少使用)</span>缓存约束的数据结构，get和put均O(1)",
       "示例：LRUCache(2) → put(1,1) → put(2,2) → get(1)=1 → put(3,3) → get(2)=-1（被淘汰）",
@@ -117,6 +181,14 @@
       "时间O(1)，空间O(capacity)。Python用OrderedDict最简洁，面试可能要求手写双向链表",
       "字节跳动高频题。面试官可能追问：如何手写双向链表实现？线程安全版本？"
     ],
+    "bullets_ja": [
+      "<span class=\"highlight\">LRU（Least Recently Used）</span>キャッシュの制約を満たすデータ構造を設計する。getとputは共にO(1)",
+      "例：LRUCache(2) → put(1,1) → put(2,2) → get(1)=1 → put(3,3) → get(2)=-1（淘汰された）",
+      "核心アイデア：<span class=\"highlight\">HashMap+双方向リスト</span>。HashMapでO(1)検索、双方向リストでO(1)の挿入・削除・順序調整",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> OrderedDict\n\n<span class=\"kw\">class</span> <span class=\"fn\">LRUCache</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, capacity):\n        self.cache = OrderedDict()\n        self.cap = capacity\n\n    <span class=\"kw\">def</span> <span class=\"fn\">get</span>(self, key):\n        <span class=\"kw\">if</span> key <span class=\"kw\">not in</span> self.cache:\n            <span class=\"kw\">return</span> -1\n        self.cache.move_to_end(key)  <span class=\"cm\"># 最近使用済みとしてマーク</span>\n        <span class=\"kw\">return</span> self.cache[key]\n\n    <span class=\"kw\">def</span> <span class=\"fn\">put</span>(self, key, value):\n        <span class=\"kw\">if</span> key <span class=\"kw\">in</span> self.cache:\n            self.cache.move_to_end(key)\n        self.cache[key] = value\n        <span class=\"kw\">if</span> len(self.cache) > self.cap:\n            self.cache.popitem(last=<span class=\"kw\">False</span>)  <span class=\"cm\"># 最も長く未使用のものを淘汰</span></pre>",
+      "時間O(1)、空間O(capacity)。PythonではOrderedDictが最も簡潔、面接では双方向リストの手書き実装を求められることがある",
+      "ByteDanceの頻出問題。面接官の追加質問：双方向リストの手書き実装は？スレッドセーフ版は？"
+    ],
     "lv": 2
   },
   {
@@ -124,6 +196,7 @@
     "cat": "编程题-Medium",
     "group": "编程题",
     "q": "LC200 岛屿数量 (Number of Islands)",
+    "q_ja": "LC200 Number of Islands（島の数）",
     "bullets": [
       "给定 '1'(陆地) 和 '0'(水) 组成的二维网格，计算<span class=\"highlight\">岛屿数量</span>",
       "示例：grid=[[\"1\",\"1\",\"0\"],[\"0\",\"1\",\"0\"],[\"0\",\"0\",\"1\"]] → 2",
@@ -132,6 +205,14 @@
       "时间O(m×n)，空间O(m×n)最坏递归栈深度。也可用BFS或并查集",
       "变体：LC695 岛屿最大面积、LC463 岛屿周长、LC827 最大人工岛"
     ],
+    "bullets_ja": [
+      "'1'（陸地）と'0'（水）で構成される二次元グリッドが与えられ、<span class=\"highlight\">島の数</span>を数える",
+      "例：grid=[[\"1\",\"1\",\"0\"],[\"0\",\"1\",\"0\"],[\"0\",\"0\",\"1\"]] → 2",
+      "核心アイデア：グリッドを走査し、'1'に遭遇したら<span class=\"highlight\">DFS/BFSで水没</span>させて連結領域全体を'0'にマークし、島カウント+1",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">numIslands</span>(grid):\n    <span class=\"kw\">if not</span> grid:\n        <span class=\"kw\">return</span> 0\n    rows, cols = len(grid), len(grid[0])\n    count = 0\n\n    <span class=\"kw\">def</span> <span class=\"fn\">dfs</span>(r, c):\n        <span class=\"kw\">if</span> r < 0 <span class=\"kw\">or</span> r >= rows <span class=\"kw\">or</span> c < 0 <span class=\"kw\">or</span> c >= cols <span class=\"kw\">or</span> grid[r][c] != <span class=\"str\">'1'</span>:\n            <span class=\"kw\">return</span>\n        grid[r][c] = <span class=\"str\">'0'</span>  <span class=\"cm\"># 水没させる</span>\n        dfs(r+1, c); dfs(r-1, c)\n        dfs(r, c+1); dfs(r, c-1)\n\n    <span class=\"kw\">for</span> r <span class=\"kw\">in</span> range(rows):\n        <span class=\"kw\">for</span> c <span class=\"kw\">in</span> range(cols):\n            <span class=\"kw\">if</span> grid[r][c] == <span class=\"str\">'1'</span>:\n                dfs(r, c)\n                count += 1\n    <span class=\"kw\">return</span> count</pre>",
+      "時間O(m×n)、空間O(m×n)最悪の場合の再帰スタック深さ。BFSやUnion-Findでも可",
+      "派生問題：LC695 島の最大面積、LC463 島の周長、LC827 最大人工島"
+    ],
     "lv": 2
   },
   {
@@ -139,6 +220,7 @@
     "cat": "编程题-Medium",
     "group": "编程题",
     "q": "LC236 二叉树的最近公共祖先 (Lowest Common Ancestor of a Binary Tree)",
+    "q_ja": "LC236 Lowest Common Ancestor of a Binary Tree（二分木の最近共通祖先）",
     "bullets": [
       "给定二叉树和两个节点p、q，找到它们的<span class=\"highlight\">最近公共祖先(LCA)</span>",
       "示例：root=[3,5,1,6,2,0,8,null,null,7,4], p=5, q=1 → LCA=3",
@@ -147,6 +229,14 @@
       "时间O(n)，空间O(h)。递归含义：在以root为根的子树中查找p或q，找到就返回",
       "易错点：LCA可以是p或q本身。变体：LC235 BST的LCA（利用BST性质更简单）"
     ],
+    "bullets_ja": [
+      "二分木と2つのノードp、qが与えられ、それらの<span class=\"highlight\">最近共通祖先(LCA)</span>を求める",
+      "例：root=[3,5,1,6,2,0,8,null,null,7,4], p=5, q=1 → LCA=3",
+      "核心アイデア：<span class=\"highlight\">後順再帰</span>——左右部分木でそれぞれpとqを探し、両側に分かれていれば現在のノードがLCA",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">lowestCommonAncestor</span>(root, p, q):\n    <span class=\"kw\">if not</span> root <span class=\"kw\">or</span> root == p <span class=\"kw\">or</span> root == q:\n        <span class=\"kw\">return</span> root\n    left = lowestCommonAncestor(root.left, p, q)\n    right = lowestCommonAncestor(root.right, p, q)\n    <span class=\"kw\">if</span> left <span class=\"kw\">and</span> right:  <span class=\"cm\"># pとqが両側に分かれている</span>\n        <span class=\"kw\">return</span> root\n    <span class=\"kw\">return</span> left <span class=\"kw\">if</span> left <span class=\"kw\">else</span> right</pre>",
+      "時間O(n)、空間O(h)。再帰の意味：rootを根とする部分木でpまたはqを探し、見つかれば返す",
+      "注意点：LCA自体がpまたはqになりうる。派生：LC235 BSTのLCA（BST特性を活用してより簡単）"
+    ],
     "lv": 2
   },
   {
@@ -154,6 +244,7 @@
     "cat": "编程题-Medium",
     "group": "编程题",
     "q": "LC322 零钱兑换 (Coin Change)",
+    "q_ja": "LC322 Coin Change（コイン両替）",
     "bullets": [
       "给定不同面额硬币和总金额amount，求凑出总金额所需的<span class=\"highlight\">最少硬币数</span>，凑不出返回-1",
       "示例：coins=[1,2,5], amount=11 → 3（5+5+1）",
@@ -162,6 +253,14 @@
       "时间O(amount × n)，空间O(amount)，n为硬币种类数",
       "贪心不可行（如coins=[1,3,4], amount=6，贪心4+1+1=3枚，DP 3+3=2枚）。变体：LC518 零钱兑换II（求方案数）"
     ],
+    "bullets_ja": [
+      "異なる額面のコインと合計金額amountが与えられ、合計を作るのに必要な<span class=\"highlight\">最少コイン枚数</span>を求める。作れなければ-1を返す",
+      "例：coins=[1,2,5], amount=11 → 3（5+5+1）",
+      "核心アイデア：<span class=\"highlight\">完全ナップザックDP</span>。dp[i]=金額iを作る最少コイン枚数、dp[i]=min(dp[i-c]+1) for c in coins",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">coinChange</span>(coins, amount):\n    dp = [float(<span class=\"str\">'inf'</span>)] * (amount + 1)\n    dp[0] = 0  <span class=\"cm\"># base case: 0円には0枚</span>\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(1, amount + 1):\n        <span class=\"kw\">for</span> c <span class=\"kw\">in</span> coins:\n            <span class=\"kw\">if</span> c <= i:\n                dp[i] = min(dp[i], dp[i - c] + 1)\n    <span class=\"kw\">return</span> dp[amount] <span class=\"kw\">if</span> dp[amount] != float(<span class=\"str\">'inf'</span>) <span class=\"kw\">else</span> -1</pre>",
+      "時間O(amount × n)、空間O(amount)、nはコインの種類数",
+      "貪欲法は不可（例：coins=[1,3,4], amount=6、貪欲法4+1+1=3枚、DP 3+3=2枚）。派生：LC518 Coin Change II（方法の数を求める）"
+    ],
     "lv": 2
   },
   {
@@ -169,6 +268,7 @@
     "cat": "编程题-Medium",
     "group": "编程题",
     "q": "LC560 和为K的子数组 (Subarray Sum Equals K)",
+    "q_ja": "LC560 Subarray Sum Equals K（和がKの部分配列）",
     "bullets": [
       "给定整数数组和整数k，统计和为k的<span class=\"highlight\">连续子数组</span>个数",
       "示例：nums=[1,1,1], k=2 → 2（[1,1]出现两次）",
@@ -177,6 +277,14 @@
       "时间O(n)，空间O(n)。注意：数组含负数所以<span class=\"highlight\">不能用滑动窗口</span>",
       "易错点：seen[0]=1不能忘（处理从头开始的子数组）；暴力O(n²)会超时"
     ],
+    "bullets_ja": [
+      "整数配列と整数kが与えられ、和がkになる<span class=\"highlight\">連続部分配列</span>の個数を数える",
+      "例：nums=[1,1,1], k=2 → 2（[1,1]が2回出現）",
+      "核心アイデア：<span class=\"highlight\">累積和+HashMap</span>。prefix[j]-prefix[i]=k ↔ prefix[i]=prefix[j]-k、HashMapで各累積和の出現回数を記録",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\n\n<span class=\"kw\">def</span> <span class=\"fn\">subarraySum</span>(nums, k):\n    count = 0\n    prefix_sum = 0\n    seen = defaultdict(int)\n    seen[0] = 1  <span class=\"cm\"># 累積和0は1回出現（空の接頭辞）</span>\n    <span class=\"kw\">for</span> num <span class=\"kw\">in</span> nums:\n        prefix_sum += num\n        count += seen[prefix_sum - k]  <span class=\"cm\"># 現在の値-kに等しい累積和がいくつあるか</span>\n        seen[prefix_sum] += 1\n    <span class=\"kw\">return</span> count</pre>",
+      "時間O(n)、空間O(n)。注意：配列に負数が含まれるため<span class=\"highlight\">Sliding Windowは使えない</span>",
+      "注意点：seen[0]=1を忘れてはいけない（先頭から始まる部分配列の処理）；全探索O(n²)はTLE"
+    ],
     "lv": 2
   },
   {
@@ -184,6 +292,7 @@
     "cat": "编程题-Medium",
     "group": "编程题",
     "q": "LC5 最长回文子串 (Longest Palindromic Substring) — 中心扩展",
+    "q_ja": "LC5 Longest Palindromic Substring（最長回文部分文字列）— 中心拡張法",
     "bullets": [
       "给定字符串s，找到s中最长的<span class=\"highlight\">回文子串</span>",
       "示例：s=\"babad\" → \"bab\" 或 \"aba\"；s=\"cbbd\" → \"bb\"",
@@ -192,6 +301,14 @@
       "时间O(n²)，空间O(1)。Manacher算法可O(n)但面试中中心扩展已足够",
       "DP做法：dp[i][j]表示s[i..j]是否回文，时间O(n²)空间O(n²)，不如中心扩展"
     ],
+    "bullets_ja": [
+      "与えられた文字列sの中で最長の<span class=\"highlight\">回文部分文字列</span>を見つける",
+      "例：s=\"babad\" → \"bab\" または \"aba\"；s=\"cbbd\" → \"bb\"",
+      "核心アイデア：<span class=\"highlight\">中心拡張法</span>——各文字（および隣接する文字ペア）を回文の中心として列挙し、両側に拡張する",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">longestPalindrome</span>(s):\n    <span class=\"kw\">def</span> <span class=\"fn\">expand</span>(l, r):\n        <span class=\"kw\">while</span> l >= 0 <span class=\"kw\">and</span> r < len(s) <span class=\"kw\">and</span> s[l] == s[r]:\n            l -= 1\n            r += 1\n        <span class=\"kw\">return</span> s[l+1:r]\n    res = <span class=\"str\">\"\"</span>\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(s)):\n        odd = expand(i, i)       <span class=\"cm\"># 奇数長の回文</span>\n        even = expand(i, i + 1)  <span class=\"cm\"># 偶数長の回文</span>\n        res = max(res, odd, even, key=len)\n    <span class=\"kw\">return</span> res</pre>",
+      "時間O(n²)、空間O(1)。ManacherアルゴリズムならO(n)だが面接では中心拡張法で十分",
+      "DP手法：dp[i][j]がs[i..j]の回文判定を表す、時間O(n²)空間O(n²)、中心拡張法には劣る"
+    ],
     "lv": 2
   },
   {
@@ -199,6 +316,7 @@
     "cat": "编程题-Medium",
     "group": "编程题",
     "q": "LC11 盛最多水的容器 (Container With Most Water) — 双指针",
+    "q_ja": "LC11 Container With Most Water（最も水を多く入れられる容器）— Two Pointers",
     "bullets": [
       "给定n条垂直线（height数组），找出两条线与x轴围成的容器能容纳<span class=\"highlight\">最多水</span>",
       "示例：height=[1,8,6,2,5,4,8,3,7] → 49（选第2和第9条线）",
@@ -207,6 +325,14 @@
       "时间O(n)，空间O(1)。贪心证明：移动短边可能找到更高的边，移动长边不可能增大面积",
       "与LC42接雨水区分：接雨水需要知道左右最大值，本题只看两端"
     ],
+    "bullets_ja": [
+      "n本の垂直線（height配列）が与えられ、2本の線とx軸で囲まれた容器が入れられる<span class=\"highlight\">最大の水量</span>を求める",
+      "例：height=[1,8,6,2,5,4,8,3,7] → 49（第2本目と第9本目を選択）",
+      "核心アイデア：<span class=\"highlight\">左右のTwo Pointers</span>を両端から中央へ収縮させ、毎回<span class=\"highlight\">短い方</span>を移動する（長い方を動かしても面積は増えない）",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">maxArea</span>(height):\n    l, r = 0, len(height) - 1\n    max_water = 0\n    <span class=\"kw\">while</span> l < r:\n        w = r - l\n        h = min(height[l], height[r])\n        max_water = max(max_water, w * h)\n        <span class=\"kw\">if</span> height[l] < height[r]:\n            l += 1\n        <span class=\"kw\">else</span>:\n            r -= 1\n    <span class=\"kw\">return</span> max_water</pre>",
+      "時間O(n)、空間O(1)。貪欲法の証明：短い辺を動かせばより高い辺が見つかる可能性があるが、長い辺を動かしても面積は増えない",
+      "LC42 Trapping Rain Waterとの区別：雨水は左右の最大値が必要、本題は両端のみを見る"
+    ],
     "lv": 2
   },
   {
@@ -214,6 +340,7 @@
     "cat": "编程题-Medium",
     "group": "编程题",
     "q": "LC33 搜索旋转排序数组 (Search in Rotated Sorted Array) — 二分",
+    "q_ja": "LC33 Search in Rotated Sorted Array（回転ソート済み配列の探索）— Binary Search",
     "bullets": [
       "在旋转过的有序数组中搜索目标值，要求O(log n)。数组无重复元素",
       "示例：nums=[4,5,6,7,0,1,2], target=0 → 4",
@@ -222,6 +349,14 @@
       "时间O(log n)，空间O(1)。关键：旋转数组至少有一半是有序的",
       "易错点：边界条件 nums[l] <= nums[mid] 的等号处理（l==mid时左半只有一个元素）"
     ],
+    "bullets_ja": [
+      "回転されたソート済み配列から目標値を探索する。O(log n)が要件。配列に重複要素はない",
+      "例：nums=[4,5,6,7,0,1,2], target=0 → 4",
+      "核心アイデア：<span class=\"highlight\">改良Binary Search</span>——まずmidがどちらの有序区間に属するか判定し、次にtargetがその有序区間内にあるか判定する",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">search</span>(nums, target):\n    l, r = 0, len(nums) - 1\n    <span class=\"kw\">while</span> l <= r:\n        mid = (l + r) // 2\n        <span class=\"kw\">if</span> nums[mid] == target:\n            <span class=\"kw\">return</span> mid\n        <span class=\"kw\">if</span> nums[l] <= nums[mid]:  <span class=\"cm\"># 左半分がソート済み</span>\n            <span class=\"kw\">if</span> nums[l] <= target < nums[mid]:\n                r = mid - 1\n            <span class=\"kw\">else</span>:\n                l = mid + 1\n        <span class=\"kw\">else</span>:                     <span class=\"cm\"># 右半分がソート済み</span>\n            <span class=\"kw\">if</span> nums[mid] < target <= nums[r]:\n                l = mid + 1\n            <span class=\"kw\">else</span>:\n                r = mid - 1\n    <span class=\"kw\">return</span> -1</pre>",
+      "時間O(log n)、空間O(1)。鍵：回転配列は少なくとも半分がソート済み",
+      "注意点：境界条件 nums[l] <= nums[mid] の等号処理（l==midのとき左半分は要素1つだけ）"
+    ],
     "lv": 2
   },
   {
@@ -229,6 +364,7 @@
     "cat": "编程题-Medium",
     "group": "编程题",
     "q": "LC148 排序链表 (Sort List) — 归并排序",
+    "q_ja": "LC148 Sort List（リストのソート）— マージソート",
     "bullets": [
       "对链表进行<span class=\"highlight\">排序</span>，要求O(n log n)时间、O(1)空间",
       "示例：head=[4,2,1,3] → [1,2,3,4]",
@@ -237,6 +373,14 @@
       "时间O(n log n)，空间O(log n)递归栈。合并函数复用LC21 mergeTwoLists",
       "链表排序首选归并（不需要随机访问）。数组排序首选快排（cache友好）"
     ],
+    "bullets_ja": [
+      "連結リストを<span class=\"highlight\">ソート</span>する。O(n log n)時間、O(1)空間が要件",
+      "例：head=[4,2,1,3] → [1,2,3,4]",
+      "核心アイデア：<span class=\"highlight\">マージソート</span>——高速・低速ポインタで中間点を見つける→分断→各々ソート→2つのソート済みリストを結合",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">sortList</span>(head):\n    <span class=\"kw\">if not</span> head <span class=\"kw\">or not</span> head.next:\n        <span class=\"kw\">return</span> head\n    <span class=\"cm\"># 高速・低速ポインタで中間点を探す</span>\n    slow, fast = head, head.next\n    <span class=\"kw\">while</span> fast <span class=\"kw\">and</span> fast.next:\n        slow = slow.next\n        fast = fast.next.next\n    mid = slow.next\n    slow.next = <span class=\"kw\">None</span>  <span class=\"cm\"># 分断</span>\n    <span class=\"cm\"># 再帰ソート+結合</span>\n    left = sortList(head)\n    right = sortList(mid)\n    <span class=\"kw\">return</span> mergeTwoLists(left, right)</pre>",
+      "時間O(n log n)、空間O(log n)再帰スタック。結合関数はLC21 mergeTwoListsを再利用",
+      "リストのソートにはマージソートが最適（ランダムアクセス不要）。配列のソートにはクイックソートが最適（キャッシュフレンドリー）"
+    ],
     "lv": 2
   },
   {
@@ -244,6 +388,7 @@
     "cat": "编程题-Medium",
     "group": "编程题",
     "q": "LC215 数组中的第K个最大元素 (Kth Largest Element) — 快速选择",
+    "q_ja": "LC215 Kth Largest Element in an Array（配列のK番目に大きい要素）— QuickSelect",
     "bullets": [
       "找出未排序数组中<span class=\"highlight\">第k大</span>的元素（不是第k小）",
       "示例：nums=[3,2,1,5,6,4], k=2 → 5",
@@ -251,6 +396,14 @@
       "<pre><span class=\"kw\">import</span> random\n\n<span class=\"kw\">def</span> <span class=\"fn\">findKthLargest</span>(nums, k):\n    target = len(nums) - k  <span class=\"cm\"># 转化为第target小</span>\n    <span class=\"kw\">def</span> <span class=\"fn\">quickselect</span>(l, r):\n        pivot = random.randint(l, r)\n        nums[pivot], nums[r] = nums[r], nums[pivot]\n        store = l\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(l, r):\n            <span class=\"kw\">if</span> nums[i] < nums[r]:\n                nums[store], nums[i] = nums[i], nums[store]\n                store += 1\n        nums[store], nums[r] = nums[r], nums[store]\n        <span class=\"kw\">if</span> store == target: <span class=\"kw\">return</span> nums[store]\n        <span class=\"kw\">elif</span> store < target: <span class=\"kw\">return</span> quickselect(store+1, r)\n        <span class=\"kw\">else</span>: <span class=\"kw\">return</span> quickselect(l, store-1)\n    <span class=\"kw\">return</span> quickselect(0, len(nums)-1)</pre>",
       "平均O(n)，最坏O(n²)（随机pivot避免）。堆解法O(n log k)也常用",
       "面试追问：为什么随机pivot？（避免已排序数组退化到O(n²)）。变体：用最小堆维护top-k"
+    ],
+    "bullets_ja": [
+      "ソートされていない配列の中で<span class=\"highlight\">K番目に大きい</span>要素を見つける（K番目に小さいではない）",
+      "例：nums=[3,2,1,5,6,4], k=2 → 5",
+      "核心アイデア：<span class=\"highlight\">QuickSelect</span>——クイックソートのpartitionに基づき、目標が含まれる半分のみを再帰する",
+      "<pre><span class=\"kw\">import</span> random\n\n<span class=\"kw\">def</span> <span class=\"fn\">findKthLargest</span>(nums, k):\n    target = len(nums) - k  <span class=\"cm\"># target番目に小さい要素に変換</span>\n    <span class=\"kw\">def</span> <span class=\"fn\">quickselect</span>(l, r):\n        pivot = random.randint(l, r)\n        nums[pivot], nums[r] = nums[r], nums[pivot]\n        store = l\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(l, r):\n            <span class=\"kw\">if</span> nums[i] < nums[r]:\n                nums[store], nums[i] = nums[i], nums[store]\n                store += 1\n        nums[store], nums[r] = nums[r], nums[store]\n        <span class=\"kw\">if</span> store == target: <span class=\"kw\">return</span> nums[store]\n        <span class=\"kw\">elif</span> store < target: <span class=\"kw\">return</span> quickselect(store+1, r)\n        <span class=\"kw\">else</span>: <span class=\"kw\">return</span> quickselect(l, store-1)\n    <span class=\"kw\">return</span> quickselect(0, len(nums)-1)</pre>",
+      "平均O(n)、最悪O(n²)（ランダムpivotで回避）。Heap解法O(n log k)もよく使われる",
+      "面接での追加質問：なぜランダムpivotか？（ソート済み配列でO(n²)に退化するのを防ぐ）。派生：最小Heapでtop-kを維持"
     ],
     "lv": 2
   }

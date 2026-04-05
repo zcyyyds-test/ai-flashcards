@@ -4,12 +4,20 @@
     "cat": "Git场景题",
     "group": "工程",
     "q": "场景：你在 feature 分支开发到一半，突然要修一个紧急 bug",
+    "q_ja": "シナリオ：featureブランチで開発中に、緊急バグの修正が必要になった",
     "bullets": [
       "<pre><span class=\"cm\"># 1. 暂存当前未完成的工作</span>\ngit stash push -m <span class=\"str\">\"WIP: feature-login halfway\"</span>\n\n<span class=\"cm\"># 2. 切到主分支，创建 hotfix</span>\ngit switch main\ngit switch -c hotfix/payment-crash\n\n<span class=\"cm\"># 3. 修复 bug，提交并合并</span>\ngit add .\ngit commit -m <span class=\"str\">\"fix: payment null pointer crash\"</span>\ngit switch main\ngit merge --no-ff hotfix/payment-crash\n\n<span class=\"cm\"># 4. 回到 feature 分支，恢复工作</span>\ngit switch feature-login\ngit stash pop</pre>",
       "stash 是一个<span class=\"highlight\">栈结构</span>，可以存多个：<code>git stash list</code> 查看所有条目",
       "<code>git stash pop</code> = 恢复并删除 | <code>git stash apply</code> = 恢复但保留（更安全）",
       "给 stash 加 message（<code>-m</code>）是好习惯，否则多个 stash 分不清哪个是哪个",
       "替代方案：直接 <code>git commit -m \"WIP\"</code> 然后走了再 <code>git reset --soft HEAD~1</code> 恢复"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\"># 1. 暂存当前未完成的工作</span>\ngit stash push -m <span class=\"str\">\"WIP: feature-login halfway\"</span>\n\n<span class=\"cm\"># 2. 切到主分支，创建 hotfix</span>\ngit switch main\ngit switch -c hotfix/payment-crash\n\n<span class=\"cm\"># 3. 修复 bug，提交并合并</span>\ngit add .\ngit commit -m <span class=\"str\">\"fix: payment null pointer crash\"</span>\ngit switch main\ngit merge --no-ff hotfix/payment-crash\n\n<span class=\"cm\"># 4. 回到 feature 分支，恢复工作</span>\ngit switch feature-login\ngit stash pop</pre>",
+      "stashは<span class=\"highlight\">スタック構造</span>で、複数保存可能：<code>git stash list</code>で全エントリを確認",
+      "<code>git stash pop</code> = 復元して削除 | <code>git stash apply</code> = 復元するが保持（より安全）",
+      "stashにメッセージ（<code>-m</code>）をつけるのは良い習慣。複数のstashがあるとどれがどれか分からなくなる",
+      "代替案：<code>git commit -m \"WIP\"</code>で直接コミットし、戻ってきたら<code>git reset --soft HEAD~1</code>で復元"
     ],
     "lv": 2
   },
@@ -18,12 +26,20 @@
     "cat": "Git场景题",
     "group": "工程",
     "q": "场景：你 commit 了一个包含密码的 .env 文件到 Git 历史",
+    "q_ja": "シナリオ：パスワードを含む.envファイルをGit履歴にコミットしてしまった",
     "bullets": [
       "仅仅 <code>git rm --cached .env</code> + 加 .gitignore <span class=\"highlight\">是不够的</span> — 密码仍然在历史 commit 里！",
       "<pre><span class=\"cm\"># 方案A：BFG Repo Cleaner（推荐，快）</span>\njava -jar bfg.jar --delete-files .env\ngit reflog expire --expire=now --all\ngit gc --prune=now --aggressive\n\n<span class=\"cm\"># 方案B：git filter-repo（官方推荐替代 filter-branch）</span>\ngit filter-repo --path .env --invert-paths\n\n<span class=\"cm\"># 清理完必须 force push</span>\ngit push --force --all</pre>",
       "Force push 后<span class=\"highlight\">通知所有团队成员重新 clone</span>，否则他们 push 会把旧历史带回来",
       "善后：<span class=\"highlight\">立即轮换所有泄露的密码/token</span>，因为 Git 历史可能已被 fork 或缓存",
       "预防：.gitignore 模板 + <code>pre-commit</code> hook 扫描敏感关键词（detect-secrets / gitleaks）"
+    ],
+    "bullets_ja": [
+      "<code>git rm --cached .env</code> + .gitignore追加だけでは<span class=\"highlight\">不十分</span> — パスワードは依然として過去のcommit履歴に残っている！",
+      "<pre><span class=\"cm\"># 方案A：BFG Repo Cleaner（推荐，快）</span>\njava -jar bfg.jar --delete-files .env\ngit reflog expire --expire=now --all\ngit gc --prune=now --aggressive\n\n<span class=\"cm\"># 方案B：git filter-repo（官方推荐替代 filter-branch）</span>\ngit filter-repo --path .env --invert-paths\n\n<span class=\"cm\"># 清理完必须 force push</span>\ngit push --force --all</pre>",
+      "Force push後は<span class=\"highlight\">全チームメンバーに再cloneを通知</span>する。さもないと彼らのpushで旧履歴が戻ってしまう",
+      "事後対応：<span class=\"highlight\">漏洩した全てのパスワード/tokenを直ちにローテーション</span>する。Git履歴は既にforkやキャッシュされている可能性がある",
+      "予防：.gitignoreテンプレート + <code>pre-commit</code> hookで機密キーワードをスキャン（detect-secrets / gitleaks）"
     ],
     "lv": 2
   },
@@ -32,11 +48,18 @@
     "cat": "Git场景题",
     "group": "工程",
     "q": "场景：你发现昨天的 commit message 写错了",
+    "q_ja": "シナリオ：昨日のコミットメッセージが間違っていたことに気付いた",
     "bullets": [
       "<pre><span class=\"cm\"># 情况1：修改最后一条 commit message</span>\ngit commit --amend -m <span class=\"str\">\"fix: correct error handling in payment module\"</span>\n\n<span class=\"cm\"># 情况2：修改更早的 commit（比如倒数第3个）</span>\ngit rebase -i HEAD~3\n<span class=\"cm\"># 在编辑器中把目标 commit 前的 \"pick\" 改成 \"reword\"</span>\n<span class=\"cm\"># 保存退出后 Git 会让你编辑该 commit message</span></pre>",
       "<span class=\"highlight\">黄金法则：只能改还没 push 的 commit！</span>已 push 的 = 改写共享历史 = 队友灾难",
       "如果已经 push 了呢？两个选择：①接受错误 message ②force push 并通知团队",
       "amend 本质是<span class=\"highlight\">替换旧 commit</span>（新 hash），不是\"编辑\" — 旧 commit 仍存在于 reflog 中"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\"># 情况1：修改最后一条 commit message</span>\ngit commit --amend -m <span class=\"str\">\"fix: correct error handling in payment module\"</span>\n\n<span class=\"cm\"># 情况2：修改更早的 commit（比如倒数第3个）</span>\ngit rebase -i HEAD~3\n<span class=\"cm\"># 在编辑器中把目标 commit 前的 \"pick\" 改成 \"reword\"</span>\n<span class=\"cm\"># 保存退出后 Git 会让你编辑该 commit message</span></pre>",
+      "<span class=\"highlight\">ゴールデンルール：まだpushしていないcommitだけ修正可能！</span>push済み = 共有履歴の書き換え = チームメイトに災難をもたらす",
+      "既にpush済みの場合は？2つの選択肢：①間違ったメッセージを受け入れる ②force pushしてチームに通知",
+      "amendの本質は<span class=\"highlight\">旧commitの置き換え</span>（新しいhash）であり、\"編集\"ではない — 旧commitはreflogに残る"
     ],
     "lv": 2
   },
@@ -45,12 +68,20 @@
     "cat": "Git场景题",
     "group": "工程",
     "q": "场景：你的 PR 有 20 个零碎 commit，reviewer 要求整理成 3 个有意义的 commit",
+    "q_ja": "シナリオ：PRに20個の細かいcommitがあり、reviewerから意味のある3つのcommitに整理するよう求められた",
     "bullets": [
       "<pre><span class=\"cm\"># 方案A：Interactive rebase（精确控制）</span>\ngit rebase -i HEAD~20\n<span class=\"cm\"># 编辑器中的操作：</span>\n<span class=\"cm\"># pick abc1234 feat: add user model        ← 保留</span>\n<span class=\"cm\"># squash def5678 fix typo in model         ← 合入上一个</span>\n<span class=\"cm\"># squash ghi9012 add validation            ← 合入上一个</span>\n<span class=\"cm\"># pick jkl3456 feat: add user API          ← 第二组开始</span>\n<span class=\"cm\"># fixup mno7890 fix API response format    ← 合入，丢弃message</span>\n<span class=\"cm\"># pick pqr1234 test: add user tests        ← 第三组</span></pre>",
       "<pre><span class=\"cm\"># 方案B：soft reset 重新提交（更简单粗暴）</span>\ngit reset --soft origin/main\n<span class=\"cm\"># 此时所有改动都在暂存区</span>\ngit commit -m <span class=\"str\">\"feat: add user model with validation\"</span>\ngit commit -m <span class=\"str\">\"feat: add user REST API\"</span>\ngit commit -m <span class=\"str\">\"test: add user module tests\"</span></pre>",
       "squash vs fixup：<span class=\"highlight\">squash 保留 message 让你编辑，fixup 直接丢弃 message</span>",
       "整理完后需要 <code>git push --force-with-lease</code>（比 --force 安全，会检查远端是否有新提交）",
       "好的 commit 粒度：一个 commit = 一个逻辑变更 = 能独立 revert 不破坏其他功能"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\"># 方案A：Interactive rebase（精确控制）</span>\ngit rebase -i HEAD~20\n<span class=\"cm\"># 编辑器中的操作：</span>\n<span class=\"cm\"># pick abc1234 feat: add user model        ← 保留</span>\n<span class=\"cm\"># squash def5678 fix typo in model         ← 合入上一个</span>\n<span class=\"cm\"># squash ghi9012 add validation            ← 合入上一个</span>\n<span class=\"cm\"># pick jkl3456 feat: add user API          ← 第二组开始</span>\n<span class=\"cm\"># fixup mno7890 fix API response format    ← 合入，丢弃message</span>\n<span class=\"cm\"># pick pqr1234 test: add user tests        ← 第三组</span></pre>",
+      "<pre><span class=\"cm\"># 方案B：soft reset 重新提交（更简单粗暴）</span>\ngit reset --soft origin/main\n<span class=\"cm\"># 此时所有改动都在暂存区</span>\ngit commit -m <span class=\"str\">\"feat: add user model with validation\"</span>\ngit commit -m <span class=\"str\">\"feat: add user REST API\"</span>\ngit commit -m <span class=\"str\">\"test: add user module tests\"</span></pre>",
+      "squash vs fixup：<span class=\"highlight\">squashはメッセージを保持して編集させる、fixupはメッセージを直接破棄</span>",
+      "整理後は<code>git push --force-with-lease</code>が必要（--forceより安全、リモートに新しいコミットがないか確認する）",
+      "良いcommit粒度：1つのcommit = 1つの論理的変更 = 他の機能を壊さずに独立してrevert可能"
     ],
     "lv": 3
   },
@@ -59,12 +90,20 @@
     "cat": "Git场景题",
     "group": "工程",
     "q": "场景：git pull 后发现一堆合并冲突，你想先回到 pull 之前的状态",
+    "q_ja": "シナリオ：git pull後に大量のマージコンフリクトが発生し、pull前の状態に戻したい",
     "bullets": [
       "<pre><span class=\"cm\"># 情况1：merge 还没完成（正在冲突中）</span>\ngit merge --abort\n<span class=\"cm\"># 一切回到 merge 前的状态，冲突标记消失</span>\n\n<span class=\"cm\"># 情况2：merge 已经完成（手滑 commit 了）</span>\ngit reset --hard ORIG_HEAD\n<span class=\"cm\"># ORIG_HEAD 指向 merge/rebase 前的位置</span>\n\n<span class=\"cm\"># 情况3：不确定要回到哪里</span>\ngit reflog\n<span class=\"cm\"># 找到 pull 之前的 commit hash</span>\ngit reset --hard abc1234</pre>",
       "<code>--hard</code> 会<span class=\"highlight\">丢弃所有未提交的修改</span>，确保没有重要的未提交工作",
       "更安全的做法：先 <code>git stash</code> 保存未提交修改，再 reset",
       "<code>git pull --rebase</code> 遇到冲突时用 <code>git rebase --abort</code> 取消",
       "预防：养成 pull 前先 <code>git stash</code> 或先 commit 的习惯"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\"># 情况1：merge 还没完成（正在冲突中）</span>\ngit merge --abort\n<span class=\"cm\"># 一切回到 merge 前的状态，冲突标记消失</span>\n\n<span class=\"cm\"># 情况2：merge 已经完成（手滑 commit 了）</span>\ngit reset --hard ORIG_HEAD\n<span class=\"cm\"># ORIG_HEAD 指向 merge/rebase 前的位置</span>\n\n<span class=\"cm\"># 情况3：不确定要回到哪里</span>\ngit reflog\n<span class=\"cm\"># 找到 pull 之前的 commit hash</span>\ngit reset --hard abc1234</pre>",
+      "<code>--hard</code>は<span class=\"highlight\">未コミットの全ての変更を破棄する</span>。重要な未コミットの作業がないことを確認すること",
+      "より安全な方法：先に<code>git stash</code>で未コミットの変更を保存してからresetする",
+      "<code>git pull --rebase</code>でコンフリクトが発生した場合は<code>git rebase --abort</code>でキャンセル",
+      "予防：pull前に<code>git stash</code>またはcommitする習慣をつける"
     ],
     "lv": 2
   },
@@ -73,11 +112,18 @@
     "cat": "Git场景题",
     "group": "工程",
     "q": "场景：你 commit 了但还没 push，发现少了一个文件",
+    "q_ja": "シナリオ：コミットしたがまだpushしていない段階で、ファイルを追加し忘れたことに気付いた",
     "bullets": [
       "<pre><span class=\"cm\"># 方案A：amend 追加到上一个 commit（推荐）</span>\ngit add forgotten_file.py\ngit commit --amend --no-edit\n<span class=\"cm\"># --no-edit 保持原来的 commit message 不变</span>\n<span class=\"cm\"># 文件被追加进最后一个 commit</span>\n\n<span class=\"cm\"># 方案B：单独新建一个 commit（更简单）</span>\ngit add forgotten_file.py\ngit commit -m <span class=\"str\">\"chore: add forgotten_file.py\"</span></pre>",
       "amend 实质是<span class=\"highlight\">创建一个新 commit 替换旧的</span>（hash 变了），而不是\"编辑\"",
       "方案A 优点：历史干净 | 方案B 优点：更安全，不改写历史",
       "如果已经 push 了：<span class=\"highlight\">别 amend！直接新建 commit</span>，否则需要 force push"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\"># 方案A：amend 追加到上一个 commit（推荐）</span>\ngit add forgotten_file.py\ngit commit --amend --no-edit\n<span class=\"cm\"># --no-edit 保持原来的 commit message 不变</span>\n<span class=\"cm\"># 文件被追加进最后一个 commit</span>\n\n<span class=\"cm\"># 方案B：单独新建一个 commit（更简单）</span>\ngit add forgotten_file.py\ngit commit -m <span class=\"str\">\"chore: add forgotten_file.py\"</span></pre>",
+      "amendの実体は<span class=\"highlight\">新しいcommitを作成して古いものを置き換える</span>（hashが変わる）。\"編集\"ではない",
+      "方案Aの利点：履歴がきれい | 方案Bの利点：より安全、履歴を書き換えない",
+      "既にpush済みの場合：<span class=\"highlight\">amendしないこと！新しいcommitを作る</span>。さもないとforce pushが必要になる"
     ],
     "lv": 2
   },
@@ -86,12 +132,20 @@
     "cat": "Git场景题",
     "group": "工程",
     "q": "场景：两个人同时改了同一个文件的同一行，如何解决冲突",
+    "q_ja": "シナリオ：2人が同じファイルの同じ行を同時に変更した場合、コンフリクトをどう解決するか",
     "bullets": [
       "<pre><span class=\"cm\"># Git 标记冲突的格式</span>\ndef calculate_price(item):\n&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD\n    return item.price * 0.9    <span class=\"cm\"># 你的改动：9折</span>\n=======\n    return item.price * 0.85   <span class=\"cm\"># 同事的改动：85折</span>\n&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature-discount</pre>",
       "<pre><span class=\"cm\"># 解决步骤</span>\n<span class=\"cm\"># 1. 理解双方改动的意图（不要盲目选一个！）</span>\n<span class=\"cm\"># 2. 手动编辑：保留一方 / 合并两者 / 重写</span>\ndef calculate_price(item, vip=False):\n    return item.price * (0.85 if vip else 0.9)\n\n<span class=\"cm\"># 3. 标记解决并提交</span>\ngit add pricing.py\ngit commit  <span class=\"cm\"># Git 自动生成 merge commit message</span></pre>",
       "工具推荐：<span class=\"highlight\">VS Code 三向合并编辑器</span>（上方显示双方，下方编辑结果）、<code>git mergetool</code>",
       "预防冲突的团队实践：小粒度提交 + 频繁 pull/rebase + 模块职责划分清晰",
       "冲突不是错误，是<span class=\"highlight\">正常的协作信号</span> — 解决时要和同事沟通确认意图"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\"># Git 标记冲突的格式</span>\ndef calculate_price(item):\n&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD\n    return item.price * 0.9    <span class=\"cm\"># 你的改动：9折</span>\n=======\n    return item.price * 0.85   <span class=\"cm\"># 同事的改动：85折</span>\n&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature-discount</pre>",
+      "<pre><span class=\"cm\"># 解决步骤</span>\n<span class=\"cm\"># 1. 理解双方改动的意图（不要盲目选一个！）</span>\n<span class=\"cm\"># 2. 手动编辑：保留一方 / 合并两者 / 重写</span>\ndef calculate_price(item, vip=False):\n    return item.price * (0.85 if vip else 0.9)\n\n<span class=\"cm\"># 3. 标记解决并提交</span>\ngit add pricing.py\ngit commit  <span class=\"cm\"># Git 自动生成 merge commit message</span></pre>",
+      "推奨ツール：<span class=\"highlight\">VS Codeの三方向マージエディタ</span>（上部に双方を表示、下部で結果を編集）、<code>git mergetool</code>",
+      "コンフリクト予防のチームプラクティス：小粒度のコミット + 頻繁なpull/rebase + モジュール責務の明確な分担",
+      "コンフリクトはエラーではなく、<span class=\"highlight\">正常な協業のシグナル</span> — 解決時には同僚と意図を確認しながらコミュニケーションすること"
     ],
     "lv": 3
   },
@@ -100,12 +154,20 @@
     "cat": "Git场景题",
     "group": "工程",
     "q": "场景：你想查看某一行代码是谁在什么时候写的",
+    "q_ja": "シナリオ：ある行のコードを誰がいつ書いたのか確認したい",
     "bullets": [
       "<pre><span class=\"cm\"># 查看每一行的作者和提交信息</span>\ngit blame file.py\n<span class=\"cm\"># 输出示例：</span>\n<span class=\"cm\"># a1b2c3d4 (张三 2025-12-01) def calculate():</span>\n<span class=\"cm\"># e5f6g7h8 (李四 2026-01-15)     return x * 0.9</span>\n\n<span class=\"cm\"># 只看某几行</span>\ngit blame -L 10,20 file.py\n\n<span class=\"cm\"># 搜索某段代码是什么时候加入/删除的</span>\ngit log -p -S <span class=\"str\">\"calculate_price\"</span>\n\n<span class=\"cm\"># 追踪文件改名历史</span>\ngit log --follow --oneline utils/pricing.py</pre>",
       "实际用途：<span class=\"highlight\">线上 bug 定位</span>（谁改的？为什么改？当时的 PR 是什么？）",
       "<code>git log -p -S \"string\"</code> 是\"pickaxe\" 搜索 — 找到<span class=\"highlight\">添加或删除</span>某个字符串的所有 commit",
       "<code>git blame -w</code> 忽略空白变更，<code>-M</code> 检测行移动，<code>-C</code> 检测跨文件复制",
       "VS Code / JetBrains 内置 blame 注解 — 鼠标悬停即可查看，无需命令行"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\"># 查看每一行的作者和提交信息</span>\ngit blame file.py\n<span class=\"cm\"># 输出示例：</span>\n<span class=\"cm\"># a1b2c3d4 (张三 2025-12-01) def calculate():</span>\n<span class=\"cm\"># e5f6g7h8 (李四 2026-01-15)     return x * 0.9</span>\n\n<span class=\"cm\"># 只看某几行</span>\ngit blame -L 10,20 file.py\n\n<span class=\"cm\"># 搜索某段代码是什么时候加入/删除的</span>\ngit log -p -S <span class=\"str\">\"calculate_price\"</span>\n\n<span class=\"cm\"># 追踪文件改名历史</span>\ngit log --follow --oneline utils/pricing.py</pre>",
+      "実用的な用途：<span class=\"highlight\">本番バグの特定</span>（誰が変更した？なぜ変更した？当時のPRは？）",
+      "<code>git log -p -S \"string\"</code>は\"pickaxe\"検索 — ある文字列を<span class=\"highlight\">追加または削除</span>した全commitを検索",
+      "<code>git blame -w</code>は空白変更を無視、<code>-M</code>は行の移動を検出、<code>-C</code>はファイル間のコピーを検出",
+      "VS Code / JetBrainsにはblameアノテーションが内蔵 — マウスホバーで確認でき、コマンドライン不要"
     ],
     "lv": 2
   },
@@ -114,12 +176,20 @@
     "cat": "Git场景题",
     "group": "工程",
     "q": "场景：你误用 git reset --hard 丢了本地改动，如何恢复",
+    "q_ja": "シナリオ：git reset --hardを誤って使いローカルの変更を失った場合、どう復旧するか",
     "bullets": [
       "<pre><span class=\"cm\"># 情况1：丢失的改动曾经 commit 过</span>\ngit reflog\n<span class=\"cm\"># 找到 reset 之前的 commit hash</span>\n<span class=\"cm\"># e.g. abc1234 HEAD@{1}: commit: add feature X</span>\ngit reset --hard abc1234\n<span class=\"cm\"># 恢复成功！reflog 保留约 90 天</span>\n\n<span class=\"cm\"># 情况2：改动只 git add 过（未 commit）</span>\ngit fsck --lost-found\n<span class=\"cm\"># 在 .git/lost-found/other/ 中寻找 blob</span>\ngit show &lt;blob-hash&gt;  <span class=\"cm\"># 查看内容</span></pre>",
       "情况3：改动<span class=\"highlight\">从未 add 也从未 commit → 无法恢复！Git 从未记录过它</span>",
       "<code>git reflog</code> 是你的<span class=\"highlight\">后悔药</span>：记录 HEAD 的每一次移动（commit/reset/checkout/rebase）",
       "教训：<span class=\"highlight\">commit early, commit often</span> — 哪怕是 WIP commit，有 commit 就有恢复的可能",
       "团队规范：用 <code>git reset --soft</code> 代替 <code>--hard</code>，除非你100%确定要丢弃改动"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\"># 情况1：丢失的改动曾经 commit 过</span>\ngit reflog\n<span class=\"cm\"># 找到 reset 之前的 commit hash</span>\n<span class=\"cm\"># e.g. abc1234 HEAD@{1}: commit: add feature X</span>\ngit reset --hard abc1234\n<span class=\"cm\"># 恢复成功！reflog 保留约 90 天</span>\n\n<span class=\"cm\"># 情况2：改动只 git add 过（未 commit）</span>\ngit fsck --lost-found\n<span class=\"cm\"># 在 .git/lost-found/other/ 中寻找 blob</span>\ngit show &lt;blob-hash&gt;  <span class=\"cm\"># 查看内容</span></pre>",
+      "ケース3：変更が<span class=\"highlight\">一度もaddもcommitもされていない場合 → 復旧不可能！Gitに一度も記録されていない</span>",
+      "<code>git reflog</code>はあなたの<span class=\"highlight\">セーフティネット</span>：HEADの全ての移動を記録（commit/reset/checkout/rebase）",
+      "教訓：<span class=\"highlight\">commit early, commit often</span> — WIPコミットでも、commitがあれば復旧の可能性がある",
+      "チーム規約：<code>--hard</code>の代わりに<code>git reset --soft</code>を使う。変更を破棄すると100%確信がある場合を除いて"
     ],
     "lv": 3
   },
@@ -128,12 +198,20 @@
     "cat": "Git场景题",
     "group": "工程",
     "q": "场景：你要把别的分支上的某一个 commit 拿过来，但不要整个分支",
+    "q_ja": "シナリオ：別のブランチの特定のcommitだけを取り込みたいが、ブランチ全体はいらない",
     "bullets": [
       "<pre><span class=\"cm\"># 找到目标 commit 的 hash</span>\ngit log --oneline main\n<span class=\"cm\"># abc1234 fix: payment timeout handling</span>\n\n<span class=\"cm\"># cherry-pick 到当前分支</span>\ngit cherry-pick abc1234\n\n<span class=\"cm\"># 如果有冲突</span>\n<span class=\"cm\"># 解决冲突 → git add → git cherry-pick --continue</span>\n<span class=\"cm\"># 或放弃：git cherry-pick --abort</span>\n\n<span class=\"cm\"># cherry-pick 多个 commit</span>\ngit cherry-pick abc1234 def5678\n<span class=\"cm\"># 或连续范围（不含起点）</span>\ngit cherry-pick abc1234..ghi9012</pre>",
       "典型场景：hotfix 已合入 main，release 分支也需要同一个修复",
       "cherry-pick <span class=\"highlight\">创建全新的 commit（不同 hash）</span>，不是引用 — 两个分支上是独立的副本",
       "如果后续两个分支 merge，Git 通常能自动处理重复改动，但偶尔会冲突",
       "替代方案：如果需要拿整个分支的部分改动，考虑 <code>git rebase --onto</code>"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\"># 找到目标 commit 的 hash</span>\ngit log --oneline main\n<span class=\"cm\"># abc1234 fix: payment timeout handling</span>\n\n<span class=\"cm\"># cherry-pick 到当前分支</span>\ngit cherry-pick abc1234\n\n<span class=\"cm\"># 如果有冲突</span>\n<span class=\"cm\"># 解决冲突 → git add → git cherry-pick --continue</span>\n<span class=\"cm\"># 或放弃：git cherry-pick --abort</span>\n\n<span class=\"cm\"># cherry-pick 多个 commit</span>\ngit cherry-pick abc1234 def5678\n<span class=\"cm\"># 或连续范围（不含起点）</span>\ngit cherry-pick abc1234..ghi9012</pre>",
+      "典型的なシナリオ：hotfixがmainにマージ済みで、releaseブランチにも同じ修正が必要",
+      "cherry-pickは<span class=\"highlight\">全く新しいcommitを作成する（異なるhash）</span>。参照ではなく、2つのブランチ上の独立したコピー",
+      "その後2つのブランチをmergeする際、Gitは通常重複した変更を自動処理できるが、まれにコンフリクトが発生する",
+      "代替案：ブランチの一部の変更を取得する必要がある場合は<code>git rebase --onto</code>を検討"
     ],
     "lv": 2
   },
@@ -142,12 +220,20 @@
     "cat": "Git场景题",
     "group": "工程",
     "q": "场景：线上出 bug 了，你需要找出是哪个 commit 引入的",
+    "q_ja": "シナリオ：本番でバグが発生し、どのcommitが原因か特定する必要がある",
     "bullets": [
       "<pre><span class=\"cm\"># 1. 启动二分查找</span>\ngit bisect start\ngit bisect bad               <span class=\"cm\"># 当前版本有 bug</span>\ngit bisect good v2.0.0       <span class=\"cm\"># 这个版本是好的</span>\n\n<span class=\"cm\"># 2. Git 自动 checkout 中间的 commit</span>\n<span class=\"cm\">#    你测试 → 告诉 Git 结果</span>\ngit bisect good              <span class=\"cm\"># 这个没 bug</span>\ngit bisect bad               <span class=\"cm\"># 这个有 bug</span>\n<span class=\"cm\"># ... 重复几次</span>\n\n<span class=\"cm\"># 3. Git 定位到罪魁祸首 commit</span>\n<span class=\"cm\"># abc1234 is the first bad commit</span>\n\ngit bisect reset             <span class=\"cm\"># 退出 bisect，回到原分支</span></pre>",
       "<pre><span class=\"cm\"># 自动化：让脚本代替人工测试</span>\ngit bisect start HEAD v2.0.0\ngit bisect run python test_payment.py\n<span class=\"cm\"># Git 自动跑测试，自动标记 good/bad</span>\n<span class=\"cm\"># 退出码 0 = good, 非0 = bad</span></pre>",
       "效率：1000 个 commit 只需测试 ~<span class=\"highlight\">10 次</span>（O(log n) 二分搜索 vs 线性 O(n)）",
       "找到 commit 后：<code>git show abc1234</code> 看改了什么 → <code>git revert abc1234</code> 快速回滚",
       "适用于：能明确判断\"有 bug / 没 bug\"的场景 — 最好有自动化测试脚本配合"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\"># 1. 启动二分查找</span>\ngit bisect start\ngit bisect bad               <span class=\"cm\"># 当前版本有 bug</span>\ngit bisect good v2.0.0       <span class=\"cm\"># 这个版本是好的</span>\n\n<span class=\"cm\"># 2. Git 自动 checkout 中间的 commit</span>\n<span class=\"cm\">#    你测试 → 告诉 Git 结果</span>\ngit bisect good              <span class=\"cm\"># 这个没 bug</span>\ngit bisect bad               <span class=\"cm\"># 这个有 bug</span>\n<span class=\"cm\"># ... 重复几次</span>\n\n<span class=\"cm\"># 3. Git 定位到罪魁祸首 commit</span>\n<span class=\"cm\"># abc1234 is the first bad commit</span>\n\ngit bisect reset             <span class=\"cm\"># 退出 bisect，回到原分支</span></pre>",
+      "<pre><span class=\"cm\"># 自动化：让脚本代替人工测试</span>\ngit bisect start HEAD v2.0.0\ngit bisect run python test_payment.py\n<span class=\"cm\"># Git 自动跑测试，自动标记 good/bad</span>\n<span class=\"cm\"># 退出码 0 = good, 非0 = bad</span></pre>",
+      "効率：1000個のcommitでもテストは約<span class=\"highlight\">10回</span>だけ（O(log n)の二分探索 vs 線形O(n)）",
+      "commit特定後：<code>git show abc1234</code>で変更内容を確認 → <code>git revert abc1234</code>で素早くロールバック",
+      "適用場面：\"バグあり/バグなし\"を明確に判定できるケース — 自動テストスクリプトとの併用が最適"
     ],
     "lv": 3
   },
@@ -156,12 +242,20 @@
     "cat": "Git场景题",
     "group": "工程",
     "q": "场景：团队用 GitFlow，你的 feature 分支落后 develop 50 个 commit，如何同步",
+    "q_ja": "シナリオ：チームがGitFlowを使用中、featureブランチがdevelopより50commit遅れている場合の同期方法",
     "bullets": [
       "<pre><span class=\"cm\"># 方案A：Merge（安全，保留完整历史）</span>\ngit switch feature-login\ngit merge develop\n<span class=\"cm\"># 产生一个 merge commit</span>\n<span class=\"cm\"># 历史中能看到\"何时同步了 develop\"</span>\ngit push origin feature-login\n\n<span class=\"cm\"># 方案B：Rebase（历史更干净）</span>\ngit switch feature-login\ngit rebase develop\n<span class=\"cm\"># 你的 commit 被\"搬\"到 develop 最新位置之后</span>\n<span class=\"cm\"># 必须 force push（因为历史被改写了）</span>\ngit push --force-with-lease origin feature-login</pre>",
       "经验法则：<span class=\"highlight\">共享分支 → merge | 个人分支 → rebase</span>",
       "<code>--force-with-lease</code> 比 <code>--force</code> 安全：如果远端有别人新 push 的提交会拒绝，防止覆盖他人工作",
       "Rebase 冲突处理：每个 commit 可能单独冲突 → <code>解决 → git add → git rebase --continue</code>，太多冲突可以 <code>git rebase --abort</code> 放弃",
       "团队应统一策略：在 PR 描述 / CONTRIBUTING.md 中写清楚用 merge 还是 rebase"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\"># 方案A：Merge（安全，保留完整历史）</span>\ngit switch feature-login\ngit merge develop\n<span class=\"cm\"># 产生一个 merge commit</span>\n<span class=\"cm\"># 历史中能看到\"何时同步了 develop\"</span>\ngit push origin feature-login\n\n<span class=\"cm\"># 方案B：Rebase（历史更干净）</span>\ngit switch feature-login\ngit rebase develop\n<span class=\"cm\"># 你的 commit 被\"搬\"到 develop 最新位置之后</span>\n<span class=\"cm\"># 必须 force push（因为历史被改写了）</span>\ngit push --force-with-lease origin feature-login</pre>",
+      "経験則：<span class=\"highlight\">共有ブランチ → merge | 個人ブランチ → rebase</span>",
+      "<code>--force-with-lease</code>は<code>--force</code>より安全：リモートに他の人の新しいpushがあれば拒否し、他人の作業の上書きを防ぐ",
+      "Rebaseのコンフリクト処理：各commitが個別にコンフリクトする可能性がある → <code>解決 → git add → git rebase --continue</code>、コンフリクトが多すぎる場合は<code>git rebase --abort</code>で中止",
+      "チームで戦略を統一すべき：PRの説明文 / CONTRIBUTING.mdにmergeとrebaseのどちらを使うか明記する"
     ],
     "lv": 2
   },
@@ -170,12 +264,20 @@
     "cat": "Git场景题",
     "group": "工程",
     "q": "场景：你需要安全地修改已 push 到远端的 commit message",
+    "q_ja": "シナリオ：リモートにpush済みのコミットメッセージを安全に修正する必要がある",
     "bullets": [
       "<pre><span class=\"cm\"># 方案A：修改最后一个 commit（个人分支）</span>\ngit commit --amend -m <span class=\"str\">\"fix: correct message here\"</span>\ngit push --force-with-lease\n\n<span class=\"cm\"># 方案B：修改更早的 commit（interactive rebase）</span>\ngit rebase -i HEAD~5\n<span class=\"cm\"># 将目标 commit 的 \"pick\" 改为 \"reword\"</span>\n<span class=\"cm\"># 保存后 Git 打开编辑器让你修改 message</span>\ngit push --force-with-lease</pre>",
       "<span class=\"highlight\">核心风险</span>：改写已 push 的历史 = 所有基于旧 commit 的分支都会失效",
       "安全检查清单：①确认是自己的分支 ②确认没有其他人基于此分支工作 ③用 <code>--force-with-lease</code> 而非 <code>--force</code>",
       "如果是<span class=\"highlight\">共享分支（main/develop）</span>：不要改！错误的 message 比破坏团队历史好得多",
       "GitHub/GitLab 上已合并的 PR：commit message 无法修改，只能接受 — 所以 merge 前要仔细检查"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\"># 方案A：修改最后一个 commit（个人分支）</span>\ngit commit --amend -m <span class=\"str\">\"fix: correct message here\"</span>\ngit push --force-with-lease\n\n<span class=\"cm\"># 方案B：修改更早的 commit（interactive rebase）</span>\ngit rebase -i HEAD~5\n<span class=\"cm\"># 将目标 commit 的 \"pick\" 改为 \"reword\"</span>\n<span class=\"cm\"># 保存后 Git 打开编辑器让你修改 message</span>\ngit push --force-with-lease</pre>",
+      "<span class=\"highlight\">コアリスク</span>：push済みの履歴を書き換える = 旧commitに基づく全てのブランチが無効になる",
+      "安全チェックリスト：①自分のブランチであることを確認 ②他の人がこのブランチに基づいて作業していないことを確認 ③<code>--force</code>ではなく<code>--force-with-lease</code>を使用",
+      "<span class=\"highlight\">共有ブランチ（main/develop）</span>の場合：修正しないこと！間違ったメッセージの方がチーム履歴を壊すよりはるかにまし",
+      "GitHub/GitLabで既にマージ済みのPR：コミットメッセージは修正できず、受け入れるしかない — だからマージ前に注意深く確認すること"
     ],
     "lv": 2
   },
@@ -184,12 +286,20 @@
     "cat": "Git场景题",
     "group": "工程",
     "q": "场景：你只想从另一个分支合并某一个文件，而非整个分支",
+    "q_ja": "シナリオ：別のブランチからブランチ全体ではなく、特定のファイルだけをマージしたい",
     "bullets": [
       "<pre><span class=\"cm\"># 方案A：checkout 指定文件（最常用）</span>\ngit checkout feature-branch -- path/to/file.py\n<span class=\"cm\"># 把 feature-branch 上的 file.py 复制到当前工作区和暂存区</span>\ngit commit -m <span class=\"str\">\"feat: bring file.py from feature-branch\"</span>\n\n<span class=\"cm\"># 方案B：用 restore（Git 2.23+ 推荐语法）</span>\ngit restore --source feature-branch -- path/to/file.py\ngit add path/to/file.py\ngit commit -m <span class=\"str\">\"feat: bring file.py from feature-branch\"</span>\n\n<span class=\"cm\"># 方案C：只取某个 commit 对该文件的改动</span>\ngit show abc1234:path/to/file.py &gt; path/to/file.py</pre>",
       "checkout/restore 方式是<span class=\"highlight\">整个文件覆盖</span>，不是合并差异 — 会丢弃当前分支对该文件的修改",
       "如果需要<span class=\"highlight\">合并差异而非覆盖</span>：<code>git diff feature-branch -- file.py | git apply</code>",
       "cherry-pick 只能按 commit 粒度操作，不能按文件 — 所以需要上述方法",
       "场景：feature 分支还没准备好合并，但其中某个配置文件 / 工具函数需要立即使用"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\"># 方案A：checkout 指定文件（最常用）</span>\ngit checkout feature-branch -- path/to/file.py\n<span class=\"cm\"># 把 feature-branch 上的 file.py 复制到当前工作区和暂存区</span>\ngit commit -m <span class=\"str\">\"feat: bring file.py from feature-branch\"</span>\n\n<span class=\"cm\"># 方案B：用 restore（Git 2.23+ 推荐语法）</span>\ngit restore --source feature-branch -- path/to/file.py\ngit add path/to/file.py\ngit commit -m <span class=\"str\">\"feat: bring file.py from feature-branch\"</span>\n\n<span class=\"cm\"># 方案C：只取某个 commit 对该文件的改动</span>\ngit show abc1234:path/to/file.py &gt; path/to/file.py</pre>",
+      "checkout/restore方式は<span class=\"highlight\">ファイル全体の上書き</span>であり、差分マージではない — 現在のブランチでの当該ファイルへの変更は失われる",
+      "上書きではなく<span class=\"highlight\">差分をマージ</span>したい場合：<code>git diff feature-branch -- file.py | git apply</code>",
+      "cherry-pickはcommit粒度でしか操作できず、ファイル単位には対応していない — だから上記の方法が必要",
+      "シナリオ：featureブランチはまだマージ準備ができていないが、その中の設定ファイル/ユーティリティ関数を今すぐ使う必要がある"
     ],
     "lv": 2
   },
@@ -198,6 +308,7 @@
     "cat": "Git场景题",
     "group": "工程",
     "q": "场景：仓库里有大文件（模型权重/数据集），clone 越来越慢",
+    "q_ja": "シナリオ：リポジトリに大きなファイル（モデル重み/データセット）があり、cloneがどんどん遅くなっている",
     "bullets": [
       "<pre><span class=\"cm\"># Git LFS（Large File Storage）— 标准解决方案</span>\ngit lfs install                          <span class=\"cm\"># 一次性安装</span>\ngit lfs track <span class=\"str\">\"*.pt\"</span> <span class=\"str\">\"*.bin\"</span> <span class=\"str\">\"*.onnx\"</span>  <span class=\"cm\"># 跟踪大文件类型</span>\ngit add .gitattributes                   <span class=\"cm\"># 必须提交此文件</span>\ngit add model.pt\ngit commit -m <span class=\"str\">\"feat: add model with LFS\"</span>\ngit push</pre>",
       "LFS 原理：Git 仓库只存<span class=\"highlight\">指针文件（~130 bytes）</span>，真正的大文件存在 LFS 服务器上，checkout 时按需下载",
@@ -206,6 +317,14 @@
       "GitHub LFS 免费额度：1 GB 存储 + 1 GB/月带宽 — 超出需付费或自建 LFS 服务器",
       "最佳实践：.gitignore 排除超大文件 + LFS 管理中等大文件 + DVC/云存储管理数据集"
     ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\"># Git LFS（Large File Storage）— 标准解决方案</span>\ngit lfs install                          <span class=\"cm\"># 一次性安装</span>\ngit lfs track <span class=\"str\">\"*.pt\"</span> <span class=\"str\">\"*.bin\"</span> <span class=\"str\">\"*.onnx\"</span>  <span class=\"cm\"># 跟踪大文件类型</span>\ngit add .gitattributes                   <span class=\"cm\"># 必须提交此文件</span>\ngit add model.pt\ngit commit -m <span class=\"str\">\"feat: add model with LFS\"</span>\ngit push</pre>",
+      "LFSの原理：Gitリポジトリには<span class=\"highlight\">ポインタファイル（約130バイト）</span>のみを保存し、実際の大きなファイルはLFSサーバーに格納。checkout時にオンデマンドでダウンロード",
+      "<pre><span class=\"cm\"># 已有大文件的仓库迁移到 LFS</span>\ngit lfs migrate import --include=<span class=\"str\">\"*.pt,*.bin\"</span> --everything\ngit push --force --all  <span class=\"cm\"># 重写历史，需通知团队</span></pre>",
+      "代替案：<span class=\"highlight\">DVC</span>（Data Version Control）— MLプロジェクトにより適しており、S3/GCSなどのリモートストレージに対応、データセットとモデルのバージョン管理が可能",
+      "GitHub LFSの無料枠：1GBストレージ + 月1GB帯域 — 超過分は有料またはLFSサーバーの自前構築が必要",
+      "ベストプラクティス：.gitignoreで超大ファイルを除外 + LFSで中程度のファイルを管理 + DVC/クラウドストレージでデータセットを管理"
+    ],
     "lv": 3
   },
   {
@@ -213,6 +332,7 @@
     "cat": "Git场景题",
     "group": "工程",
     "q": "场景：CI/CD 流水线中 Git 操作的最佳实践",
+    "q_ja": "シナリオ：CI/CDパイプラインにおけるGit操作のベストプラクティス",
     "bullets": [
       "<pre><span class=\"cm\"># CI 中常见的 Git 优化</span>\ngit clone --depth 1 &lt;repo&gt;         <span class=\"cm\"># Shallow clone（只取最新commit，快）</span>\ngit clone --filter=blob:none &lt;repo&gt; <span class=\"cm\"># Partial clone（按需下载blob）</span>\ngit fetch --tags                    <span class=\"cm\"># 拉取 tag 用于版本号</span></pre>",
       "<span class=\"highlight\">Tag 触发发布</span>：push v1.2.3 tag → CI 自动构建 → 推送 Docker Image / PyPI / npm",
@@ -221,6 +341,14 @@
       "保护分支规则：main/develop 禁止直接 push，必须通过 PR + review + CI pass",
       "Git 在 CI 中的陷阱：<span class=\"highlight\">detached HEAD</span>（CI 默认 checkout 的是 commit 而非分支）— 需要时手动 <code>git checkout $BRANCH</code>"
     ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\"># CI 中常见的 Git 优化</span>\ngit clone --depth 1 &lt;repo&gt;         <span class=\"cm\"># Shallow clone（只取最新commit，快）</span>\ngit clone --filter=blob:none &lt;repo&gt; <span class=\"cm\"># Partial clone（按需下载blob）</span>\ngit fetch --tags                    <span class=\"cm\"># 拉取 tag 用于版本号</span></pre>",
+      "<span class=\"highlight\">Tagトリガーのリリース</span>：v1.2.3 tagをpush → CIが自動ビルド → Docker Image / PyPI / npmにプッシュ",
+      "PRのチェックフロー：push → CIがlint + testを実行 → status checkパス → マージ許可",
+      "<pre><span class=\"cm\"># GitHub Actions 示例片段</span>\non:\n  push:\n    tags: ['v*']       <span class=\"cm\"># tag push 触发发布</span>\n  pull_request:\n    branches: [main]   <span class=\"cm\"># PR 到 main 触发检查</span></pre>",
+      "ブランチ保護ルール：main/developへの直接pushを禁止し、PR + レビュー + CI passを必須にする",
+      "CIにおけるGitの落とし穴：<span class=\"highlight\">detached HEAD</span>（CIはデフォルトでブランチではなくcommitをcheckout）— 必要に応じて手動で<code>git checkout $BRANCH</code>"
+    ],
     "lv": 3
   },
   {
@@ -228,12 +356,20 @@
     "cat": "Git场景题",
     "group": "工程",
     "q": "场景：你 fork 了开源项目，如何与上游仓库保持同步",
+    "q_ja": "シナリオ：オープンソースプロジェクトをforkした後、上流リポジトリとどう同期を保つか",
     "bullets": [
       "<pre><span class=\"cm\"># 1. 添加上游仓库为 remote</span>\ngit remote add upstream https://github.com/original/repo.git\ngit remote -v  <span class=\"cm\"># 确认 origin(你的fork) + upstream(原仓库)</span>\n\n<span class=\"cm\"># 2. 同步上游更新到本地</span>\ngit fetch upstream\ngit switch main\ngit merge upstream/main\n<span class=\"cm\"># 或 rebase：git rebase upstream/main</span>\n\n<span class=\"cm\"># 3. 推送到你的 fork</span>\ngit push origin main</pre>",
       "Fork 工作流（开源标准）：fork → clone 自己的 fork → 创建 feature 分支 → 提交 PR 到上游",
       "保持同步的频率：<span class=\"highlight\">提交 PR 前务必同步</span>，否则可能冲突；日常建议每周同步一次",
       "<code>git fetch upstream</code> 只下载不合并，<code>git pull upstream main</code> = fetch + merge 一步到位",
       "GitHub 网页端也能同步：Fork 页面点 \"Sync fork\" 按钮（简单但不如命令行灵活）"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\"># 1. 添加上游仓库为 remote</span>\ngit remote add upstream https://github.com/original/repo.git\ngit remote -v  <span class=\"cm\"># 确认 origin(你的fork) + upstream(原仓库)</span>\n\n<span class=\"cm\"># 2. 同步上游更新到本地</span>\ngit fetch upstream\ngit switch main\ngit merge upstream/main\n<span class=\"cm\"># 或 rebase：git rebase upstream/main</span>\n\n<span class=\"cm\"># 3. 推送到你的 fork</span>\ngit push origin main</pre>",
+      "Forkワークフロー（オープンソースの標準）：fork → 自分のforkをclone → featureブランチを作成 → 上流にPRを提出",
+      "同期の頻度：<span class=\"highlight\">PR提出前には必ず同期すること</span>。さもないとコンフリクトの可能性がある。日常的には週1回の同期を推奨",
+      "<code>git fetch upstream</code>はダウンロードのみでマージしない。<code>git pull upstream main</code> = fetch + mergeを一度に実行",
+      "GitHubのWebインターフェースでも同期可能：Forkページで\"Sync fork\"ボタンをクリック（シンプルだがコマンドラインほど柔軟ではない）"
     ],
     "lv": 2
   }

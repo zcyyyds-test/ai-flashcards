@@ -3,11 +3,18 @@
     "id": "db01",
     "cat": "数据库",
     "q": "SQL 基础查询 — SELECT/WHERE/ORDER BY",
+    "q_ja": "SQL基本クエリ — SELECT/WHERE/ORDER BY",
     "bullets": [
       "<pre><span class=\"kw\">SELECT</span> name, age, salary\n<span class=\"kw\">FROM</span> employees\n<span class=\"kw\">WHERE</span> department = <span class=\"str\">'Engineering'</span>\n  <span class=\"kw\">AND</span> age > 25\n  <span class=\"kw\">AND</span> name <span class=\"kw\">LIKE</span> <span class=\"str\">'%zhou%'</span>  <span class=\"cm\">-- 模糊匹配</span>\n<span class=\"kw\">ORDER BY</span> salary <span class=\"kw\">DESC</span>\n<span class=\"kw\">LIMIT</span> 10 <span class=\"kw\">OFFSET</span> 20;  <span class=\"cm\">-- 分页：跳过20条取10条</span></pre>",
       "执行顺序：FROM → WHERE → SELECT → ORDER BY → LIMIT",
       "NULL比较用 IS NULL / IS NOT NULL，不能用 = NULL",
       "LIKE通配符：% 任意字符，_ 单个字符"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"kw\">SELECT</span> name, age, salary\n<span class=\"kw\">FROM</span> employees\n<span class=\"kw\">WHERE</span> department = <span class=\"str\">'Engineering'</span>\n  <span class=\"kw\">AND</span> age > 25\n  <span class=\"kw\">AND</span> name <span class=\"kw\">LIKE</span> <span class=\"str\">'%zhou%'</span>  <span class=\"cm\">-- 模糊匹配</span>\n<span class=\"kw\">ORDER BY</span> salary <span class=\"kw\">DESC</span>\n<span class=\"kw\">LIMIT</span> 10 <span class=\"kw\">OFFSET</span> 20;  <span class=\"cm\">-- 分页：跳过20条取10条</span></pre>",
+      "実行順序：FROM → WHERE → SELECT → ORDER BY → LIMIT",
+      "NULLの比較にはIS NULL / IS NOT NULLを使う。= NULLは使えない",
+      "LIKEワイルドカード：%は任意の文字列、_は1文字"
     ],
     "lv": 1,
     "group": "工程"
@@ -16,10 +23,16 @@
     "id": "db02",
     "cat": "数据库",
     "q": "增删改 — INSERT/UPDATE/DELETE",
+    "q_ja": "データ操作 — INSERT/UPDATE/DELETE",
     "bullets": [
       "<pre><span class=\"cm\">-- 插入</span>\n<span class=\"kw\">INSERT INTO</span> users (name, email) <span class=\"kw\">VALUES</span> (<span class=\"str\">'Zhou'</span>, <span class=\"str\">'z@mail.com'</span>);\n<span class=\"cm\">-- 批量插入</span>\n<span class=\"kw\">INSERT INTO</span> users (name, email) <span class=\"kw\">VALUES</span>\n  (<span class=\"str\">'A'</span>, <span class=\"str\">'a@m.com'</span>), (<span class=\"str\">'B'</span>, <span class=\"str\">'b@m.com'</span>);\n<span class=\"cm\">-- 更新</span>\n<span class=\"kw\">UPDATE</span> users <span class=\"kw\">SET</span> age = 26 <span class=\"kw\">WHERE</span> id = 1;\n<span class=\"cm\">-- 删除（⚠️ 没有WHERE会删全表！）</span>\n<span class=\"kw\">DELETE FROM</span> users <span class=\"kw\">WHERE</span> id = 1;</pre>",
       "<span class=\"highlight\">永远在UPDATE/DELETE前先用SELECT确认影响范围</span>",
       "TRUNCATE vs DELETE：TRUNCATE清空全表更快（不记录行日志），MySQL中属于DDL隐式提交不能回滚，PostgreSQL中可在事务内回滚"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\">-- 插入</span>\n<span class=\"kw\">INSERT INTO</span> users (name, email) <span class=\"kw\">VALUES</span> (<span class=\"str\">'Zhou'</span>, <span class=\"str\">'z@mail.com'</span>);\n<span class=\"cm\">-- 批量插入</span>\n<span class=\"kw\">INSERT INTO</span> users (name, email) <span class=\"kw\">VALUES</span>\n  (<span class=\"str\">'A'</span>, <span class=\"str\">'a@m.com'</span>), (<span class=\"str\">'B'</span>, <span class=\"str\">'b@m.com'</span>);\n<span class=\"cm\">-- 更新</span>\n<span class=\"kw\">UPDATE</span> users <span class=\"kw\">SET</span> age = 26 <span class=\"kw\">WHERE</span> id = 1;\n<span class=\"cm\">-- 删除（⚠️ 没有WHERE会删全表！）</span>\n<span class=\"kw\">DELETE FROM</span> users <span class=\"kw\">WHERE</span> id = 1;</pre>",
+      "<span class=\"highlight\">UPDATE/DELETEの前に必ずSELECTで影響範囲を確認すること</span>",
+      "TRUNCATE vs DELETE：TRUNCATEはテーブル全体をより高速にクリア（行レベルのログを記録しない）。MySQLではDDLとして暗黙的にコミットされロールバック不可、PostgreSQLではトランザクション内でロールバック可能"
     ],
     "lv": 1,
     "group": "工程"
@@ -28,10 +41,16 @@
     "id": "db03",
     "cat": "数据库",
     "q": "主键与外键 — 表关系基础",
+    "q_ja": "PRIMARY KEYとFOREIGN KEY — テーブル関係の基礎",
     "bullets": [
       "<pre><span class=\"kw\">CREATE TABLE</span> departments (\n    id <span class=\"kw\">INT PRIMARY KEY AUTO_INCREMENT</span>,\n    name <span class=\"kw\">VARCHAR</span>(100) <span class=\"kw\">NOT NULL UNIQUE</span>\n);\n<span class=\"kw\">CREATE TABLE</span> employees (\n    id <span class=\"kw\">INT PRIMARY KEY AUTO_INCREMENT</span>,\n    name <span class=\"kw\">VARCHAR</span>(100) <span class=\"kw\">NOT NULL</span>,\n    dept_id <span class=\"kw\">INT</span>,\n    <span class=\"kw\">FOREIGN KEY</span> (dept_id) <span class=\"kw\">REFERENCES</span> departments(id)\n);</pre>",
       "主键(PK)：唯一标识行，不能为NULL。自增或UUID",
       "外键(FK)：引用另一张表的主键 → 建立表间关系 → 保证参照完整性"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"kw\">CREATE TABLE</span> departments (\n    id <span class=\"kw\">INT PRIMARY KEY AUTO_INCREMENT</span>,\n    name <span class=\"kw\">VARCHAR</span>(100) <span class=\"kw\">NOT NULL UNIQUE</span>\n);\n<span class=\"kw\">CREATE TABLE</span> employees (\n    id <span class=\"kw\">INT PRIMARY KEY AUTO_INCREMENT</span>,\n    name <span class=\"kw\">VARCHAR</span>(100) <span class=\"kw\">NOT NULL</span>,\n    dept_id <span class=\"kw\">INT</span>,\n    <span class=\"kw\">FOREIGN KEY</span> (dept_id) <span class=\"kw\">REFERENCES</span> departments(id)\n);</pre>",
+      "PRIMARY KEY（PK）：行を一意に識別し、NULLは不可。AUTO_INCREMENTまたはUUID",
+      "FOREIGN KEY（FK）：別テーブルのPRIMARY KEYを参照 → テーブル間の関係を構築 → 参照整合性を保証"
     ],
     "lv": 1,
     "group": "工程"
@@ -40,11 +59,18 @@
     "id": "db04",
     "cat": "数据库",
     "q": "JOIN 类型对比 — 图解与场景",
+    "q_ja": "JOINの種類の比較 — 図解とユースケース",
     "bullets": [
       "<pre><span class=\"cm\">-- INNER JOIN: 只返回两表都匹配的行</span>\n<span class=\"kw\">SELECT</span> e.name, d.name <span class=\"kw\">AS</span> dept\n<span class=\"kw\">FROM</span> employees e\n<span class=\"kw\">INNER JOIN</span> departments d <span class=\"kw\">ON</span> e.dept_id = d.id;\n\n<span class=\"cm\">-- LEFT JOIN: 左表全部 + 右表匹配（不匹配为NULL）</span>\n<span class=\"kw\">SELECT</span> e.name, d.name\n<span class=\"kw\">FROM</span> employees e\n<span class=\"kw\">LEFT JOIN</span> departments d <span class=\"kw\">ON</span> e.dept_id = d.id;</pre>",
       "INNER：交集 | LEFT：左表全部 | RIGHT：右表全部 | FULL：并集",
       "LEFT JOIN找\"没有部门的员工\" → WHERE d.id IS NULL",
       "性能：JOIN比子查询通常更快（优化器可以选择更好的执行计划）"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\">-- INNER JOIN: 只返回两表都匹配的行</span>\n<span class=\"kw\">SELECT</span> e.name, d.name <span class=\"kw\">AS</span> dept\n<span class=\"kw\">FROM</span> employees e\n<span class=\"kw\">INNER JOIN</span> departments d <span class=\"kw\">ON</span> e.dept_id = d.id;\n\n<span class=\"cm\">-- LEFT JOIN: 左表全部 + 右表匹配（不匹配为NULL）</span>\n<span class=\"kw\">SELECT</span> e.name, d.name\n<span class=\"kw\">FROM</span> employees e\n<span class=\"kw\">LEFT JOIN</span> departments d <span class=\"kw\">ON</span> e.dept_id = d.id;</pre>",
+      "INNER：積集合 | LEFT：左テーブル全件 | RIGHT：右テーブル全件 | FULL：和集合",
+      "LEFT JOINで\"部署のない従業員\"を検索 → WHERE d.id IS NULL",
+      "パフォーマンス：JOINはサブクエリより通常高速（オプティマイザがより良い実行計画を選択できる）"
     ],
     "lv": 2,
     "group": "工程"
@@ -53,11 +79,18 @@
     "id": "db05",
     "cat": "数据库",
     "q": "GROUP BY / HAVING / 聚合函数",
+    "q_ja": "GROUP BY / HAVING / 集約関数",
     "bullets": [
       "<pre><span class=\"cm\">-- 每个部门的平均薪资（只显示>50000的）</span>\n<span class=\"kw\">SELECT</span> department,\n       <span class=\"fn\">COUNT</span>(*) <span class=\"kw\">AS</span> cnt,\n       <span class=\"fn\">AVG</span>(salary) <span class=\"kw\">AS</span> avg_sal,\n       <span class=\"fn\">MAX</span>(salary) <span class=\"kw\">AS</span> max_sal\n<span class=\"kw\">FROM</span> employees\n<span class=\"kw\">WHERE</span> age > 20          <span class=\"cm\">-- 先过滤行</span>\n<span class=\"kw\">GROUP BY</span> department\n<span class=\"kw\">HAVING</span> <span class=\"fn\">AVG</span>(salary) > 50000  <span class=\"cm\">-- 再过滤组</span>\n<span class=\"kw\">ORDER BY</span> avg_sal <span class=\"kw\">DESC</span>;</pre>",
       "<span class=\"highlight\">WHERE过滤行（分组前），HAVING过滤组（分组后）</span>",
       "聚合函数：COUNT / SUM / AVG / MAX / MIN",
       "执行顺序：FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\">-- 每个部门的平均薪资（只显示>50000的）</span>\n<span class=\"kw\">SELECT</span> department,\n       <span class=\"fn\">COUNT</span>(*) <span class=\"kw\">AS</span> cnt,\n       <span class=\"fn\">AVG</span>(salary) <span class=\"kw\">AS</span> avg_sal,\n       <span class=\"fn\">MAX</span>(salary) <span class=\"kw\">AS</span> max_sal\n<span class=\"kw\">FROM</span> employees\n<span class=\"kw\">WHERE</span> age > 20          <span class=\"cm\">-- 先过滤行</span>\n<span class=\"kw\">GROUP BY</span> department\n<span class=\"kw\">HAVING</span> <span class=\"fn\">AVG</span>(salary) > 50000  <span class=\"cm\">-- 再过滤组</span>\n<span class=\"kw\">ORDER BY</span> avg_sal <span class=\"kw\">DESC</span>;</pre>",
+      "<span class=\"highlight\">WHEREは行をフィルタ（グループ化前）、HAVINGはグループをフィルタ（グループ化後）</span>",
+      "集約関数：COUNT / SUM / AVG / MAX / MIN",
+      "実行順序：FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY"
     ],
     "lv": 2,
     "group": "工程"
@@ -66,12 +99,20 @@
     "id": "db06",
     "cat": "数据库",
     "q": "索引原理 — B+Tree 与使用场景",
+    "q_ja": "インデックスの原理 — B+Treeとユースケース",
     "bullets": [
       "B+Tree：多路平衡树，叶子节点链表相连 → 范围查询高效",
       "为什么不用Hash索引？Hash只支持等值查询，不支持范围(>/</BETWEEN/ORDER BY)",
       "<pre><span class=\"cm\">-- 创建索引</span>\n<span class=\"kw\">CREATE INDEX</span> idx_email <span class=\"kw\">ON</span> users(email);\n<span class=\"cm\">-- 联合索引（最左匹配原则）</span>\n<span class=\"kw\">CREATE INDEX</span> idx_name_age <span class=\"kw\">ON</span> users(name, age);\n<span class=\"cm\">-- 可以加速 WHERE name=? / WHERE name=? AND age=?</span>\n<span class=\"cm\">-- 不能加速 WHERE age=?（没有最左列）</span></pre>",
       "<span class=\"highlight\">最左匹配原则</span>：联合索引(A,B,C)可用于查A / A+B / A+B+C，不能跳过A直接查B",
       "索引代价：写入变慢（要维护索引） + 占存储空间 → 不要滥建"
+    ],
+    "bullets_ja": [
+      "B+Tree：多分岐平衡木、リーフノードがリンクリストで連結 → 範囲クエリが効率的",
+      "なぜHashインデックスを使わないのか？Hashは等価クエリのみサポートし、範囲（>/</BETWEEN/ORDER BY）は未対応",
+      "<pre><span class=\"cm\">-- 创建索引</span>\n<span class=\"kw\">CREATE INDEX</span> idx_email <span class=\"kw\">ON</span> users(email);\n<span class=\"cm\">-- 联合索引（最左匹配原则）</span>\n<span class=\"kw\">CREATE INDEX</span> idx_name_age <span class=\"kw\">ON</span> users(name, age);\n<span class=\"cm\">-- 可以加速 WHERE name=? / WHERE name=? AND age=?</span>\n<span class=\"cm\">-- 不能加速 WHERE age=?（没有最左列）</span></pre>",
+      "<span class=\"highlight\">最左プレフィックスの原則</span>：複合インデックス(A,B,C)はAの検索 / A+B / A+B+Cに使用可能、Aを飛ばしてBだけの検索には使えない",
+      "インデックスのコスト：書き込みが遅くなる（インデックスの維持が必要）+ ストレージを消費 → 乱造しないこと"
     ],
     "lv": 2,
     "group": "工程"
@@ -80,13 +121,22 @@
     "id": "db07",
     "cat": "数据库",
     "q": "事务 ACID — 四大特性",
+    "q_ja": "トランザクション ACID — 4つの特性",
     "bullets": [
       "<span class=\"highlight\">A</span>tomicity(原子性)：事务要么全成功要么全回滚，不存在做一半",
       "<span class=\"highlight\">C</span>onsistency(一致性)：事务前后数据满足所有约束",
-      "<span class=\"highlight\">I</span>solation(隔离性)：并发事务互不干扰",
+      "<span class=\"highlight\">I</span>solation(隔離性)：并发事务互不干扰",
       "<span class=\"highlight\">D</span>urability(持久性)：提交后数据不丢失（写入磁盘）",
       "<pre><span class=\"kw\">BEGIN TRANSACTION</span>;\n<span class=\"kw\">UPDATE</span> accounts <span class=\"kw\">SET</span> balance = balance - 100 <span class=\"kw\">WHERE</span> id = 1;\n<span class=\"kw\">UPDATE</span> accounts <span class=\"kw\">SET</span> balance = balance + 100 <span class=\"kw\">WHERE</span> id = 2;\n<span class=\"kw\">COMMIT</span>;  <span class=\"cm\">-- 或 ROLLBACK</span></pre>",
       "隔离级别：Read Uncommitted → Read Committed → Repeatable Read(MySQL默认) → Serializable"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">A</span>tomicity（原子性）：トランザクションは全て成功するか全てロールバックするか、中途半端な状態は存在しない",
+      "<span class=\"highlight\">C</span>onsistency（一貫性）：トランザクションの前後でデータが全ての制約を満たす",
+      "<span class=\"highlight\">I</span>solation（分離性）：並行トランザクションが互いに干渉しない",
+      "<span class=\"highlight\">D</span>urability（永続性）：コミット後のデータは失われない（ディスクに書き込み済み）",
+      "<pre><span class=\"kw\">BEGIN TRANSACTION</span>;\n<span class=\"kw\">UPDATE</span> accounts <span class=\"kw\">SET</span> balance = balance - 100 <span class=\"kw\">WHERE</span> id = 1;\n<span class=\"kw\">UPDATE</span> accounts <span class=\"kw\">SET</span> balance = balance + 100 <span class=\"kw\">WHERE</span> id = 2;\n<span class=\"kw\">COMMIT</span>;  <span class=\"cm\">-- 或 ROLLBACK</span></pre>",
+      "分離レベル：Read Uncommitted → Read Committed → Repeatable Read（MySQLデフォルト）→ Serializable"
     ],
     "lv": 2,
     "group": "工程"
@@ -95,11 +145,18 @@
     "id": "db08",
     "cat": "数据库",
     "q": "EXPLAIN — 查询性能分析",
+    "q_ja": "EXPLAIN — クエリパフォーマンス分析",
     "bullets": [
       "<pre><span class=\"kw\">EXPLAIN SELECT</span> * <span class=\"kw\">FROM</span> users <span class=\"kw\">WHERE</span> email = <span class=\"str\">'z@mail.com'</span>;\n<span class=\"cm\">-- 关注: type, key, rows, Extra</span>\n<span class=\"cm\">-- type: ALL(全表扫描,最差) → index → range → ref → const(最好)</span>\n<span class=\"cm\">-- key: 实际使用的索引（NULL=没用索引）</span>\n<span class=\"cm\">-- rows: 预估扫描行数（越少越好）</span>\n<span class=\"cm\">-- Extra: Using filesort(需优化) / Using index(覆盖索引,好)</span></pre>",
       "看到 type=ALL 就要考虑加索引",
       "看到 Using filesort 可能需要调整 ORDER BY 的索引",
       "<span class=\"highlight\">覆盖索引</span>：查询的列都在索引中 → 不需要回表 → 最快"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"kw\">EXPLAIN SELECT</span> * <span class=\"kw\">FROM</span> users <span class=\"kw\">WHERE</span> email = <span class=\"str\">'z@mail.com'</span>;\n<span class=\"cm\">-- 关注: type, key, rows, Extra</span>\n<span class=\"cm\">-- type: ALL(全表扫描,最差) → index → range → ref → const(最好)</span>\n<span class=\"cm\">-- key: 实际使用的索引（NULL=没用索引）</span>\n<span class=\"cm\">-- rows: 预估扫描行数（越少越好）</span>\n<span class=\"cm\">-- Extra: Using filesort(需优化) / Using index(覆盖索引,好)</span></pre>",
+      "type=ALLが表示されたらインデックス追加を検討すべき",
+      "Using filesortが表示されたらORDER BY用のインデックスの調整が必要な可能性がある",
+      "<span class=\"highlight\">カバリングインデックス</span>：クエリ対象のカラムが全てインデックスに含まれている → テーブルへの再アクセス不要 → 最速"
     ],
     "lv": 3,
     "group": "工程"
@@ -108,12 +165,20 @@
     "id": "db09",
     "cat": "数据库",
     "q": "SQL 优化 — 常见技巧",
+    "q_ja": "SQL最適化 — よくあるテクニック",
     "bullets": [
       "①<span class=\"highlight\">避免SELECT *</span>：只查需要的列 → 减少IO + 可能用覆盖索引",
       "②<span class=\"highlight\">索引失效场景</span>：函数包裹列(WHERE YEAR(date)=2026) / LIKE以%开头 / 隐式类型转换 / OR条件",
       "③<span class=\"highlight\">分页优化</span>：LIMIT 10000,10 很慢 → 改用 WHERE id > last_id LIMIT 10（游标分页）",
       "④<span class=\"highlight\">批量操作</span>：循环INSERT 1000次 → 一条INSERT 1000行（减少网络往返）",
       "⑤<span class=\"highlight\">JOIN优化</span>：小表驱动大表 / 确保JOIN列有索引"
+    ],
+    "bullets_ja": [
+      "①<span class=\"highlight\">SELECT *を避ける</span>：必要なカラムだけクエリ → IOを削減 + カバリングインデックスの活用が可能に",
+      "②<span class=\"highlight\">インデックスが無効になるケース</span>：カラムを関数で包む（WHERE YEAR(date)=2026）/ LIKEが%で始まる / 暗黙の型変換 / OR条件",
+      "③<span class=\"highlight\">ページネーションの最適化</span>：LIMIT 10000,10は非常に遅い → WHERE id > last_id LIMIT 10に変更（カーソルページネーション）",
+      "④<span class=\"highlight\">バッチ操作</span>：INSERTを1000回ループ → 1つのINSERTで1000行（ネットワークラウンドトリップを削減）",
+      "⑤<span class=\"highlight\">JOINの最適化</span>：小さいテーブルで大きいテーブルを駆動 / JOINカラムにインデックスがあることを確認"
     ],
     "lv": 3,
     "group": "工程"
@@ -122,6 +187,7 @@
     "id": "db10",
     "cat": "数据库",
     "q": "NoSQL vs SQL — 选型指南",
+    "q_ja": "NoSQL vs SQL — 選定ガイド",
     "bullets": [
       "SQL(MySQL/PostgreSQL)：结构化数据、复杂查询、事务要求高 → 金融/ERP/大部分业务",
       "MongoDB(文档型)：半结构化数据、Schema灵活 → 内容管理/日志/用户画像",
@@ -130,6 +196,14 @@
       "向量数据库(FAISS/Qdrant)：相似度检索 → RAG/推荐/图像搜索",
       "原则：<span class=\"highlight\">先SQL，有明确理由再用NoSQL</span>"
     ],
+    "bullets_ja": [
+      "SQL（MySQL/PostgreSQL）：構造化データ・複雑なクエリ・トランザクション要件が高い → 金融/ERP/大半のビジネス",
+      "MongoDB（ドキュメント型）：半構造化データ・Schemaが柔軟 → コンテンツ管理/ログ/ユーザープロファイル",
+      "Redis（KV型）：超低レイテンシ（<1ms）・インメモリストレージ → キャッシュ/セッション/ランキング/レートリミット",
+      "Elasticsearch（検索型）：全文検索+集計分析 → ログ分析/検索エンジン",
+      "ベクトルDB（FAISS/Qdrant）：類似度検索 → RAG/レコメンド/画像検索",
+      "原則：<span class=\"highlight\">まずSQL、明確な理由がある場合にNoSQL</span>"
+    ],
     "lv": 3,
     "group": "工程"
   },
@@ -137,12 +211,20 @@
     "id": "db11",
     "cat": "数据库",
     "q": "Redis 核心数据结构与应用",
+    "q_ja": "Redisのコアデータ構造と活用",
     "bullets": [
       "<pre><span class=\"cm\"># 5种核心数据结构</span>\nString: SET key val / GET key          <span class=\"cm\"># 缓存/计数器</span>\nHash:   HSET user:1 name Zhou          <span class=\"cm\"># 对象存储</span>\nList:   LPUSH queue task1              <span class=\"cm\"># 消息队列</span>\nSet:    SADD tags python               <span class=\"cm\"># 去重/交并集</span>\nZSet:   ZADD rank 100 user1            <span class=\"cm\"># 排行榜</span></pre>",
       "常用操作复杂度：GET/SET/HGET O(1)，ZSet操作 O(log n)，LRANGE/SMEMBERS O(n)",
       "持久化：RDB(定时快照) + AOF(追加写日志) → 重启后恢复",
       "过期策略：惰性删除 + 定期删除。设置TTL：<code>EXPIRE key 3600</code>",
       "AI项目应用：KV Cache管理 / Agent记忆存储 / API限流 / 特征缓存"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\"># 5种核心数据结构</span>\nString: SET key val / GET key          <span class=\"cm\"># 缓存/计数器</span>\nHash:   HSET user:1 name Zhou          <span class=\"cm\"># 对象存储</span>\nList:   LPUSH queue task1              <span class=\"cm\"># 消息队列</span>\nSet:    SADD tags python               <span class=\"cm\"># 去重/交并集</span>\nZSet:   ZADD rank 100 user1            <span class=\"cm\"># 排行榜</span></pre>",
+      "よく使う操作の計算量：GET/SET/HGET O(1)、ZSet操作 O(log n)、LRANGE/SMEMBERS O(n)",
+      "永続化：RDB（定期スナップショット）+ AOF（追記型ログ）→ 再起動後に復元",
+      "有効期限戦略：遅延削除 + 定期削除。TTL設定：<code>EXPIRE key 3600</code>",
+      "AIプロジェクトでの活用：KV Cache管理 / Agentの記憶ストレージ / APIレートリミット / 特徴量キャッシュ"
     ],
     "lv": 3,
     "group": "工程"
@@ -151,6 +233,7 @@
     "id": "db12",
     "cat": "数据库",
     "q": "数据库范式 — 1NF/2NF/3NF/BCNF",
+    "q_ja": "データベース正規形 — 1NF/2NF/3NF/BCNF",
     "bullets": [
       "<span class=\"highlight\">1NF</span>：每列原子性，不可再分（不能在一个字段存\"Java,Python\"）",
       "<span class=\"highlight\">2NF</span>：满足1NF + 消除部分依赖（非主键列必须完全依赖整个主键，不能只依赖联合主键的一部分）",
@@ -159,6 +242,14 @@
       "面试口诀：<span class=\"highlight\">1NF列原子，2NF消除部分依赖，3NF消除传递依赖</span>",
       "实践中大多遵循3NF，但为了查询性能可适当反范式（冗余字段避免JOIN）"
     ],
+    "bullets_ja": [
+      "<span class=\"highlight\">1NF</span>：各カラムが原子的であり、さらに分割不可（1つのフィールドに\"Java,Python\"と格納してはいけない）",
+      "<span class=\"highlight\">2NF</span>：1NFを満たす + 部分従属の排除（非キーカラムは複合PRIMARY KEY全体に完全従属しなければならず、一部だけに依存してはいけない）",
+      "<span class=\"highlight\">3NF</span>：2NFを満たす + 推移従属の排除（非キーカラムが別の非キーカラムに依存してはいけない。例：従業員テーブルに部署名を格納せず、dept_idのみ格納）",
+      "<span class=\"highlight\">BCNF</span>：3NFを満たす + 全ての決定要因が候補キーである（3NFより厳格、主属性の候補キーへの部分/推移従属を排除）",
+      "面接での暗記ポイント：<span class=\"highlight\">1NFはカラムの原子性、2NFは部分従属の排除、3NFは推移従属の排除</span>",
+      "実務では主に3NFに従うが、クエリ性能のためにあえて非正規化する場合もある（冗長フィールドでJOINを回避）"
+    ],
     "lv": 2,
     "group": "工程"
   },
@@ -166,12 +257,20 @@
     "id": "db13",
     "cat": "数据库",
     "q": "子查询 vs JOIN — 性能对比与选择",
+    "q_ja": "サブクエリ vs JOIN — パフォーマンス比較と選択",
     "bullets": [
       "<pre><span class=\"cm\">-- 子查询写法（相关子查询，每行执行一次，可能慢）</span>\n<span class=\"kw\">SELECT</span> name <span class=\"kw\">FROM</span> employees e\n<span class=\"kw\">WHERE</span> salary > (\n  <span class=\"kw\">SELECT</span> <span class=\"fn\">AVG</span>(salary) <span class=\"kw\">FROM</span> employees\n  <span class=\"kw\">WHERE</span> dept_id = e.dept_id\n);\n\n<span class=\"cm\">-- JOIN改写（通常更快）</span>\n<span class=\"kw\">SELECT</span> e.name\n<span class=\"kw\">FROM</span> employees e\n<span class=\"kw\">JOIN</span> (<span class=\"kw\">SELECT</span> dept_id, <span class=\"fn\">AVG</span>(salary) <span class=\"kw\">AS</span> avg_sal\n      <span class=\"kw\">FROM</span> employees <span class=\"kw\">GROUP BY</span> dept_id) d\n<span class=\"kw\">ON</span> e.dept_id = d.dept_id\n<span class=\"kw\">WHERE</span> e.salary > d.avg_sal;</pre>",
       "<span class=\"highlight\">相关子查询</span>（引用外层表）：每行执行一次 → O(n*m)，大表时极慢",
       "<span class=\"highlight\">非相关子查询</span>（独立执行）：只执行一次，性能可接受",
       "优化器在很多场景下会将子查询自动改写为JOIN，但<span class=\"highlight\">不能依赖优化器</span>",
       "选择原则：能用JOIN就用JOIN；EXISTS比IN对大子查询结果集更高效"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\">-- 子查询写法（相关子查询，每行执行一次，可能慢）</span>\n<span class=\"kw\">SELECT</span> name <span class=\"kw\">FROM</span> employees e\n<span class=\"kw\">WHERE</span> salary > (\n  <span class=\"kw\">SELECT</span> <span class=\"fn\">AVG</span>(salary) <span class=\"kw\">FROM</span> employees\n  <span class=\"kw\">WHERE</span> dept_id = e.dept_id\n);\n\n<span class=\"cm\">-- JOIN改写（通常更快）</span>\n<span class=\"kw\">SELECT</span> e.name\n<span class=\"kw\">FROM</span> employees e\n<span class=\"kw\">JOIN</span> (<span class=\"kw\">SELECT</span> dept_id, <span class=\"fn\">AVG</span>(salary) <span class=\"kw\">AS</span> avg_sal\n      <span class=\"kw\">FROM</span> employees <span class=\"kw\">GROUP BY</span> dept_id) d\n<span class=\"kw\">ON</span> e.dept_id = d.dept_id\n<span class=\"kw\">WHERE</span> e.salary > d.avg_sal;</pre>",
+      "<span class=\"highlight\">相関サブクエリ</span>（外部テーブルを参照）：行ごとに1回実行 → O(n*m)、大規模テーブルでは極めて遅い",
+      "<span class=\"highlight\">非相関サブクエリ</span>（独立して実行）：1回だけ実行され、パフォーマンスは許容範囲",
+      "オプティマイザは多くのケースでサブクエリをJOINに自動書き換えするが、<span class=\"highlight\">オプティマイザに頼ってはいけない</span>",
+      "選択の原則：JOINが使える場面ではJOINを使う。EXISTSはINよりも大きなサブクエリ結果セットに対して効率的"
     ],
     "lv": 2,
     "group": "工程"
@@ -180,6 +279,7 @@
     "id": "db14",
     "cat": "数据库",
     "q": "窗口函数 — ROW_NUMBER/RANK/DENSE_RANK",
+    "q_ja": "ウィンドウ関数 — ROW_NUMBER/RANK/DENSE_RANK",
     "bullets": [
       "<pre><span class=\"kw\">SELECT</span> name, department, salary,\n  <span class=\"fn\">ROW_NUMBER</span>() <span class=\"kw\">OVER</span>(<span class=\"kw\">PARTITION BY</span> department <span class=\"kw\">ORDER BY</span> salary <span class=\"kw\">DESC</span>) <span class=\"kw\">AS</span> rn,\n  <span class=\"fn\">RANK</span>()       <span class=\"kw\">OVER</span>(<span class=\"kw\">PARTITION BY</span> department <span class=\"kw\">ORDER BY</span> salary <span class=\"kw\">DESC</span>) <span class=\"kw\">AS</span> rk,\n  <span class=\"fn\">DENSE_RANK</span>() <span class=\"kw\">OVER</span>(<span class=\"kw\">PARTITION BY</span> department <span class=\"kw\">ORDER BY</span> salary <span class=\"kw\">DESC</span>) <span class=\"kw\">AS</span> drk\n<span class=\"kw\">FROM</span> employees;</pre>",
       "薪资100,100,90时：ROW_NUMBER → 1,2,3 | RANK → 1,1,3 | DENSE_RANK → 1,1,2",
@@ -188,6 +288,14 @@
       "<span class=\"highlight\">DENSE_RANK</span>：并列不跳号，适合连续等级划分",
       "经典面试题：<span class=\"highlight\">取每个部门薪资TOP 3</span> → ROW_NUMBER + WHERE rn <= 3"
     ],
+    "bullets_ja": [
+      "<pre><span class=\"kw\">SELECT</span> name, department, salary,\n  <span class=\"fn\">ROW_NUMBER</span>() <span class=\"kw\">OVER</span>(<span class=\"kw\">PARTITION BY</span> department <span class=\"kw\">ORDER BY</span> salary <span class=\"kw\">DESC</span>) <span class=\"kw\">AS</span> rn,\n  <span class=\"fn\">RANK</span>()       <span class=\"kw\">OVER</span>(<span class=\"kw\">PARTITION BY</span> department <span class=\"kw\">ORDER BY</span> salary <span class=\"kw\">DESC</span>) <span class=\"kw\">AS</span> rk,\n  <span class=\"fn\">DENSE_RANK</span>() <span class=\"kw\">OVER</span>(<span class=\"kw\">PARTITION BY</span> department <span class=\"kw\">ORDER BY</span> salary <span class=\"kw\">DESC</span>) <span class=\"kw\">AS</span> drk\n<span class=\"kw\">FROM</span> employees;</pre>",
+      "給与が100,100,90の場合：ROW_NUMBER → 1,2,3 | RANK → 1,1,3 | DENSE_RANK → 1,1,2",
+      "<span class=\"highlight\">ROW_NUMBER</span>：同順位なし、ページネーション/重複排除（各グループの先頭行を取得）によく使用",
+      "<span class=\"highlight\">RANK</span>：同順位後に番号を飛ばす、競技ランキングに適する",
+      "<span class=\"highlight\">DENSE_RANK</span>：同順位でも番号を飛ばさない、連続的なランク分けに適する",
+      "定番の面接問題：<span class=\"highlight\">各部門の給与TOP3を取得</span> → ROW_NUMBER + WHERE rn <= 3"
+    ],
     "lv": 2,
     "group": "工程"
   },
@@ -195,12 +303,20 @@
     "id": "db15",
     "cat": "数据库",
     "q": "窗口函数 — LAG/LEAD/SUM OVER",
+    "q_ja": "ウィンドウ関数 — LAG/LEAD/SUM OVER",
     "bullets": [
       "<pre><span class=\"kw\">SELECT</span> date, revenue,\n  <span class=\"fn\">LAG</span>(revenue, <span class=\"num\">1</span>) <span class=\"kw\">OVER</span>(<span class=\"kw\">ORDER BY</span> date)  <span class=\"kw\">AS</span> prev_rev,  <span class=\"cm\">-- 前一行</span>\n  <span class=\"fn\">LEAD</span>(revenue, <span class=\"num\">1</span>) <span class=\"kw\">OVER</span>(<span class=\"kw\">ORDER BY</span> date) <span class=\"kw\">AS</span> next_rev,  <span class=\"cm\">-- 后一行</span>\n  <span class=\"fn\">SUM</span>(revenue) <span class=\"kw\">OVER</span>(<span class=\"kw\">ORDER BY</span> date\n    <span class=\"kw\">ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</span>\n  ) <span class=\"kw\">AS</span> cumulative_sum  <span class=\"cm\">-- 累计求和</span>\n<span class=\"kw\">FROM</span> daily_sales;</pre>",
       "<span class=\"highlight\">LAG(col, n)</span>：取前n行的值 | <span class=\"highlight\">LEAD(col, n)</span>：取后n行的值",
       "环比计算：(revenue - LAG(revenue,1)) / LAG(revenue,1) * 100",
       "滑动窗口：ROWS BETWEEN 6 PRECEDING AND CURRENT ROW → 7日移动平均",
       "窗口函数<span class=\"highlight\">不减少行数</span>（与GROUP BY的核心区别），在SELECT阶段执行"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"kw\">SELECT</span> date, revenue,\n  <span class=\"fn\">LAG</span>(revenue, <span class=\"num\">1</span>) <span class=\"kw\">OVER</span>(<span class=\"kw\">ORDER BY</span> date)  <span class=\"kw\">AS</span> prev_rev,  <span class=\"cm\">-- 前一行</span>\n  <span class=\"fn\">LEAD</span>(revenue, <span class=\"num\">1</span>) <span class=\"kw\">OVER</span>(<span class=\"kw\">ORDER BY</span> date) <span class=\"kw\">AS</span> next_rev,  <span class=\"cm\">-- 后一行</span>\n  <span class=\"fn\">SUM</span>(revenue) <span class=\"kw\">OVER</span>(<span class=\"kw\">ORDER BY</span> date\n    <span class=\"kw\">ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</span>\n  ) <span class=\"kw\">AS</span> cumulative_sum  <span class=\"cm\">-- 累计求和</span>\n<span class=\"kw\">FROM</span> daily_sales;</pre>",
+      "<span class=\"highlight\">LAG(col, n)</span>：n行前の値を取得 | <span class=\"highlight\">LEAD(col, n)</span>：n行後の値を取得",
+      "前期比計算：(revenue - LAG(revenue,1)) / LAG(revenue,1) * 100",
+      "スライディングウィンドウ：ROWS BETWEEN 6 PRECEDING AND CURRENT ROW → 7日間移動平均",
+      "ウィンドウ関数は<span class=\"highlight\">行数を減らさない</span>（GROUP BYとの核心的な違い）、SELECTフェーズで実行される"
     ],
     "lv": 3,
     "group": "工程"
@@ -209,6 +325,7 @@
     "id": "db16",
     "cat": "数据库",
     "q": "数据库锁 — 类型与死锁",
+    "q_ja": "データベースロック — 種類とデッドロック",
     "bullets": [
       "<span class=\"highlight\">共享锁(S锁/读锁)</span>：多个事务可同时读，不能写。SELECT ... LOCK IN SHARE MODE",
       "<span class=\"highlight\">排他锁(X锁/写锁)</span>：持有者独占读写，其他事务不能读写。SELECT ... FOR UPDATE",
@@ -217,6 +334,14 @@
       "死锁预防：①固定加锁顺序 ②控制事务大小 ③设置锁超时(innodb_lock_wait_timeout)",
       "InnoDB死锁检测：自动检测并回滚代价较小的事务（wait-for graph算法）"
     ],
+    "bullets_ja": [
+      "<span class=\"highlight\">共有ロック（Sロック/読み取りロック）</span>：複数のトランザクションが同時に読み取り可能、書き込みは不可。SELECT ... LOCK IN SHARE MODE",
+      "<span class=\"highlight\">排他ロック（Xロック/書き込みロック）</span>：保持者が読み書きを独占、他のトランザクションは読み書き不可。SELECT ... FOR UPDATE",
+      "ロック粒度：<span class=\"highlight\">行ロック</span>（InnoDBデフォルト、並行性が高い）→ <span class=\"highlight\">テーブルロック</span>（MyISAM、オーバーヘッドは小さいが並行性が低い）",
+      "<span class=\"highlight\">デッドロック</span>：トランザクションAが行1をロックし行2を待つ、トランザクションBが行2をロックし行1を待つ → 循環待ち",
+      "デッドロックの予防：①ロック取得順序の固定 ②トランザクションサイズの制御 ③ロックタイムアウトの設定（innodb_lock_wait_timeout）",
+      "InnoDBのデッドロック検出：自動的に検出し、コストの小さいトランザクションをロールバック（wait-for graphアルゴリズム）"
+    ],
     "lv": 3,
     "group": "工程"
   },
@@ -224,6 +349,7 @@
     "id": "db17",
     "cat": "数据库",
     "q": "MySQL vs PostgreSQL — 核心差异",
+    "q_ja": "MySQL vs PostgreSQL — コアの違い",
     "bullets": [
       "<span class=\"highlight\">MySQL</span>：更轻量、生态大(LAMP)、主从复制成熟 → 互联网业务首选",
       "<span class=\"highlight\">PostgreSQL</span>：SQL标准更完整、扩展性强(自定义类型/函数)、MVCC实现更优 → 复杂查询/GIS/分析",
@@ -232,6 +358,14 @@
       "MySQL默认Repeatable Read(用Gap Lock防幻读) | PG默认Read Committed",
       "选型建议：简单CRUD选MySQL；复杂查询/数据分析/需要丰富数据类型选PostgreSQL"
     ],
+    "bullets_ja": [
+      "<span class=\"highlight\">MySQL</span>：より軽量、エコシステムが大きい（LAMP）、マスタースレーブレプリケーションが成熟 → インターネットビジネスの第一選択",
+      "<span class=\"highlight\">PostgreSQL</span>：SQL標準への準拠度が高い、拡張性が強い（カスタム型/関数）、MVCC実装が優れている → 複雑なクエリ/GIS/分析",
+      "MVCCの違い：MySQLはundo logのロールバックセグメント | PGは多版本タプル（旧バージョンがテーブルに残りVACUUMで清掃が必要）",
+      "JSONサポート：PGのJSONBはネイティブインデックスクエリに対応し、性能はMySQLのJSON型を大幅に上回る",
+      "MySQLデフォルトはRepeatable Read（Gap Lockでファントムリードを防止）| PGデフォルトはRead Committed",
+      "選定の目安：シンプルなCRUDにはMySQL、複雑なクエリ/データ分析/豊富なデータ型が必要ならPostgreSQL"
+    ],
     "lv": 3,
     "group": "工程"
   },
@@ -239,6 +373,7 @@
     "id": "db18",
     "cat": "数据库",
     "q": "数据库连接池 — 原理与配置",
+    "q_ja": "データベースコネクションプール — 原理と設定",
     "bullets": [
       "问题：每次请求新建TCP连接+数据库认证 → 开销大（约10-50ms），高并发下连接数爆炸",
       "连接池：<span class=\"highlight\">预先创建一批连接放入池中，用完归还而非关闭</span>",
@@ -247,6 +382,14 @@
       "maxActive经验公式：<span class=\"highlight\">连接数 ≈ CPU核心数 * 2 + 磁盘数</span>（PostgreSQL官方建议，通常10-30足够）",
       "连接泄漏：业务代码未归还连接 → 池耗尽 → 需设置泄漏检测(removeAbandoned)和超时回收"
     ],
+    "bullets_ja": [
+      "課題：リクエストごとにTCP接続の新規作成+DB認証 → オーバーヘッドが大きい（約10〜50ms）、高並行時にコネクション数が爆発",
+      "コネクションプール：<span class=\"highlight\">事前にコネクションをまとめて作成しプールに格納、使用後は閉じずに返却</span>",
+      "コアパラメータ：<span class=\"highlight\">minIdle</span>（最小アイドル数）/ <span class=\"highlight\">maxActive</span>（最大コネクション数）/ <span class=\"highlight\">maxWait</span>（取得待ちタイムアウト）",
+      "代表的な実装：Java（HikariCP/Druid）| Python（SQLAlchemy pool）| Go（database/sql内蔵）",
+      "maxActiveの経験則：<span class=\"highlight\">コネクション数 ≈ CPUコア数 * 2 + ディスク数</span>（PostgreSQL公式推奨、通常10〜30で十分）",
+      "コネクションリーク：ビジネスコードがコネクションを返却しない → プール枯渇 → リーク検出（removeAbandoned）とタイムアウト回収の設定が必要"
+    ],
     "lv": 2,
     "group": "工程"
   },
@@ -254,6 +397,7 @@
     "id": "db19",
     "cat": "数据库",
     "q": "慢查询排查流程",
+    "q_ja": "スロークエリの調査フロー",
     "bullets": [
       "①<span class=\"highlight\">开启慢查询日志</span>：SET GLOBAL slow_query_log = ON; long_query_time = 1（单位秒）",
       "②<span class=\"highlight\">定位慢SQL</span>：mysqldumpslow 或 pt-query-digest 分析慢日志，按耗时/频率排序",
@@ -261,6 +405,14 @@
       "④<span class=\"highlight\">常见原因</span>：缺索引 / 索引失效(函数/类型转换) / 返回数据量大 / 锁等待 / 深分页",
       "⑤<span class=\"highlight\">优化手段</span>：加索引 / 改写SQL / 业务层缓存 / 读写分离 / 分库分表",
       "⑥生产环境用 SHOW PROCESSLIST 查看当前执行中的慢查询，必要时 KILL query_id"
+    ],
+    "bullets_ja": [
+      "①<span class=\"highlight\">スロークエリログを有効化</span>：SET GLOBAL slow_query_log = ON; long_query_time = 1（秒単位）",
+      "②<span class=\"highlight\">スローSQLの特定</span>：mysqldumpslowまたはpt-query-digestでスローログを分析し、所要時間/頻度でソート",
+      "③<span class=\"highlight\">EXPLAIN分析</span>：type（ALLフルテーブルスキャンかどうか）、key（インデックスにヒットしているか）、rows（スキャン行数）を確認",
+      "④<span class=\"highlight\">よくある原因</span>：インデックスの欠如 / インデックスの無効化（関数/型変換）/ 返却データ量が大きい / ロック待ち / 深いページネーション",
+      "⑤<span class=\"highlight\">最適化手段</span>：インデックス追加 / SQLの書き換え / アプリケーション層のキャッシュ / 読み書き分離 / シャーディング",
+      "⑥本番環境ではSHOW PROCESSLISTで実行中のスロークエリを確認し、必要に応じてKILL query_id"
     ],
     "lv": 3,
     "group": "工程"

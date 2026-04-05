@@ -3,12 +3,20 @@
     "id": "t01",
     "cat": "技术概念",
     "q": "FastAPI / Streamlit / SSE 是什么？",
+    "q_ja": "FastAPI / Streamlit / SSE とは？",
     "bullets": [
       "FastAPI：Python高性能Web框架，原生异步+自动API文档+类型校验，性能接近Go/Node",
       "FastAPI vs Flask：Flask更老但不支持原生异步，FastAPI更适合AI服务",
       "Streamlit：Python快速搭前端，适合PoC和demo（不适合生产环境）",
       "SSE(Server-Sent Events)：服务器→客户端单向推送，LLM逐token流式输出用SSE就够了",
       "SSE vs WebSocket：SSE单向，WebSocket双向"
+    ],
+    "bullets_ja": [
+      "FastAPI：Python高性能Webフレームワーク、ネイティブ非同期+自動APIドキュメント+型バリデーション、性能はGo/Nodeに近い",
+      "FastAPI vs Flask：Flaskは歴史が長いがネイティブ非同期を未サポート、FastAPIはAIサービスに適している",
+      "Streamlit：Pythonで素早くフロントエンドを構築、PoCやデモ向け（本番環境には不向き）",
+      "SSE（Server-Sent Events）：サーバー→クライアントへの一方向プッシュ、LLMのトークンごとのストリーミング出力にはSSEで十分",
+      "SSE vs WebSocket：SSEは一方向、WebSocketは双方向"
     ],
     "lv": 2,
     "group": "工程"
@@ -17,6 +25,7 @@
     "id": "t02",
     "cat": "技术概念",
     "q": "Docker核心概念（5个）",
+    "q_ja": "Dockerのコア概念（5つ）",
     "bullets": [
       "Image镜像：打包好的应用模板（安装光盘）",
       "Container容器：镜像的运行实例（安装好的系统）",
@@ -25,6 +34,14 @@
       "Registry仓库：存储和分发镜像的地方（Docker Hub）",
       "核心价值：解决\"在我机器上能跑\"问题，保证交付物稳定运行"
     ],
+    "bullets_ja": [
+      "Imageイメージ：パッケージ化されたアプリケーションテンプレート（インストールディスク）",
+      "Containerコンテナ：イメージの実行インスタンス（インストール済みのシステム）",
+      "Dockerfile：イメージの構築方法を記述するスクリプト",
+      "Docker Compose：複数のコンテナを同時に管理（FastAPI+ベクトルDB+フロントエンドをワンクリックでデプロイ）",
+      "Registryリポジトリ：イメージを保存・配布する場所（Docker Hub）",
+      "コアバリュー：\"自分のマシンでは動く\"問題を解決し、納品物の安定稼働を保証"
+    ],
     "lv": 1,
     "group": "工程"
   },
@@ -32,12 +49,20 @@
     "id": "t03",
     "cat": "技术概念",
     "q": "Kubernetes(K8s)是什么，为什么用？",
+    "q_ja": "Kubernetes（K8s）とは何か、なぜ使うのか？",
     "bullets": [
       "容器编排平台，管理大量Docker容器的部署/扩缩容/负载均衡",
       "Docker解决单机部署，K8s解决\"100台机器上跑1000个容器怎么管\"",
       "自动扩缩容：流量大自动加容器，流量小自动减",
       "自动恢复：容器挂了自动重启；滚动更新：不停机更新服务",
       "SA需要知道的深度：知道是什么、为什么用，不需要会写YAML"
+    ],
+    "bullets_ja": [
+      "コンテナオーケストレーションプラットフォーム。大量のDockerコンテナのデプロイ/スケーリング/ロードバランシングを管理",
+      "Dockerは単一マシンのデプロイを解決、K8sは\"100台のマシンで1000個のコンテナをどう管理するか\"を解決",
+      "オートスケーリング：トラフィック増加時にコンテナを自動追加、減少時に自動削減",
+      "自動復旧：コンテナがダウンしたら自動再起動。ローリングアップデート：無停止でサービスを更新",
+      "SAに求められる理解度：何であるか・なぜ使うかを理解していればよく、YAMLを書ける必要はない"
     ],
     "lv": 2,
     "group": "工程"
@@ -46,12 +71,20 @@
     "id": "t04",
     "cat": "技术概念",
     "q": "向量数据库是什么，为什么RAG需要它？",
+    "q_ja": "ベクトルデータベースとは何か、なぜRAGに必要なのか？",
     "bullets": [
       "专门存储和检索高维向量（embedding）的数据库",
       "支持相似度搜索（Cosine/L2），比传统数据库快得多",
       "常见：Chroma（轻量级，本地开发）/ Qdrant / Weaviate / Pinecone（云端）/ FAISS（库）",
       "RAG流程：文档→embedding→存向量数据库→查询时检索相似向量→取对应文本",
       "FAISS：Facebook AI的开源库，IndexFlatIP（精确）→IndexIVFPQ（近似，大规模用）"
+    ],
+    "bullets_ja": [
+      "高次元ベクトル（embedding）の保存と検索に特化したデータベース",
+      "類似度検索（Cosine/L2）をサポートし、従来のデータベースよりはるかに高速",
+      "代表的なもの：Chroma（軽量、ローカル開発向け）/ Qdrant / Weaviate / Pinecone（クラウド）/ FAISS（ライブラリ）",
+      "RAGフロー：文書→embedding→ベクトルDB保存→クエリ時に類似ベクトルを検索→対応テキストを取得",
+      "FAISS：Facebook AIのオープンソースライブラリ。IndexFlatIP（精密）→IndexIVFPQ（近似、大規模向け）"
     ],
     "lv": 2,
     "group": "工程"
@@ -60,12 +93,20 @@
     "id": "t05",
     "cat": "技术概念",
     "q": "vLLM vs Ollama — 什么场景用哪个？",
+    "q_ja": "vLLM vs Ollama — どのシナリオでどちらを使うか？",
     "bullets": [
       "Ollama：优化易用性和本地/边缘部署，支持GGUF(Q4/Q8)，CPU-only可运行，单请求优化",
       "vLLM：优化高吞吐云端服务，Continuous Batching，需要GPU，支持GPTQ/AWQ量化",
       "Prefix Caching：System Prompt对所有请求相同→KV Cache复用，计算量减少~30%",
       "Tensor Parallelism(TP=2)：大模型跨多卡并行，vLLM支持",
       "SA场景：edge用Ollama，cloud/企业API用vLLM"
+    ],
+    "bullets_ja": [
+      "Ollama：使いやすさとローカル/エッジデプロイに最適化、GGUF（Q4/Q8）対応、CPU-onlyで動作可能、単一リクエスト最適化",
+      "vLLM：高スループットのクラウドサービスに最適化、Continuous Batching、GPU必須、GPTQ/AWQ量子化対応",
+      "Prefix Caching：System Promptが全リクエストで共通→KV Cacheを再利用、計算量約30%削減",
+      "Tensor Parallelism（TP=2）：大規模モデルの複数GPU並列処理、vLLMがサポート",
+      "SAシナリオ：エッジはOllama、クラウド/企業APIはvLLM"
     ],
     "lv": 3,
     "group": "工程"
@@ -74,12 +115,20 @@
     "id": "t06",
     "cat": "技术概念",
     "q": "LoRA / QLoRA 机制",
+    "q_ja": "LoRA / QLoRA の仕組み",
     "bullets": [
       "LoRA：在原始权重旁添加低秩矩阵A和B（秩r），只训练AB，原始权重冻结",
       "可训练参数：r=64时约<1%，大幅减少显存需求",
       "QLoRA：在LoRA基础上，原始权重用4-bit NF4量化，进一步降低显存",
-      "lora_alpha：缩放系数，通常=2r（alpha=128对应r=64）",
+      "lora_alpha：缩放系数，通常=2r（alpha=128对応r=64）",
       "target_modules：q_proj/k_proj/v_proj/o_proj + gate/up/down_proj（7个）"
+    ],
+    "bullets_ja": [
+      "LoRA：元の重みの横に低ランク行列AとB（ランクr）を追加し、ABのみを訓練、元の重みは凍結",
+      "訓練可能パラメータ：r=64の場合は約1%未満、VRAM使用量を大幅に削減",
+      "QLoRA：LoRAに加えて元の重みを4-bit NF4量子化し、VRAMをさらに削減",
+      "lora_alpha：スケーリング係数、通常=2r（alpha=128はr=64に対応）",
+      "target_modules：q_proj/k_proj/v_proj/o_proj + gate/up/down_proj（7つ）"
     ],
     "lv": 3,
     "group": "工程"
@@ -88,6 +137,7 @@
     "id": "t07",
     "cat": "技术概念",
     "q": "Agent框架对比（面试时的回答）",
+    "q_ja": "Agentフレームワークの比較（面接での回答）",
     "bullets": [
       "LangChain/LangGraph：生态最全，但抽象层重、调试困难、\"黑盒\"感强",
       "LlamaIndex：RAG场景最强，索引检索抽象好，但Agent能力相对弱",
@@ -96,6 +146,14 @@
       "自研：完全可控，但要自己造轮子（SiLR-Agent选择自研的原因）",
       "选哪个取决于客户需求和团队熟悉度，不存在\"最好的框架\""
     ],
+    "bullets_ja": [
+      "LangChain/LangGraph：エコシステムが最も充実、ただし抽象層が重い・デバッグ困難・\"ブラックボックス\"感が強い",
+      "LlamaIndex：RAGシナリオで最強、インデックス・検索の抽象化が優秀、ただしAgent機能は比較的弱い",
+      "AutoGen：マルチAgent連携に優れ、複雑なワークフローに適するが、学習コストが高い",
+      "ADK（Google）：Google Cloudとの統合が良好、比較的新しい",
+      "自社開発：完全にコントロール可能だが、自分で車輪を再発明する必要がある（SiLR-Agentが自社開発を選んだ理由）",
+      "どれを選ぶかは顧客の要件とチームの習熟度次第、\"最良のフレームワーク\"は存在しない"
+    ],
     "lv": 2,
     "group": "工程"
   },
@@ -103,11 +161,18 @@
     "id": "t08",
     "cat": "技术概念",
     "q": "ReAct / Plan-and-Execute / Multi-Agent 区别",
+    "q_ja": "ReAct / Plan-and-Execute / Multi-Agent の違い",
     "bullets": [
       "ReAct：思考-行动-观察循环，适合步骤不确定、需根据反馈调整的任务（SiLR-Agent用这个）",
       "Plan-and-Execute：先整体规划再执行，适合步骤较明确的复杂任务，但计划有误会连锁出错",
       "Multi-Agent：多个专门化Agent协作（规划/执行/审核），适合角色分工明确的场景",
       "实际项目经常混合使用，不是非此即彼"
+    ],
+    "bullets_ja": [
+      "ReAct：思考→行動→観察のループ。ステップが不確定でフィードバックに応じた調整が必要なタスクに適する（SiLR-Agentはこれを採用）",
+      "Plan-and-Execute：まず全体計画を立ててから実行。ステップが比較的明確な複雑タスクに適するが、計画ミスが連鎖的なエラーを引き起こす",
+      "Multi-Agent：複数の専門化されたAgentが連携（計画/実行/レビュー）。役割分担が明確なシナリオに適する",
+      "実際のプロジェクトでは混合して使うことが多く、二者択一ではない"
     ],
     "lv": 2,
     "group": "工程"
@@ -116,12 +181,20 @@
     "id": "t09",
     "cat": "技术概念",
     "q": "RAG vs Fine-tuning — 什么时候用哪个？",
+    "q_ja": "RAG vs Fine-tuning — いつどちらを使うか？",
     "bullets": [
       "RAG：知识经常更新 / 需要引用来源 / 数据量大但不能全训练进模型",
       "Fine-tuning：需要特定输出格式和风格 / 领域知识需要内化 / 低延迟（减少prompt长度）",
       "RAG失败场景：回归任务（时序预测）/ 答案需要计算而非检索",
       "结合使用：先RAG检索相关文档，再用fine-tuned模型生成（JP-DocRAG的做法）",
       "帮客户判断：问题是\"找答案\"还是\"计算/推理\"？"
+    ],
+    "bullets_ja": [
+      "RAG：知識が頻繁に更新される / ソースの引用が必要 / データ量は多いが全てをモデルに訓練できない",
+      "Fine-tuning：特定の出力フォーマットやスタイルが必要 / ドメイン知識を内在化する必要がある / 低レイテンシ（prompt長の削減）",
+      "RAGが失敗するシナリオ：回帰タスク（時系列予測）/ 答えに検索ではなく計算が必要",
+      "組み合わせ使用：まずRAGで関連文書を検索し、fine-tunedモデルで生成（JP-DocRAGのアプローチ）",
+      "顧客への判断基準：問題は\"答えを見つける\"のか\"計算/推論する\"のか？"
     ],
     "lv": 2,
     "group": "工程"
@@ -130,12 +203,20 @@
     "id": "t10",
     "cat": "技术概念",
     "q": "如何做模型评测（3层框架）",
+    "q_ja": "モデル評価の方法（3層フレームワーク）",
     "bullets": [
       "① 自动指标：准确率/Recall@K/MRR/延迟/token成本",
       "② LLM-as-Judge：用强模型评估弱模型输出，适合开放式生成任务",
       "③ 人工评估：领域专家最终验证，金融/医疗等高风险场景必须",
       "关键：先定义\"好\"的标准——电商文案的\"好\"和金融报告的\"好\"差别很大",
       "A/B测试：最终用业务指标（CTR/转化率）验证，不只是技术指标"
+    ],
+    "bullets_ja": [
+      "① 自動指標：正解率/Recall@K/MRR/レイテンシ/トークンコスト",
+      "② LLM-as-Judge：強いモデルで弱いモデルの出力を評価、オープンな生成タスクに適する",
+      "③ 人手評価：ドメイン専門家による最終検証、金融/医療などの高リスクシナリオでは必須",
+      "重要：まず\"良い\"の基準を定義する——ECコピーライティングの\"良い\"と金融レポートの\"良い\"は大きく異なる",
+      "A/Bテスト：最終的にはビジネス指標（CTR/コンバージョン率）で検証、技術指標だけではない"
     ],
     "lv": 2,
     "group": "工程"
@@ -144,6 +225,7 @@
     "id": "tc11",
     "cat": "技术概念",
     "q": "REST vs GraphQL vs gRPC — API 设计三种范式",
+    "q_ja": "REST vs GraphQL vs gRPC — API設計の3つのパラダイム",
     "bullets": [
       "<span class=\"highlight\">REST</span>：资源导向（URL = 资源），HTTP 动词（GET/POST/PUT/DELETE），JSON 格式，最普遍",
       "<span class=\"highlight\">GraphQL</span>：客户端精确指定需要的字段，一次请求获取多个资源，避免 over-fetching / under-fetching",
@@ -152,6 +234,14 @@
       "性能对比：gRPC 比 REST 快 2-10 倍（二进制序列化 + HTTP/2 多路复用 + 流式传输）",
       "面试常见追问：REST 的无状态性（stateless）意味着什么？→ 每个请求包含所有信息，服务端不保存会话状态"
     ],
+    "bullets_ja": [
+      "<span class=\"highlight\">REST</span>：リソース指向（URL = リソース）、HTTP動詞（GET/POST/PUT/DELETE）、JSON形式、最も普及",
+      "<span class=\"highlight\">GraphQL</span>：クライアントが必要なフィールドを正確に指定、1回のリクエストで複数リソースを取得、over-fetching / under-fetchingを回避",
+      "<span class=\"highlight\">gRPC</span>：Googleオープンソース、HTTP/2 + Protocol Buffers（バイナリシリアライゼーション）ベース、高性能、Microservices間通信に適する",
+      "選定：<span class=\"highlight\">公開API / シンプルなCRUD → REST</span> | 複雑なネスト型クエリのフロントエンド → GraphQL | 内部Microservicesの高頻度呼び出し → gRPC",
+      "性能比較：gRPCはRESTの2〜10倍高速（バイナリシリアライゼーション + HTTP/2多重化 + ストリーミング転送）",
+      "面接でよくある追加質問：RESTのステートレス性（stateless）とは？→ 各リクエストが全情報を含み、サーバー側でセッション状態を保持しない"
+    ],
     "lv": 2,
     "group": "工程"
   },
@@ -159,6 +249,7 @@
     "id": "tc12",
     "cat": "技术概念",
     "q": "CI/CD 流水线设计 — GitHub Actions / GitLab CI",
+    "q_ja": "CI/CD パイプライン設計 — GitHub Actions / GitLab CI",
     "bullets": [
       "<span class=\"highlight\">CI（持续集成）</span>：每次 push 自动跑 lint + 单元测试 + 构建，确保代码随时可合并",
       "<span class=\"highlight\">CD（持续部署/交付）</span>：CI 通过后自动部署到 staging/production 环境",
@@ -167,6 +258,14 @@
       "最佳实践：快速失败（lint 在前）+ 缓存依赖（加速构建）+ 并行执行（独立 job 同时跑）+ 环境分离（staging → production）",
       "GitHub Actions vs GitLab CI：Actions 用 YAML + Marketplace 生态好；GitLab CI 与 GitLab 深度集成，自建 runner 更灵活"
     ],
+    "bullets_ja": [
+      "<span class=\"highlight\">CI（継続的インテグレーション）</span>：pushごとにlint + ユニットテスト + ビルドを自動実行し、コードがいつでもマージ可能な状態を保証",
+      "<span class=\"highlight\">CD（継続的デプロイ/デリバリー）</span>：CI通過後にstaging/production環境へ自動デプロイ",
+      "<pre><span class=\"cm\"># GitHub Actions 基本结构</span>\nname: CI\non: [push, pull_request]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: pip install -r requirements.txt\n      - run: pytest tests/</pre>",
+      "重要概念：<span class=\"highlight\">Pipeline</span>（パイプライン）→ <span class=\"highlight\">Stage</span>（フェーズ：build/test/deploy）→ <span class=\"highlight\">Job</span>（具体的なタスク）→ <span class=\"highlight\">Step</span>（ステップ）",
+      "ベストプラクティス：フェイルファスト（lintを先に）+ 依存関係のキャッシュ（ビルド高速化）+ 並列実行（独立したjobを同時実行）+ 環境の分離（staging → production）",
+      "GitHub Actions vs GitLab CI：ActionsはYAML + Marketplaceエコシステムが充実。GitLab CIはGitLabと深く統合し、セルフホストrunnerの柔軟性が高い"
+    ],
     "lv": 2,
     "group": "工程"
   },
@@ -174,12 +273,20 @@
     "id": "tc13",
     "cat": "技术概念",
     "q": "Linux 面试高频命令 — 进程/网络/文件操作",
+    "q_ja": "Linux面接頻出コマンド — プロセス/ネットワーク/ファイル操作",
     "bullets": [
       "<pre><span class=\"cm\"># 进程管理</span>\nps aux | grep python     <span class=\"cm\"># 查找进程</span>\ntop / htop               <span class=\"cm\"># 实时资源监控</span>\nkill -9 &lt;PID&gt;            <span class=\"cm\"># 强制终止进程</span>\nnohup python train.py &amp;  <span class=\"cm\"># 后台运行，退出终端不停止</span>\nlsof -i :8080            <span class=\"cm\"># 查看端口占用</span></pre>",
       "<pre><span class=\"cm\"># 网络诊断</span>\ncurl -X GET http://api/health   <span class=\"cm\"># HTTP 请求测试</span>\nnetstat -tlnp / ss -tlnp        <span class=\"cm\"># 查看监听端口</span>\nping / traceroute               <span class=\"cm\"># 连通性和路由</span>\nwget / curl -O                  <span class=\"cm\"># 下载文件</span></pre>",
       "<pre><span class=\"cm\"># 文件操作</span>\nfind . -name <span class=\"str\">\"*.log\"</span> -mtime +7 -delete  <span class=\"cm\"># 删除7天前的日志</span>\ngrep -rn <span class=\"str\">\"error\"</span> /var/log/     <span class=\"cm\"># 递归搜索关键词</span>\ntail -f app.log                 <span class=\"cm\"># 实时查看日志</span>\ndu -sh * | sort -rh | head      <span class=\"cm\"># 目录大小排序</span>\nchmod 755 / chown user:group    <span class=\"cm\"># 权限管理</span></pre>",
       "管道与重定向：<code>|</code>（管道）、<code>></code>（覆盖写入）、<code>>></code>（追加）、<code>2>&1</code>（stderr 合并到 stdout）",
       "面试必问：<code>grep</code> + <code>awk</code> + <code>sed</code> 文本三剑客 — 至少能读懂基本用法"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"cm\"># 进程管理</span>\nps aux | grep python     <span class=\"cm\"># 查找进程</span>\ntop / htop               <span class=\"cm\"># 实时资源监控</span>\nkill -9 &lt;PID&gt;            <span class=\"cm\"># 强制终止进程</span>\nnohup python train.py &amp;  <span class=\"cm\"># 后台运行，退出终端不停止</span>\nlsof -i :8080            <span class=\"cm\"># 查看端口占用</span></pre>",
+      "<pre><span class=\"cm\"># 网络诊断</span>\ncurl -X GET http://api/health   <span class=\"cm\"># HTTP 请求测试</span>\nnetstat -tlnp / ss -tlnp        <span class=\"cm\"># 查看监听端口</span>\nping / traceroute               <span class=\"cm\"># 连通性和路由</span>\nwget / curl -O                  <span class=\"cm\"># 下载文件</span></pre>",
+      "<pre><span class=\"cm\"># 文件操作</span>\nfind . -name <span class=\"str\">\"*.log\"</span> -mtime +7 -delete  <span class=\"cm\"># 删除7天前的日志</span>\ngrep -rn <span class=\"str\">\"error\"</span> /var/log/     <span class=\"cm\"># 递归搜索关键词</span>\ntail -f app.log                 <span class=\"cm\"># 实时查看日志</span>\ndu -sh * | sort -rh | head      <span class=\"cm\"># 目录大小排序</span>\nchmod 755 / chown user:group    <span class=\"cm\"># 权限管理</span></pre>",
+      "パイプとリダイレクト：<code>|</code>（パイプ）、<code>></code>（上書き）、<code>>></code>（追記）、<code>2>&1</code>（stderrをstdoutに統合）",
+      "面接必出：<code>grep</code> + <code>awk</code> + <code>sed</code> テキスト三種の神器 — 少なくとも基本的な使い方を読めること"
     ],
     "lv": 2,
     "group": "工程"
@@ -188,6 +295,7 @@
     "id": "tc14",
     "cat": "技术概念",
     "q": "网络基础 — HTTP/HTTPS、TCP/UDP、DNS",
+    "q_ja": "ネットワーク基礎 — HTTP/HTTPS、TCP/UDP、DNS",
     "bullets": [
       "<span class=\"highlight\">TCP vs UDP</span>：TCP 可靠有序（三次握手/四次挥手）→ Web/API；UDP 快但不保证到达 → 视频/游戏/DNS查询",
       "<span class=\"highlight\">HTTP 状态码</span>：2xx 成功 | 3xx 重定向 | 4xx 客户端错误（400 参数错/401 未认证/403 无权限/404 不存在）| 5xx 服务端错误",
@@ -196,6 +304,14 @@
       "HTTP/1.1 vs HTTP/2 vs HTTP/3：H2 多路复用（一个 TCP 连接并行多个请求）；H3 基于 QUIC（UDP），更快的连接建立",
       "面试高频问：\"从输入 URL 到页面显示发生了什么？\" → DNS → TCP → TLS → HTTP 请求 → 服务器处理 → 渲染"
     ],
+    "bullets_ja": [
+      "<span class=\"highlight\">TCP vs UDP</span>：TCPは信頼性があり順序保証（3ウェイハンドシェイク/4ウェイクローズ）→ Web/API。UDPは高速だが到達保証なし → 動画/ゲーム/DNSクエリ",
+      "<span class=\"highlight\">HTTPステータスコード</span>：2xx 成功 | 3xx リダイレクト | 4xx クライアントエラー（400 パラメータ不正/401 未認証/403 権限なし/404 存在しない）| 5xx サーバーエラー",
+      "<span class=\"highlight\">HTTPS = HTTP + TLS</span>：TLSハンドシェイクで暗号化チャネルを確立、証明書でサーバーの身元を検証、中間者攻撃を防止",
+      "<span class=\"highlight\">DNS解決フロー</span>：ブラウザキャッシュ → OSキャッシュ → ローカルDNS → ルートDNSサーバー → TLD → 権威DNS → IPを返却",
+      "HTTP/1.1 vs HTTP/2 vs HTTP/3：H2は多重化（1つのTCP接続で複数リクエストを並列処理）、H3はQUIC（UDP）ベースでより高速な接続確立",
+      "面接頻出問題：\"URLを入力してからページが表示されるまでに何が起きるか？\" → DNS → TCP → TLS → HTTPリクエスト → サーバー処理 → レンダリング"
+    ],
     "lv": 2,
     "group": "工程"
   },
@@ -203,6 +319,7 @@
     "id": "tc15",
     "cat": "技术概念",
     "q": "认证与授权 — OAuth 2.0 / JWT / Session vs Token",
+    "q_ja": "認証と認可 — OAuth 2.0 / JWT / Session vs Token",
     "bullets": [
       "<span class=\"highlight\">认证(Authentication)</span>：你是谁？ | <span class=\"highlight\">授权(Authorization)</span>：你能干什么？",
       "<span class=\"highlight\">Session-based</span>：服务端存 session → 返回 session_id cookie → 有状态，需 session 存储，水平扩展难",
@@ -211,6 +328,14 @@
       "<span class=\"highlight\">OAuth 2.0</span>：第三方授权框架 → \"用 Google 账号登录\"。四种授权模式，最常用 Authorization Code Flow",
       "最佳实践：短期 Access Token（15min）+ 长期 Refresh Token + HTTPS 必须 + HttpOnly Cookie 存 token"
     ],
+    "bullets_ja": [
+      "<span class=\"highlight\">認証（Authentication）</span>：あなたは誰か？ | <span class=\"highlight\">認可（Authorization）</span>：あなたは何ができるか？",
+      "<span class=\"highlight\">Session-based</span>：サーバー側でsessionを保存 → session_id cookieを返却 → ステートフル、sessionストレージが必要、水平スケーリングが困難",
+      "<span class=\"highlight\">Token-based（JWT）</span>：サーバー側で署名付きtokenを生成 → クライアントが毎回携帯 → ステートレス、スケーリング容易、ただしtokenを能動的に無効化できない",
+      "JWTの構造：<code>Header.Payload.Signature</code>（Base64エンコード、<span class=\"highlight\">暗号化ではない！</span>改ざん防止の署名のみ、機密情報を格納しないこと）",
+      "<span class=\"highlight\">OAuth 2.0</span>：サードパーティ認可フレームワーク → \"Googleアカウントでログイン\"。4つの認可モード、最も一般的なのはAuthorization Code Flow",
+      "ベストプラクティス：短期Access Token（15分）+ 長期Refresh Token + HTTPS必須 + HttpOnly Cookieでtokenを保存"
+    ],
     "lv": 2,
     "group": "工程"
   },
@@ -218,6 +343,7 @@
     "id": "tc16",
     "cat": "技术概念",
     "q": "微服务 vs 单体架构 — 什么时候用哪个？",
+    "q_ja": "Microservices vs モノリシックアーキテクチャ — いつどちらを使うか？",
     "bullets": [
       "<span class=\"highlight\">单体(Monolith)</span>：一个代码库一个部署单元，简单直接 → 适合初创期、小团队、快速迭代",
       "<span class=\"highlight\">微服务(Microservices)</span>：按业务拆分独立服务，各自部署 → 适合大团队、高并发、需要独立扩缩容",
@@ -225,6 +351,14 @@
       "服务间通信：<span class=\"highlight\">同步</span> → REST/gRPC | <span class=\"highlight\">异步</span> → 消息队列（Kafka/RabbitMQ/Redis Pub/Sub）",
       "常见模式：API Gateway（统一入口）+ Service Mesh（Istio，管理服务间通信）+ 分布式追踪（Jaeger/Zipkin）",
       "Martin Fowler 原则：<span class=\"highlight\">\"Monolith First\"</span> — 先用单体验证业务，确定边界后再拆微服务"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">モノリス（Monolith）</span>：1つのコードベースに1つのデプロイ単位、シンプルで直接的 → スタートアップ期・小規模チーム・高速イテレーションに適する",
+      "<span class=\"highlight\">Microservices</span>：ビジネスごとに独立したサービスに分割し、個別にデプロイ → 大規模チーム・高い並行性・独立したスケーリングが必要な場合に適する",
+      "Microservicesの代償：ネットワーク呼び出しのレイテンシ、分散トランザクションの複雑さ、運用コストの増大（K8s/サービスディスカバリ/分散トレーシング/ログ集約が必要）",
+      "サービス間通信：<span class=\"highlight\">同期</span> → REST/gRPC | <span class=\"highlight\">非同期</span> → メッセージキュー（Kafka/RabbitMQ/Redis Pub/Sub）",
+      "よくあるパターン：API Gateway（統一エントリポイント）+ Service Mesh（Istio、サービス間通信の管理）+ 分散トレーシング（Jaeger/Zipkin）",
+      "Martin Fowlerの原則：<span class=\"highlight\">\"Monolith First\"</span> — まずモノリスでビジネスを検証し、境界を確定してからMicroservicesに分割"
     ],
     "lv": 3,
     "group": "工程"

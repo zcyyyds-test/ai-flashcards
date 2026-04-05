@@ -3,12 +3,20 @@
     "id": "m01",
     "cat": "ML/DL基础",
     "q": "优化器对比：SGD / Adam / AdamW",
+    "q_ja": "オプティマイザの比較：SGD / Adam / AdamW",
     "bullets": [
       "SGD：最基础，lr × gradient。需要精心调lr和momentum。收敛慢但泛化可能更好",
       "Adam：自适应学习率，维护一阶(动量)和二阶(方差)矩估计。收敛快，默认首选",
       "<span class=\"highlight\">AdamW</span>：Adam + 正确的weight decay（Adam的L2不等价于weight decay）→ LLM标准选择",
       "学习率：LLM训练通常用cosine schedule + warmup（前几百步线性升温，防止开始时梯度爆炸）",
       "LoRA微调常用lr=2e-4~2e-5，比全量微调高一个量级"
+    ],
+    "bullets_ja": [
+      "SGD：最も基本的、lr × gradient。lrとmomentumの慎重な調整が必要。収束は遅いが汎化性能はより良い場合がある",
+      "Adam：適応的学習率、1次（モメンタム）と2次（分散）のモーメント推定を維持。収束が速く、デフォルトの第一選択",
+      "<span class=\"highlight\">AdamW</span>：Adam + 正しいweight decay（AdamのL2正則化はweight decayと等価ではない）→ LLMの標準的な選択",
+      "学習率：LLMの学習ではcosine schedule + warmup（最初の数百ステップで線形に昇温、初期の勾配爆発を防止）が一般的",
+      "LoRAファインチューニングではlr=2e-4〜2e-5が一般的、フル・ファインチューニングより1桁高い"
     ],
     "group": "基础",
     "lv": 2
@@ -17,6 +25,7 @@
     "id": "m02",
     "cat": "ML/DL基础",
     "q": "过拟合与正则化",
+    "q_ja": "過学習と正則化",
     "bullets": [
       "过拟合：训练loss低但验证loss高 → 模型记住了训练数据而非学到规律",
       "Dropout：训练时随机丢弃神经元(通常p=0.1)，推理时关闭 → 集成效果",
@@ -25,6 +34,14 @@
       "数据增强：增加训练数据多样性 → 图像(翻转/裁剪)、NLP(同义替换/回译)",
       "LLM场景：LoRA本身就是正则化（低秩约束限制了参数自由度）"
     ],
+    "bullets_ja": [
+      "過学習：学習lossは低いが検証lossが高い → モデルが学習データを暗記し、規則性を学んでいない",
+      "Dropout：学習時にニューロンをランダムに無効化（通常p=0.1）、推論時はオフ → アンサンブル効果",
+      "Weight Decay(L2)：loss += λ||w||² → 大きな重みにペナルティ、AdamWでは分離実装",
+      "Early Stopping：検証lossが下がらなくなったら学習を停止 → 最もシンプルで効果的",
+      "データ拡張：学習データの多様性を向上 → 画像（反転/クロップ）、NLP（同義語置換/逆翻訳）",
+      "LLMの場合：LoRA自体が正則化（低ランク制約がパラメータの自由度を制限）"
+    ],
     "group": "基础",
     "lv": 1
   },
@@ -32,12 +49,20 @@
     "id": "m03",
     "cat": "ML/DL基础",
     "q": "损失函数选择",
+    "q_ja": "損失関数の選択",
     "bullets": [
       "<span class=\"highlight\">Cross-Entropy</span>：分类标准loss，-Σy·log(p)。LLM预训练就是对next token做CE",
       "MSE：回归任务，(y-ŷ)²。对异常值敏感",
       "Focal Loss：给简单样本低权重，难样本高权重 → 解决类别不平衡",
       "Contrastive Loss：拉近正样本对、推远负样本对 → Embedding训练核心",
       "Triplet Loss：(anchor, positive, negative)三元组 → 你的bge-m3微调用的"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">Cross-Entropy</span>：分類の標準loss、-Σy·log(p)。LLMの事前学習はnext tokenに対するCE",
+      "MSE：回帰タスク、(y-ŷ)²。外れ値に敏感",
+      "Focal Loss：簡単なサンプルに低い重み、難しいサンプルに高い重み → クラス不均衡を解消",
+      "Contrastive Loss：正のサンプルペアを近づけ、負のサンプルペアを引き離す → Embedding学習の核心",
+      "Triplet Loss：(anchor, positive, negative)の三つ組 → 自身のbge-m3ファインチューニングで使用"
     ],
     "group": "基础",
     "lv": 2
@@ -46,12 +71,20 @@
     "id": "m04",
     "cat": "ML/DL基础",
     "q": "CNN 核心概念",
+    "q_ja": "CNNの中核概念",
     "bullets": [
       "卷积核(filter)：滑动窗口提取局部特征 → 参数共享（比全连接参数少得多）",
       "池化(Pooling)：降低空间分辨率，MaxPool保留最强特征",
       "经典架构演进：LeNet→AlexNet→VGG→ResNet(残差连接)→EfficientNet",
       "ResNet的残差连接：y = F(x) + x → 让深层网络可训练（和Transformer的residual connection相同思想）",
       "你的Edge AI项目：用TensorRT对视觉模型做量化加速部署到Jetson Nano"
+    ],
+    "bullets_ja": [
+      "畳み込みカーネル（filter）：スライディングウィンドウで局所特徴を抽出 → パラメータ共有（全結合層よりはるかに少ないパラメータ）",
+      "プーリング（Pooling）：空間解像度を低減、MaxPoolは最も強い特徴を保持",
+      "代表的アーキテクチャの変遷：LeNet→AlexNet→VGG→ResNet（残差接続）→EfficientNet",
+      "ResNetの残差接続：y = F(x) + x → 深いネットワークの学習を可能にする（Transformerのresidual connectionと同じ思想）",
+      "自身のEdge AIプロジェクト：TensorRTで視覚モデルを量子化・高速化しJetson Nanoにデプロイ"
     ],
     "group": "基础",
     "lv": 1
@@ -60,12 +93,20 @@
     "id": "m05",
     "cat": "ML/DL基础",
     "q": "RNN / LSTM / GRU",
+    "q_ja": "RNN / LSTM / GRU",
     "bullets": [
       "RNN：h_t = f(W_h·h_{t-1} + W_x·x_t)。梯度消失/爆炸 → 长序列失效",
       "<span class=\"highlight\">LSTM</span>：引入Cell State + 三个门(遗忘/输入/输出) → 解决长期依赖",
       "GRU：LSTM简化版，两个门(重置/更新) → 参数少，效果接近LSTM",
       "已被Transformer大部分取代，但在低资源/实时场景仍有价值",
       "你的经验：PowerTS中LSTM精度比LLM高13倍，推理~1ms vs ~5-10s → <span class=\"highlight\">简单模型在特定场景仍是最优解</span>"
+    ],
+    "bullets_ja": [
+      "RNN：h_t = f(W_h·h_{t-1} + W_x·x_t)。勾配消失/爆発 → 長いシーケンスでは機能しない",
+      "<span class=\"highlight\">LSTM</span>：Cell Stateと3つのゲート（忘却/入力/出力）を導入 → 長期依存関係を解決",
+      "GRU：LSTMの簡略版、2つのゲート（リセット/更新） → パラメータが少なく、LSTMに近い性能",
+      "Transformerにほぼ置き換えられたが、低リソース/リアルタイム環境では依然として有用",
+      "自身の経験：PowerTSにおいてLSTMはLLMより精度が13倍高く、推論は約1ms vs 約5-10s → <span class=\"highlight\">シンプルなモデルが特定の場面では最適解</span>"
     ],
     "group": "基础",
     "lv": 2
@@ -74,12 +115,20 @@
     "id": "m06",
     "cat": "ML/DL基础",
     "q": "Batch Norm vs Layer Norm",
+    "q_ja": "Batch Norm vs Layer Norm",
     "bullets": [
       "Batch Norm：对一个batch内的同一特征维度做归一化。依赖batch size，不适合序列任务",
       "<span class=\"highlight\">Layer Norm</span>：对单个样本的所有特征维度做归一化。不依赖batch size → Transformer标准选择",
       "RMSNorm：Layer Norm的简化版，只做缩放不做平移 → Llama/Qwen使用，更快",
       "Pre-Norm vs Post-Norm：Transformer中Layer Norm放在Attention前(Pre)还是后(Post)",
       "Pre-Norm训练更稳定（主流选择），Post-Norm理论上效果更好但难训练"
+    ],
+    "bullets_ja": [
+      "Batch Norm：バッチ内の同一特徴次元に対して正規化。バッチサイズに依存し、シーケンスタスクには不適",
+      "<span class=\"highlight\">Layer Norm</span>：単一サンプルの全特徴次元に対して正規化。バッチサイズに依存しない → Transformerの標準的な選択",
+      "RMSNorm：Layer Normの簡略版、スケーリングのみでシフトなし → Llama/Qwenで使用、より高速",
+      "Pre-Norm vs Post-Norm：TransformerでLayer NormをAttentionの前（Pre）に置くか後（Post）に置くか",
+      "Pre-Normは学習がより安定（主流の選択）、Post-Normは理論上は効果が良いが学習が困難"
     ],
     "group": "基础",
     "lv": 2
@@ -88,12 +137,20 @@
     "id": "m07",
     "cat": "ML/DL基础",
     "q": "GAN 原理与应用",
+    "q_ja": "GANの原理と応用",
     "bullets": [
       "Generator生成假数据 vs Discriminator判断真假 → 对抗训练",
       "训练难点：模式崩塌(generator只输出少数样本) / 训练不稳定 / 评估困难(FID/IS)",
       "WGAN：用Wasserstein距离替代JS散度 → 更稳定的训练信号",
       "应用：图像生成 / 数据增强 / 风格迁移 / 超分辨率",
       "你的经验：本科项目用GAN做电力系统稀有事件数据增强 → 解决类别不平衡问题"
+    ],
+    "bullets_ja": [
+      "Generatorが偽データを生成 vs Discriminatorが真偽を判定 → 敵対的学習",
+      "学習の難点：モード崩壊（Generatorが少数のサンプルのみ出力）/ 学習が不安定 / 評価が困難（FID/IS）",
+      "WGAN：JS divergenceの代わりにWasserstein距離を使用 → より安定した学習シグナル",
+      "応用：画像生成 / データ拡張 / スタイル変換 / 超解像",
+      "自身の経験：学部プロジェクトでGANを用いて電力系統のレアイベントデータを拡張 → クラス不均衡問題を解消"
     ],
     "group": "基础",
     "lv": 2
@@ -102,12 +159,20 @@
     "id": "m08",
     "cat": "ML/DL基础",
     "q": "强化学习基础：PPO / DDPG",
+    "q_ja": "強化学習の基礎：PPO / DDPG",
     "bullets": [
       "RL核心：Agent在Environment中执行Action获得Reward，目标是最大化累计Reward",
       "Policy Gradient：直接优化策略函数 → REINFORCE算法（高方差）",
       "<span class=\"highlight\">PPO</span>：加clip限制策略更新幅度 → 稳定训练。RLHF的标准选择",
       "<span class=\"highlight\">DDPG</span>：Actor-Critic + 连续动作空间 → 适合机器人/电力控制",
       "你的经验：①本科用DDPG/PPO做电力系统实时控制 ②理解RLHF中PPO的作用"
+    ],
+    "bullets_ja": [
+      "RLの核心：AgentがEnvironment内でActionを実行しRewardを取得、目標は累積Rewardの最大化",
+      "Policy Gradient：方策関数を直接最適化 → REINFORCEアルゴリズム（高分散）",
+      "<span class=\"highlight\">PPO</span>：clipで方策更新幅を制限 → 安定した学習。RLHFの標準的な選択",
+      "<span class=\"highlight\">DDPG</span>：Actor-Critic + 連続行動空間 → ロボット/電力制御に適する",
+      "自身の経験：①学部でDDPG/PPOによる電力系統のリアルタイム制御 ②RLHFにおけるPPOの役割を理解"
     ],
     "group": "基础",
     "lv": 3
@@ -116,12 +181,20 @@
     "id": "m09",
     "cat": "ML/DL基础",
     "q": "对比学习（Contrastive Learning）",
+    "q_ja": "対照学習（Contrastive Learning）",
     "bullets": [
       "核心思想：<span class=\"highlight\">拉近正样本对，推远负样本对</span>在embedding空间中",
       "SimCLR：同一图像的两个增强版本互为正样本，其他图像为负样本",
       "CLIP：图像和文本配对做对比学习 → 跨模态理解",
       "SimCSE：用dropout制造正样本对 → 简单有效的句向量方法",
       "你的应用：bge-m3微调用MultipleNegativesRankingLoss（对比学习变体），in-batch negatives提高效率"
+    ],
+    "bullets_ja": [
+      "核心的な考え方：Embedding空間において<span class=\"highlight\">正のサンプルペアを近づけ、負のサンプルペアを引き離す</span>",
+      "SimCLR：同一画像の2つの拡張バージョンを正のサンプルとし、他の画像を負のサンプルとする",
+      "CLIP：画像とテキストのペアで対照学習 → クロスモーダル理解",
+      "SimCSE：Dropoutで正のサンプルペアを生成 → シンプルで効果的な文ベクトル手法",
+      "自身の応用：bge-m3ファインチューニングでMultipleNegativesRankingLoss（対照学習の変種）を使用、in-batch negativesで効率向上"
     ],
     "group": "基础",
     "lv": 3
@@ -130,6 +203,7 @@
     "id": "m10",
     "cat": "ML/DL基础",
     "q": "Attention机制演进",
+    "q_ja": "Attention機構の進化",
     "bullets": [
       "<span class=\"highlight\">Bahdanau(2014)</span>：加性Attention，score = v^T·tanh(W_1·h_i + W_2·s_j)，首次在Seq2Seq中引入注意力",
       "<span class=\"highlight\">Luong(2015)</span>：乘性Attention，score = h_i^T·W·s_j，计算更高效。还提出local attention（只关注窗口）",
@@ -138,6 +212,14 @@
       "演进逻辑：从\"辅助RNN的对齐工具\" → \"完全替代RNN的序列建模核心\"",
       "后续优化：MQA(Multi-Query) → GQA(Grouped-Query) → 减少KV头数降低推理成本"
     ],
+    "bullets_ja": [
+      "<span class=\"highlight\">Bahdanau(2014)</span>：加法的Attention、score = v^T·tanh(W_1·h_i + W_2·s_j)、Seq2Seqに初めてAttentionを導入",
+      "<span class=\"highlight\">Luong(2015)</span>：乗法的Attention、score = h_i^T·W·s_j、計算効率が向上。local attention（ウィンドウ内のみ注目）も提案",
+      "<span class=\"highlight\">Self-Attention(2017)</span>：Q/K/Vが同一シーケンスから、各位置が全位置にattend → Transformerの核心",
+      "<span class=\"highlight\">Multi-Head Attention</span>：d_modelをh個のヘッドに分割、各ヘッドが独立にAttentionを計算してconcat → 多種の関係を捕捉",
+      "進化のロジック：「RNNを補助するアラインメントツール」から「RNNを完全に置き換えるシーケンスモデリングの核心」へ",
+      "後続の最適化：MQA(Multi-Query) → GQA(Grouped-Query) → KVヘッド数を削減し推論コストを低減"
+    ],
     "group": "基础",
     "lv": 2
   },
@@ -145,6 +227,7 @@
     "id": "m11",
     "cat": "ML/DL基础",
     "q": "梯度消失与梯度爆炸",
+    "q_ja": "勾配消失と勾配爆発",
     "bullets": [
       "<span class=\"highlight\">梯度消失</span>：反向传播时梯度连乘 → 趋近于0 → 深层参数无法更新。常见于sigmoid/tanh激活",
       "<span class=\"highlight\">梯度爆炸</span>：梯度连乘 → 趋向无穷 → 参数更新不稳定。常见于深层RNN",
@@ -153,6 +236,14 @@
       "权重初始化：Xavier(适合sigmoid/tanh) / He(适合ReLU) / 保持各层方差一致",
       "LLM中：Pre-Norm + Residual + Gradient Clipping(通常max_norm=1.0)三板斧"
     ],
+    "bullets_ja": [
+      "<span class=\"highlight\">勾配消失</span>：逆伝播時に勾配が連鎖的に乗算 → 0に近づく → 深い層のパラメータが更新されない。sigmoid/tanh活性化で頻発",
+      "<span class=\"highlight\">勾配爆発</span>：勾配が連鎖的に乗算 → 無限大に向かう → パラメータ更新が不安定。深層RNNで頻発",
+      "消失の解決：ReLU/GELU活性化（導関数が縮小しない）/ Residual Connection（勾配のバイパス経路）/ Layer Norm",
+      "爆発の解決：Gradient Clipping（勾配ノルムを制限、LLM学習の標準装備）/ 適切な重み初期化",
+      "重み初期化：Xavier（sigmoid/tanh向き）/ He（ReLU向き）/ 各層の分散を一定に保つ",
+      "LLMでは：Pre-Norm + Residual + Gradient Clipping（通常max_norm=1.0）の三点セット"
+    ],
     "group": "基础",
     "lv": 2
   },
@@ -160,6 +251,7 @@
     "id": "m12",
     "cat": "ML/DL基础",
     "q": "学习率调度策略",
+    "q_ja": "学習率スケジューリング戦略",
     "bullets": [
       "<span class=\"highlight\">Warmup</span>：从极小lr线性升温到目标lr。原因：初始参数随机，大lr会破坏预训练权重",
       "<span class=\"highlight\">Cosine Annealing</span>：lr按余弦曲线从峰值衰减到接近0。平滑衰减，LLM训练最常用",
@@ -168,6 +260,14 @@
       "Warmup+Cosine组合：LLM标准配置。如warmup 2000步 → cosine衰减到0",
       "实践：warmup步数通常为总步数的1-5%；peak lr与batch size正相关（线性缩放规则）"
     ],
+    "bullets_ja": [
+      "<span class=\"highlight\">Warmup</span>：極小lrから目標lrまで線形に昇温。理由：初期パラメータがランダムなため、大きなlrは事前学習済みの重みを破壊する",
+      "<span class=\"highlight\">Cosine Annealing</span>：lrがコサイン曲線に沿ってピーク値から0近くまで減衰。滑らかな減衰、LLM学習で最も一般的",
+      "<span class=\"highlight\">OneCycleLR</span>：上昇→下降の1サイクル、大きなlrで探索 → FastAI推奨、収束が速い",
+      "Step Decay：Nエポックごとにlrにγ（例：0.1）を乗算 → 古典的だがcosineほど滑らかではない",
+      "Warmup+Cosineの組み合わせ：LLMの標準構成。例：warmup 2000ステップ → cosine減衰で0に",
+      "実践：warmupステップ数は通常総ステップ数の1-5%；ピークlrはバッチサイズに比例（線形スケーリング則）"
+    ],
     "group": "基础",
     "lv": 2
   },
@@ -175,6 +275,7 @@
     "id": "m13",
     "cat": "ML/DL基础",
     "q": "数据增强技术",
+    "q_ja": "データ拡張技術",
     "bullets": [
       "CV：翻转/旋转/裁剪/颜色抖动 → 基础几何变换。<span class=\"highlight\">Mixup</span>：两张图线性插值混合",
       "CV进阶：CutMix(剪切粘贴区域) / AutoAugment(搜索最优增强策略) / RandAugment(随机组合)",
@@ -183,6 +284,14 @@
       "对比学习中的增强：SimCLR的random crop+color distortion / SimCSE的dropout",
       "注意：增强不能改变语义标签（NLP中尤其需要小心）"
     ],
+    "bullets_ja": [
+      "CV：反転/回転/クロップ/色ジッタ → 基本的な幾何変換。<span class=\"highlight\">Mixup</span>：2枚の画像を線形補間で混合",
+      "CV発展：CutMix（領域を切り貼り）/ AutoAugment（最適な拡張戦略を探索）/ RandAugment（ランダム組み合わせ）",
+      "NLP：同義語置換 / ランダム削除/入れ替え / <span class=\"highlight\">逆翻訳</span>（別言語に翻訳して戻す）/ EDA",
+      "NLP発展：LLMで言い換え(paraphrase)を生成 / データ蒸留（大モデルで学習データを生成）",
+      "対照学習での拡張：SimCLRのrandom crop+color distortion / SimCSEのDropout",
+      "注意：拡張が意味ラベルを変えてはならない（NLPでは特に注意が必要）"
+    ],
     "group": "基础",
     "lv": 1
   },
@@ -190,6 +299,7 @@
     "id": "m14",
     "cat": "ML/DL基础",
     "q": "模型压缩：剪枝、蒸馏、量化",
+    "q_ja": "モデル圧縮：枝刈り、蒸留、量子化",
     "bullets": [
       "<span class=\"highlight\">剪枝(Pruning)</span>：移除冗余参数。非结构化(单个权重置零) vs 结构化(整行/整列/整个head删除)",
       "结构化剪枝对硬件更友好（实际加速），非结构化剪枝比例高但需要稀疏硬件支持",
@@ -198,6 +308,14 @@
       "<span class=\"highlight\">量化(Quantization)</span>：降低数值精度。PTQ(训练后量化)简单 / QAT(量化感知训练)精度高",
       "组合使用：先蒸馏得到小模型 → 再量化部署。如DistilBERT(蒸馏) + INT8(量化)"
     ],
+    "bullets_ja": [
+      "<span class=\"highlight\">枝刈り(Pruning)</span>：冗長なパラメータを除去。非構造化（個々の重みをゼロに）vs 構造化（行/列/ヘッド全体を削除）",
+      "構造化枝刈りはハードウェアに優しい（実際の高速化）、非構造化枝刈りは高い比率で削減可能だがスパースハードウェアのサポートが必要",
+      "<span class=\"highlight\">知識蒸留(Distillation)</span>：大モデル（teacher）のsoft labelで小モデル（student）を教える。KD Loss = CE(student, soft_label)",
+      "蒸留の鍵：Temperatureでteacherの出力分布を軟化し、studentにより豊かな「暗黙知」を学ばせる",
+      "<span class=\"highlight\">量子化(Quantization)</span>：数値精度を低減。PTQ（学習後量子化）はシンプル / QAT（量子化意識学習）は精度が高い",
+      "組み合わせ使用：まず蒸留で小モデルを取得 → 量子化してデプロイ。例：DistilBERT（蒸留）+ INT8（量子化）"
+    ],
     "group": "基础",
     "lv": 3
   },
@@ -205,6 +323,7 @@
     "id": "m15",
     "cat": "ML/DL基础",
     "q": "交叉验证与超参搜索",
+    "q_ja": "交差検証とハイパーパラメータ探索",
     "bullets": [
       "<span class=\"highlight\">K-Fold CV</span>：数据分K份，每次用K-1份训练、1份验证，轮换K次取平均 → 评估更稳定",
       "Stratified K-Fold：保持每折中类别比例一致 → 分类任务必选",
@@ -213,6 +332,14 @@
       "<span class=\"highlight\">Bayesian Optimization</span>：用高斯过程建模超参→性能映射，智能选下一组 → Optuna/Ray Tune",
       "LLM微调：超参空间小(lr/rank/epochs)，通常小规模grid search即可"
     ],
+    "bullets_ja": [
+      "<span class=\"highlight\">K-Fold CV</span>：データをK分割し、毎回K-1個で学習・1個で検証、K回ローテーションして平均 → 評価がより安定",
+      "Stratified K-Fold：各foldでクラス比率を一定に保つ → 分類タスクでは必須",
+      "Grid Search：全ハイパーパラメータの組み合わせを網羅的に探索 → シンプルだが組み合わせ爆発",
+      "Random Search：ハイパーパラメータの組み合わせをランダムサンプリング → 高次元空間ではGrid Searchより効率的（Bergstra 2012）",
+      "<span class=\"highlight\">Bayesian Optimization</span>：ガウス過程でハイパーパラメータ→性能のマッピングをモデル化、次の組み合わせをインテリジェントに選択 → Optuna/Ray Tune",
+      "LLMファインチューニング：ハイパーパラメータ空間が小さい（lr/rank/epochs）、通常は小規模なgrid searchで十分"
+    ],
     "group": "基础",
     "lv": 2
   },
@@ -220,6 +347,7 @@
     "id": "m16",
     "cat": "ML/DL基础",
     "q": "Transformer架构变体：GPT vs BERT vs T5 vs LLaMA",
+    "q_ja": "Transformerアーキテクチャの変種：GPT vs BERT vs T5 vs LLaMA",
     "bullets": [
       "<span class=\"highlight\">GPT</span>：Decoder-only，CLM预训练。单向attention，适合生成。GPT-3(175B)开启大模型时代",
       "<span class=\"highlight\">BERT</span>：Encoder-only，MLM+NSP预训练。双向attention，适合理解/分类。仍是NLU任务首选",
@@ -227,6 +355,14 @@
       "<span class=\"highlight\">LLaMA</span>：Decoder-only，Pre-Norm + RoPE + SwiGLU + GQA。开源生态核心，训练数据充分(Chinchilla)",
       "架构选择：纯生成→Decoder-only / 纯理解→Encoder-only / 条件生成(翻译)→Enc-Dec",
       "趋势：<span class=\"highlight\">Decoder-only统一天下</span>，因为足够大时理解能力也很强"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">GPT</span>：Decoder-only、CLM事前学習。単方向Attention、生成に適する。GPT-3(175B)が大規模モデル時代を開始",
+      "<span class=\"highlight\">BERT</span>：Encoder-only、MLM+NSP事前学習。双方向Attention、理解/分類に適する。NLUタスクでは依然として第一選択",
+      "<span class=\"highlight\">T5</span>：Encoder-Decoder、Span Corruption事前学習。text-to-textの統一フレームワーク、翻訳/要約に適する",
+      "<span class=\"highlight\">LLaMA</span>：Decoder-only、Pre-Norm + RoPE + SwiGLU + GQA。オープンソースエコシステムの中核、十分な学習データ(Chinchilla)",
+      "アーキテクチャの選択：純粋な生成→Decoder-only / 純粋な理解→Encoder-only / 条件付き生成（翻訳）→Enc-Dec",
+      "トレンド：<span class=\"highlight\">Decoder-onlyが統一</span>、十分に大きければ理解能力も高いため"
     ],
     "group": "基础",
     "lv": 2

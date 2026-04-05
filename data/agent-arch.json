@@ -3,12 +3,20 @@
     "id": "a01",
     "cat": "Agent架构",
     "q": "Agent 四要素",
+    "q_ja": "Agentの四要素",
     "bullets": [
       "<span class=\"highlight\">LLM</span>：大脑，负责推理和决策",
       "<span class=\"highlight\">Tools</span>：手和脚，执行外部操作（API调用/代码执行/搜索/数据库查询）",
       "<span class=\"highlight\">Memory</span>：短期(对话历史) + 长期(向量数据库/文件) + 工作记忆(当前任务状态)",
       "<span class=\"highlight\">Planning</span>：任务分解和执行策略（ReAct/Plan-and-Execute/反思）",
       "你的项目覆盖全部四要素：SiLR(LLM+仿真工具+观测记忆+ReAct规划)，RAG(LLM+10工具+检索记忆+意图路由)"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">LLM</span>：頭脳、推論と意思決定を担当",
+      "<span class=\"highlight\">Tools</span>：手足、外部操作を実行（API呼び出し/コード実行/検索/データベースクエリ）",
+      "<span class=\"highlight\">Memory</span>：短期（対話履歴）+ 長期（ベクトルDB/ファイル）+ ワーキングメモリ（現在のタスク状態）",
+      "<span class=\"highlight\">Planning</span>：タスク分解と実行戦略（ReAct/Plan-and-Execute/内省）",
+      "自身のプロジェクトは全四要素をカバー：SiLR（LLM+シミュレーションツール+観測メモリ+ReAct計画）、RAG（LLM+10ツール+検索メモリ+意図ルーティング）"
     ],
     "group": "基础",
     "lv": 1
@@ -17,12 +25,20 @@
     "id": "a02",
     "cat": "Agent架构",
     "q": "Function Calling 实现机制",
+    "q_ja": "Function Callingの実装メカニズム",
     "bullets": [
       "原理：System Prompt中定义工具的JSON Schema → LLM输出结构化的工具调用请求 → 系统执行 → 结果返回LLM",
       "OpenAI格式：tool_calls: [{function: {name, arguments}}]",
       "关键挑战：①LLM可能生成无效参数 ②可能调用不存在的工具 ③可能不调工具直接回答",
       "你的解决方案：三层ActionParser（原生/JSON/正则兜底）+ 强制调用guardrails",
       "<span class=\"highlight\">Structured Output</span>：限制LLM只能输出符合Schema的JSON，减少解析错误"
+    ],
+    "bullets_ja": [
+      "原理：System PromptでツールのJSON Schemaを定義 → LLMが構造化されたツール呼び出しリクエストを出力 → システムが実行 → 結果をLLMに返却",
+      "OpenAI形式：tool_calls: [{function: {name, arguments}}]",
+      "主な課題：①LLMが無効なパラメータを生成する可能性 ②存在しないツールを呼び出す可能性 ③ツールを呼ばず直接回答する可能性",
+      "自身の解決策：三層ActionParser（ネイティブ/JSON/正規表現フォールバック）+ 強制呼び出しGuardrails",
+      "<span class=\"highlight\">Structured Output</span>：LLMの出力をSchemaに準拠したJSONに制限し、パースエラーを削減"
     ],
     "group": "基础",
     "lv": 2
@@ -31,12 +47,20 @@
     "id": "a03",
     "cat": "Agent架构",
     "q": "Memory 系统分类",
+    "q_ja": "Memoryシステムの分類",
     "bullets": [
       "<span class=\"highlight\">短期记忆</span>：对话历史，直接放在context window中。受限于上下文长度",
       "<span class=\"highlight\">长期记忆</span>：向量数据库存储过去的经验，按相似度检索。如MemGPT",
       "<span class=\"highlight\">工作记忆</span>：当前任务的中间状态（scratchpad），类似人的\"脑中暂存\"",
       "<span class=\"highlight\">情景记忆</span>：记录成功/失败的完整episode，用于未来类似任务参考",
       "你的实现：SiLR用观测压缩做工作记忆；RAG用向量DB做长期记忆；EdgeRouter用滑动窗口做时序记忆"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">短期記憶</span>：対話履歴、context windowに直接配置。コンテキスト長に制約される",
+      "<span class=\"highlight\">長期記憶</span>：ベクトルDBに過去の経験を保存し、類似度で検索。例：MemGPT",
+      "<span class=\"highlight\">ワーキングメモリ</span>：現在のタスクの中間状態（scratchpad）、人間の「脳内一時保存」に相当",
+      "<span class=\"highlight\">エピソード記憶</span>：成功/失敗した完全なエピソードを記録し、将来の類似タスクの参考に",
+      "自身の実装：SiLRは観測圧縮でワーキングメモリ；RAGはベクトルDBで長期記憶；EdgeRouterはスライディングウィンドウで時系列記憶"
     ],
     "group": "基础",
     "lv": 2
@@ -45,12 +69,20 @@
     "id": "a04",
     "cat": "Agent架构",
     "q": "Context Engineering vs Prompt Engineering",
+    "q_ja": "Context Engineering vs Prompt Engineering",
     "bullets": [
       "Prompt Engineering：优化单次输入的措辞和格式",
       "<span class=\"highlight\">Context Engineering</span>（2025新趋势）：设计整个信息流——什么信息在什么时候以什么形式进入context",
       "包括：工具结果的格式化 / 记忆检索的时机 / 观测数据的压缩 / 系统提示的动态调整",
       "你做过的：Observation压缩(2000→300 tokens) / Escalation Hint(只在REJECT时注入) / RRF权重调整",
       "核心理念：<span class=\"highlight\">控制模型\"看到什么\"比\"怎么问\"更重要</span>"
+    ],
+    "bullets_ja": [
+      "Prompt Engineering：単一入力の表現やフォーマットを最適化",
+      "<span class=\"highlight\">Context Engineering</span>（2025年の新トレンド）：情報フロー全体を設計——どの情報を、いつ、どのような形式でcontextに入れるか",
+      "含まれるもの：ツール結果のフォーマット / メモリ検索のタイミング / 観測データの圧縮 / システムプロンプトの動的調整",
+      "自身の実践：Observation圧縮（2000→300トークン）/ Escalation Hint（REJECT時のみ注入）/ RRF重み調整",
+      "核心理念：<span class=\"highlight\">モデルに「何を見せるか」の制御は「どう質問するか」より重要</span>"
     ],
     "group": "基础",
     "lv": 2
@@ -59,12 +91,20 @@
     "id": "a05",
     "cat": "Agent架构",
     "q": "Multi-Agent 通信模式",
+    "q_ja": "Multi-Agentの通信パターン",
     "bullets": [
       "①<span class=\"highlight\">中心化</span>：一个Orchestrator分派任务给Worker Agent → 简单可控，单点瓶颈",
       "②<span class=\"highlight\">层级式</span>：Manager→SubManager→Worker → 适合复杂组织结构",
       "③<span class=\"highlight\">对等式</span>：Agent之间直接通信协商 → 灵活但难以调试",
       "④<span class=\"highlight\">黑板模式</span>：共享状态空间，各Agent读写 → 解耦通信",
       "框架：AutoGen(对话式) / CrewAI(角色分工) / LangGraph(图状态机)"
+    ],
+    "bullets_ja": [
+      "①<span class=\"highlight\">中央集権型</span>：1つのOrchestratorがWorker Agentにタスクを割り当て → シンプルで制御可能、単一障害点がボトルネック",
+      "②<span class=\"highlight\">階層型</span>：Manager→SubManager→Worker → 複雑な組織構造に適する",
+      "③<span class=\"highlight\">ピアツーピア型</span>：Agent間で直接通信・交渉 → 柔軟だがデバッグが困難",
+      "④<span class=\"highlight\">ブラックボードパターン</span>：共有状態空間で各Agentが読み書き → 通信を疎結合化",
+      "フレームワーク：AutoGen（対話型）/ CrewAI（役割分担）/ LangGraph（グラフ状態マシン）"
     ],
     "group": "基础",
     "lv": 3
@@ -73,6 +113,7 @@
     "id": "a06",
     "cat": "Agent架构",
     "q": "Agent Evaluation 方法",
+    "q_ja": "Agentの評価方法",
     "bullets": [
       "①<span class=\"highlight\">任务完成率</span>：最终结果是否正确（SiLR: 97.0%恢复成功率）",
       "②<span class=\"highlight\">效率</span>：完成任务所需步骤数/token数/时间（SiLR: 平均3.2步）",
@@ -81,6 +122,14 @@
       "⑤<span class=\"highlight\">成本</span>：API调用/推理成本（SiLR: 比GPT低100×）",
       "难点：Agent行为是随机的，需要多次运行取统计量，不能只跑一次"
     ],
+    "bullets_ja": [
+      "①<span class=\"highlight\">タスク完了率</span>：最終結果が正しいか（SiLR: 97.0%の復旧成功率）",
+      "②<span class=\"highlight\">効率</span>：タスク完了に要するステップ数/トークン数/時間（SiLR: 平均3.2ステップ）",
+      "③<span class=\"highlight\">安全性</span>：危険なアクション/制約違反を引き起こしたか（SiLR: 違反率0%）",
+      "④<span class=\"highlight\">ロバスト性</span>：入力変化時の性能安定性（PowerTS: わずか+2.2%の劣化）",
+      "⑤<span class=\"highlight\">コスト</span>：API呼び出し/推論コスト（SiLR: GPTより100倍低コスト）",
+      "難点：Agentの挙動は確率的であり、複数回実行して統計量を取る必要がある、1回の実行では不十分"
+    ],
     "group": "基础",
     "lv": 3
   },
@@ -88,12 +137,20 @@
     "id": "a07",
     "cat": "Agent架构",
     "q": "Guardrails 设计模式",
+    "q_ja": "Guardrailsの設計パターン",
     "bullets": [
       "输入Guardrails：过滤恶意/不安全的用户输入（prompt injection检测）",
       "输出Guardrails：检查LLM输出的安全性/合规性/格式正确性",
       "动作Guardrails：<span class=\"highlight\">在执行前验证动作安全性</span>（SiLR验证器就是这类）",
       "回退Guardrails：失败时的兜底策略（Failsafe、默认回答、人工转接）",
       "实现方式：规则(正则/关键词) / 分类器(fine-tuned) / LLM-as-Judge / 仿真器验证"
+    ],
+    "bullets_ja": [
+      "入力Guardrails：悪意のある/安全でないユーザー入力をフィルタリング（Prompt Injection検出）",
+      "出力Guardrails：LLM出力の安全性/コンプライアンス/フォーマットの正確性をチェック",
+      "アクションGuardrails：<span class=\"highlight\">実行前にアクションの安全性を検証</span>（SiLR検証器がこのタイプ）",
+      "フォールバックGuardrails：失敗時のセーフティネット戦略（フェイルセーフ、デフォルト回答、人間への転送）",
+      "実装方式：ルール（正規表現/キーワード）/ 分類器（fine-tuned）/ LLM-as-Judge / シミュレータ検証"
     ],
     "group": "基础",
     "lv": 3
@@ -102,12 +159,20 @@
     "id": "a08",
     "cat": "Agent架构",
     "q": "Agent 常见失败模式",
+    "q_ja": "Agentのよくある失敗パターン",
     "bullets": [
       "①<span class=\"highlight\">无限循环</span>：没有终止条件或步数上限 → Bounded ReAct解决",
       "②<span class=\"highlight\">工具滥用</span>：反复调用同一工具期待不同结果 → 重试上限+失败反馈",
       "③<span class=\"highlight\">最短路径</span>：跳过关键步骤直接回答 → 强制调用guardrails",
       "④<span class=\"highlight\">幻觉动作</span>：调用不存在的工具或生成无效参数 → Schema验证+解析兜底",
       "⑤<span class=\"highlight\">上下文污染</span>：错误信息积累在context中影响后续判断 → 观测压缩+状态重置"
+    ],
+    "bullets_ja": [
+      "①<span class=\"highlight\">無限ループ</span>：終了条件やステップ上限がない → Bounded ReActで解決",
+      "②<span class=\"highlight\">ツールの乱用</span>：異なる結果を期待して同じツールを繰り返し呼び出す → リトライ上限+失敗フィードバック",
+      "③<span class=\"highlight\">最短経路</span>：重要なステップを飛ばして直接回答 → 強制呼び出しGuardrails",
+      "④<span class=\"highlight\">幻覚アクション</span>：存在しないツールの呼び出しや無効なパラメータの生成 → Schema検証+パースのフォールバック",
+      "⑤<span class=\"highlight\">コンテキスト汚染</span>：誤った情報がcontextに蓄積し後続の判断に影響 → 観測圧縮+状態リセット"
     ],
     "group": "基础",
     "lv": 2
@@ -116,12 +181,20 @@
     "id": "aa09",
     "cat": "Agent架构",
     "q": "MCP协议 (Model Context Protocol)",
+    "q_ja": "MCPプロトコル（Model Context Protocol）",
     "bullets": [
       "<span class=\"highlight\">MCP</span>是Anthropic提出的开放协议，标准化LLM与外部工具/数据源的连接方式",
       "类比：USB-C统一了充电接口 → MCP统一了<span class=\"highlight\">AI与工具的接口</span>。一次实现，所有模型都能用",
       "三大能力：①<span class=\"highlight\">Tools</span>（模型调用外部函数） ②<span class=\"highlight\">Resources</span>（模型读取外部数据） ③<span class=\"highlight\">Prompts</span>（预定义的交互模板）",
       "架构：Client(LLM应用) ↔ MCP Server(工具提供者)。传输层支持stdio/HTTP SSE",
       "优势vs自定义Function Calling：标准化(跨模型复用) / 发现机制(动态列出可用工具) / 安全模型(权限控制内置)"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">MCP</span>はAnthropicが提案したオープンプロトコルで、LLMと外部ツール/データソースの接続方式を標準化",
+      "例え：USB-Cが充電端子を統一 → MCPが<span class=\"highlight\">AIとツールのインターフェース</span>を統一。一度実装すれば全モデルで使用可能",
+      "3つの主要機能：①<span class=\"highlight\">Tools</span>（モデルが外部関数を呼び出す） ②<span class=\"highlight\">Resources</span>（モデルが外部データを読み取る） ③<span class=\"highlight\">Prompts</span>（事前定義された対話テンプレート）",
+      "アーキテクチャ：Client（LLMアプリ） ↔ MCP Server（ツール提供者）。トランスポート層はstdio/HTTP SSEをサポート",
+      "カスタムFunction Callingに対する優位性：標準化（クロスモデル再利用）/ ディスカバリ機構（利用可能なツールを動的にリスト）/ セキュリティモデル（権限制御が組み込み）"
     ],
     "group": "基础",
     "lv": 2
@@ -130,12 +203,20 @@
     "id": "aa10",
     "cat": "Agent架构",
     "q": "Agent记忆系统设计（深入）",
+    "q_ja": "Agentメモリシステムの設計（詳細）",
     "bullets": [
       "记忆三层架构：<span class=\"highlight\">感知层</span>(原始输入) → <span class=\"highlight\">工作记忆层</span>(当前任务上下文) → <span class=\"highlight\">长期记忆层</span>(持久化知识)",
       "工作记忆管理：context window有限 → 关键技术：①摘要压缩 ②滑动窗口 ③重要性评分后选择性保留",
       "长期记忆存储：向量数据库(语义检索) + 结构化数据库(精确查询) + 知识图谱(关系推理)",
       "记忆检索策略：<span class=\"highlight\">相关性</span>(embedding相似度) + <span class=\"highlight\">时效性</span>(时间衰减) + <span class=\"highlight\">重要性</span>(访问频率/情感强度)",
       "你的实践：SiLR观测压缩(2000→300 tokens)就是工作记忆管理；RAG向量检索就是长期记忆检索"
+    ],
+    "bullets_ja": [
+      "メモリの三層アーキテクチャ：<span class=\"highlight\">知覚層</span>（生の入力）→ <span class=\"highlight\">ワーキングメモリ層</span>（現在のタスクコンテキスト）→ <span class=\"highlight\">長期記憶層</span>（永続化された知識）",
+      "ワーキングメモリ管理：context windowに制限あり → 鍵となる技術：①要約圧縮 ②スライディングウィンドウ ③重要度スコアリングによる選択的保持",
+      "長期記憶の保存：ベクトルDB（意味検索）+ 構造化DB（精密クエリ）+ 知識グラフ（関係推論）",
+      "メモリ検索戦略：<span class=\"highlight\">関連性</span>（Embedding類似度）+ <span class=\"highlight\">時効性</span>（時間減衰）+ <span class=\"highlight\">重要性</span>（アクセス頻度/感情の強度）",
+      "自身の実践：SiLRの観測圧縮（2000→300トークン）がワーキングメモリ管理；RAGのベクトル検索が長期記憶の検索"
     ],
     "group": "基础",
     "lv": 3
@@ -144,12 +225,20 @@
     "id": "aa11",
     "cat": "Agent架构",
     "q": "Multi-Agent协作模式（深入）",
+    "q_ja": "Multi-Agent協調パターン（詳細）",
     "bullets": [
       "<span class=\"highlight\">辩论模式</span>：多个Agent各持观点，通过多轮辩论达成共识 → 提升推理质量（如Society of Mind）",
       "<span class=\"highlight\">流水线模式</span>：Agent A的输出作为Agent B的输入 → 适合有明确流程的任务（研究→写作→审查）",
       "<span class=\"highlight\">投票模式</span>：多个Agent独立完成任务，多数投票选最佳 → Self-Consistency的Agent版本",
       "协作挑战：①状态同步（共享记忆的一致性） ②任务分配（避免重复工作） ③冲突解决（Agent意见不一致时的仲裁）",
       "框架对比：LangGraph(最灵活，图定义) / CrewAI(角色驱动，简单) / AutoGen(对话驱动，微软)"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">ディベートパターン</span>：複数のAgentがそれぞれ見解を持ち、複数ラウンドの議論で合意形成 → 推論品質の向上（例：Society of Mind）",
+      "<span class=\"highlight\">パイプラインパターン</span>：Agent Aの出力がAgent Bの入力 → 明確なフローのあるタスクに適する（研究→執筆→レビュー）",
+      "<span class=\"highlight\">投票パターン</span>：複数のAgentが独立にタスクを完了し、多数決で最善を選択 → Self-ConsistencyのAgent版",
+      "協調の課題：①状態同期（共有メモリの一貫性） ②タスク分配（重複作業の回避） ③コンフリクト解決（Agent間で意見が分かれた場合の裁定）",
+      "フレームワーク比較：LangGraph（最も柔軟、グラフ定義）/ CrewAI（ロール駆動、シンプル）/ AutoGen（対話駆動、Microsoft）"
     ],
     "group": "基础",
     "lv": 3
@@ -158,12 +247,20 @@
     "id": "aa12",
     "cat": "Agent架构",
     "q": "Agent安全与对齐",
+    "q_ja": "Agentの安全性とアライメント",
     "bullets": [
       "核心原则：Agent拥有工具调用能力 → 安全比纯文本生成<span class=\"highlight\">重要10倍</span>（可以真正造成损害）",
       "<span class=\"highlight\">最小权限</span>：每个Agent/工具只授予完成任务所需的最小权限。读写分离，危险操作需人工确认",
       "<span class=\"highlight\">沙箱执行</span>：代码执行在隔离环境中运行（Docker/VM），网络访问白名单，文件系统只读挂载",
       "<span class=\"highlight\">人类在回路</span>(Human-in-the-Loop)：高风险动作（删除/付款/发布）必须人工审批。SiLR验证器就是自动化版HITL",
       "对齐难题：Agent优化任务目标时可能产生意外行为（specification gaming）→ 需要明确约束+过程监控，不只看最终结果"
+    ],
+    "bullets_ja": [
+      "核心原則：Agentはツール呼び出し能力を持つ → 安全性はテキスト生成のみの場合より<span class=\"highlight\">10倍重要</span>（実際に損害を引き起こす可能性がある）",
+      "<span class=\"highlight\">最小権限</span>：各Agent/ツールにタスク完了に必要な最小限の権限のみ付与。読み書き分離、危険な操作は人間の確認が必要",
+      "<span class=\"highlight\">サンドボックス実行</span>：コード実行を隔離環境で行う（Docker/VM）、ネットワークアクセスはホワイトリスト、ファイルシステムは読み取り専用マウント",
+      "<span class=\"highlight\">Human-in-the-Loop</span>：高リスクなアクション（削除/支払い/公開）は人間の承認が必須。SiLR検証器は自動化版HITL",
+      "アライメントの難題：Agentがタスク目標を最適化する際に予期しない行動を取る可能性（specification gaming）→ 明確な制約+プロセス監視が必要、最終結果だけを見ない"
     ],
     "group": "基础",
     "lv": 3

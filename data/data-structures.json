@@ -3,12 +3,20 @@
     "id": "ds01",
     "cat": "数据结构",
     "q": "数组 vs 链表 — 核心区别与适用场景",
+    "q_ja": "配列 vs 連結リスト — 核心的な違いと適用場面",
     "bullets": [
       "数组：连续内存，随机访问O(1)，插入删除O(n)（需要移动元素）",
       "链表：离散内存，随机访问O(n)，插入删除O(1)（改指针即可）",
       "数组适合：频繁查找、已知大小、缓存友好（CPU预取连续内存）",
       "链表适合：频繁插入删除、大小动态变化、不需要随机访问",
       "Python list 底层是<span class=\"highlight\">动态数组</span>（非链表），append均摊O(1)"
+    ],
+    "bullets_ja": [
+      "配列：連続メモリ、ランダムアクセスO(1)、挿入削除O(n)（要素の移動が必要）",
+      "連結リスト：離散メモリ、ランダムアクセスO(n)、挿入削除O(1)（ポインタの変更のみ）",
+      "配列が適する場面：頻繁な検索、サイズが既知、キャッシュフレンドリー（CPUが連続メモリをプリフェッチ）",
+      "連結リストが適する場面：頻繁な挿入削除、サイズが動的に変化、ランダムアクセスが不要",
+      "Python listの内部は<span class=\"highlight\">動的配列</span>（連結リストではない）、appendは償却O(1)"
     ],
     "lv": 1,
     "group": "基础"
@@ -17,11 +25,18 @@
     "id": "ds02",
     "cat": "数据结构",
     "q": "栈 (Stack) — LIFO 原理与应用",
+    "q_ja": "スタック (Stack) — LIFO の原理と応用",
     "bullets": [
       "后进先出(Last In First Out)，只能操作栈顶：push O(1) / pop O(1) / peek O(1)",
       "<pre><span class=\"cm\"># Python 用 list 实现栈</span>\nstack = []\nstack.append(1)  <span class=\"cm\"># push</span>\nstack.append(2)\ntop = stack.pop()  <span class=\"cm\"># pop → 2</span>\npeek = stack[-1]   <span class=\"cm\"># peek → 1</span></pre>",
       "经典应用：括号匹配 / 函数调用栈 / 浏览器前进后退 / 表达式求值",
       "面试高频：有效括号(LC20)、最小栈(LC155)、每日温度(LC739)"
+    ],
+    "bullets_ja": [
+      "後入れ先出し(Last In First Out)、スタック先頭のみ操作可能：push O(1) / pop O(1) / peek O(1)",
+      "<pre><span class=\"cm\"># Python で list を使ってスタックを実装</span>\nstack = []\nstack.append(1)  <span class=\"cm\"># push</span>\nstack.append(2)\ntop = stack.pop()  <span class=\"cm\"># pop → 2</span>\npeek = stack[-1]   <span class=\"cm\"># peek → 1</span></pre>",
+      "典型的な応用：括弧の対応 / 関数呼び出しスタック / ブラウザの進む・戻る / 式の評価",
+      "面接高頻出：有効な括弧(LC20)、最小スタック(LC155)、毎日の気温(LC739)"
     ],
     "lv": 1,
     "group": "基础"
@@ -30,11 +45,18 @@
     "id": "ds03",
     "cat": "数据结构",
     "q": "队列 (Queue) — FIFO 原理与应用",
+    "q_ja": "キュー (Queue) — FIFO の原理と応用",
     "bullets": [
       "先进先出(First In First Out)：enqueue O(1) / dequeue O(1)",
       "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> deque\nq = deque()\nq.append(1)     <span class=\"cm\"># enqueue</span>\nq.append(2)\nfront = q.popleft()  <span class=\"cm\"># dequeue → 1</span></pre>",
       "双端队列 deque：两端都能O(1)操作，比list.pop(0)快（list是O(n)）",
       "经典应用：BFS / 任务调度 / 消息队列 / 滑动窗口最大值"
+    ],
+    "bullets_ja": [
+      "先入れ先出し(First In First Out)：enqueue O(1) / dequeue O(1)",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> deque\nq = deque()\nq.append(1)     <span class=\"cm\"># enqueue</span>\nq.append(2)\nfront = q.popleft()  <span class=\"cm\"># dequeue → 1</span></pre>",
+      "両端キュー deque：両端からO(1)操作可能、list.pop(0)より高速（listはO(n)）",
+      "典型的な応用：BFS / タスクスケジューリング / メッセージキュー / スライディングウィンドウ最大値"
     ],
     "lv": 1,
     "group": "基础"
@@ -43,12 +65,20 @@
     "id": "ds04",
     "cat": "数据结构",
     "q": "哈希表 (HashMap) — 原理与冲突解决",
+    "q_ja": "ハッシュテーブル (HashMap) — 原理と衝突解決",
     "bullets": [
       "核心：key → hash函数 → 数组索引 → 存value。查找/插入/删除均摊 <span class=\"num\">O(1)</span>",
       "冲突解决：①链地址法（每个桶是链表/红黑树）②开放地址法（线性/二次探测）",
       "Python dict 用开放地址法，负载因子>2/3时自动扩容（×2）",
       "<pre><span class=\"cm\"># Two Sum — 哈希表经典应用</span>\n<span class=\"kw\">def</span> <span class=\"fn\">two_sum</span>(nums, target):\n    seen = {}\n    <span class=\"kw\">for</span> i, n <span class=\"kw\">in</span> enumerate(nums):\n        <span class=\"kw\">if</span> target - n <span class=\"kw\">in</span> seen:\n            <span class=\"kw\">return</span> [seen[target-n], i]\n        seen[n] = i</pre>",
       "时间O(n)空间O(n)，用空间换时间的典型思路"
+    ],
+    "bullets_ja": [
+      "核心：key → ハッシュ関数 → 配列インデックス → valueを格納。検索/挿入/削除は償却 <span class=\"num\">O(1)</span>",
+      "衝突解決：①チェイン法（各バケットが連結リスト/赤黒木）②オープンアドレス法（線形/二次探査）",
+      "Python dictはオープンアドレス法を使用、負荷係数>2/3で自動拡張（×2）",
+      "<pre><span class=\"cm\"># Two Sum — ハッシュテーブルの典型応用</span>\n<span class=\"kw\">def</span> <span class=\"fn\">two_sum</span>(nums, target):\n    seen = {}\n    <span class=\"kw\">for</span> i, n <span class=\"kw\">in</span> enumerate(nums):\n        <span class=\"kw\">if</span> target - n <span class=\"kw\">in</span> seen:\n            <span class=\"kw\">return</span> [seen[target-n], i]\n        seen[n] = i</pre>",
+      "時間O(n)空間O(n)、空間と時間のトレードオフの典型的な考え方"
     ],
     "lv": 1,
     "group": "基础"
@@ -57,6 +87,7 @@
     "id": "ds05",
     "cat": "数据结构",
     "q": "复杂度分析 — O(1) 到 O(n!) 速查",
+    "q_ja": "計算量分析 — O(1) から O(n!) 早見表",
     "bullets": [
       "<span class=\"num\">O(1)</span>：哈希表查找、数组索引访问、栈push/pop",
       "<span class=\"num\">O(log n)</span>：二分查找、平衡BST操作、堆操作",
@@ -65,6 +96,14 @@
       "<span class=\"num\">O(n²)</span>：冒泡/选择/插入排序、暴力两层循环",
       "<span class=\"num\">O(2ⁿ)</span>：子集枚举、递归斐波那契 | <span class=\"num\">O(n!)</span>：全排列"
     ],
+    "bullets_ja": [
+      "<span class=\"num\">O(1)</span>：ハッシュテーブル検索、配列インデックスアクセス、スタックのpush/pop",
+      "<span class=\"num\">O(log n)</span>：二分探索、平衡BSTの操作、ヒープ操作",
+      "<span class=\"num\">O(n)</span>：配列の走査、線形探索、連結リスト操作",
+      "<span class=\"num\">O(n log n)</span>：クイック/マージソート（比較ソートの最適）",
+      "<span class=\"num\">O(n²)</span>：バブル/選択/挿入ソート、素朴な二重ループ",
+      "<span class=\"num\">O(2ⁿ)</span>：部分集合の列挙、再帰フィボナッチ | <span class=\"num\">O(n!)</span>：全順列"
+    ],
     "lv": 1,
     "group": "基础"
   },
@@ -72,10 +111,16 @@
     "id": "ds06",
     "cat": "数据结构",
     "q": "二叉树遍历 — 前序/中序/后序/层序",
+    "q_ja": "二分木の走査 — 前順/中順/後順/層順",
     "bullets": [
       "<pre><span class=\"kw\">def</span> <span class=\"fn\">inorder</span>(root):  <span class=\"cm\"># 中序：左-根-右 → BST有序</span>\n    <span class=\"kw\">if not</span> root: <span class=\"kw\">return</span> []\n    <span class=\"kw\">return</span> inorder(root.left)+[root.val]+inorder(root.right)\n\n<span class=\"kw\">from</span> collections <span class=\"kw\">import</span> deque\n<span class=\"kw\">def</span> <span class=\"fn\">level_order</span>(root):  <span class=\"cm\"># BFS层序</span>\n    <span class=\"kw\">if not</span> root: <span class=\"kw\">return</span> []\n    q, res = deque([root]), []\n    <span class=\"kw\">while</span> q:\n        level = []\n        <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(len(q)):\n            node = q.popleft()\n            level.append(node.val)\n            <span class=\"kw\">if</span> node.left: q.append(node.left)\n            <span class=\"kw\">if</span> node.right: q.append(node.right)\n        res.append(level)\n    <span class=\"kw\">return</span> res</pre>",
       "前序(根左右)/中序(左根右)/后序(左右根) → 递归或用栈迭代",
       "层序 = BFS = 队列"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">inorder</span>(root):  <span class=\"cm\"># 中順：左-根-右 → BSTではソート済み</span>\n    <span class=\"kw\">if not</span> root: <span class=\"kw\">return</span> []\n    <span class=\"kw\">return</span> inorder(root.left)+[root.val]+inorder(root.right)\n\n<span class=\"kw\">from</span> collections <span class=\"kw\">import</span> deque\n<span class=\"kw\">def</span> <span class=\"fn\">level_order</span>(root):  <span class=\"cm\"># BFS層順</span>\n    <span class=\"kw\">if not</span> root: <span class=\"kw\">return</span> []\n    q, res = deque([root]), []\n    <span class=\"kw\">while</span> q:\n        level = []\n        <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(len(q)):\n            node = q.popleft()\n            level.append(node.val)\n            <span class=\"kw\">if</span> node.left: q.append(node.left)\n            <span class=\"kw\">if</span> node.right: q.append(node.right)\n        res.append(level)\n    <span class=\"kw\">return</span> res</pre>",
+      "前順(根左右)/中順(左根右)/後順(左右根) → 再帰またはスタックで反復",
+      "層順 = BFS = キュー"
     ],
     "lv": 2,
     "group": "基础"
@@ -84,11 +129,18 @@
     "id": "ds07",
     "cat": "数据结构",
     "q": "堆 / 优先队列",
+    "q_ja": "ヒープ / 優先度キュー",
     "bullets": [
       "最小堆：父节点 ≤ 子节点。插入O(log n)，取最小O(1)，删除最小O(log n)",
       "<pre><span class=\"kw\">import</span> heapq\nnums = [3,1,4,1,5,9]\nheapq.heapify(nums)       <span class=\"cm\"># O(n) 建堆</span>\nheapq.heappush(nums, 2)   <span class=\"cm\"># O(log n)</span>\nmin_val = heapq.heappop(nums)  <span class=\"cm\"># O(log n) → 1</span>\n<span class=\"cm\"># Top-K：nlargest / nsmallest</span>\ntop3 = heapq.nlargest(3, nums)</pre>",
       "Python heapq 是<span class=\"highlight\">最小堆</span>，要最大堆可以取负或用 nlargest",
       "经典应用：Top-K问题 / 合并K个有序链表 / 中位数流"
+    ],
+    "bullets_ja": [
+      "最小ヒープ：親ノード ≤ 子ノード。挿入O(log n)、最小値取得O(1)、最小値削除O(log n)",
+      "<pre><span class=\"kw\">import</span> heapq\nnums = [3,1,4,1,5,9]\nheapq.heapify(nums)       <span class=\"cm\"># O(n) ヒープ構築</span>\nheapq.heappush(nums, 2)   <span class=\"cm\"># O(log n)</span>\nmin_val = heapq.heappop(nums)  <span class=\"cm\"># O(log n) → 1</span>\n<span class=\"cm\"># Top-K：nlargest / nsmallest</span>\ntop3 = heapq.nlargest(3, nums)</pre>",
+      "Python heapqは<span class=\"highlight\">最小ヒープ</span>、最大ヒープが必要な場合は負数にするか nlargest を使用",
+      "典型的な応用：Top-K問題 / K個のソート済みリストのマージ / 中央値ストリーム"
     ],
     "lv": 2,
     "group": "基础"
@@ -97,12 +149,20 @@
     "id": "ds08",
     "cat": "数据结构",
     "q": "图的表示 — 邻接表 vs 邻接矩阵",
+    "q_ja": "グラフの表現 — 隣接リスト vs 隣接行列",
     "bullets": [
       "<span class=\"highlight\">邻接表</span>：dict of lists，空间O(V+E)，适合<span class=\"highlight\">稀疏图</span>（大多数面试题用这个）",
       "<span class=\"highlight\">邻接矩阵</span>：2D数组，空间O(V²)，适合<span class=\"highlight\">稠密图</span>，O(1)判断边是否存在",
       "<pre><span class=\"cm\"># 邻接表（最常用）</span>\n<span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\ngraph = defaultdict(list)\ngraph[<span class=\"num\">0</span>].append(<span class=\"num\">1</span>)  <span class=\"cm\"># 0 → 1</span>\ngraph[<span class=\"num\">0</span>].append(<span class=\"num\">2</span>)  <span class=\"cm\"># 0 → 2</span>\ngraph[<span class=\"num\">1</span>].append(<span class=\"num\">2</span>)  <span class=\"cm\"># 1 → 2</span>\n\n<span class=\"cm\"># 邻接矩阵</span>\nV = <span class=\"num\">3</span>\nmatrix = [[<span class=\"num\">0</span>]*V <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(V)]\nmatrix[<span class=\"num\">0</span>][<span class=\"num\">1</span>] = <span class=\"num\">1</span>  <span class=\"cm\"># 0 → 1</span>\nmatrix[<span class=\"num\">0</span>][<span class=\"num\">2</span>] = <span class=\"num\">1</span>  <span class=\"cm\"># 0 → 2</span>\nmatrix[<span class=\"num\">1</span>][<span class=\"num\">2</span>] = <span class=\"num\">1</span>  <span class=\"cm\"># 1 → 2</span></pre>",
       "选择依据：E ≪ V² 用邻接表（省空间），E ≈ V² 用邻接矩阵（快速查边）",
       "面试中绝大多数图题使用邻接表，矩阵多见于Floyd最短路、图的连通性等特定问题"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">隣接リスト</span>：dict of lists、空間O(V+E)、<span class=\"highlight\">疎グラフ</span>に適する（ほとんどの面接問題でこれを使用）",
+      "<span class=\"highlight\">隣接行列</span>：2D配列、空間O(V²)、<span class=\"highlight\">密グラフ</span>に適する、O(1)で辺の存在を判定",
+      "<pre><span class=\"cm\"># 隣接リスト（最も一般的）</span>\n<span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\ngraph = defaultdict(list)\ngraph[<span class=\"num\">0</span>].append(<span class=\"num\">1</span>)  <span class=\"cm\"># 0 → 1</span>\ngraph[<span class=\"num\">0</span>].append(<span class=\"num\">2</span>)  <span class=\"cm\"># 0 → 2</span>\ngraph[<span class=\"num\">1</span>].append(<span class=\"num\">2</span>)  <span class=\"cm\"># 1 → 2</span>\n\n<span class=\"cm\"># 隣接行列</span>\nV = <span class=\"num\">3</span>\nmatrix = [[<span class=\"num\">0</span>]*V <span class=\"kw\">for</span> _ <span class=\"kw\">in</span> range(V)]\nmatrix[<span class=\"num\">0</span>][<span class=\"num\">1</span>] = <span class=\"num\">1</span>  <span class=\"cm\"># 0 → 1</span>\nmatrix[<span class=\"num\">0</span>][<span class=\"num\">2</span>] = <span class=\"num\">1</span>  <span class=\"cm\"># 0 → 2</span>\nmatrix[<span class=\"num\">1</span>][<span class=\"num\">2</span>] = <span class=\"num\">1</span>  <span class=\"cm\"># 1 → 2</span></pre>",
+      "選択基準：E ≪ V² なら隣接リスト（空間節約）、E ≈ V² なら隣接行列（辺の高速検索）",
+      "面接では大半のグラフ問題で隣接リストを使用、行列はFloyd最短経路やグラフの連結性など特定の問題で使用"
     ],
     "lv": 2,
     "group": "基础"
@@ -111,12 +171,20 @@
     "id": "ds09",
     "cat": "数据结构",
     "q": "平衡BST — AVL树 vs 红黑树",
+    "q_ja": "平衡BST — AVL木 vs 赤黒木",
     "bullets": [
       "普通BST在最坏情况下退化为链表，所有操作变为<span class=\"num\">O(n)</span>（如顺序插入1,2,3,4,5）",
       "<span class=\"highlight\">AVL树</span>：严格平衡（左右子树高度差≤1），查找最快，但插入/删除时旋转次数较多",
       "<span class=\"highlight\">红黑树</span>：放松平衡条件（通过红黑着色规则），旋转更少，插入/删除性能更好 → Java TreeMap、C++ std::map 底层实现",
       "两者查找/插入/删除均为 <span class=\"num\">O(log n)</span>，区别在于常数因子：AVL查找略快（更矮），红黑树修改略快（旋转少）",
       "Python 没有内置平衡BST；可用第三方库 <span class=\"highlight\">sortedcontainers.SortedList</span>，底层是B-tree变体，实测性能优秀"
+    ],
+    "bullets_ja": [
+      "通常のBSTは最悪の場合連結リストに退化し、全操作が<span class=\"num\">O(n)</span>になる（例：1,2,3,4,5の順に挿入）",
+      "<span class=\"highlight\">AVL木</span>：厳密に平衡（左右部分木の高さの差≤1）、検索は最速だが、挿入/削除時の回転回数が多い",
+      "<span class=\"highlight\">赤黒木</span>：平衡条件を緩和（赤黒の着色規則による）、回転が少なく挿入/削除の性能が向上 → Java TreeMap、C++ std::mapの内部実装",
+      "両者とも検索/挿入/削除は <span class=\"num\">O(log n)</span>、違いは定数係数：AVLは検索がやや速い（高さが低い）、赤黒木は変更がやや速い（回転が少ない）",
+      "Pythonには組み込みの平衡BSTがない；サードパーティライブラリ <span class=\"highlight\">sortedcontainers.SortedList</span> が使用可能、内部はB-tree変種で実測性能が優秀"
     ],
     "lv": 3,
     "group": "基础"
@@ -125,12 +193,20 @@
     "id": "ds10",
     "cat": "数据结构",
     "q": "线段树 — 区间查询与更新",
+    "q_ja": "セグメント木 — 区間クエリと更新",
     "bullets": [
       "解决问题：区间求和/最值 + 单点更新，每次操作 <span class=\"num\">O(log n)</span>（暴力需要O(n)）",
       "<pre><span class=\"kw\">class</span> <span class=\"fn\">SegTree</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, nums):\n        self.n = len(nums)\n        self.tree = [<span class=\"num\">0</span>] * (<span class=\"num\">2</span> * self.n)\n        <span class=\"cm\"># 叶子节点放在 tree[n..2n-1]</span>\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(self.n):\n            self.tree[self.n + i] = nums[i]\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(self.n - <span class=\"num\">1</span>, <span class=\"num\">0</span>, -<span class=\"num\">1</span>):\n            self.tree[i] = self.tree[<span class=\"num\">2</span>*i] + self.tree[<span class=\"num\">2</span>*i+<span class=\"num\">1</span>]</pre>",
       "<pre><span class=\"kw\">def</span> <span class=\"fn\">update</span>(self, i, val):  <span class=\"cm\"># 单点更新</span>\n    i += self.n\n    self.tree[i] = val\n    <span class=\"kw\">while</span> i > <span class=\"num\">1</span>:\n        i //= <span class=\"num\">2</span>\n        self.tree[i] = self.tree[<span class=\"num\">2</span>*i] + self.tree[<span class=\"num\">2</span>*i+<span class=\"num\">1</span>]\n\n<span class=\"kw\">def</span> <span class=\"fn\">query</span>(self, l, r):  <span class=\"cm\"># 区间和 [l, r)</span>\n    res = <span class=\"num\">0</span>\n    l += self.n; r += self.n\n    <span class=\"kw\">while</span> l < r:\n        <span class=\"kw\">if</span> l % <span class=\"num\">2</span> == <span class=\"num\">1</span>: res += self.tree[l]; l += <span class=\"num\">1</span>\n        <span class=\"kw\">if</span> r % <span class=\"num\">2</span> == <span class=\"num\">1</span>: r -= <span class=\"num\">1</span>; res += self.tree[r]\n        l //= <span class=\"num\">2</span>; r //= <span class=\"num\">2</span>\n    <span class=\"kw\">return</span> res</pre>",
       "应用：区间最值/求和（LC 307）、区间调度、数据流统计",
       "<span class=\"highlight\">懒传播(Lazy Propagation)</span>：支持区间批量更新，将更新延迟到查询时下推，区间更新也能O(log n)"
+    ],
+    "bullets_ja": [
+      "解決する問題：区間の合計/最値 + 点更新、各操作 <span class=\"num\">O(log n)</span>（素朴法はO(n)）",
+      "<pre><span class=\"kw\">class</span> <span class=\"fn\">SegTree</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, nums):\n        self.n = len(nums)\n        self.tree = [<span class=\"num\">0</span>] * (<span class=\"num\">2</span> * self.n)\n        <span class=\"cm\"># 葉ノードを tree[n..2n-1] に配置</span>\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(self.n):\n            self.tree[self.n + i] = nums[i]\n        <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(self.n - <span class=\"num\">1</span>, <span class=\"num\">0</span>, -<span class=\"num\">1</span>):\n            self.tree[i] = self.tree[<span class=\"num\">2</span>*i] + self.tree[<span class=\"num\">2</span>*i+<span class=\"num\">1</span>]</pre>",
+      "<pre><span class=\"kw\">def</span> <span class=\"fn\">update</span>(self, i, val):  <span class=\"cm\"># 点更新</span>\n    i += self.n\n    self.tree[i] = val\n    <span class=\"kw\">while</span> i > <span class=\"num\">1</span>:\n        i //= <span class=\"num\">2</span>\n        self.tree[i] = self.tree[<span class=\"num\">2</span>*i] + self.tree[<span class=\"num\">2</span>*i+<span class=\"num\">1</span>]\n\n<span class=\"kw\">def</span> <span class=\"fn\">query</span>(self, l, r):  <span class=\"cm\"># 区間和 [l, r)</span>\n    res = <span class=\"num\">0</span>\n    l += self.n; r += self.n\n    <span class=\"kw\">while</span> l < r:\n        <span class=\"kw\">if</span> l % <span class=\"num\">2</span> == <span class=\"num\">1</span>: res += self.tree[l]; l += <span class=\"num\">1</span>\n        <span class=\"kw\">if</span> r % <span class=\"num\">2</span> == <span class=\"num\">1</span>: r -= <span class=\"num\">1</span>; res += self.tree[r]\n        l //= <span class=\"num\">2</span>; r //= <span class=\"num\">2</span>\n    <span class=\"kw\">return</span> res</pre>",
+      "応用：区間最値/合計（LC 307）、区間スケジューリング、データストリーム統計",
+      "<span class=\"highlight\">遅延伝搬(Lazy Propagation)</span>：区間一括更新をサポート、更新をクエリ時に下位に伝搬、区間更新もO(log n)"
     ],
     "lv": 3,
     "group": "基础"
@@ -139,12 +215,20 @@
     "id": "ds11",
     "cat": "数据结构",
     "q": "树状数组 (BIT/Fenwick Tree)",
+    "q_ja": "フェニック木 (BIT/Fenwick Tree)",
     "bullets": [
       "比线段树更简洁，专门解决<span class=\"highlight\">前缀和 + 单点更新</span>问题，代码量仅约10行",
       "核心：<span class=\"highlight\">lowbit = i & (-i)</span>，利用二进制最低位1来划分区间",
       "<pre><span class=\"kw\">class</span> <span class=\"fn\">BIT</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, n):\n        self.n = n\n        self.tree = [<span class=\"num\">0</span>] * (n + <span class=\"num\">1</span>)  <span class=\"cm\"># 1-indexed</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">update</span>(self, i, delta):  <span class=\"cm\"># 单点加 delta</span>\n        <span class=\"kw\">while</span> i <= self.n:\n            self.tree[i] += delta\n            i += i & (-i)  <span class=\"cm\"># lowbit</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">prefix_sum</span>(self, i):  <span class=\"cm\"># 前缀和 [1..i]</span>\n        s = <span class=\"num\">0</span>\n        <span class=\"kw\">while</span> i > <span class=\"num\">0</span>:\n            s += self.tree[i]\n            i -= i & (-i)\n        <span class=\"kw\">return</span> s\n\n    <span class=\"kw\">def</span> <span class=\"fn\">range_sum</span>(self, l, r):  <span class=\"cm\"># 区间和 [l..r]</span>\n        <span class=\"kw\">return</span> self.prefix_sum(r) - self.prefix_sum(l - <span class=\"num\">1</span>)</pre>",
       "更新 <span class=\"num\">O(log n)</span>，查询 <span class=\"num\">O(log n)</span>，空间 <span class=\"num\">O(n)</span>",
       "BIT vs 线段树：BIT仅支持前缀类操作（前缀和/前缀最值），线段树支持任意区间操作 → 能用BIT就用BIT（更简洁更快）"
+    ],
+    "bullets_ja": [
+      "セグメント木より簡潔で、<span class=\"highlight\">累積和 + 点更新</span>問題に特化、コード量は約10行",
+      "核心：<span class=\"highlight\">lowbit = i & (-i)</span>、二進数の最下位の1を利用して区間を分割",
+      "<pre><span class=\"kw\">class</span> <span class=\"fn\">BIT</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, n):\n        self.n = n\n        self.tree = [<span class=\"num\">0</span>] * (n + <span class=\"num\">1</span>)  <span class=\"cm\"># 1-indexed</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">update</span>(self, i, delta):  <span class=\"cm\"># 点にdeltaを加算</span>\n        <span class=\"kw\">while</span> i <= self.n:\n            self.tree[i] += delta\n            i += i & (-i)  <span class=\"cm\"># lowbit</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">prefix_sum</span>(self, i):  <span class=\"cm\"># 累積和 [1..i]</span>\n        s = <span class=\"num\">0</span>\n        <span class=\"kw\">while</span> i > <span class=\"num\">0</span>:\n            s += self.tree[i]\n            i -= i & (-i)\n        <span class=\"kw\">return</span> s\n\n    <span class=\"kw\">def</span> <span class=\"fn\">range_sum</span>(self, l, r):  <span class=\"cm\"># 区間和 [l..r]</span>\n        <span class=\"kw\">return</span> self.prefix_sum(r) - self.prefix_sum(l - <span class=\"num\">1</span>)</pre>",
+      "更新 <span class=\"num\">O(log n)</span>、クエリ <span class=\"num\">O(log n)</span>、空間 <span class=\"num\">O(n)</span>",
+      "BIT vs セグメント木：BITは累積系操作（累積和/累積最値）のみ対応、セグメント木は任意の区間操作に対応 → BITが使える場面ではBITを使う（より簡潔で高速）"
     ],
     "lv": 3,
     "group": "基础"
@@ -153,12 +237,20 @@
     "id": "ds12",
     "cat": "数据结构",
     "q": "双向链表 — 实现与应用",
+    "q_ja": "双方向連結リスト — 実装と応用",
     "bullets": [
       "每个节点有 prev 和 next 指针，已知节点引用时插入/删除均为 <span class=\"num\">O(1)</span>（单链表删除需要前驱，O(n)查找）",
       "<pre><span class=\"kw\">class</span> <span class=\"fn\">Node</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, key=<span class=\"num\">0</span>, val=<span class=\"num\">0</span>):\n        self.key, self.val = key, val\n        self.prev = self.next = <span class=\"kw\">None</span>\n\n<span class=\"kw\">class</span> <span class=\"fn\">DoublyLinkedList</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self):\n        self.head, self.tail = Node(), Node()  <span class=\"cm\"># 哨兵节点</span>\n        self.head.next = self.tail\n        self.tail.prev = self.head\n\n    <span class=\"kw\">def</span> <span class=\"fn\">add_to_head</span>(self, node):\n        node.prev, node.next = self.head, self.head.next\n        self.head.next.prev = node\n        self.head.next = node\n\n    <span class=\"kw\">def</span> <span class=\"fn\">remove</span>(self, node):\n        node.prev.next = node.next\n        node.next.prev = node.prev</pre>",
       "<span class=\"highlight\">哨兵节点</span>（dummy head/tail）：消除头尾边界判断，代码更简洁不易出错",
       "核心应用：<span class=\"highlight\">LRU Cache</span>（双向链表 + HashMap，LC 146）、浏览器前进后退、文本编辑器undo/redo",
       "面试重点：LRU = HashMap存key→node + 双向链表维护访问顺序，get/put 均 O(1)"
+    ],
+    "bullets_ja": [
+      "各ノードにprevとnextポインタがあり、ノードの参照が既知の場合は挿入/削除が <span class=\"num\">O(1)</span>（単方向連結リストの削除は前駆ノードが必要でO(n)の検索）",
+      "<pre><span class=\"kw\">class</span> <span class=\"fn\">Node</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, key=<span class=\"num\">0</span>, val=<span class=\"num\">0</span>):\n        self.key, self.val = key, val\n        self.prev = self.next = <span class=\"kw\">None</span>\n\n<span class=\"kw\">class</span> <span class=\"fn\">DoublyLinkedList</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self):\n        self.head, self.tail = Node(), Node()  <span class=\"cm\"># 番兵ノード</span>\n        self.head.next = self.tail\n        self.tail.prev = self.head\n\n    <span class=\"kw\">def</span> <span class=\"fn\">add_to_head</span>(self, node):\n        node.prev, node.next = self.head, self.head.next\n        self.head.next.prev = node\n        self.head.next = node\n\n    <span class=\"kw\">def</span> <span class=\"fn\">remove</span>(self, node):\n        node.prev.next = node.next\n        node.next.prev = node.prev</pre>",
+      "<span class=\"highlight\">番兵ノード</span>（dummy head/tail）：先頭と末尾の境界判定を排除し、コードがより簡潔でバグが起きにくい",
+      "主な応用：<span class=\"highlight\">LRU Cache</span>（双方向連結リスト + HashMap、LC 146）、ブラウザの進む・戻る、テキストエディタのundo/redo",
+      "面接重点：LRU = HashMapでkey→nodeを格納 + 双方向連結リストでアクセス順序を維持、get/putは共にO(1)"
     ],
     "lv": 2,
     "group": "基础"
@@ -167,12 +259,20 @@
     "id": "ds13",
     "cat": "数据结构",
     "q": "Python collections — Counter/defaultdict/OrderedDict",
+    "q_ja": "Python collections — Counter/defaultdict/OrderedDict",
     "bullets": [
       "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> Counter\nc = Counter(<span class=\"str\">\"aabbbcc\"</span>)  <span class=\"cm\"># Counter({'b':3, 'a':2, 'c':2})</span>\nc.most_common(<span class=\"num\">2</span>)  <span class=\"cm\"># [('b',3), ('a',2)]</span>\nc1 + c2  <span class=\"cm\"># 合并计数</span>\nc1 - c2  <span class=\"cm\"># 差集（只保留正数）</span></pre>",
       "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\ngraph = defaultdict(list)   <span class=\"cm\"># 缺失key自动创建空list</span>\ncount = defaultdict(int)    <span class=\"cm\"># 缺失key自动为0</span>\ngroups = defaultdict(set)   <span class=\"cm\"># 缺失key自动创建空set</span>\n<span class=\"cm\"># 比 dict.setdefault() 更简洁</span></pre>",
       "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> OrderedDict\nod = OrderedDict()\nod[<span class=\"str\">'a'</span>] = <span class=\"num\">1</span>; od[<span class=\"str\">'b'</span>] = <span class=\"num\">2</span>; od[<span class=\"str\">'c'</span>] = <span class=\"num\">3</span>\nod.move_to_end(<span class=\"str\">'a'</span>)        <span class=\"cm\"># 移到末尾</span>\nod.popitem(last=<span class=\"kw\">False</span>)    <span class=\"cm\"># 弹出最早的 → ('b',2)</span>\n<span class=\"cm\"># 可用于实现 LRU Cache</span></pre>",
       "面试常见用法：Counter统计频率 → 字母异位词/Top-K；defaultdict建图/分组；OrderedDict实现LRU",
       "注意：Python 3.7+ 普通 dict 也保持插入序，但 OrderedDict 额外支持 move_to_end 和 == 比较顺序"
+    ],
+    "bullets_ja": [
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> Counter\nc = Counter(<span class=\"str\">\"aabbbcc\"</span>)  <span class=\"cm\"># Counter({'b':3, 'a':2, 'c':2})</span>\nc.most_common(<span class=\"num\">2</span>)  <span class=\"cm\"># [('b',3), ('a',2)]</span>\nc1 + c2  <span class=\"cm\"># カウントを統合</span>\nc1 - c2  <span class=\"cm\"># 差集合（正の値のみ保持）</span></pre>",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\ngraph = defaultdict(list)   <span class=\"cm\"># 存在しないkeyは自動的に空listを生成</span>\ncount = defaultdict(int)    <span class=\"cm\"># 存在しないkeyは自動的に0を生成</span>\ngroups = defaultdict(set)   <span class=\"cm\"># 存在しないkeyは自動的に空setを生成</span>\n<span class=\"cm\"># dict.setdefault() より簡潔</span></pre>",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> OrderedDict\nod = OrderedDict()\nod[<span class=\"str\">'a'</span>] = <span class=\"num\">1</span>; od[<span class=\"str\">'b'</span>] = <span class=\"num\">2</span>; od[<span class=\"str\">'c'</span>] = <span class=\"num\">3</span>\nod.move_to_end(<span class=\"str\">'a'</span>)        <span class=\"cm\"># 末尾に移動</span>\nod.popitem(last=<span class=\"kw\">False</span>)    <span class=\"cm\"># 最も古い要素を取出す → ('b',2)</span>\n<span class=\"cm\"># LRU Cache の実装に使用可能</span></pre>",
+      "面接でよくある使い方：Counter→頻度統計/アナグラム/Top-K；defaultdict→グラフ構築/グループ化；OrderedDict→LRU実装",
+      "注意：Python 3.7以降は通常のdictも挿入順序を保持するが、OrderedDictは追加でmove_to_endと==での順序比較をサポート"
     ],
     "lv": 1,
     "group": "基础"
@@ -181,12 +281,20 @@
     "id": "ds14",
     "cat": "数据结构",
     "q": "跳表 (Skip List) — Redis ZSet 的底层",
+    "q_ja": "スキップリスト (Skip List) — Redis ZSetの内部構造",
     "bullets": [
       "多层链表 + 概率平衡：每层以 ~50% 概率提升节点，形成「快速通道」",
       "<pre><span class=\"cm\"># 概念图：3层跳表</span>\n<span class=\"cm\"># L2:  1 ─────────────── 7 ─── NIL</span>\n<span class=\"cm\"># L1:  1 ──── 3 ──────── 7 ─── NIL</span>\n<span class=\"cm\"># L0:  1 → 2 → 3 → 5 → 7 → 8 → NIL</span>\n<span class=\"cm\"># 查找从最高层开始，逐层下降</span>\n<span class=\"cm\"># 类似二分查找的效果</span></pre>",
       "平均时间复杂度：查找/插入/删除均为 <span class=\"num\">O(log n)</span>，期望空间 <span class=\"num\">O(n)</span>",
       "Redis 用跳表而非平衡BST的原因：① 实现更简单（~100行 vs 红黑树~300行）② <span class=\"highlight\">范围查询天然高效</span>（链表直接遍历）③ 性能与平衡树相当",
       "面试要点：理解分层思想和概率平衡即可，手写实现很少考；Redis ZRANGEBYSCORE 底层就是跳表的范围遍历"
+    ],
+    "bullets_ja": [
+      "多層連結リスト + 確率的平衡：各層で約50%の確率でノードを昇格し「高速レーン」を形成",
+      "<pre><span class=\"cm\"># 概念図：3層スキップリスト</span>\n<span class=\"cm\"># L2:  1 ─────────────── 7 ─── NIL</span>\n<span class=\"cm\"># L1:  1 ──── 3 ──────── 7 ─── NIL</span>\n<span class=\"cm\"># L0:  1 → 2 → 3 → 5 → 7 → 8 → NIL</span>\n<span class=\"cm\"># 探索は最上層から開始し、層ごとに下降</span>\n<span class=\"cm\"># 二分探索に似た効果</span></pre>",
+      "平均時間計算量：検索/挿入/削除は共に <span class=\"num\">O(log n)</span>、期待空間 <span class=\"num\">O(n)</span>",
+      "Redisがスキップリストを使い平衡BSTを使わない理由：① 実装がより簡単（約100行 vs 赤黒木約300行）② <span class=\"highlight\">範囲クエリが自然に効率的</span>（連結リストを直接走査）③ 性能は平衡木と同等",
+      "面接のポイント：階層化の考え方と確率的平衡を理解すれば十分、手書き実装はほとんど問われない；Redis ZRANGEBYSCOREの内部はスキップリストの範囲走査"
     ],
     "lv": 3,
     "group": "基础"
@@ -195,12 +303,20 @@
     "id": "ds15",
     "cat": "数据结构",
     "q": "字符串匹配数据结构对比",
+    "q_ja": "文字列マッチング データ構造の比較",
     "bullets": [
       "<span class=\"highlight\">HashMap</span>：精确匹配 O(1)，不支持前缀/模式匹配 → 适合字典查词、去重",
       "<span class=\"highlight\">Trie (前缀树)</span>：前缀搜索 O(m)（m=串长），支持自动补全/词频统计，但空间开销大（每个节点最多26个子指针）",
       "<span class=\"highlight\">后缀数组/后缀树</span>：子串搜索 O(m log n)，LCP（最长公共前缀）计算 → 适合DNA序列分析、文本搜索引擎",
       "<span class=\"highlight\">布隆过滤器 (Bloom Filter)</span>：概率性成员测试，<span class=\"highlight\">可能有误判(false positive)，绝不漏判(no false negative)</span>，空间极省 → 适合URL去重、缓存穿透防护",
       "选型口诀：精确匹配→Hash | 前缀搜索→Trie | 子串查找→后缀结构 | 大规模存在性判断→Bloom Filter"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">HashMap</span>：完全一致 O(1)、プレフィックス/パターンマッチングは非対応 → 辞書検索、重複排除に適する",
+      "<span class=\"highlight\">Trie (接頭辞木)</span>：プレフィックス検索 O(m)（m=文字列長）、オートコンプリート/単語頻度統計に対応するが、空間オーバーヘッドが大きい（各ノード最大26個の子ポインタ）",
+      "<span class=\"highlight\">接尾辞配列/接尾辞木</span>：部分文字列検索 O(m log n)、LCP（最長共通接頭辞）計算 → DNA配列分析、テキスト検索エンジンに適する",
+      "<span class=\"highlight\">ブルームフィルタ (Bloom Filter)</span>：確率的メンバーシップテスト、<span class=\"highlight\">誤判定の可能性あり(false positive)、見逃しは絶対なし(no false negative)</span>、空間が極めて省 → URL重複排除、キャッシュ穿透防御に適する",
+      "選定の口訣：完全一致→Hash | プレフィックス検索→Trie | 部分文字列検索→接尾辞構造 | 大規模存在性判定→Bloom Filter"
     ],
     "lv": 2,
     "group": "基础"
@@ -209,12 +325,20 @@
     "id": "ds16",
     "cat": "数据结构",
     "q": "并查集 (Union-Find) — 结构与优化",
+    "q_ja": "Union-Find — 構造と最適化",
     "bullets": [
       "核心操作：<span class=\"highlight\">find(x)</span> 查询x所属集合的代表元素；<span class=\"highlight\">union(x,y)</span> 合并x和y所在集合",
       "<pre><span class=\"kw\">class</span> <span class=\"fn\">UnionFind</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, n):\n        self.parent = list(range(n))\n        self.rank = [<span class=\"num\">0</span>] * n\n        self.count = n  <span class=\"cm\"># 连通分量个数</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">find</span>(self, x):  <span class=\"cm\"># 路径压缩</span>\n        <span class=\"kw\">if</span> self.parent[x] != x:\n            self.parent[x] = self.find(self.parent[x])\n        <span class=\"kw\">return</span> self.parent[x]\n\n    <span class=\"kw\">def</span> <span class=\"fn\">union</span>(self, x, y):  <span class=\"cm\"># 按秩合并</span>\n        px, py = self.find(x), self.find(y)\n        <span class=\"kw\">if</span> px == py: <span class=\"kw\">return</span> <span class=\"kw\">False</span>\n        <span class=\"kw\">if</span> self.rank[px] < self.rank[py]: px, py = py, px\n        self.parent[py] = px\n        <span class=\"kw\">if</span> self.rank[px] == self.rank[py]: self.rank[px] += <span class=\"num\">1</span>\n        self.count -= <span class=\"num\">1</span>\n        <span class=\"kw\">return</span> <span class=\"kw\">True</span></pre>",
       "两大优化：<span class=\"highlight\">路径压缩</span>（find时将节点直接指向根）+ <span class=\"highlight\">按秩合并</span>（矮树挂高树下）→ 近似 <span class=\"num\">O(α(n))</span>，α为反Ackermann函数，实际可视为O(1)",
       "经典应用：连通分量计数(LC200岛屿数量)、冗余连接检测(LC684)、账户合并(LC721)、朋友圈(LC547)",
       "扩展：<span class=\"highlight\">带权并查集</span>可维护节点间的相对关系（如LC399除法求值）"
+    ],
+    "bullets_ja": [
+      "核心操作：<span class=\"highlight\">find(x)</span> xが属する集合の代表要素を検索；<span class=\"highlight\">union(x,y)</span> xとyが属する集合を統合",
+      "<pre><span class=\"kw\">class</span> <span class=\"fn\">UnionFind</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, n):\n        self.parent = list(range(n))\n        self.rank = [<span class=\"num\">0</span>] * n\n        self.count = n  <span class=\"cm\"># 連結成分の数</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">find</span>(self, x):  <span class=\"cm\"># 経路圧縮</span>\n        <span class=\"kw\">if</span> self.parent[x] != x:\n            self.parent[x] = self.find(self.parent[x])\n        <span class=\"kw\">return</span> self.parent[x]\n\n    <span class=\"kw\">def</span> <span class=\"fn\">union</span>(self, x, y):  <span class=\"cm\"># ランクによる統合</span>\n        px, py = self.find(x), self.find(y)\n        <span class=\"kw\">if</span> px == py: <span class=\"kw\">return</span> <span class=\"kw\">False</span>\n        <span class=\"kw\">if</span> self.rank[px] < self.rank[py]: px, py = py, px\n        self.parent[py] = px\n        <span class=\"kw\">if</span> self.rank[px] == self.rank[py]: self.rank[px] += <span class=\"num\">1</span>\n        self.count -= <span class=\"num\">1</span>\n        <span class=\"kw\">return</span> <span class=\"kw\">True</span></pre>",
+      "2つの最適化：<span class=\"highlight\">経路圧縮</span>（find時にノードを直接ルートに接続）+ <span class=\"highlight\">ランクによる統合</span>（低い木を高い木の下に接続）→ 近似 <span class=\"num\">O(α(n))</span>、αは逆Ackermann関数、実際にはO(1)とみなせる",
+      "典型的な応用：連結成分カウント(LC200 島の数)、冗長辺検出(LC684)、アカウント統合(LC721)、友達の輪(LC547)",
+      "拡張：<span class=\"highlight\">重み付きUnion-Find</span>はノード間の相対関係を維持可能（例：LC399 除法の評価）"
     ],
     "lv": 2,
     "group": "基础"
@@ -223,12 +347,20 @@
     "id": "ds17",
     "cat": "数据结构",
     "q": "单调栈 — 原理与典型应用",
+    "q_ja": "単調スタック — 原理と典型的な応用",
     "bullets": [
       "栈内元素保持<span class=\"highlight\">单调递增或单调递减</span>，用于在O(n)内求「每个元素左/右边第一个更大/更小的元素」",
       "单调递减栈（栈底到栈顶递减）：求<span class=\"highlight\">下一个更大元素</span>；单调递增栈：求<span class=\"highlight\">下一个更小元素</span>",
       "<pre><span class=\"cm\"># 求每个元素右边第一个更大元素的索引</span>\n<span class=\"kw\">def</span> <span class=\"fn\">next_greater</span>(nums):\n    n = len(nums)\n    res = [-<span class=\"num\">1</span>] * n\n    stack = []  <span class=\"cm\"># 存索引，对应值单调递减</span>\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(n):\n        <span class=\"kw\">while</span> stack <span class=\"kw\">and</span> nums[i] > nums[stack[-<span class=\"num\">1</span>]]:\n            j = stack.pop()\n            res[j] = i\n        stack.append(i)\n    <span class=\"kw\">return</span> res</pre>",
       "每个元素最多入栈一次出栈一次 → 时间 <span class=\"num\">O(n)</span>，空间 <span class=\"num\">O(n)</span>",
       "经典题：每日温度(LC739)、柱状图最大矩形(LC84)、接雨水(LC42单调栈解法)、下一个更大元素(LC496/503)"
+    ],
+    "bullets_ja": [
+      "スタック内の要素を<span class=\"highlight\">単調増加または単調減少</span>に保つことで、O(n)で「各要素の左/右で最初のより大きい/より小さい要素」を求める",
+      "単調減少スタック（スタック底からスタック頂に向かって減少）：<span class=\"highlight\">次のより大きい要素</span>を求める；単調増加スタック：<span class=\"highlight\">次のより小さい要素</span>を求める",
+      "<pre><span class=\"cm\"># 各要素の右側で最初のより大きい要素のインデックスを求める</span>\n<span class=\"kw\">def</span> <span class=\"fn\">next_greater</span>(nums):\n    n = len(nums)\n    res = [-<span class=\"num\">1</span>] * n\n    stack = []  <span class=\"cm\"># インデックスを格納、対応する値は単調減少</span>\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(n):\n        <span class=\"kw\">while</span> stack <span class=\"kw\">and</span> nums[i] > nums[stack[-<span class=\"num\">1</span>]]:\n            j = stack.pop()\n            res[j] = i\n        stack.append(i)\n    <span class=\"kw\">return</span> res</pre>",
+      "各要素は最大1回のpushと1回のpop → 時間 <span class=\"num\">O(n)</span>、空間 <span class=\"num\">O(n)</span>",
+      "典型問題：毎日の気温(LC739)、柱状図の最大矩形(LC84)、雨水を受ける(LC42単調スタック解法)、次のより大きい要素(LC496/503)"
     ],
     "lv": 2,
     "group": "基础"
@@ -237,11 +369,18 @@
     "id": "ds18",
     "cat": "数据结构",
     "q": "单调队列 — 滑动窗口最大值",
+    "q_ja": "単調キュー — スライディングウィンドウ最大値",
     "bullets": [
       "双端队列 deque 维护<span class=\"highlight\">窗口内元素的单调递减序列</span>，队首始终是当前窗口的最大值",
       "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> deque\n\n<span class=\"kw\">def</span> <span class=\"fn\">maxSlidingWindow</span>(nums, k):\n    dq = deque()  <span class=\"cm\"># 存索引，对应值单调递减</span>\n    res = []\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(nums)):\n        <span class=\"cm\"># 移除超出窗口的队首</span>\n        <span class=\"kw\">while</span> dq <span class=\"kw\">and</span> dq[<span class=\"num\">0</span>] <= i - k:\n            dq.popleft()\n        <span class=\"cm\"># 移除比当前值小的队尾（它们不可能成为最大值）</span>\n        <span class=\"kw\">while</span> dq <span class=\"kw\">and</span> nums[dq[-<span class=\"num\">1</span>]] <= nums[i]:\n            dq.pop()\n        dq.append(i)\n        <span class=\"kw\">if</span> i >= k - <span class=\"num\">1</span>:\n            res.append(nums[dq[<span class=\"num\">0</span>]])\n    <span class=\"kw\">return</span> res</pre>",
       "时间 <span class=\"num\">O(n)</span>（每个元素最多入队出队各一次），空间 <span class=\"num\">O(k)</span>",
       "LC239 高频面试题。暴力O(nk)，堆O(n log k)，单调队列最优O(n)"
+    ],
+    "bullets_ja": [
+      "双端キューdequeで<span class=\"highlight\">ウィンドウ内要素の単調減少列</span>を維持し、キュー先頭は常に現在のウィンドウの最大値",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> deque\n\n<span class=\"kw\">def</span> <span class=\"fn\">maxSlidingWindow</span>(nums, k):\n    dq = deque()  <span class=\"cm\"># インデックスを格納、対応する値は単調減少</span>\n    res = []\n    <span class=\"kw\">for</span> i <span class=\"kw\">in</span> range(len(nums)):\n        <span class=\"cm\"># ウィンドウ外のキュー先頭を除去</span>\n        <span class=\"kw\">while</span> dq <span class=\"kw\">and</span> dq[<span class=\"num\">0</span>] <= i - k:\n            dq.popleft()\n        <span class=\"cm\"># 現在値より小さいキュー末尾を除去（最大値になり得ない）</span>\n        <span class=\"kw\">while</span> dq <span class=\"kw\">and</span> nums[dq[-<span class=\"num\">1</span>]] <= nums[i]:\n            dq.pop()\n        dq.append(i)\n        <span class=\"kw\">if</span> i >= k - <span class=\"num\">1</span>:\n            res.append(nums[dq[<span class=\"num\">0</span>]])\n    <span class=\"kw\">return</span> res</pre>",
+      "時間 <span class=\"num\">O(n)</span>（各要素はキューに最大1回入り1回出る）、空間 <span class=\"num\">O(k)</span>",
+      "LC239 高頻出面接問題。素朴法O(nk)、ヒープO(n log k)、単調キューが最適O(n)"
     ],
     "lv": 2,
     "group": "基础"
@@ -250,11 +389,18 @@
     "id": "ds19",
     "cat": "数据结构",
     "q": "LRU Cache — 手写双向链表实现",
+    "q_ja": "LRU Cache — 手書き双方向連結リスト実装",
     "bullets": [
       "LC146：设计一个<span class=\"highlight\">get和put均O(1)</span>的缓存。哈希表定位 + 双向链表维护顺序",
       "<pre><span class=\"kw\">class</span> <span class=\"fn\">Node</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, k=<span class=\"num\">0</span>, v=<span class=\"num\">0</span>):\n        self.key, self.val = k, v\n        self.prev = self.next = <span class=\"kw\">None</span>\n\n<span class=\"kw\">class</span> <span class=\"fn\">LRUCache</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, capacity):\n        self.cap = capacity\n        self.cache = {}  <span class=\"cm\"># key → Node</span>\n        self.head, self.tail = Node(), Node()  <span class=\"cm\"># 哨兵</span>\n        self.head.next = self.tail\n        self.tail.prev = self.head\n\n    <span class=\"kw\">def</span> <span class=\"fn\">_remove</span>(self, node):\n        node.prev.next = node.next\n        node.next.prev = node.prev\n\n    <span class=\"kw\">def</span> <span class=\"fn\">_add_to_head</span>(self, node):\n        node.next = self.head.next\n        node.prev = self.head\n        self.head.next.prev = node\n        self.head.next = node\n\n    <span class=\"kw\">def</span> <span class=\"fn\">get</span>(self, key):\n        <span class=\"kw\">if</span> key <span class=\"kw\">not in</span> self.cache: <span class=\"kw\">return</span> -<span class=\"num\">1</span>\n        node = self.cache[key]\n        self._remove(node)\n        self._add_to_head(node)\n        <span class=\"kw\">return</span> node.val\n\n    <span class=\"kw\">def</span> <span class=\"fn\">put</span>(self, key, val):\n        <span class=\"kw\">if</span> key <span class=\"kw\">in</span> self.cache:\n            self._remove(self.cache[key])\n        node = Node(key, val)\n        self.cache[key] = node\n        self._add_to_head(node)\n        <span class=\"kw\">if</span> len(self.cache) > self.cap:\n            lru = self.tail.prev\n            self._remove(lru)\n            <span class=\"kw\">del</span> self.cache[lru.key]</pre>",
       "面试常要求不用 OrderedDict 手写。核心：<span class=\"highlight\">哨兵节点</span>消除边界判断，Node存key用于淘汰时从cache中删除",
       "LRU淘汰策略：最近最少使用。get/put都将节点移到链表头部，淘汰链表尾部"
+    ],
+    "bullets_ja": [
+      "LC146：<span class=\"highlight\">getとput共にO(1)</span>のキャッシュを設計。ハッシュテーブルで位置特定 + 双方向連結リストで順序維持",
+      "<pre><span class=\"kw\">class</span> <span class=\"fn\">Node</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, k=<span class=\"num\">0</span>, v=<span class=\"num\">0</span>):\n        self.key, self.val = k, v\n        self.prev = self.next = <span class=\"kw\">None</span>\n\n<span class=\"kw\">class</span> <span class=\"fn\">LRUCache</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, capacity):\n        self.cap = capacity\n        self.cache = {}  <span class=\"cm\"># key → Node</span>\n        self.head, self.tail = Node(), Node()  <span class=\"cm\"># 番兵</span>\n        self.head.next = self.tail\n        self.tail.prev = self.head\n\n    <span class=\"kw\">def</span> <span class=\"fn\">_remove</span>(self, node):\n        node.prev.next = node.next\n        node.next.prev = node.prev\n\n    <span class=\"kw\">def</span> <span class=\"fn\">_add_to_head</span>(self, node):\n        node.next = self.head.next\n        node.prev = self.head\n        self.head.next.prev = node\n        self.head.next = node\n\n    <span class=\"kw\">def</span> <span class=\"fn\">get</span>(self, key):\n        <span class=\"kw\">if</span> key <span class=\"kw\">not in</span> self.cache: <span class=\"kw\">return</span> -<span class=\"num\">1</span>\n        node = self.cache[key]\n        self._remove(node)\n        self._add_to_head(node)\n        <span class=\"kw\">return</span> node.val\n\n    <span class=\"kw\">def</span> <span class=\"fn\">put</span>(self, key, val):\n        <span class=\"kw\">if</span> key <span class=\"kw\">in</span> self.cache:\n            self._remove(self.cache[key])\n        node = Node(key, val)\n        self.cache[key] = node\n        self._add_to_head(node)\n        <span class=\"kw\">if</span> len(self.cache) > self.cap:\n            lru = self.tail.prev\n            self._remove(lru)\n            <span class=\"kw\">del</span> self.cache[lru.key]</pre>",
+      "面接ではOrderedDictを使わない手書き実装がよく求められる。核心：<span class=\"highlight\">番兵ノード</span>で境界判定を排除、Nodeにkeyを格納して淘汰時にcacheから削除",
+      "LRU淘汰戦略：最近最も使われていないものを淘汰。get/putは共にノードをリスト先頭に移動、リスト末尾を淘汰"
     ],
     "lv": 3,
     "group": "基础"
@@ -263,12 +409,20 @@
     "id": "ds20",
     "cat": "数据结构",
     "q": "LFU Cache — 最不经常使用缓存",
+    "q_ja": "LFU Cache — 最低使用頻度キャッシュ",
     "bullets": [
       "LC460：淘汰<span class=\"highlight\">使用频率最低</span>的key；频率相同时淘汰最久未使用的（LRU）",
       "数据结构：<span class=\"highlight\">三个哈希表</span> — key→val, key→freq, freq→OrderedDict(keys)",
       "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict, OrderedDict\n\n<span class=\"kw\">class</span> <span class=\"fn\">LFUCache</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, capacity):\n        self.cap = capacity\n        self.min_freq = <span class=\"num\">0</span>\n        self.key_val = {}       <span class=\"cm\"># key → value</span>\n        self.key_freq = {}      <span class=\"cm\"># key → frequency</span>\n        self.freq_keys = defaultdict(OrderedDict)  <span class=\"cm\"># freq → OrderedDict of keys</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">_update</span>(self, key):\n        freq = self.key_freq[key]\n        <span class=\"kw\">del</span> self.freq_keys[freq][key]\n        <span class=\"kw\">if not</span> self.freq_keys[freq]:\n            <span class=\"kw\">del</span> self.freq_keys[freq]\n            <span class=\"kw\">if</span> self.min_freq == freq: self.min_freq += <span class=\"num\">1</span>\n        self.key_freq[key] = freq + <span class=\"num\">1</span>\n        self.freq_keys[freq + <span class=\"num\">1</span>][key] = <span class=\"kw\">None</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">get</span>(self, key):\n        <span class=\"kw\">if</span> key <span class=\"kw\">not in</span> self.key_val: <span class=\"kw\">return</span> -<span class=\"num\">1</span>\n        self._update(key)\n        <span class=\"kw\">return</span> self.key_val[key]\n\n    <span class=\"kw\">def</span> <span class=\"fn\">put</span>(self, key, val):\n        <span class=\"kw\">if</span> self.cap == <span class=\"num\">0</span>: <span class=\"kw\">return</span>\n        <span class=\"kw\">if</span> key <span class=\"kw\">in</span> self.key_val:\n            self.key_val[key] = val\n            self._update(key)\n            <span class=\"kw\">return</span>\n        <span class=\"kw\">if</span> len(self.key_val) >= self.cap:\n            k, _ = self.freq_keys[self.min_freq].popitem(last=<span class=\"kw\">False</span>)\n            <span class=\"kw\">del</span> self.key_val[k]\n            <span class=\"kw\">del</span> self.key_freq[k]\n        self.key_val[key] = val\n        self.key_freq[key] = <span class=\"num\">1</span>\n        self.freq_keys[<span class=\"num\">1</span>][key] = <span class=\"kw\">None</span>\n        self.min_freq = <span class=\"num\">1</span></pre>",
       "get/put 均 <span class=\"num\">O(1)</span>。关键维护 <span class=\"highlight\">min_freq</span> 以快速定位淘汰层",
       "LRU vs LFU：LRU按访问时间淘汰，LFU按访问频率淘汰。实际系统中LRU更常用（LFU有缓存污染问题）"
+    ],
+    "bullets_ja": [
+      "LC460：<span class=\"highlight\">使用頻度が最も低い</span>keyを淘汰；頻度が同じ場合は最も長く使われていないもの（LRU）を淘汰",
+      "データ構造：<span class=\"highlight\">3つのハッシュテーブル</span> — key→val, key→freq, freq→OrderedDict(keys)",
+      "<pre><span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict, OrderedDict\n\n<span class=\"kw\">class</span> <span class=\"fn\">LFUCache</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self, capacity):\n        self.cap = capacity\n        self.min_freq = <span class=\"num\">0</span>\n        self.key_val = {}       <span class=\"cm\"># key → value</span>\n        self.key_freq = {}      <span class=\"cm\"># key → frequency</span>\n        self.freq_keys = defaultdict(OrderedDict)  <span class=\"cm\"># freq → OrderedDict of keys</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">_update</span>(self, key):\n        freq = self.key_freq[key]\n        <span class=\"kw\">del</span> self.freq_keys[freq][key]\n        <span class=\"kw\">if not</span> self.freq_keys[freq]:\n            <span class=\"kw\">del</span> self.freq_keys[freq]\n            <span class=\"kw\">if</span> self.min_freq == freq: self.min_freq += <span class=\"num\">1</span>\n        self.key_freq[key] = freq + <span class=\"num\">1</span>\n        self.freq_keys[freq + <span class=\"num\">1</span>][key] = <span class=\"kw\">None</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">get</span>(self, key):\n        <span class=\"kw\">if</span> key <span class=\"kw\">not in</span> self.key_val: <span class=\"kw\">return</span> -<span class=\"num\">1</span>\n        self._update(key)\n        <span class=\"kw\">return</span> self.key_val[key]\n\n    <span class=\"kw\">def</span> <span class=\"fn\">put</span>(self, key, val):\n        <span class=\"kw\">if</span> self.cap == <span class=\"num\">0</span>: <span class=\"kw\">return</span>\n        <span class=\"kw\">if</span> key <span class=\"kw\">in</span> self.key_val:\n            self.key_val[key] = val\n            self._update(key)\n            <span class=\"kw\">return</span>\n        <span class=\"kw\">if</span> len(self.key_val) >= self.cap:\n            k, _ = self.freq_keys[self.min_freq].popitem(last=<span class=\"kw\">False</span>)\n            <span class=\"kw\">del</span> self.key_val[k]\n            <span class=\"kw\">del</span> self.key_freq[k]\n        self.key_val[key] = val\n        self.key_freq[key] = <span class=\"num\">1</span>\n        self.freq_keys[<span class=\"num\">1</span>][key] = <span class=\"kw\">None</span>\n        self.min_freq = <span class=\"num\">1</span></pre>",
+      "get/put 共に <span class=\"num\">O(1)</span>。<span class=\"highlight\">min_freq</span> の維持が淘汰層の迅速な特定の鍵",
+      "LRU vs LFU：LRUはアクセス時間で淘汰、LFUはアクセス頻度で淘汰。実際のシステムではLRUがより一般的（LFUにはキャッシュ汚染問題がある）"
     ],
     "lv": 3,
     "group": "基础"
@@ -277,6 +431,7 @@
     "id": "ds21",
     "cat": "数据结构",
     "q": "B树 vs B+树 — 数据库索引核心",
+    "q_ja": "B木 vs B+木 — データベースインデックスの核心",
     "bullets": [
       "<span class=\"highlight\">B树</span>：多路平衡搜索树，每个节点存多个key和数据指针，内节点也存数据",
       "<span class=\"highlight\">B+树</span>：在B树基础上改进 — ①内节点<span class=\"highlight\">只存key不存数据</span>（扇出更大）②所有数据存叶子节点 ③叶子节点用<span class=\"highlight\">双向链表</span>相连",
@@ -285,6 +440,14 @@
       "B+树高度一般 2-4 层：假设一页16KB、一个key+指针16B → 扇出约1000 → 3层可索引约10亿条记录",
       "面试重点：为什么用B+树而非B树/哈希/二叉树 → 磁盘IO最小化 + 范围查询 + 稳定性能"
     ],
+    "bullets_ja": [
+      "<span class=\"highlight\">B木</span>：多分岐平衡探索木、各ノードに複数のkeyとデータポインタを格納、内部ノードにもデータを格納",
+      "<span class=\"highlight\">B+木</span>：B木を改良 — ①内部ノードは<span class=\"highlight\">keyのみ格納でデータなし</span>（ファンアウトが大きい）②全データは葉ノードに格納 ③葉ノードは<span class=\"highlight\">双方向連結リスト</span>で連結",
+      "B+木がB木より優れる理由：① 内部ノードにデータがない → 同じページにより多くのkeyを配置可能 → <span class=\"highlight\">木がより低く、IOが少ない</span> ② 葉の連結リスト → <span class=\"highlight\">範囲クエリが極めて効率的</span>（順次走査） ③ クエリ性能が安定（全て葉まで到達）",
+      "MySQL InnoDBは <span class=\"highlight\">B+木</span> をインデックス構造に使用。クラスタインデックスの葉は完全な行データを格納、非クラスタインデックスの葉は主キー値を格納",
+      "B+木の高さは通常2-4層：1ページ16KB、1つのkey+ポインタが16Bと仮定 → ファンアウト約1000 → 3層で約10億レコードをインデックス可能",
+      "面接重点：なぜB+木でB木/ハッシュ/二分木ではないか → ディスクIOの最小化 + 範囲クエリ + 安定した性能"
+    ],
     "lv": 3,
     "group": "基础"
   },
@@ -292,12 +455,20 @@
     "id": "ds22",
     "cat": "数据结构",
     "q": "红黑树 — 性质与旋转",
+    "q_ja": "赤黒木 — 性質と回転",
     "bullets": [
       "红黑树五条性质：①每个节点红或黑 ②根是黑 ③叶子(NIL)是黑 ④<span class=\"highlight\">红节点的子节点必须是黑</span>（不能连续红） ⑤<span class=\"highlight\">从任意节点到叶子的所有路径黑色节点数相同</span>",
       "这些性质保证了：<span class=\"highlight\">最长路径不超过最短路径的2倍</span>（最长=红黑交替，最短=全黑），因此查找/插入/删除都是O(log n)",
       "插入修复（新节点默认红色）：①叔节点红→叔/父变黑、祖变红、向上递归 ②叔黑+折线→先旋转变直线 ③叔黑+直线→旋转+变色",
       "Java TreeMap/TreeSet、C++ std::map/std::set、Linux CFS调度器底层均为红黑树",
       "红黑树 vs AVL：红黑树<span class=\"highlight\">插入删除更快</span>（旋转次数O(1) vs AVL最多O(log n)），AVL<span class=\"highlight\">查找略快</span>（更严格平衡）。工程中更常用红黑树"
+    ],
+    "bullets_ja": [
+      "赤黒木の5つの性質：①各ノードは赤か黒 ②根は黒 ③葉(NIL)は黒 ④<span class=\"highlight\">赤ノードの子ノードは必ず黒</span>（連続赤は不可）⑤<span class=\"highlight\">任意のノードから葉までの全経路で黒ノードの数が同じ</span>",
+      "これらの性質が保証するのは：<span class=\"highlight\">最長経路は最短経路の2倍を超えない</span>（最長=赤黒交互、最短=全黒）、したがって検索/挿入/削除は全てO(log n)",
+      "挿入修復（新ノードはデフォルトで赤）：①叔ノードが赤→叔/親を黒に、祖を赤に変更して上に再帰 ②叔が黒+折れ線→まず回転で直線に ③叔が黒+直線→回転+色変更",
+      "Java TreeMap/TreeSet、C++ std::map/std::set、Linux CFSスケジューラの内部は全て赤黒木",
+      "赤黒木 vs AVL：赤黒木は<span class=\"highlight\">挿入削除が高速</span>（回転回数O(1) vs AVLは最大O(log n)）、AVLは<span class=\"highlight\">検索がやや速い</span>（より厳密な平衡）。実務では赤黒木がより一般的"
     ],
     "lv": 3,
     "group": "基础"
@@ -306,11 +477,18 @@
     "id": "ds23",
     "cat": "数据结构",
     "q": "Trie (前缀树) — 实现与应用",
+    "q_ja": "Trie (接頭辞木) — 実装と応用",
     "bullets": [
       "每个节点代表一个字符前缀，从根到某节点的路径构成一个前缀。支持 <span class=\"num\">O(m)</span> 的插入/查找/前缀搜索（m=字符串长度）",
       "<pre><span class=\"kw\">class</span> <span class=\"fn\">Trie</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self):\n        self.children = {}\n        self.is_end = <span class=\"kw\">False</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">insert</span>(self, word):\n        node = self\n        <span class=\"kw\">for</span> c <span class=\"kw\">in</span> word:\n            <span class=\"kw\">if</span> c <span class=\"kw\">not in</span> node.children:\n                node.children[c] = Trie()\n            node = node.children[c]\n        node.is_end = <span class=\"kw\">True</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">search</span>(self, word):\n        node = self._find(word)\n        <span class=\"kw\">return</span> node <span class=\"kw\">is not</span> <span class=\"kw\">None</span> <span class=\"kw\">and</span> node.is_end\n\n    <span class=\"kw\">def</span> <span class=\"fn\">startsWith</span>(self, prefix):\n        <span class=\"kw\">return</span> self._find(prefix) <span class=\"kw\">is not</span> <span class=\"kw\">None</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">_find</span>(self, s):\n        node = self\n        <span class=\"kw\">for</span> c <span class=\"kw\">in</span> s:\n            <span class=\"kw\">if</span> c <span class=\"kw\">not in</span> node.children: <span class=\"kw\">return</span> <span class=\"kw\">None</span>\n            node = node.children[c]\n        <span class=\"kw\">return</span> node</pre>",
       "空间优化：Python用dict存子节点（按需创建），比固定26数组更灵活",
       "应用：自动补全(LC208)、搜索引擎前缀提示、拼写检查、单词搜索II(LC212 Trie+回溯)、IP路由最长前缀匹配"
+    ],
+    "bullets_ja": [
+      "各ノードが文字の接頭辞を表し、根からあるノードまでの経路が一つの接頭辞を構成。<span class=\"num\">O(m)</span> の挿入/検索/接頭辞検索をサポート（m=文字列長）",
+      "<pre><span class=\"kw\">class</span> <span class=\"fn\">Trie</span>:\n    <span class=\"kw\">def</span> <span class=\"fn\">__init__</span>(self):\n        self.children = {}\n        self.is_end = <span class=\"kw\">False</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">insert</span>(self, word):\n        node = self\n        <span class=\"kw\">for</span> c <span class=\"kw\">in</span> word:\n            <span class=\"kw\">if</span> c <span class=\"kw\">not in</span> node.children:\n                node.children[c] = Trie()\n            node = node.children[c]\n        node.is_end = <span class=\"kw\">True</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">search</span>(self, word):\n        node = self._find(word)\n        <span class=\"kw\">return</span> node <span class=\"kw\">is not</span> <span class=\"kw\">None</span> <span class=\"kw\">and</span> node.is_end\n\n    <span class=\"kw\">def</span> <span class=\"fn\">startsWith</span>(self, prefix):\n        <span class=\"kw\">return</span> self._find(prefix) <span class=\"kw\">is not</span> <span class=\"kw\">None</span>\n\n    <span class=\"kw\">def</span> <span class=\"fn\">_find</span>(self, s):\n        node = self\n        <span class=\"kw\">for</span> c <span class=\"kw\">in</span> s:\n            <span class=\"kw\">if</span> c <span class=\"kw\">not in</span> node.children: <span class=\"kw\">return</span> <span class=\"kw\">None</span>\n            node = node.children[c]\n        <span class=\"kw\">return</span> node</pre>",
+      "空間最適化：Pythonではdictで子ノードを格納（必要に応じて生成）、固定26配列より柔軟",
+      "応用：オートコンプリート(LC208)、検索エンジンの接頭辞提示、スペルチェック、単語検索II(LC212 Trie+バックトラッキング)、IPルーティングの最長接頭辞マッチング"
     ],
     "lv": 2,
     "group": "基础"
@@ -319,12 +497,20 @@
     "id": "ds24",
     "cat": "数据结构",
     "q": "哈希表深入 — 扩容与哈希冲突细节",
+    "q_ja": "ハッシュテーブル詳細 — 拡張とハッシュ衝突の詳細",
     "bullets": [
       "负载因子 = 元素数 / 桶数。<span class=\"highlight\">Java HashMap 阈值0.75</span>（桶数加倍），<span class=\"highlight\">Python dict 阈值2/3</span>",
       "<span class=\"highlight\">链地址法</span>（Java HashMap）：每个桶是链表，冲突时追加。Java 8优化：链表长度>=8时转<span class=\"highlight\">红黑树</span>（O(n)→O(log n)），<=6时退化回链表",
       "<span class=\"highlight\">开放地址法</span>（Python dict）：冲突时按探测序列找下一个空位。线性探测→聚集问题；Python用<span class=\"highlight\">二次探测</span>变体",
       "哈希函数设计要点：① 均匀分布（减少冲突） ② 计算快 ③ 确定性。Python对象的 <code>__hash__</code> 可自定义",
       "面试考点：HashMap put流程（计算hash→定位桶→处理冲突→判断扩容）、线程安全问题（Java ConcurrentHashMap分段锁/CAS）"
+    ],
+    "bullets_ja": [
+      "負荷係数 = 要素数 / バケット数。<span class=\"highlight\">Java HashMapの閾値は0.75</span>（バケット数を倍増）、<span class=\"highlight\">Python dictの閾値は2/3</span>",
+      "<span class=\"highlight\">チェイン法</span>（Java HashMap）：各バケットが連結リスト、衝突時に追加。Java 8の最適化：連結リスト長>=8で<span class=\"highlight\">赤黒木</span>に変換（O(n)→O(log n)）、<=6で連結リストに戻す",
+      "<span class=\"highlight\">オープンアドレス法</span>（Python dict）：衝突時に探査列に従って次の空き位置を探す。線形探査→クラスタリング問題；Pythonは<span class=\"highlight\">二次探査</span>の変種を使用",
+      "ハッシュ関数の設計要点：① 均一分布（衝突を削減）② 計算が高速 ③ 決定的。Pythonオブジェクトの <code>__hash__</code> はカスタマイズ可能",
+      "面接の考査ポイント：HashMap putの流れ（ハッシュ計算→バケット特定→衝突処理→拡張判定）、スレッドセーフ問題（Java ConcurrentHashMap セグメントロック/CAS）"
     ],
     "lv": 2,
     "group": "基础"
@@ -333,11 +519,18 @@
     "id": "ds25",
     "cat": "数据结构",
     "q": "图的高级表示 — 加权图与隐式图",
+    "q_ja": "グラフの高度な表現 — 重み付きグラフと暗黙グラフ",
     "bullets": [
       "<span class=\"highlight\">加权邻接表</span>：图中边有权重时使用，存储 (邻居, 权重) 对",
       "<pre><span class=\"cm\"># 加权有向图</span>\n<span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\ngraph = defaultdict(list)\ngraph[<span class=\"num\">0</span>].append((<span class=\"num\">1</span>, <span class=\"num\">5</span>))  <span class=\"cm\"># 0→1 权重5</span>\ngraph[<span class=\"num\">0</span>].append((<span class=\"num\">2</span>, <span class=\"num\">3</span>))  <span class=\"cm\"># 0→2 权重3</span>\ngraph[<span class=\"num\">1</span>].append((<span class=\"num\">2</span>, <span class=\"num\">1</span>))  <span class=\"cm\"># 1→2 权重1</span>\n\n<span class=\"cm\"># 网格图（隐式图）— 不需要显式建图</span>\ndirs = [(<span class=\"num\">0</span>,<span class=\"num\">1</span>),(<span class=\"num\">0</span>,-<span class=\"num\">1</span>),(<span class=\"num\">1</span>,<span class=\"num\">0</span>),(-<span class=\"num\">1</span>,<span class=\"num\">0</span>)]\n<span class=\"kw\">for</span> dx, dy <span class=\"kw\">in</span> dirs:\n    nx, ny = x+dx, y+dy\n    <span class=\"kw\">if</span> <span class=\"num\">0</span> &lt;= nx &lt; m <span class=\"kw\">and</span> <span class=\"num\">0</span> &lt;= ny &lt; n:\n        <span class=\"cm\"># 处理邻居 (nx, ny)</span></pre>",
       "<span class=\"highlight\">隐式图</span>：不显式存储邻接关系，通过规则动态生成邻居 → 网格BFS/DFS（LC200岛屿数量）、状态空间搜索（LC127单词接龙）",
       "面试中 80% 的图题使用<span class=\"highlight\">邻接表</span>或<span class=\"highlight\">网格隐式图</span>。记住建图模板是解题的第一步"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">重み付き隣接リスト</span>：グラフの辺に重みがある場合に使用、(隣接ノード, 重み)ペアを格納",
+      "<pre><span class=\"cm\"># 重み付き有向グラフ</span>\n<span class=\"kw\">from</span> collections <span class=\"kw\">import</span> defaultdict\ngraph = defaultdict(list)\ngraph[<span class=\"num\">0</span>].append((<span class=\"num\">1</span>, <span class=\"num\">5</span>))  <span class=\"cm\"># 0→1 重み5</span>\ngraph[<span class=\"num\">0</span>].append((<span class=\"num\">2</span>, <span class=\"num\">3</span>))  <span class=\"cm\"># 0→2 重み3</span>\ngraph[<span class=\"num\">1</span>].append((<span class=\"num\">2</span>, <span class=\"num\">1</span>))  <span class=\"cm\"># 1→2 重み1</span>\n\n<span class=\"cm\"># グリッドグラフ（暗黙グラフ）— 明示的なグラフ構築不要</span>\ndirs = [(<span class=\"num\">0</span>,<span class=\"num\">1</span>),(<span class=\"num\">0</span>,-<span class=\"num\">1</span>),(<span class=\"num\">1</span>,<span class=\"num\">0</span>),(-<span class=\"num\">1</span>,<span class=\"num\">0</span>)]\n<span class=\"kw\">for</span> dx, dy <span class=\"kw\">in</span> dirs:\n    nx, ny = x+dx, y+dy\n    <span class=\"kw\">if</span> <span class=\"num\">0</span> &lt;= nx &lt; m <span class=\"kw\">and</span> <span class=\"num\">0</span> &lt;= ny &lt; n:\n        <span class=\"cm\"># 隣接ノード (nx, ny) を処理</span></pre>",
+      "<span class=\"highlight\">暗黙グラフ</span>：隣接関係を明示的に格納せず、ルールで動的に隣接ノードを生成 → グリッドBFS/DFS（LC200 島の数）、状態空間探索（LC127 ワードラダー）",
+      "面接ではグラフ問題の80%が<span class=\"highlight\">隣接リスト</span>か<span class=\"highlight\">グリッド暗黙グラフ</span>を使用。グラフ構築テンプレートを覚えることが問題を解く第一歩"
     ],
     "lv": 1,
     "group": "基础"

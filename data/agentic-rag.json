@@ -3,12 +3,20 @@
     "id": "r01",
     "cat": "Agentic RAG",
     "q": "Agentic RAG 核心数字",
+    "q_ja": "Agentic RAGの主要指標",
     "bullets": [
       "Recall@5 = <span class=\"num\">96.4%</span>（加Rerank后）",
       "Embedding微调：Recall@1 从47.3% → <span class=\"num\">63.6%</span>（+16.4pp）",
       "10工具Agent框架，支持多跳QA、自反思重试",
       "55个日语电力领域查询，160+文档→359 chunks",
       "完整检索pipeline：BM25(Char 3-gram) + Dense(fine-tuned bge-m3) + RRF + Reranker"
+    ],
+    "bullets_ja": [
+      "Recall@5 = <span class=\"num\">96.4%</span>（Rerank適用後）",
+      "Embeddingファインチューニング：Recall@1が47.3% → <span class=\"num\">63.6%</span>（+16.4pp）",
+      "10ツールのAgentフレームワーク、マルチホップQA・自己反省リトライ対応",
+      "55件の日本語電力分野クエリ、160以上の文書→359 chunks",
+      "完全な検索パイプライン：BM25(Char 3-gram) + Dense(fine-tuned bge-m3) + RRF + Reranker"
     ],
     "group": "项目",
     "lv": 2
@@ -17,11 +25,18 @@
     "id": "r02",
     "cat": "Agentic RAG",
     "q": "BM25 vs Dense检索 — 小语料的教训",
+    "q_ja": "BM25 vs Dense検索 — 小規模コーパスでの教訓",
     "bullets": [
       "BM25 Recall@1 = <span class=\"num\">81.8%</span>（最高！）；Dense未微调只有47.3%，微调后63.6%",
-      "小语料（359 chunks）上，n-gram模糊匹配比精确形态素更鲁棒",
+      "小语料（359 chunks）上，n-gram模糊匹配比精确形態素更鲁棒",
       "<span class=\"highlight\">\"更精确\"≠\"更好\"</span>，需要实验验证",
       "Dense微调后仍低于BM25，但两者互补（Dense能找到语义相关的文档）"
+    ],
+    "bullets_ja": [
+      "BM25 Recall@1 = <span class=\"num\">81.8%</span>（最高！）；Denseはファインチューニングなしで47.3%、ファインチューニング後63.6%",
+      "小規模コーパス（359 chunks）ではn-gramのファジーマッチングが精密な形態素解析より頑健",
+      "<span class=\"highlight\">「より精密」≠「より良い」</span>、実験による検証が必要",
+      "Denseはファインチューニング後もBM25に劣るが、両者は補完的（Denseは意味的に関連する文書を発見できる）"
     ],
     "group": "项目",
     "lv": 2
@@ -30,11 +45,18 @@
     "id": "r03",
     "cat": "Agentic RAG",
     "q": "为什么BM25用Char 3-gram而不是MeCab？",
+    "q_ja": "BM25でMeCabではなくChar 3-gramを使う理由は？",
     "bullets": [
       "Char 3-gram Recall@1 = <span class=\"num\">81.8%</span> vs MeCab = 74.5%，高7.3pp",
-      "小语料上n-gram的模糊匹配比精确形态素更鲁棒",
+      "小语料上n-gram的模糊匹配比精确形態素更鲁棒",
       "MeCab漏掉复合词中间部分（\"需給調整\"→\"需給\"+\"調整\"，丢失组合信息）",
       "n-gram对Query和Document用相同tokenizer，一致性好"
+    ],
+    "bullets_ja": [
+      "Char 3-gram Recall@1 = <span class=\"num\">81.8%</span> vs MeCab = 74.5%、7.3pp高い",
+      "小規模コーパスではn-gramのファジーマッチングが精密な形態素解析より頑健",
+      "MeCabは複合語の中間部分を見落とす（\"需給調整\"→\"需給\"+\"調整\"、組み合わせ情報が失われる）",
+      "n-gramはQueryとDocumentに同じtokenizerを使用でき、一貫性が良い"
     ],
     "group": "项目",
     "lv": 2
@@ -43,12 +65,20 @@
     "id": "r04",
     "cat": "Agentic RAG",
     "q": "Hybrid RRF 反直觉结果",
+    "q_ja": "Hybrid RRFの反直感的な結果",
     "bullets": [
       "Hybrid Recall@1 = <span class=\"num\">72.7%</span> < BM25 = 81.8%（Hybrid反而更差！）",
       "原因：Dense把错误文档排很高，RRF融合时这些高排名错误文档挤掉了BM25的正确Top-1",
       "加Rerank后差异消失，全部收敛到96.4%",
       "教训：Hybrid的价值在Recall@5+（不漏掉好文档），不是Top-1准确率",
       "RRF权重(BM25=0.75, Dense=1.0)是反直觉的——给更弱的Dense更高权重"
+    ],
+    "bullets_ja": [
+      "Hybrid Recall@1 = <span class=\"num\">72.7%</span> < BM25 = 81.8%（Hybridの方がむしろ悪い！）",
+      "原因：Denseが誤った文書を高順位に置き、RRF融合時にBM25の正しいTop-1を押し出す",
+      "Rerank適用後は差が消え、全て96.4%に収束",
+      "教訓：Hybridの価値はRecall@5以上（良い文書を漏らさない）にあり、Top-1精度ではない",
+      "RRF重み(BM25=0.75, Dense=1.0)は反直感的——弱いDenseに高い重みを付与"
     ],
     "group": "项目",
     "lv": 2
@@ -57,12 +87,20 @@
     "id": "r05",
     "cat": "Agentic RAG",
     "q": "Reranker 为什么叫\"均衡器\"？",
+    "q_ja": "Rerankerが「イコライザー」と呼ばれる理由は？",
     "bullets": [
       "无Rerank：BM25(81.8%) >> Hybrid(72.7%) >> Dense(63.6%)，差距悬殊",
       "有Rerank：<span class=\"highlight\">全部收敛到80.0% / 96.4%</span>",
       "Cross-Encoder消除了第一阶段所有方法的差异",
       "是RAG pipeline的安全网——即使第一阶段不完美，Reranker从Top-50中把正确文档捞上来",
       "模型：bge-reranker-v2-m3（80M参数），延迟~0.25s"
+    ],
+    "bullets_ja": [
+      "Rerankなし：BM25(81.8%) >> Hybrid(72.7%) >> Dense(63.6%)、大きな差",
+      "Rerankあり：<span class=\"highlight\">全て80.0% / 96.4%に収束</span>",
+      "Cross-Encoderが第一段階の全手法の差を解消する",
+      "RAGパイプラインのセーフティネット——第一段階が不完全でも、RerankerがTop-50から正しい文書を引き上げる",
+      "モデル：bge-reranker-v2-m3（80Mパラメータ）、レイテンシ~0.25s"
     ],
     "group": "项目",
     "lv": 2
@@ -71,12 +109,20 @@
     "id": "r06",
     "cat": "Agentic RAG",
     "q": "bge-m3 微调配置",
+    "q_ja": "bge-m3ファインチューニングの設定",
     "bullets": [
       "数据：<span class=\"num\">29,799条</span> 日语三元组，来自9个开源数据集（零领域标注成本）",
       "Loss：MultipleNegativesRankingLoss（in-batch negatives + hard negatives）",
       "训练：batch_size=64, epochs=3, lr=2e-5, FP16，<span class=\"num\">~27.6分钟</span>",
       "效果：Recall@1 <span class=\"num\">+16.4pp</span>，MAP@10 +0.130",
       "关键教训：训练中断时Recall@5 -3.6%，跑完才+5.5%——<span class=\"highlight\">中途checkpoint可能比基线更差</span>"
+    ],
+    "bullets_ja": [
+      "データ：<span class=\"num\">29,799件</span>の日本語トリプレット、9つのオープンソースデータセットから（ドメインアノテーションコストゼロ）",
+      "Loss：MultipleNegativesRankingLoss（in-batch negatives + hard negatives）",
+      "学習：batch_size=64, epochs=3, lr=2e-5, FP16、<span class=\"num\">~27.6分</span>",
+      "効果：Recall@1 <span class=\"num\">+16.4pp</span>、MAP@10 +0.130",
+      "重要な教訓：学習中断時はRecall@5が-3.6%、完走して初めて+5.5%——<span class=\"highlight\">中間checkpointはベースラインより悪い可能性がある</span>"
     ],
     "group": "项目",
     "lv": 2
@@ -85,12 +131,21 @@
     "id": "r07",
     "cat": "Agentic RAG",
     "q": "10个工具列表",
+    "q_ja": "10ツールの一覧",
     "bullets": [
       "① expand_query(~5.5s) — LLM查询改写",
       "② retrieve(~0.2s) — BM25/Dense/Hybrid检索",
       "③ rerank(~0.25s) — Cross-Encoder精排",
       "④ generate_answer(~10.7s) — LLM生成回答",
       "⑤ judge_answer(~5.3s) — LLM-as-Judge 5维度评分",
+      "⑥ read_chunk / ⑦ search_by_doc / ⑧ summarize_context / ⑨ decompose_query / ⑩ reflect_and_retry"
+    ],
+    "bullets_ja": [
+      "① expand_query(~5.5s) — LLMによるクエリ書き換え",
+      "② retrieve(~0.2s) — BM25/Dense/Hybrid検索",
+      "③ rerank(~0.25s) — Cross-Encoderによる精密ランキング",
+      "④ generate_answer(~10.7s) — LLMによる回答生成",
+      "⑤ judge_answer(~5.3s) — LLM-as-Judgeによる5次元評価",
       "⑥ read_chunk / ⑦ search_by_doc / ⑧ summarize_context / ⑨ decompose_query / ⑩ reflect_and_retry"
     ],
     "group": "项目",
@@ -100,11 +155,18 @@
     "id": "r08",
     "cat": "Agentic RAG",
     "q": "为什么不用LangChain？",
+    "q_ja": "なぜLangChainを使わないのか？",
     "bullets": [
       "已有代码覆盖80%（retriever/LLM/reranker），LangChain包装层价值有限",
       "需要完全控制prompt和guardrails（<span class=\"highlight\">强制调用judge、强制使用retrieve</span>）",
       "避免依赖膨胀（LangChain引入60+包）",
       "双协议支持（Gemini + OpenAI）自定义更容易"
+    ],
+    "bullets_ja": [
+      "既存コードで80%をカバー済み（retriever/LLM/reranker）、LangChainのラッパー層の価値は限定的",
+      "promptとguardrailsの完全な制御が必要（<span class=\"highlight\">judge強制呼び出し、retrieve強制使用</span>）",
+      "依存関係の肥大化を回避（LangChainは60以上のパッケージを導入）",
+      "デュアルプロトコル対応（Gemini + OpenAI）はカスタム実装の方が容易"
     ],
     "group": "项目",
     "lv": 2
@@ -113,6 +175,7 @@
     "id": "r09",
     "cat": "Agentic RAG",
     "q": "LLM-as-Judge 5个评估维度",
+    "q_ja": "LLM-as-Judgeの5つの評価軸",
     "bullets": [
       "① Faithfulness — 回答是否忠于检索到的文档",
       "② Relevance — 回答是否切题",
@@ -121,6 +184,14 @@
       "⑤ Overall — 整体质量",
       "overall≤3 → 自动触发reflect_and_retry，最多重试2次"
     ],
+    "bullets_ja": [
+      "① Faithfulness — 回答が検索された文書に忠実か",
+      "② Relevance — 回答が質問に合致しているか",
+      "③ Completeness — 情報が十分に網羅されているか",
+      "④ Context Relevance — 検索された文書が十分か",
+      "⑤ Overall — 全体的な品質",
+      "overall≤3 → reflect_and_retryを自動トリガー、最大2回リトライ"
+    ],
     "group": "项目",
     "lv": 2
   },
@@ -128,11 +199,18 @@
     "id": "r10",
     "cat": "Agentic RAG",
     "q": "Agent不调judge_answer的问题怎么解决？",
+    "q_ja": "Agentがjudge_answerを呼ばない問題の解決方法は？",
     "bullets": [
       "问题：LLM只用retrieve+generate_answer就直接回答，走最短路径",
       "Prompt层：添加\"MUST call judge_answer\"/\"NEVER write answer as plain text\"",
       "Code层：如果LLM输出文本但没调judge，强制注入一次judge调用",
       "教训：<span class=\"highlight\">LLM会走最短路径，关键步骤不能靠\"建议\"，要靠强制</span>"
+    ],
+    "bullets_ja": [
+      "問題：LLMがretrieve+generate_answerだけで回答し、最短経路を取る",
+      "Prompt層：\"MUST call judge_answer\"/\"NEVER write answer as plain text\"を追加",
+      "Code層：LLMがテキスト出力してjudgeを呼んでいなければ、judge呼び出しを強制注入",
+      "教訓：<span class=\"highlight\">LLMは最短経路を取る。重要なステップは「推奨」ではなく「強制」で確保する</span>"
     ],
     "group": "项目",
     "lv": 2
@@ -141,6 +219,7 @@
     "id": "r11",
     "cat": "Agentic RAG",
     "q": "完整检索结果对比表",
+    "q_ja": "検索結果の完全な比較表",
     "bullets": [
       "BM25：Recall@1 <span class=\"num\">81.8%</span> / Recall@5 94.5%（小语料王者）",
       "Dense(fine-tuned)：Recall@1 63.6% / Recall@5 87.3%",
@@ -149,6 +228,14 @@
       "Dense+Rerank：Recall@1 80.0% / Recall@5 96.4% / nDCG <span class=\"num\">0.961</span>（最高）",
       "推荐：BM25+Rerank（简单高效）或Dense+Rerank（nDCG最高）"
     ],
+    "bullets_ja": [
+      "BM25：Recall@1 <span class=\"num\">81.8%</span> / Recall@5 94.5%（小規模コーパスの王者）",
+      "Dense(fine-tuned)：Recall@1 63.6% / Recall@5 87.3%",
+      "Hybrid RRF：Recall@1 72.7% / Recall@5 92.7%（BM25に劣る！）",
+      "BM25+Rerank：Recall@1 80.0% / Recall@5 <span class=\"num\">96.4%</span>",
+      "Dense+Rerank：Recall@1 80.0% / Recall@5 96.4% / nDCG <span class=\"num\">0.961</span>（最高）",
+      "推奨：BM25+Rerank（シンプルで高効率）またはDense+Rerank（nDCG最高）"
+    ],
     "group": "项目",
     "lv": 2
   },
@@ -156,6 +243,7 @@
     "id": "r12",
     "cat": "Agentic RAG",
     "q": "RAG诊断框架（客户说效果不好时）",
+    "q_ja": "RAG診断フレームワーク（顧客が効果不十分と言った場合）",
     "bullets": [
       "① Chunking：切分策略是否合理？语义完整性？",
       "② 检索：Recall@K量化，正确文档能被检索到吗？",
@@ -164,6 +252,14 @@
       "⑤ 生成：Prompt是否有效？Faithfulness约束？",
       "通常最大问题在<span class=\"highlight\">Chunking和Embedding</span>——这是基础"
     ],
+    "bullets_ja": [
+      "① Chunking：分割戦略は適切か？意味的完全性は？",
+      "② 検索：Recall@Kで定量化し、正しい文書が検索されるか？",
+      "③ Embedding：汎用モデルはドメイン用語に有効か？ファインチューニングが必要か？",
+      "④ Reranking：Rerankerはあるか？なければ追加するだけで+10ppの可能性",
+      "⑤ 生成：Promptは効果的か？Faithfulness制約は？",
+      "通常、最大の問題は<span class=\"highlight\">ChunkingとEmbedding</span>——これが基盤"
+    ],
     "group": "项目",
     "lv": 2
   },
@@ -171,12 +267,20 @@
     "id": "r13",
     "cat": "Agentic RAG",
     "q": "日语RAG的特殊挑战",
+    "q_ja": "日本語RAG特有の課題",
     "bullets": [
       "无空格分词：需要专门分词工具或n-gram",
       "三种字符混用：汉字/平假名/片假名，同一概念多种写法",
       "复合词问题：\"需給調整\"被MeCab分成两个词，丢失意义",
       "NFKC正规化：全角→半角（\"ＡＢＣ\"→\"ABC\"），统一空白字符",
-      "发现：在小语料上，暴力Char n-gram比精细形态素解析更好"
+      "发现：在小语料上，暴力Char n-gram比精细形態素解析更好"
+    ],
+    "bullets_ja": [
+      "スペースなし分かち書き：専用のトークナイザーまたはn-gramが必要",
+      "三種の文字混在：漢字/ひらがな/カタカナ、同じ概念に複数の表記",
+      "複合語問題：\"需給調整\"がMeCabで2語に分割され、意味が失われる",
+      "NFKC正規化：全角→半角（\"ＡＢＣ\"→\"ABC\"）、空白文字の統一",
+      "発見：小規模コーパスでは力技のChar n-gramが精密な形態素解析より優れる"
     ],
     "group": "项目",
     "lv": 2
@@ -185,11 +289,18 @@
     "id": "r14",
     "cat": "Agentic RAG",
     "q": "多跳QA怎么实现？",
+    "q_ja": "マルチホップQAの実現方法は？",
     "bullets": [
       "decompose_query工具把复杂问题拆成2-4个独立子问题",
       "分别检索 → 合并去重（by chunk_id）→ 生成综合回答",
       "Query意图分类（规则）自动识别comparative类问题 → 触发decompose_query",
       "例：\"A规定和B规定有什么冲突\" → [\"A规定目的？\", \"B规定目的？\", \"两者差异？\"]"
+    ],
+    "bullets_ja": [
+      "decompose_queryツールが複雑な質問を2-4個の独立したサブクエリに分解",
+      "それぞれ検索 → マージ・重複排除（chunk_idで）→ 統合回答を生成",
+      "Queryインテント分類（ルールベース）がcomparative系の質問を自動識別 → decompose_queryをトリガー",
+      "例：\"A規定とB規定の矛盾は？\" → [\"A規定の目的？\", \"B規定の目的？\", \"両者の違い？\"]"
     ],
     "group": "项目",
     "lv": 2
@@ -198,10 +309,16 @@
     "id": "r15",
     "cat": "Agentic RAG",
     "q": "客户预算有限，只能做一件事提升RAG效果，推荐什么？",
+    "q_ja": "顧客の予算が限られ、RAG改善で1つだけ実施するなら何を推奨する？",
     "bullets": [
       "首选：<span class=\"highlight\">加Reranker</span>——把所有方法Recall@5统一提升到96.4%，延迟只+0.25s，开箱即用",
       "次选：<span class=\"highlight\">Embedding微调</span>——+16.4pp Recall@1，27分钟训练，用开源数据零标注成本",
-      "bge-m3开源可微调本地部署；OpenAI embedding不可微调，日本企业数据不出设备是硬需求"
+      "bge-m3开源可微调本地部署；OpenAI embedding不可微调，日本企業数据不出设备是硬需求"
+    ],
+    "bullets_ja": [
+      "第一推奨：<span class=\"highlight\">Rerankerの追加</span>——全手法のRecall@5を96.4%に統一向上、レイテンシ+0.25sのみ、すぐ導入可能",
+      "第二推奨：<span class=\"highlight\">Embeddingのファインチューニング</span>——Recall@1を+16.4pp、27分の学習、オープンソースデータでアノテーションコストゼロ",
+      "bge-m3はオープンソースでファインチューニング・ローカルデプロイ可能；OpenAI embeddingはファインチューニング不可、日本企業のデータをデバイス外に出さないのは必須要件"
     ],
     "group": "项目",
     "lv": 2

@@ -93,6 +93,8 @@
   .toolbar-btn:hover { border-color: var(--vermillion); color: var(--vermillion); background: var(--vermillion-dim); transform: translateY(-1px); }
   .btn-sync { color: var(--indigo); }
   .btn-sync:hover { border-color: var(--indigo); color: var(--indigo); background: var(--indigo-dim); }
+  .btn-lang { color: var(--matcha); font-weight: 700; }
+  .btn-lang:hover { border-color: var(--matcha); color: var(--matcha); background: var(--matcha-dim); }
 
   /* ── Group nav ── */
   .group-nav { background: var(--bg-card); border-bottom: 1px solid var(--border); display: flex; gap: 4px; padding: 8px 24px; overflow-x: auto; scrollbar-width: thin; }
@@ -322,6 +324,7 @@
   <button class="toolbar-btn" onclick="document.getElementById('import-file').click()">导入</button>
   <input type="file" id="import-file" accept=".json" style="display:none" onchange="importCards(event)">
   <button class="toolbar-btn btn-sync" onclick="syncProgress()">同步</button>
+  <button class="toolbar-btn btn-lang" id="lang-toggle" onclick="toggleLang()">日本語</button>
 </div>
 
 <div class="group-nav" id="group-nav"></div>
@@ -427,6 +430,7 @@ let isFlipped = false;
 let searchQuery = '';
 let diffFilter = 0;
 let reviewMode = false;
+let currentLang = localStorage.getItem('ai_fc_lang') || 'zh';
 
 function getAllCards() {
   return [...BUILTIN_CARDS, ...customCards];
@@ -568,7 +572,7 @@ function onSearch() {
 
 function matchesSearch(card) {
   if (!searchQuery) return true;
-  const text = (card.q + ' ' + card.bullets.join(' ') + ' ' + card.cat).toLowerCase();
+  const text = (card.q + ' ' + card.bullets.join(' ') + ' ' + card.cat + ' ' + (card.q_ja || '') + ' ' + (card.bullets_ja || []).join(' ')).toLowerCase();
   return searchQuery.split(/\s+/).every(term => text.includes(term));
 }
 
@@ -623,11 +627,12 @@ function render() {
   const lvLabels = {1:'★ 初级', 2:'★★ 中级', 3:'★★★ 高级'};
   const lvClass = card.lv ? ` <span class="diff-badge diff-${card.lv}">${lvLabels[card.lv]}</span>` : '';
   document.getElementById('cf-cat').innerHTML = card.cat + lvClass;
-  document.getElementById('cf-q').textContent = card.q;
+  document.getElementById('cf-q').textContent = (currentLang === 'ja' && card.q_ja) ? card.q_ja : card.q;
   document.getElementById('cb-cat').innerHTML = card.cat + lvClass;
 
   const ul = document.getElementById('cb-bullets');
-  ul.innerHTML = card.bullets.map(b => `<li>${b}</li>`).join('');
+  const bullets = (currentLang === 'ja' && card.bullets_ja) ? card.bullets_ja : card.bullets;
+  ul.innerHTML = bullets.map(b => `<li>${b}</li>`).join('');
 
   updateStats();
   updateCatProgress();
@@ -768,6 +773,13 @@ function toggleShuffle() {
   shuffled = !shuffled;
   document.getElementById('mode-shuffle').classList.toggle('active', shuffled);
   buildList();
+  render();
+}
+
+function toggleLang() {
+  currentLang = currentLang === 'zh' ? 'ja' : 'zh';
+  localStorage.setItem('ai_fc_lang', currentLang);
+  document.getElementById('lang-toggle').textContent = currentLang === 'zh' ? '日本語' : '中文';
   render();
 }
 
@@ -1095,6 +1107,7 @@ loadReviewLog();
 loadCustomCards();
 migrateIfNeeded();
 buildNav();
+document.getElementById('lang-toggle').textContent = currentLang === 'zh' ? '日本語' : '中文';
 buildList();
 render();
 renderStreak();
