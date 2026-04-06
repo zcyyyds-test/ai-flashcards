@@ -198,8 +198,30 @@
   .card-back ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
   .card-back li { display: flex; gap: 10px; font-size: 0.85rem; line-height: 1.65; color: var(--text); }
   .card-back li::before { content: ''; width: 3px; min-height: 100%; background: linear-gradient(180deg, var(--indigo), var(--matcha)); border-radius: 2px; flex-shrink: 0; opacity: 0.2; }
+  .card-back .bullet-text { flex: 1; min-width: 0; }
   .card-back .highlight { color: var(--vermillion); font-weight: 700; }
   .card-back .num { color: var(--amber); font-weight: 700; font-family: var(--mono); }
+
+  /* ── Details / Glossary ── */
+  .details-section { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--border); }
+  .term-detail { margin-bottom: 8px; border-radius: 8px; background: var(--bg-surface); border: 1px solid var(--border); overflow: hidden; }
+  .term-detail summary {
+    padding: 8px 14px; font-size: 0.78rem; font-weight: 700; color: var(--indigo);
+    cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px;
+    transition: background 0.2s;
+  }
+  .term-detail summary:hover { background: var(--bg-hover); }
+  .term-detail summary::before { content: '▸'; font-size: 0.7rem; color: var(--text-muted); transition: transform 0.2s; }
+  .term-detail[open] summary::before { transform: rotate(90deg); }
+  .term-detail[open] summary { border-bottom: 1px solid var(--border); background: rgba(58,80,152,0.04); }
+  .term-explain { padding: 12px 14px; font-size: 0.78rem; line-height: 1.75; color: var(--text); }
+  .term-explain p { margin: 0 0 8px 0; }
+  .term-explain .analogy { background: var(--amber-dim); border-left: 3px solid var(--amber); padding: 8px 12px; border-radius: 0 6px 6px 0; margin: 8px 0; font-size: 0.75rem; color: var(--text-dim); }
+  .term-explain .formula { background: #1e1e2e; color: #cdd6f4; padding: 8px 12px; border-radius: 6px; font-family: var(--mono); font-size: 0.72rem; margin: 8px 0; overflow-x: auto; white-space: pre; }
+  .term-explain .key-point { color: var(--vermillion); font-weight: 600; }
+  .term-explain ul { list-style: disc; padding-left: 18px; margin: 6px 0; }
+  .term-explain li { display: block; font-size: 0.75rem; line-height: 1.6; margin-bottom: 4px; }
+  .term-explain li::before { display: none; }
 
   /* ── Action buttons ── */
   .card-actions { display: flex; gap: 10px; margin-top: 24px; justify-content: center; flex-wrap: wrap; }
@@ -368,6 +390,7 @@
         <div class="card-cat-tag" id="cb-cat"></div>
         <div class="answer-title">要点</div>
         <ul id="cb-bullets"></ul>
+        <div id="cb-details" class="details-section" style="display:none"></div>
       </div>
     </div>
   </div>
@@ -632,7 +655,18 @@ function render() {
 
   const ul = document.getElementById('cb-bullets');
   const bullets = (currentLang === 'ja' && card.bullets_ja) ? card.bullets_ja : card.bullets;
-  ul.innerHTML = bullets.map(b => `<li>${b}</li>`).join('');
+  ul.innerHTML = bullets.map(b => `<li><div class="bullet-text">${b}</div></li>`).join('');
+
+  // Render details/glossary section if present
+  const detailsContainer = document.getElementById('cb-details');
+  const details = (currentLang === 'ja' && card.details_ja) ? card.details_ja : (card.details || []);
+  if (details.length > 0) {
+    detailsContainer.style.display = '';
+    detailsContainer.innerHTML = details.map(d => `<details class="term-detail"><summary>${d.term}</summary><div class="term-explain">${d.explain}</div></details>`).join('');
+  } else {
+    detailsContainer.style.display = 'none';
+    detailsContainer.innerHTML = '';
+  }
 
   updateStats();
   updateCatProgress();
