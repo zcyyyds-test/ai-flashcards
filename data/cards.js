@@ -1,5 +1,5 @@
 // Auto-generated from data/*.json — edit the JSON files, then run: bash build-cards.sh
-// Generated: 2026-04-06T15:07:50
+// Generated: 2026-04-06T15:59:39
 const BUILTIN_CARDS = [
   {
     "id": "s01",
@@ -4238,6 +4238,138 @@ const BUILTIN_CARDS = [
     ],
     "group": "基础",
     "lv": 3
+  },
+  {
+    "id": "l23",
+    "cat": "LLM基础",
+    "q": "训练框架选型：Unsloth vs TRL vs LLaMA-Factory",
+    "q_ja": "学習フレームワーク選定：Unsloth vs TRL vs LLaMA-Factory",
+    "bullets": [
+      "<span class=\"highlight\">Unsloth</span>：极致速度优化的微调框架。手动重写反向传播kernel（不用PyTorch autograd），训练速度<span class=\"num\">2-5x</span>，显存减少<span class=\"num\">70%</span>",
+      "<span class=\"highlight\">TRL</span>（HuggingFace）：专注对齐训练的库。SFT/DPO/PPO/GRPO全支持，和transformers生态无缝集成，<span class=\"highlight\">RLHF/DPO的事实标准</span>",
+      "<span class=\"highlight\">LLaMA-Factory</span>：一站式微调平台。WebUI配置训练、100+模型预置、支持SFT/DPO/PPO/ORPO，<span class=\"highlight\">零代码上手</span>",
+      "选型逻辑：显存紧张/追求速度→Unsloth｜需要DPO/PPO对齐→TRL｜快速实验/团队协作→LLaMA-Factory",
+      "组合使用：Unsloth提供优化后端 + TRL/LLaMA-Factory提供训练逻辑（<span class=\"highlight\">Unsloth+TRL是常见组合</span>）",
+      "你的项目：SiLR-Agent用LLaMA-Factory+DeepSpeed ZeRO-2做SFT（248条数据，~70-100min on RTX PRO Blackwell）"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">Unsloth</span>：極限まで速度最適化されたファインチューニングフレームワーク。逆伝播カーネルを手動で書き直し（PyTorch autogradを不使用）、学習速度<span class=\"num\">2-5倍</span>、VRAM<span class=\"num\">70%</span>削減",
+      "<span class=\"highlight\">TRL</span>（HuggingFace）：アライメント学習に特化したライブラリ。SFT/DPO/PPO/GRPO全対応、transformersエコシステムとシームレス統合、<span class=\"highlight\">RLHF/DPOのデファクトスタンダード</span>",
+      "<span class=\"highlight\">LLaMA-Factory</span>：ワンストップのファインチューニングプラットフォーム。WebUIで学習設定、100以上のモデルをプリセット、SFT/DPO/PPO/ORPOに対応、<span class=\"highlight\">コードゼロで開始可能</span>",
+      "選定ロジック：VRAM不足/速度重視→Unsloth｜DPO/PPOアライメント→TRL｜迅速な実験/チーム協業→LLaMA-Factory",
+      "組み合わせ：Unslothが最適化バックエンドを提供 + TRL/LLaMA-Factoryが学習ロジックを提供（<span class=\"highlight\">Unsloth+TRLが一般的な組み合わせ</span>）",
+      "自身のプロジェクト：SiLR-AgentはLLaMA-Factory+DeepSpeed ZeRO-2でSFT（248件データ、約70-100分 on RTX PRO Blackwell）"
+    ],
+    "details": [
+      {
+        "term": "Unsloth",
+        "explain": "<p><strong>本质：</strong>通过<span class=\"key-point\">手写CUDA/Triton kernel替换PyTorch默认实现</span>来实现极致训练速度和显存效率的微调框架。不改变数学逻辑，只优化底层计算。</p><div class=\"formula\">【Unsloth 优化技术栈】\n\n1. 手动反向传播（Manual Backprop）:\n   PyTorch autograd: 保存所有中间激活 → 显存大\n   Unsloth: 手动推导梯度 → 只保存必要的中间值\n   → 显存节省 ~60-70%\n\n2. 融合Kernel:\n   标准: LayerNorm → Attention → FFN (多次显存读写)\n   Unsloth: 多个操作融合成单个kernel (减少HBM访问)\n   → 速度提升 ~2x\n\n3. 智能权重上传:\n   标准LoRA: 保存adapter → 合并到base model → 上传\n   Unsloth: 直接保存为GGUF/合并16bit/4bit\n   → 部署更方便\n\n【支持的模型和方法】\n模型: Llama 3, Mistral, Qwen2, Phi-3, Gemma 2...\n方法: LoRA, QLoRA (4bit)\n限制: 不支持全量微调, 不支持多卡训练(单卡only)</div><p><strong>为什么快？</strong>关键洞察：LoRA微调时<span class=\"key-point\">只有很少的参数需要梯度</span>（~1%），但PyTorch autograd仍然为所有层保存完整的中间激活。Unsloth手动计算梯度链，只保存LoRA相关的中间值，显存大幅减少。</p><div class=\"analogy\">比喻：标准PyTorch是全自动洗碗机——不管碗多碗少都注满水跑全程。Unsloth是手洗——只用刚好够的水洗脏的部分。碗（参数）只有1%脏了（需要梯度），没必要启动整台洗碗机。</div><p><span class=\"key-point\">面试追问</span>：(1)「Unsloth为什么不支持多卡？」→ 手写kernel针对单卡内存布局优化，多卡通信（NCCL）的融合是另一套工程。(2)「和Flash Attention的关系？」→ Unsloth内置Flash Attention 2，但额外优化了LoRA相关的前后向传播。(3)「精度有损失吗？」→ 数学上等价，结果bit-identical，只是计算路径更高效。</p>"
+      },
+      {
+        "term": "TRL",
+        "explain": "<p><strong>本质：</strong>HuggingFace官方的<span class=\"key-point\">对齐训练库</span>（Transformer Reinforcement Learning），提供从SFT到RLHF/DPO全流程的标准实现。</p><div class=\"formula\">【TRL 提供的 Trainer 类】\n\nSFTTrainer        → 监督微调\nDPOTrainer        → Direct Preference Optimization\nPPOTrainer        → Proximal Policy Optimization (RLHF)\nGRPOTrainer       → Group Relative Policy Optimization\nORPOTrainer       → Odds Ratio Preference Optimization\nKTOTrainer        → Kahneman-Tversky Optimization\nRewardTrainer     → Reward Model 训练\nOnlineDPOTrainer  → 在线DPO (边生成边训练)\n\n【典型 DPO 训练代码】\nfrom trl import DPOTrainer, DPOConfig\nfrom transformers import AutoModelForCausalLM\n\nmodel = AutoModelForCausalLM.from_pretrained(\"Qwen/Qwen2-7B\")\nconfig = DPOConfig(beta=0.1, learning_rate=5e-7)\ntrainer = DPOTrainer(model=model, args=config,\n    train_dataset=dataset,   # chosen/rejected 列\n    tokenizer=tokenizer)\ntrainer.train()\n\n【数据格式】\nSFT:  {\"messages\": [{\"role\":\"user\",\"content\":...}, ...]}\nDPO:  {\"chosen\": \"好回答\", \"rejected\": \"差回答\", \"prompt\": \"...\"}\nPPO:  {\"query\": \"...\"}  → 在线生成response → reward打分</div><p><strong>为什么是标准？</strong>(1) HuggingFace官方维护，和transformers/datasets/accelerate/peft无缝集成。(2) 论文级实现——DPO/PPO的实现经过社区验证。(3) 新对齐方法（GRPO、SimPO、ORPO）通常首先在TRL中实现。</p><div class=\"analogy\">比喻：TRL是对齐训练的「官方SDK」——你不需要自己实现PPO的clip、KL惩罚、GAE等细节，直接调用就行。就像用OpenAI SDK调API而不是自己写HTTP请求。</div><p><span class=\"key-point\">面试追问</span>：(1)「TRL和Unsloth怎么配合？」→ Unsloth提供优化后的model+tokenizer，传入TRL的Trainer类。TRL管训练逻辑，Unsloth管底层计算效率。(2)「为什么PPO比DPO难训练？」→ PPOTrainer需要同时管理4个模型(policy/ref/reward/value)的前向传播+梯度更新，显存和稳定性都是挑战。(3)「GRPO是什么？」→ DeepSeek提出，不需要单独的Reward Model，用组内相对排序作为reward信号。</p>"
+      },
+      {
+        "term": "LLaMA-Factory",
+        "explain": "<p><strong>本质：</strong>一站式LLM微调平台，通过<span class=\"key-point\">配置文件/WebUI即可完成从数据准备到训练到评估的全流程</span>，极大降低微调门槛。</p><div class=\"formula\">【LLaMA-Factory vs 手写训练代码】\n\n手写代码:\n  model = load_model()           # 50行\n  tokenizer = load_tokenizer()   # 20行\n  dataset = preprocess()         # 100行\n  trainer = setup_trainer()      # 80行\n  配置LoRA/量化/DeepSpeed        # 100行\n  训练循环+日志+保存             # 50行\n  合计: ~400行 Python\n\nLLaMA-Factory (YAML配置):\n  model_name_or_path: Qwen/Qwen2.5-14B\n  stage: sft\n  finetuning_type: lora\n  lora_rank: 64\n  dataset: my_dataset\n  output_dir: saves/qwen-sft\n  per_device_train_batch_size: 4\n  num_train_epochs: 3\n  → llamafactory-cli train config.yaml\n  合计: ~10行 YAML + 1行命令\n\n【支持矩阵】\n模型: 100+ (Llama/Qwen/Mistral/Phi/Gemma/ChatGLM...)\n方法: Full/LoRA/QLoRA + SFT/DPO/PPO/ORPO/SimPO/KTO\n并行: DeepSpeed ZeRO-1/2/3, FSDP\n工具: WebUI训练/对话/评估, 数据可视化</div><p><strong>你为什么用LLaMA-Factory？</strong>SiLR-Agent项目中：(1) 快速迭代——修改YAML即可切换模型(14B/32B)、方法(SFT/DPO)、LoRA配置，不改代码。(2) DeepSpeed集成——单行配置ZeRO-2。(3) 内置评估和导出。</p><div class=\"analogy\">比喻：如果TRL是对齐训练的SDK，那LLaMA-Factory就是「低代码平台」。就像用WordPress建网站 vs 自己写HTML——牺牲一些自定义能力，换来10倍的效率。</div><p><span class=\"key-point\">面试追问</span>：(1)「LLaMA-Factory的局限？」→ 高度定制化的训练循环（如SiLR的仿真器交互式训练）需要修改源码或回退到TRL。(2)「和Unsloth能一起用吗？」→ 可以，LLaMA-Factory支持Unsloth后端加速，在WebUI中勾选即可。(3)「生产环境用LLaMA-Factory吗？」→ 实验/原型阶段用LF快速迭代，生产级训练pipeline通常用TRL+自定义代码以获得更精细的控制。</span></p>"
+      },
+      {
+        "term": "DeepSpeed ZeRO",
+        "explain": "<p><strong>本质：</strong>微软的分布式训练优化技术，通过<span class=\"key-point\">分片存储</span>（Partitioning）将模型状态分散到多个GPU，突破单卡显存限制。</p><div class=\"formula\">【7B模型的显存分析（FP16训练）】\n\n模型参数:          14 GB (7B × 2 bytes)\n梯度:              14 GB\n优化器状态(Adam):   28 GB (fp32参数副本 + momentum + variance)\n合计:              56 GB ← 单卡放不下！\n\n【ZeRO 三个阶段】\nZeRO-1: 分片优化器状态\n  每卡: 14(参数) + 14(梯度) + 28/N(优化器)\n  N=4:  14 + 14 + 7 = 35 GB  ✓ A100-40G 可用\n\nZeRO-2: 分片优化器 + 梯度\n  每卡: 14(参数) + 14/N(梯度) + 28/N(优化器)\n  N=4:  14 + 3.5 + 7 = 24.5 GB  ✓ 更充裕\n\nZeRO-3: 分片优化器 + 梯度 + 参数\n  每卡: 14/N + 14/N + 28/N\n  N=4:  3.5 + 3.5 + 7 = 14 GB  ✓ 但通信开销大\n\n你的选择: ZeRO-2 (速度和显存的最佳平衡)</div><p><strong>trade-off：</strong>ZeRO阶段越高，显存越省，但<span class=\"key-point\">通信开销越大</span>。ZeRO-3在forward/backward时需要从其他卡gather参数，增加延迟。ZeRO-2是SFT/DPO最常用的选择。</p><div class=\"analogy\">比喻：搬家时把家具（模型状态）分给N个朋友（GPU）分别存放。ZeRO-1：每人存部分工具箱（优化器）。ZeRO-2：工具箱和零件图（梯度）都分着存。ZeRO-3：连家具本身都拆开分着存——最省空间但每次用都要先拼起来（通信）。</div><p><span class=\"key-point\">面试追问</span>：(1)「ZeRO vs FSDP？」→ 原理相似（都是分片），FSDP是PyTorch原生支持（不依赖DeepSpeed），但DeepSpeed ZeRO工程成熟度更高、配置更简单。(2)「为什么你选ZeRO-2而不是3？」→ 248条SFT数据+QLoRA，单卡14B模型显存够用，ZeRO-2的通信开销比ZeRO-3低，训练更快。</p>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "Unsloth",
+        "explain": "<p><strong>本質：</strong><span class=\"key-point\">手書きのCUDA/Tritonカーネルでデフォルトのメモリ実装を置き換える</span>ことで、極限の学習速度とVRAM効率を実現するファインチューニングフレームワーク。数学的ロジックは変更せず、低レベルの計算のみを最適化。</p><div class=\"formula\">【Unsloth 最適化技術スタック】\n\n1. 手動逆伝播（Manual Backprop）:\n   PyTorch autograd: 全中間活性化を保存 → VRAM大\n   Unsloth: 勾配を手動導出 → 必要な中間値のみ保存\n   → VRAM節約 ~60-70%\n\n2. 融合Kernel:\n   標準: LayerNorm → Attention → FFN (複数回のVRAM読み書き)\n   Unsloth: 複数操作を単一kernelに融合 (HBMアクセス削減)\n   → 速度向上 ~2x\n\n3. スマートウェイトエクスポート:\n   標準LoRA: adapter保存 → base modelにマージ → アップロード\n   Unsloth: GGUF/マージ16bit/4bitで直接保存\n\n【対応モデル・手法】\nモデル: Llama 3, Mistral, Qwen2, Phi-3, Gemma 2...\n手法: LoRA, QLoRA (4bit)\n制限: フル微調整非対応, マルチGPU非対応(シングルGPUのみ)</div><p><strong>なぜ速いのか：</strong>LoRAファインチューニング時、<span class=\"key-point\">勾配が必要なパラメータはわずか約1%</span>だが、PyTorch autogradは全層の完全な中間活性化を保存する。Unslothは勾配チェーンを手動計算し、LoRA関連の中間値のみを保存することでVRAMを大幅削減。</p><div class=\"analogy\">例え：標準PyTorchは全自動食洗機——皿が少なくても満水で全工程を回す。Unslothは手洗い——汚れた部分だけに必要最小限の水を使う。皿（パラメータ）の1%しか汚れていない（勾配が必要ない）のに、食洗機をフル稼働させる必要はない。</div><p><span class=\"key-point\">面接追問</span>：(1)「なぜマルチGPU非対応？」→ 手書きカーネルはシングルGPUのメモリレイアウトに最適化されており、マルチGPU通信（NCCL）の融合は別のエンジニアリング。(2)「Flash Attentionとの関係は？」→ UnslothはFlash Attention 2を内蔵しつつ、LoRA関連の前方/後方伝播をさらに最適化。(3)「精度損失は？」→ 数学的に等価、結果はbit-identical、計算パスが効率的なだけ。</p>"
+      },
+      {
+        "term": "TRL",
+        "explain": "<p><strong>本質：</strong>HuggingFace公式の<span class=\"key-point\">アライメント学習ライブラリ</span>（Transformer Reinforcement Learning）。SFTからRLHF/DPOまでの全フローの標準実装を提供。</p><div class=\"formula\">【TRL が提供する Trainer クラス】\n\nSFTTrainer        → 教師ありファインチューニング\nDPOTrainer        → Direct Preference Optimization\nPPOTrainer        → Proximal Policy Optimization (RLHF)\nGRPOTrainer       → Group Relative Policy Optimization\nORPOTrainer       → Odds Ratio Preference Optimization\nKTOTrainer        → Kahneman-Tversky Optimization\nRewardTrainer     → Reward Model 学習\nOnlineDPOTrainer  → オンラインDPO（生成しながら学習）\n\n【典型的な DPO 学習コード】\nfrom trl import DPOTrainer, DPOConfig\nfrom transformers import AutoModelForCausalLM\n\nmodel = AutoModelForCausalLM.from_pretrained(\"Qwen/Qwen2-7B\")\nconfig = DPOConfig(beta=0.1, learning_rate=5e-7)\ntrainer = DPOTrainer(model=model, args=config,\n    train_dataset=dataset,   # chosen/rejected 列\n    tokenizer=tokenizer)\ntrainer.train()\n\n【データフォーマット】\nSFT:  {\"messages\": [{\"role\":\"user\",\"content\":...}, ...]}\nDPO:  {\"chosen\": \"良い回答\", \"rejected\": \"悪い回答\", \"prompt\": \"...\"}\nPPO:  {\"query\": \"...\"}  → オンラインでresponse生成 → reward評価</div><p><strong>なぜスタンダードか：</strong>(1) HuggingFace公式メンテナンスで、transformers/datasets/accelerate/peftとシームレス統合。(2) 論文レベルの実装——DPO/PPOの実装はコミュニティで検証済み。(3) 新しいアライメント手法（GRPO、SimPO、ORPO）は通常TRLで最初に実装される。</p><div class=\"analogy\">例え：TRLはアライメント学習の「公式SDK」——PPOのclip、KLペナルティ、GAE等の詳細を自分で実装する必要がなく、直接呼び出すだけ。OpenAI SDKでAPIを呼ぶのと同じで、自分でHTTPリクエストを書く必要がない。</div><p><span class=\"key-point\">面接追問</span>：(1)「TRLとUnslothの組み合わせは？」→ Unslothが最適化されたmodel+tokenizerを提供し、TRLのTrainerクラスに渡す。TRLが学習ロジック、Unslothが低レベル計算効率を担当。(2)「PPOがDPOより学習が難しい理由は？」→ PPOTrainerは4つのモデル（policy/ref/reward/value）の前方伝播+勾配更新を同時管理する必要があり、VRAMと安定性の両方が課題。(3)「GRPOとは？」→ DeepSeek提案、独立したReward Model不要、グループ内相対ランキングをrewardシグナルとして使用。</p>"
+      },
+      {
+        "term": "LLaMA-Factory",
+        "explain": "<p><strong>本質：</strong>ワンストップのLLMファインチューニングプラットフォーム。<span class=\"key-point\">設定ファイル/WebUIだけでデータ準備から学習・評価までの全工程を完了</span>でき、ファインチューニングの敷居を大幅に下げる。</p><div class=\"formula\">【LLaMA-Factory vs 手書きコード】\n\n手書きコード:\n  model = load_model()           # 50行\n  tokenizer = load_tokenizer()   # 20行\n  dataset = preprocess()         # 100行\n  trainer = setup_trainer()      # 80行\n  LoRA/量子化/DeepSpeed設定       # 100行\n  学習ループ+ログ+保存            # 50行\n  合計: ~400行 Python\n\nLLaMA-Factory (YAML設定):\n  model_name_or_path: Qwen/Qwen2.5-14B\n  stage: sft\n  finetuning_type: lora\n  lora_rank: 64\n  dataset: my_dataset\n  output_dir: saves/qwen-sft\n  per_device_train_batch_size: 4\n  num_train_epochs: 3\n  → llamafactory-cli train config.yaml\n  合計: ~10行 YAML + 1コマンド\n\n【対応マトリクス】\nモデル: 100+ (Llama/Qwen/Mistral/Phi/Gemma/ChatGLM...)\n手法: Full/LoRA/QLoRA + SFT/DPO/PPO/ORPO/SimPO/KTO\n並列: DeepSpeed ZeRO-1/2/3, FSDP\nツール: WebUI学習/対話/評価, データ可視化</div><p><strong>なぜLLaMA-Factoryを使ったか：</strong>SiLR-Agentプロジェクトで：(1) 高速反復——YAMLを修正するだけでモデル（14B/32B）、手法（SFT/DPO）、LoRA設定を切り替え可能。(2) DeepSpeed統合——1行設定でZeRO-2を有効化。(3) 内蔵の評価とエクスポート機能。</p><div class=\"analogy\">例え：TRLがアライメント学習のSDKだとすれば、LLaMA-Factoryは「ローコードプラットフォーム」。WordPressでWebサイトを構築するのと自分でHTMLを書くのの違い——カスタマイズ性を多少犠牲にして、10倍の効率を得る。</div><p><span class=\"key-point\">面接追問</span>：(1)「LLaMA-Factoryの限界は？」→ 高度にカスタマイズされた学習ループ（SiLRのシミュレータ対話型学習など）はソースコード修正かTRLへの回帰が必要。(2)「Unslothと併用可能？」→ 可能、LLaMA-FactoryはUnslothバックエンド加速に対応、WebUIでチェックするだけ。(3)「本番環境でLLaMA-Factoryを使う？」→ 実験/プロトタイプ段階ではLFで迅速に反復、本番レベルの学習パイプラインは通常TRL+カスタムコードでより精密な制御を行う。</p>"
+      },
+      {
+        "term": "DeepSpeed ZeRO",
+        "explain": "<p><strong>本質：</strong>Microsoftの分散学習最適化技術。<span class=\"key-point\">シャーディング</span>（Partitioning）によりモデル状態を複数GPUに分散させ、シングルGPUのVRAM制限を突破する。</p><div class=\"formula\">【7Bモデルの VRAM 分析（FP16学習）】\n\nモデルパラメータ:     14 GB (7B × 2 bytes)\n勾配:                14 GB\nオプティマイザ状態(Adam): 28 GB (fp32パラメータコピー + momentum + variance)\n合計:                56 GB ← シングルGPUに収まらない！\n\n【ZeRO 3つのステージ】\nZeRO-1: オプティマイザ状態をシャーディング\n  各GPU: 14(パラメータ) + 14(勾配) + 28/N(オプティマイザ)\n  N=4:  14 + 14 + 7 = 35 GB  ✓ A100-40G対応\n\nZeRO-2: オプティマイザ + 勾配をシャーディング\n  各GPU: 14(パラメータ) + 14/N(勾配) + 28/N(オプティマイザ)\n  N=4:  14 + 3.5 + 7 = 24.5 GB  ✓ より余裕あり\n\nZeRO-3: オプティマイザ + 勾配 + パラメータをシャーディング\n  各GPU: 14/N + 14/N + 28/N\n  N=4:  3.5 + 3.5 + 7 = 14 GB  ✓ だが通信オーバーヘッド大\n\nあなたの選択: ZeRO-2（速度とVRAMの最適バランス）</div><p><strong>トレードオフ：</strong>ZeROステージが高いほどVRAM節約になるが、<span class=\"key-point\">通信オーバーヘッドが増大</span>。ZeRO-3はforward/backward時に他のGPUからパラメータをgatherする必要があり、遅延が増加。ZeRO-2がSFT/DPOで最もよく使われる選択。</p><div class=\"analogy\">例え：引越しの際に家具（モデル状態）をN人の友人（GPU）に分けて保管してもらう。ZeRO-1：各人が工具箱の一部（オプティマイザ）を保管。ZeRO-2：工具箱と設計図（勾配）も分けて保管。ZeRO-3：家具本体も分解して分散保管——最も省スペースだが、使うたびに組み立て直す（通信）必要がある。</div><p><span class=\"key-point\">面接追問</span>：(1)「ZeRO vs FSDP？」→ 原理は同じ（どちらもシャーディング）、FSDPはPyTorchネイティブサポート（DeepSpeed非依存）だが、DeepSpeed ZeROの方がエンジニアリング成熟度が高く設定が簡単。(2)「なぜZeRO-2でZeRO-3ではない？」→ 248件のSFTデータ+QLoRAでシングルGPUの14Bモデルに十分なVRAMがあり、ZeRO-2の方がZeRO-3より通信オーバーヘッドが低く、学習が速い。</p>"
+      }
+    ],
+    "group": "基础",
+    "lv": 2
+  },
+  {
+    "id": "l24",
+    "cat": "LLM基础",
+    "q": "SFT / DPO / GRPO 训练超参数详解",
+    "q_ja": "SFT / DPO / GRPO 学習ハイパーパラメータ詳解",
+    "bullets": [
+      "<span class=\"highlight\">epochs=3</span>：SFT通常2-5轮。数据少(<1K)时3轮防止欠拟合，数据多(>10K)时1-2轮够。DPO也1-3轮",
+      "<span class=\"highlight\">batch_size=2 + gradient_accumulation=4</span>：effective batch=8。显存不够→小batch+梯度累积模拟大batch。LLM微调通常effective 4-16",
+      "<span class=\"highlight\">learning_rate</span>：SFT用<span class=\"num\">2e-4</span>（LoRA标准值），DPO用<span class=\"num\">5e-5</span>（低一个量级防止偏好坍缩），GRPO用<span class=\"num\">1e-5~5e-6</span>（RL更敏感）",
+      "<span class=\"highlight\">max_seq_length=4096</span>：覆盖最长训练样本。过大→显存浪费+padding多，过小→截断信息丢失。KV Cache显存∝seq_len",
+      "<span class=\"highlight\">warmup_ratio=0.03</span>：前3%步数从0线性升到lr。防止初始大梯度破坏预训练权重。LoRA微调中尤其重要",
+      "<span class=\"highlight\">adamw_8bit</span>：8-bit Adam量化优化器状态(momentum+variance)从FP32→INT8，<span class=\"num\">节省~30%</span>优化器显存，精度损失极小",
+      "DPO特有：<span class=\"highlight\">beta=0.1</span>（KL惩罚系数，越大越保守）/ loss_type=sigmoid / ref_model=None（用初始权重省显存）",
+      "GRPO特有：不需要Reward Model，用<span class=\"highlight\">组内相对排序</span>作为reward信号。num_generations=8, reward来自规则/LLM评分"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">epochs=3</span>：SFTは通常2-5エポック。データが少ない(<1K)場合は3エポックで未学習を防止、多い(>10K)場合は1-2で十分。DPOも1-3エポック",
+      "<span class=\"highlight\">batch_size=2 + gradient_accumulation=4</span>：effective batch=8。VRAM不足→小batch+勾配蓄積で大batchをシミュレート。LLMファインチューニングでは通常effective 4-16",
+      "<span class=\"highlight\">learning_rate</span>：SFTは<span class=\"num\">2e-4</span>（LoRA標準値）、DPOは<span class=\"num\">5e-5</span>（1桁低く選好崩壊を防止）、GRPOは<span class=\"num\">1e-5~5e-6</span>（RLはより敏感）",
+      "<span class=\"highlight\">max_seq_length=4096</span>：最長の学習サンプルをカバー。大きすぎ→VRAM浪費+パディング増加、小さすぎ→情報切り捨て。KV CacheのVRAM ∝ seq_len",
+      "<span class=\"highlight\">warmup_ratio=0.03</span>：最初の3%ステップで0からlrまで線形上昇。初期の大きな勾配による事前学習重みの破壊を防止。LoRAファインチューニングで特に重要",
+      "<span class=\"highlight\">adamw_8bit</span>：8-bit Adamでオプティマイザ状態(momentum+variance)をFP32→INT8に量子化、<span class=\"num\">約30%</span>のオプティマイザVRAM節約、精度損失は極小",
+      "DPO特有：<span class=\"highlight\">beta=0.1</span>（KLペナルティ係数、大きいほど保守的）/ loss_type=sigmoid / ref_model=None（初期重みを使用しVRAM節約）",
+      "GRPO特有：Reward Model不要、<span class=\"highlight\">グループ内相対ランキング</span>をrewardシグナルとして使用。num_generations=8、rewardはルール/LLM評価から"
+    ],
+    "details": [
+      {
+        "term": "Learning Rate 选值逻辑",
+        "explain": "<p><strong>本质：</strong>学习率决定每步参数更新的幅度。LLM微调中，<span class=\"key-point\">不同训练阶段需要不同量级的lr</span>，因为参数的「可动空间」不同。</p><div class=\"formula\">【各阶段 lr 经验值】\n\nPre-training (全量):  1e-4 ~ 3e-4\n  → 参数从随机初始化开始，需要大步快跑\n\nSFT + LoRA:          1e-4 ~ 2e-4  (你用 2e-4 ✓)\n  → 只调 ~1% 参数，可以用较大lr\n  → LoRA rank越大，lr可以略小\n\nSFT + 全量微调:       5e-6 ~ 2e-5\n  → 所有参数都动，lr太大会灾难性遗忘\n\nDPO:                 1e-6 ~ 5e-5  (你用 5e-5)\n  → 比SFT低一个量级！\n  → 原因：DPO调整的是\"偏好方向\"而非\"能力\"\n  → lr太大 → 偏好坍缩(只学会说chosen,忘记语言能力)\n\nGRPO/PPO:            5e-7 ~ 1e-5\n  → RL对lr最敏感，太大→策略崩溃\n  → 通常从1e-6开始，观察reward曲线调整</div><p><span class=\"key-point\">面试追问</span>：「为什么LoRA能用比全量微调更大的lr？」→ LoRA只更新低秩矩阵（~1%参数），每步更新对模型整体行为的影响小，因此可以用更大步长。全量微调所有参数都在动，大lr容易破坏预训练知识。</p>"
+      },
+      {
+        "term": "Gradient Accumulation",
+        "explain": "<p><strong>本质：</strong>在显存不够放大batch时，<span class=\"key-point\">累积多个小batch的梯度后再做一次参数更新</span>，数学上等价于大batch训练。</p><div class=\"formula\">【数学等价性】\n\n大batch (batch=8, 1步):\n  g = (1/8) × Σᵢ₌₁⁸ ∇L(xᵢ)\n  θ = θ - lr × g\n\n梯度累积 (batch=2, 累积4步):\n  g_acc = 0\n  for step in [1,2,3,4]:\n    g_acc += (1/8) × Σⱼ₌₁² ∇L(xⱼ)  # 累积\n  θ = θ - lr × g_acc  # 一次更新\n\n  → 结果完全相同 ✓\n\n【显存对比 (14B模型, seq_len=4096)】\nbatch=8: 激活值 ~32GB → OOM\nbatch=2 × acc=4: 激活值 ~8GB → 可用 ✓\n\n代价: 训练时间 ×4 (4次前向+反向, 1次更新)\n     vs batch=8 只需1次前后向</div><p><strong>为什么 effective batch=8 而不是更大？</strong>LLM微调数据通常较少（几百~几千条），<span class=\"key-point\">batch太大会导致每个epoch的更新步数太少</span>（248条/batch8=31步/epoch），模型没有足够的更新次数来学习。</p><div class=\"analogy\">比喻：吃自助餐（学习）——每盘装不多（小batch），但多跑几趟（累积），吃到的总量和大盘一次装满一样多。但跑的趟数多了，花的时间也多。</div>"
+      },
+      {
+        "term": "AdamW 8-bit",
+        "explain": "<p><strong>本质：</strong>Adam优化器的显存优化版本。将优化器内部状态（momentum和variance）从FP32量化到INT8，<span class=\"key-point\">几乎不影响训练效果</span>。</p><div class=\"formula\">【Adam 优化器状态的显存】\n\n标准 AdamW (FP32 状态):\n  参数 θ:     14GB (7B × 2bytes, FP16)\n  momentum m: 28GB (7B × 4bytes, FP32)\n  variance v: 28GB (7B × 4bytes, FP32)\n  优化器合计: 56GB\n\nAdamW 8-bit (bitsandbytes):\n  参数 θ:     14GB (不变)\n  momentum m:  7GB (7B × 1byte, INT8)\n  variance v:  7GB (7B × 1byte, INT8)\n  优化器合计: 14GB → 节省 75%!\n\n实现原理 (bitsandbytes):\n  - 对每个tensor block(通常2048个元素)\n    计算 absmax 作为量化scale\n  - 动态量化: 更新时 INT8→FP32→计算→FP32→INT8\n  - block-wise设计保证量化误差不会累积\n\n【LoRA场景下的实际节省】\n  LoRA只有 ~100M 参数有优化器状态\n  节省: ~300MB (不是很多,但聊胜于无)\n  全量微调时节省才明显: 7B节省 ~42GB</div><p><span class=\"key-point\">面试追问</span>：「8-bit Adam vs AdaFactor？」→ AdaFactor不存储完整的momentum/variance（用行列分解近似），显存更省，但<span class=\"key-point\">训练不如Adam稳定</span>。8-bit Adam在显存和稳定性之间取得更好的平衡。</p>"
+      },
+      {
+        "term": "DPO: beta 和 ref_model",
+        "explain": "<p><strong>beta（KL惩罚系数）：</strong>控制训练后的模型<span class=\"key-point\">允许偏离原始SFT模型多远</span>。DPO loss中的核心超参数。</p><div class=\"formula\">【DPO Loss 回顾】\nL = -log σ(β × (log π_θ(y_w|x)/π_ref(y_w|x)\n              - log π_θ(y_l|x)/π_ref(y_l|x)))\n\nbeta的影响:\n  β=0.01 (小): 允许大幅偏离ref → 学得激进,可能过拟合偏好\n  β=0.1  (标准): 适中约束 → 你的选择 ✓\n  β=0.5  (大): 强约束 → 几乎不偏离ref,学习效果弱\n\n【ref_model = None 的含义】\n标准DPO: 加载两份模型\n  policy model (θ):   14GB ← 被训练\n  reference model:    14GB ← 冻结,计算 π_ref\n  合计: 28GB\n\nref_model=None (implicit reference):\n  只加载一份模型\n  用训练开始时的参数快照作为 π_ref\n  通过数学等价变换避免显式加载ref\n  合计: 14GB → 节省 50% 显存!\n\n注意: 这要求 beta 不能太小\n(β太小时, 近似误差会放大)</div><p><span class=\"key-point\">面试追问</span>：(1)「beta太小会怎样？」→ 模型学得太激进，可能丢失语言能力（只会说chosen的话术）。(2)「你的DPO为什么失败了？」→ 63%的偏好对中惩罚了shed_load操作，导致模型学会「永远不切负荷」，这是数据偏差而非beta问题。beta调整无法修复数据质量问题。</p>"
+      },
+      {
+        "term": "GRPO 核心机制",
+        "explain": "<p><strong>本质：</strong>DeepSeek提出的<span class=\"key-point\">无需Reward Model的强化学习对齐方法</span>。对同一个prompt生成一组回答，用组内相对排序作为reward信号。</p><div class=\"formula\">【GRPO vs PPO vs DPO】\n\nPPO:  需要4个模型(policy/ref/reward/value)\n      reward来自: 训练好的Reward Model\n      → 复杂, 不稳定, 显存大\n\nDPO:  需要2个模型(policy/ref)\n      reward来自: 隐式(偏好对数据)\n      → 简单, 但对数据质量敏感\n\nGRPO: 需要1个模型(policy)\n      reward来自: 规则/LLM评分的组内排序\n      → 最简单, 不需要人类偏好数据!\n\n【GRPO 算法流程】\n对每个 prompt x:\n  1. 生成 G 个回答: {y₁,...,yG} ~ π_θ(·|x)\n  2. 对每个 yᵢ 计算 reward rᵢ:\n     - 代码: 单元测试通过=1, 不通过=0\n     - 数学: 答案正确=1, 错误=0\n     - 通用: LLM-as-Judge 评分\n  3. 组内标准化: r̂ᵢ = (rᵢ - mean(r)) / std(r)\n  4. 策略梯度更新:\n     L = -Σᵢ r̂ᵢ × log π_θ(yᵢ|x)\n       + β × KL(π_θ || π_ref)\n\n典型配置:\n  num_generations = 8 (G=8)\n  lr = 1e-6 ~ 5e-6\n  beta = 0.04 (比DPO小, 因为学习信号更弱)\n  reward_model = \"规则\" 或 \"LLM评分\"</div><p><strong>GRPO的优势：</strong>(1) 不需要人类标注偏好数据。(2) reward可以是任何可计算的指标。(3) 对代码/数学等有明确正确答案的任务特别有效（DeepSeek-R1就用了GRPO）。</p><div class=\"analogy\">比喻：考试阅卷——DPO是给学生看标准答案让他学（需要标准答案）。GRPO是让学生答8份卷子，老师只打分不给答案，学生自己比较「哪份考得好」来改进（不需要标准答案，只需要评分标准）。</div><p><span class=\"key-point\">面试追问</span>：(1)「GRPO适合什么场景？」→ 有明确评分标准但难以构造偏好对的场景：代码（测试用例）、数学（正确答案）、工具调用（执行结果）。(2)「和PPO比的优势？」→ 不需要训练Reward Model，显存只需1个模型。(3)「DeepSeek-R1用了什么？」→ 先SFT冷启动，再GRPO强化推理链质量。</p>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "Learning Rate 選定ロジック",
+        "explain": "<p><strong>本質：</strong>学習率は各ステップのパラメータ更新幅を決定する。LLMファインチューニングでは<span class=\"key-point\">学習段階ごとに異なる桁のlrが必要</span>。パラメータの「可動範囲」が異なるため。</p><div class=\"formula\">【各段階の lr 経験値】\n\nPre-training (全量):  1e-4 ~ 3e-4\n  → パラメータがランダム初期化から開始、大きな歩幅で進む必要\n\nSFT + LoRA:          1e-4 ~ 2e-4  (あなたは 2e-4 ✓)\n  → 約1%のパラメータのみ調整、比較的大きなlrが使用可能\n  → LoRA rankが大きいほど、lrは少し小さくすべき\n\nSFT + 全量微調整:     5e-6 ~ 2e-5\n  → 全パラメータが変動、lrが大きすぎると壊滅的忘却\n\nDPO:                 1e-6 ~ 5e-5  (あなたは 5e-5)\n  → SFTより1桁低い！\n  → 理由：DPOは「選好方向」を調整、「能力」ではない\n  → lr大 → 選好崩壊(chosenだけ言えて言語能力喪失)\n\nGRPO/PPO:            5e-7 ~ 1e-5\n  → RLはlrに最も敏感、大きすぎ→方策崩壊\n  → 通常1e-6から開始、reward曲線を見て調整</div><p><span class=\"key-point\">面接追問</span>：「LoRAが全量微調整より大きなlrを使える理由は？」→ LoRAは低ランク行列（約1%のパラメータ）のみ更新するため、各ステップの更新がモデル全体の挙動に与える影響が小さく、より大きな歩幅が許容される。全量微調整では全パラメータが変動し、大きなlrは事前学習知識を破壊しやすい。</p>"
+      },
+      {
+        "term": "Gradient Accumulation",
+        "explain": "<p><strong>本質：</strong>VRAMが大きなbatchに足りない場合、<span class=\"key-point\">複数の小batchの勾配を蓄積してから1回のパラメータ更新</span>を行い、数学的に大batch学習と等価にする。</p><div class=\"formula\">【数学的等価性】\n\n大batch (batch=8, 1ステップ):\n  g = (1/8) × Σᵢ₌₁⁸ ∇L(xᵢ)\n  θ = θ - lr × g\n\n勾配蓄積 (batch=2, 蓄積4ステップ):\n  g_acc = 0\n  for step in [1,2,3,4]:\n    g_acc += (1/8) × Σⱼ₌₁² ∇L(xⱼ)  # 蓄積\n  θ = θ - lr × g_acc  # 1回更新\n\n  → 結果は完全に同一 ✓\n\n【VRAM比較 (14Bモデル, seq_len=4096)】\nbatch=8: 活性化 ~32GB → OOM\nbatch=2 × acc=4: 活性化 ~8GB → 使用可能 ✓\n\n代償: 学習時間 ×4 (4回の前方+後方、1回の更新)\n     vs batch=8 は1回の前後方のみ</div><p><strong>なぜ effective batch=8 でもっと大きくないのか？</strong>LLMファインチューニングのデータは通常少量（数百〜数千件）、<span class=\"key-point\">batchが大きすぎると各epochの更新ステップ数が不足</span>（248件÷batch8＝31ステップ/epoch）、モデルが学習するための更新回数が足りなくなる。</p><div class=\"analogy\">例え：ビュッフェ（学習）で食べる——各皿には少ししか盛れない（小batch）が、何度も取りに行く（蓄積）ことで、大皿に一度に盛るのと同じ量を食べられる。ただし往復が増えるため時間がかかる。</div>"
+      },
+      {
+        "term": "AdamW 8-bit",
+        "explain": "<p><strong>本質：</strong>Adamオプティマイザのメモリ最適化版。オプティマイザ内部状態（momentumとvariance）をFP32からINT8に量子化し、<span class=\"key-point\">学習結果にほぼ影響なし</span>。</p><div class=\"formula\">【Adam オプティマイザ状態の VRAM】\n\n標準 AdamW (FP32 状態):\n  パラメータ θ:  14GB (7B × 2bytes, FP16)\n  momentum m:  28GB (7B × 4bytes, FP32)\n  variance v:  28GB (7B × 4bytes, FP32)\n  オプティマイザ合計: 56GB\n\nAdamW 8-bit (bitsandbytes):\n  パラメータ θ:  14GB (変更なし)\n  momentum m:   7GB (7B × 1byte, INT8)\n  variance v:   7GB (7B × 1byte, INT8)\n  オプティマイザ合計: 14GB → 75%節約!\n\n実装原理 (bitsandbytes):\n  - 各tensorブロック(通常2048要素)ごとに\n    absmaxを量子化scaleとして計算\n  - 動的量子化: 更新時 INT8→FP32→計算→FP32→INT8\n  - ブロック単位設計で量子化誤差が累積しないことを保証\n\n【LoRAシナリオでの実際の節約】\n  LoRAでは ~100M パラメータのみにオプティマイザ状態あり\n  節約: ~300MB (それほど多くないが、ないよりはまし)\n  全量微調整時の節約が顕著: 7Bで ~42GB節約</div><p><span class=\"key-point\">面接追問</span>：「8-bit Adam vs AdaFactor？」→ AdaFactorは完全なmomentum/varianceを保存しない（行列の行・列分解で近似）ためVRAMはさらに少ないが、<span class=\"key-point\">学習がAdamほど安定しない</span>。8-bit AdamはVRAMと安定性のより良いバランスを実現。</p>"
+      },
+      {
+        "term": "DPO: beta と ref_model",
+        "explain": "<p><strong>beta（KLペナルティ係数）：</strong>学習後のモデルが<span class=\"key-point\">元のSFTモデルからどの程度離れることを許容するか</span>を制御。DPO lossの中核ハイパーパラメータ。</p><div class=\"formula\">【DPO Loss 復習】\nL = -log σ(β × (log π_θ(y_w|x)/π_ref(y_w|x)\n              - log π_θ(y_l|x)/π_ref(y_l|x)))\n\nbetaの影響:\n  β=0.01 (小): refから大幅に離れることを許容 → 攻めた学習、選好に過学習の可能性\n  β=0.1  (標準): 適度な制約 → あなたの選択 ✓\n  β=0.5  (大): 強い制約 → refからほぼ離れず、学習効果が弱い\n\n【ref_model = None の意味】\n標準DPO: 2つのモデルを読み込み\n  policy model (θ):   14GB ← 学習対象\n  reference model:    14GB ← 凍結、π_ref 計算用\n  合計: 28GB\n\nref_model=None (暗黙的reference):\n  1つのモデルのみ読み込み\n  学習開始時のパラメータスナップショットを π_ref として使用\n  数学的等価変換により明示的なref読み込みを回避\n  合計: 14GB → 50% VRAM 節約!\n\n注意: βが小さすぎてはいけない\n(β小 → 近似誤差が増幅される)</div><p><span class=\"key-point\">面接追問</span>：(1)「betaが小さすぎるとどうなる？」→ モデルの学習が過激になり、言語能力を失う可能性（chosenの表現しか言えなくなる）。(2)「あなたのDPOはなぜ失敗した？」→ 63%の選好ペアがshed_load操作を罰しており、モデルが「負荷遮断を絶対にしない」ことを学習。これはデータバイアスの問題でbeta調整では修正不可。</p>"
+      },
+      {
+        "term": "GRPO 核心メカニズム",
+        "explain": "<p><strong>本質：</strong>DeepSeekが提案した<span class=\"key-point\">Reward Model不要の強化学習アライメント手法</span>。同一promptに対して一群の回答を生成し、グループ内の相対ランキングをrewardシグナルとして使用。</p><div class=\"formula\">【GRPO vs PPO vs DPO】\n\nPPO:  4モデル必要(policy/ref/reward/value)\n      reward: 学習済みReward Model\n      → 複雑、不安定、VRAM大\n\nDPO:  2モデル必要(policy/ref)\n      reward: 暗黙的(選好ペアデータ)\n      → シンプル、ただしデータ品質に敏感\n\nGRPO: 1モデル必要(policy)\n      reward: ルール/LLM評価のグループ内ランキング\n      → 最もシンプル、人間の選好データ不要！\n\n【GRPO アルゴリズムフロー】\n各 prompt x に対して:\n  1. G 個の回答を生成: {y₁,...,yG} ~ π_θ(·|x)\n  2. 各 yᵢ の reward rᵢ を計算:\n     - コード: ユニットテスト合格=1, 不合格=0\n     - 数学: 正解=1, 不正解=0\n     - 汎用: LLM-as-Judge 評価\n  3. グループ内標準化: r̂ᵢ = (rᵢ - mean(r)) / std(r)\n  4. 方策勾配更新:\n     L = -Σᵢ r̂ᵢ × log π_θ(yᵢ|x)\n       + β × KL(π_θ || π_ref)\n\n典型的な設定:\n  num_generations = 8 (G=8)\n  lr = 1e-6 ~ 5e-6\n  beta = 0.04 (DPOより小さい、学習シグナルが弱いため)\n  reward_model = 「ルール」 or 「LLM評価」</div><p><strong>GRPOの優位性：</strong>(1) 人間のアノテーション不要。(2) rewardは計算可能な任意の指標でよい。(3) コード/数学など明確な正解がある任務に特に有効（DeepSeek-R1がGRPOを使用）。</p><div class=\"analogy\">例え：試験の採点——DPOは学生に模範解答を見せて学ばせる（模範解答が必要）。GRPOは学生に8回答案を書かせ、先生は点数だけつけて解答は見せず、学生自身が「どの答案が良かったか」を比較して改善する（模範解答不要、採点基準のみ必要）。</div><p><span class=\"key-point\">面接追問</span>：(1)「GRPOに適したシナリオは？」→ 明確な評価基準はあるが選好ペアの構築が難しいシナリオ：コード（テストケース）、数学（正解）、ツール呼び出し（実行結果）。(2)「PPOとの優位性は？」→ Reward Modelの学習不要、VRAMは1モデル分のみ。(3)「DeepSeek-R1は何を使った？」→ まずSFTでコールドスタート、次にGRPOで推論チェーンの品質を強化。</p>"
+      }
+    ],
+    "group": "基础",
+    "lv": 2
   },
   {
     "id": "m01",
