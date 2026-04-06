@@ -378,7 +378,7 @@
     </div>
   </div>
   <div class="card-counter"><span id="card-pos">0</span> / <span id="card-total">0</span></div>
-  <div class="card-wrap" id="card-wrap" onclick="flipCard()">
+  <div class="card-wrap" id="card-wrap" onclick="flipCard(event)">
     <div class="card-inner" id="card-inner">
       <div class="card-face card-front" id="card-front">
         <div class="card-cat-tag" id="cf-cat"></div>
@@ -742,8 +742,10 @@ function updateCatProgress() {
 // ═══════════════════════════════════════════════════════════════
 // ACTIONS
 // ═══════════════════════════════════════════════════════════════
-function flipCard() {
+function flipCard(e) {
   if(!currentCard()) return;
+  // Don't flip when clicking details/summary or links inside the card back
+  if(e && e.target.closest('.details-section, summary, .term-detail, a')) return;
   isFlipped = !isFlipped;
   document.getElementById('card-inner').classList.toggle('flipped', isFlipped);
   updateRateButtons();
