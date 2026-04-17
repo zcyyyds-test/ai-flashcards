@@ -1,0 +1,310 @@
+[
+  {
+    "id": "ib01",
+    "cat": "字节·LLM面",
+    "q": "了解 DeepSeek-R1 吗？介绍一下",
+    "bullets": [
+      "深度求索开源的推理增强型 LLM，以 DeepSeek-V3 为基座 + 大规模 RL pipeline 训出",
+      "主力 671B 总参数 / 37B 激活（MoE），另开源 1.5B~70B 系列蒸馏小模型",
+      "基座架构：Decoder-only Transformer + MLA（Multi-head Latent Attention）+ DeepSeekMoE",
+      "训练路线：R1-Zero 走纯 RL 验证可行性；R1 正式版用 SFT 冷启动 → RL → SFT → RL 的多阶段管线",
+      "定位对标 OpenAI o1，数学/代码/逻辑推理 benchmark 接近 o1"
+    ],
+    "details": [
+      {
+        "term": "R1-Zero vs R1",
+        "explain": "<p><strong>R1-Zero</strong>：跳过 SFT 直接用 GRPO 做 RL，证明了「RL 能让模型自发涌现反思/自检行为」，但输出混乱、中英夹杂、语言切换严重。</p><p><strong>R1</strong>：加了冷启动 SFT 数据修复可读性和格式问题，然后走「SFT → RL → SFT 再对齐 → RL」的多阶段管线。R1-Zero 是学术 demo，R1 是可用产品。</p>"
+      },
+      {
+        "term": "GRPO",
+        "explain": "<p>DeepSeek 为 R1 设计的策略优化算法，相比 PPO <span class=\"key-point\">省掉 critic 网络</span>——直接用一组 rollout 的 reward 做标准化当 advantage。</p><div class=\"formula\">advantage_i = (R_i - mean(R)) / std(R)</div><p>好处：显存减半（没有 critic），训练稳定，特别适合 reasoning 任务这种 reward 信号稀疏的场景。</p>"
+      },
+      {
+        "term": "R1 与 V3 的关系",
+        "explain": "<p>R1 的基座就是 V3——可以看作「V3 + RL-for-reasoning」。V3 提供基础的语言能力和知识，R1 在上面叠加长推理链的能力。两者是递进关系，不是替代关系。</p>"
+      },
+      {
+        "term": "蒸馏小模型为何有效",
+        "explain": "<p>把 R1 生成的长 CoT 当作 SFT 数据喂给 Qwen/Llama 小模型，推理能力<span class=\"key-point\">直接继承</span>，不需要小模型自己再做 RL。实验证明 1.5B 的蒸馏模型在 AIME 上能超过 GPT-4o，说明「推理能力可以用 SFT 传递」。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ib02",
+    "cat": "字节·LLM面",
+    "q": "R1 的 MLA 如何实现 KV-Cache 节约？",
+    "bullets": [
+      "核心思想：把 K 和 V 压到一个低维 latent 空间再缓存，只缓存 latent 向量",
+      "压缩：共享的 down-projection 把 hidden state 投到 latent c_KV（d_c << h·d_k）",
+      "解压：每个 head 用独立 up-projection 从 c_KV 还原 K、V",
+      "关键优化：up-projection 可以吸收进 Q 的投影，数学上等价于直接在 latent 空间算 attention",
+      "RoPE 单独走一条「解耦通路」，避免破坏投影吸收技巧"
+    ],
+    "details": [
+      {
+        "term": "MHA / MQA / GQA / MLA 对比",
+        "explain": "<div class=\"formula\">MHA: 缓存 h · n · d_k<br>MQA: 缓存 1 · n · d_k  （所有 head 共享一组 KV）<br>GQA: 缓存 g · n · d_k  （分组共享，Llama2/3 采用）<br>MLA: 缓存 n · d_c      （低秩压缩到 latent）</div><p>MQA 压得狠但效果掉；GQA 是 MHA/MQA 的折中；<span class=\"key-point\">MLA 在压缩率和效果之间更优</span>——DeepSeek 实测 MLA 比 GQA 显存省得多、效果还更好。</p>"
+      },
+      {
+        "term": "为什么 up-projection 能被吸收",
+        "explain": "<p>数学上 <code>attention_score = Q · W_UK · c_KV</code>，可以改写成 <code>(Q · W_UK) · c_KV</code>。W_UK 在推理时可以<span class=\"key-point\">预先合并到 Q 的投影矩阵里</span>，这样推理时根本不需要真的还原出 K、V，直接在 latent 空间算 attention 就行。V 侧同理。</p>"
+      },
+      {
+        "term": "MLA 对 RoPE 的特殊处理",
+        "explain": "<p>RoPE 作用在 Q、K 上会破坏前面的「投影吸收」技巧（因为 RoPE 是非线性的旋转）。MLA 的解决方案是<span class=\"key-point\">把少量维度拆出来专门走 RoPE 通路</span>——这部分维度正常缓存 K 的旋转结果，其余大部分维度走 latent 压缩通路。两路拼起来当最终的 K。</p>"
+      },
+      {
+        "term": "长上下文下的增益",
+        "explain": "<p>上下文越长，KV-Cache 占总显存的比例越高。n=128K 时传统 MHA 的 KV-Cache 会爆炸，而 MLA 压缩后显存可能只有 MHA 的 1/10 以下。这是 DeepSeek 敢做 128K context window 的底气。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ib03",
+    "cat": "字节·LLM面",
+    "q": "R1 在 SFT 时冷启动的目的？",
+    "bullets": [
+      "冷启动 = RL 之前先用少量高质量 CoT 数据做一轮轻量 SFT",
+      "目的一：修复 R1-Zero 的可读性问题（输出混乱、中英夹杂、格式乱）",
+      "目的二：给 RL 一个好起点，让模型先学会「think step by step」基本范式",
+      "目的三：稳定训练，降低 RL 阶段方差，避免 reward hacking 和崩溃",
+      "数据来源：人工整理几千条高质量 CoT + R1-Zero 生成后人工筛选"
+    ],
+    "details": [
+      {
+        "term": "为什么叫「冷」启动",
+        "explain": "<p>对应 RL 的「热」训练——先用监督信号把模型调到一个合理状态，再上 RL 这个高方差优化器。如果模型一开始就是随机的，RL 探索长 CoT 的效率极低，而且容易学偏。</p>"
+      },
+      {
+        "term": "和 InstructGPT 的 SFT 区别",
+        "explain": "<p><strong>InstructGPT</strong> 的 SFT 是主力对齐手段，数据量大（万到十万级），目标是全面对齐人类偏好。</p><p><strong>R1 的冷启动 SFT</strong> 只是 RL 前的热身，数据量小（几千条），目标只是<span class=\"key-point\">注入「CoT 格式」和「基本指令能力」</span>，真正的推理能力还是靠后续的 RL 涌现出来。</p>"
+      },
+      {
+        "term": "不冷启动行不行",
+        "explain": "<p>行——就是 R1-Zero。能用但不好用：推理能力在，但输出不是人类能舒服阅读的格式。学术上证明了 RL 的潜力，产品上必须加冷启动。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ib04",
+    "cat": "字节·LLM面",
+    "q": "位置编码是什么？解释 RoPE",
+    "bullets": [
+      "位置编码给 token 注入序列位置信息——self-attention 本身置换不变，不加位置编码「我爱你」和「你爱我」对模型完全一样",
+      "RoPE = Rotary Position Embedding：把位置信息编码成复平面上的旋转，作用在 Q、K 上",
+      "对位置 m 的 Q 向量，旋转角度 m·θ_i；内积只依赖相对位置 (m-n)",
+      "天然具备相对位置感知，且有一定外推能力（配合 YaRN 可扩展 4-32 倍训练长度）",
+      "现已成为主流：Llama、Qwen、DeepSeek 全部采用"
+    ],
+    "details": [
+      {
+        "term": "RoPE 的数学本质",
+        "explain": "<div class=\"formula\">把 Q/K 两两配对看作复数: q_2i + i·q_2i+1<br>旋转角度 θ_i = 10000^(-2i/d)<br>位置 m 旋转后: q_m = q · e^(i·m·θ)<br>内积: &lt;q_m, k_n&gt; = Re(q·k* · e^(i·(m-n)·θ))</div><p><span class=\"key-point\">两个 token 的 attention score 只依赖相对位置 (m-n)</span>——即使绝对位置不同，相对距离相同的 token 对 attention 模式一致。这就是 RoPE 的核心魅力。</p>"
+      },
+      {
+        "term": "RoPE 为什么能外推",
+        "explain": "<p>旋转的周期性+远距离衰减特性让模型对「没见过的相对位置」有一定泛化。但纯 RoPE 的外推能力其实有限——超出训练长度 2 倍左右就开始掉点。真正的长度外推靠 <strong>YaRN</strong>（对 RoPE 的频率做 NTK-aware 缩放）+ 少量长文本微调实现。</p>"
+      },
+      {
+        "term": "和其他位置编码对比",
+        "explain": "<p><strong>Sinusoidal</strong>（原版 Transformer）：绝对位置正弦编码加到 embedding 上，外推差</p><p><strong>Learned</strong>（BERT/GPT-2）：每个位置学一个 embedding，无外推能力</p><p><strong>ALiBi</strong>（BLOOM/MPT）：attention bias 线性衰减，外推好但没有显式方向感</p><p><strong>RoPE</strong>（Llama/Qwen/DeepSeek）：旋转形式，相对位置天然，外推好，<span class=\"key-point\">目前最流行</span></p>"
+      },
+      {
+        "term": "MLA 和 RoPE 的冲突",
+        "explain": "<p>RoPE 是非线性操作，会破坏 MLA 的「up-projection 吸收到 Q」这个数学技巧。DeepSeek 的解决方案是<span class=\"key-point\">拆出少量维度单独走 RoPE 通路</span>，其余大部分维度走 latent 压缩通路。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ib05",
+    "cat": "字节·LLM面",
+    "q": "14B 模型的推理和训练显存估算",
+    "bullets": [
+      "核心公式：参数显存 + 梯度显存 + 优化器状态 + 激活显存",
+      "14B FP16/BF16 推理：权重 28GB + KV-Cache + overhead ≈ 30-35GB（单 A100 80G 能塞）",
+      "14B 全参训练（Adam+BF16）：约 250-300GB ≈ 参数量 × 16-20 字节",
+      "14B INT4 推理仅需 7GB → 消费级 3090/4090 能跑",
+      "LoRA 微调显存 ≈ 推理 + 小梯度 ≈ 40-50GB，单卡 A100 可行"
+    ],
+    "details": [
+      {
+        "term": "训练显存明细（Adam+BF16 混合精度）",
+        "explain": "<div class=\"formula\">权重 (BF16):   14B × 2 = 28 GB<br>梯度 (BF16):   14B × 2 = 28 GB<br>Adam m (FP32): 14B × 4 = 56 GB<br>Adam v (FP32): 14B × 4 = 56 GB<br>主权重 (FP32): 14B × 4 = 56 GB<br>────────────────────────<br>小计:                   224 GB (不含激活)<br>激活 (batch=1,seq=2K):  +20~50 GB<br>总计:                 ≈ 250-300 GB</div><p>这就是为什么 14B 全参训练需要 <span class=\"key-point\">4×A100 80G 以上 + ZeRO</span>。</p>"
+      },
+      {
+        "term": "为什么训练显存是推理的 10 倍",
+        "explain": "<ul><li><strong>梯度</strong>：推理没有</li><li><strong>优化器状态（Adam m/v）</strong>：推理没有，且需要 FP32 高精度</li><li><strong>FP32 主权重副本</strong>：混合精度训练必备</li><li><strong>激活</strong>：反向传播需要，推理不需要</li></ul><p>这四项加起来远超参数本身。<span class=\"key-point\">Adam 优化器的内存开销是大头</span>——这也是为什么 SGD / Lion / 8bit Adam 等优化器受关注。</p>"
+      },
+      {
+        "term": "怎么压到单卡",
+        "explain": "<ul><li><strong>LoRA / QLoRA</strong>：冻结基座，只训小矩阵</li><li><strong>Gradient Checkpointing</strong>：不存激活，反向时重算</li><li><strong>ZeRO-3 / FSDP</strong>：参数、梯度、优化器状态切分到多卡</li><li><strong>CPU Offload</strong>：把不活跃的状态搬到 CPU</li><li><strong>8bit Adam</strong>：bitsandbytes，把 m/v 量化到 8bit</li></ul>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ib06",
+    "cat": "字节·LLM面",
+    "q": "显存占用和哪些因素相关？",
+    "bullets": [
+      "参数量（线性）、精度（FP32/BF16/FP16/INT8/INT4）、优化器（SGD<Adam）",
+      "batch size（激活 ∝ batch）、序列长度（激活 ∝ seq，attention 还有 O(n²)）",
+      "模型深度（激活 ∝ layers）",
+      "训练技巧：梯度累积（时间换空间）、gradient checkpointing（不存激活）",
+      "推理时 KV-Cache ∝ batch × seq × layers × hidden，长上下文是显存杀手"
+    ],
+    "details": [
+      {
+        "term": "FSDP / ZeRO 原理",
+        "explain": "<p>把参数、梯度、优化器状态<span class=\"key-point\">切分到多张卡上</span>，用的时候再 all-gather。</p><ul><li><strong>ZeRO-1</strong>：只切优化器状态（省 4×）</li><li><strong>ZeRO-2</strong>：切优化器 + 梯度（省 8×）</li><li><strong>ZeRO-3 / FSDP</strong>：切优化器 + 梯度 + 参数（省 N×，N=GPU 数）</li></ul><p>代价是通信开销——ZeRO-3 的通信成本最高，但在 NVLink 互联下可以接受。</p>"
+      },
+      {
+        "term": "Flash Attention 省显存吗",
+        "explain": "<p>省——而且省得非常狠。核心是把 attention 计算 fuse 成 tiled kernel，<span class=\"key-point\">不再显式存 n×n 的 attention 矩阵</span>，反向时用 recomputation 重新算。从 O(n²) 内存降到 O(n)，同时因为更好的 GPU 内存访问模式反而更快。</p>"
+      },
+      {
+        "term": "为什么 Adam 优化器状态要 FP32",
+        "explain": "<p>低精度累加误差大，尤其是二阶矩 v_t 这种需要长期累积的状态。BF16 的精度（7 位尾数）不足以准确维护 β₂=0.999 的指数移动平均——累积误差会让优化器跑偏。所以即使参数和梯度用 BF16，优化器状态必须 FP32。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ib07",
+    "cat": "字节·LLM面",
+    "q": "大模型灾难性遗忘是什么？如何解决？",
+    "bullets": [
+      "现象：在新任务上微调后，旧任务（包括基座能力）性能显著下降",
+      "本质：参数更新时旧任务相关的权重被覆盖",
+      "参数层面：LoRA/Adapter 冻结基座只训小矩阵，部分层冻结",
+      "数据层面：混合训练（新+少量旧）、知识蒸馏、经验回放",
+      "正则化 + 小学习率 + 少 epoch 是训练技巧组合拳"
+    ],
+    "details": [
+      {
+        "term": "LoRA 为什么能缓解遗忘",
+        "explain": "<p>基座权重<span class=\"key-point\">完全冻结</span>，新知识都进 LoRA 的 B·A 矩阵。极端情况下想回到基座，只要把 LoRA 去掉就行——完全无损。对比全参微调，LoRA 的遗忘风险几乎可控为零。</p><p>但 LoRA 的容量有限，学不下太多新知识。在遗忘和容量之间权衡时，rank 越大容量越大、遗忘风险越高。</p>"
+      },
+      {
+        "term": "多阶段 SFT 的顺序影响",
+        "explain": "<p>有影响——<span class=\"key-point\">后训的任务留下的印记最深</span>，所以重要任务放后面。常见的经验法则：通用对话 → 领域知识 → 指令对齐 → 风格微调。工业界更激进的做法是用 rehearsal（每个阶段都混入前一阶段的数据）。</p>"
+      },
+      {
+        "term": "EWC（Elastic Weight Consolidation）",
+        "explain": "<p>在新任务 loss 上加一个正则项：<code>λ · Σ F_i · (θ_i - θ*_i)²</code>，其中 F_i 是 Fisher 信息矩阵（衡量参数 i 对旧任务的重要性）。</p><p>直觉：<span class=\"key-point\">对旧任务重要的参数更新要付出更大代价</span>。但计算 Fisher 矩阵贵，实际落地不多。</p>"
+      },
+      {
+        "term": "RLHF 会不会遗忘",
+        "explain": "<p>会——RLHF 在对齐人类偏好的同时会削弱 base model 的一些能力（所谓「alignment tax」）。这也是现在流行 DPO、IPO 等相对温和的偏好优化方法的原因之一——它们更接近 SFT，偏离 base 的程度更小。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ib08",
+    "cat": "字节·LLM面",
+    "q": "BF16、FP16、FP32 对比",
+    "bullets": [
+      "FP32：1+8+23，动态范围大精度高，4 字节",
+      "FP16：1+5+10，精度高但范围小（容易溢出），2 字节，Pascal+ 支持",
+      "BF16：1+8+7，动态范围=FP32，精度低，2 字节，Ampere+ 支持",
+      "FP16 必须用 loss scaling 防溢出；BF16 开箱即用更稳定",
+      "现代大模型都用 BF16——A100/H100 原生支持，稳定性 >> FP16"
+    ],
+    "details": [
+      {
+        "term": "为什么 FP16 需要 loss scaling",
+        "explain": "<p>FP16 动态范围只有 6e-5 ~ 6.5e4，梯度很容易：</p><ul><li><strong>大梯度溢出</strong>：变成 inf，参数被破坏</li><li><strong>小梯度下溢</strong>：变成 0，更新消失</li></ul><p>解决方案：<span class=\"key-point\">把 loss 乘以 2^16 再反向</span>，梯度会被同步放大 2^16 倍，下溢风险消失；优化器更新时除回去。动态 loss scaling 会根据是否出现 inf 自动调整 scale 因子。</p>"
+      },
+      {
+        "term": "BF16 为什么更稳定",
+        "explain": "<p>BF16 有 8 位指数（和 FP32 一样），动态范围覆盖 1e-38 ~ 1e38，<span class=\"key-point\">和 FP32 完全一致</span>——所以溢出和下溢几乎不会发生，完全不需要 loss scaling。</p><p>代价是只有 7 位尾数，相对误差约 7.8e-3——比 FP16 的 9.8e-4 大一个数量级，但大模型训练对这个精度不敏感。</p>"
+      },
+      {
+        "term": "FP8 是什么",
+        "explain": "<p>H100 引入的更低精度浮点，两种格式：</p><ul><li><strong>E4M3</strong>：1+4+3，精度优先（用于前向 activation）</li><li><strong>E5M2</strong>：1+5+2，范围优先（用于反向 gradient）</li></ul><p>需要 per-tensor scaling 配合才能稳定训练。Transformer Engine 库在 H100 上能做到 FP8 训练 + BF16 精度。</p>"
+      },
+      {
+        "term": "混合精度中哪些要 FP32",
+        "explain": "<p>即使用 BF16 训练，这些地方仍然用 FP32：</p><ul><li>Loss 计算（数值稳定）</li><li>Softmax（容易溢出）</li><li>LayerNorm 的统计量</li><li>Optimizer states（m, v）</li><li>Master weights（主权重副本）</li></ul>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ib09",
+    "cat": "字节·LLM面",
+    "q": "Adam 和 AdamW 的原理",
+    "bullets": [
+      "Adam = Momentum（一阶动量）+ RMSProp（二阶动量自适应学习率）",
+      "m_t = β₁m + (1-β₁)g；v_t = β₂v + (1-β₂)g²；偏差修正后更新",
+      "AdamW 改动：解耦 weight decay，直接在更新步骤减 η·λ·θ",
+      "AdamW 的 weight decay 不会被二阶矩缩放削弱，正则效果正确",
+      "现代大模型全部用 AdamW——泛化更好、超参更稳定"
+    ],
+    "details": [
+      {
+        "term": "Adam 更新公式",
+        "explain": "<div class=\"formula\">m_t = β₁·m_(t-1) + (1-β₁)·g_t         一阶矩<br>v_t = β₂·v_(t-1) + (1-β₂)·g_t²        二阶矩<br>m̂_t = m_t / (1-β₁^t)                 偏差修正<br>v̂_t = v_t / (1-β₂^t)<br>θ_t = θ_(t-1) - η · m̂_t / (√v̂_t + ε)</div><p>典型超参：β₁=0.9, β₂=0.999, ε=1e-8。</p><p><strong>m_t</strong> 提供方向惯性让更新更平滑；<strong>v_t</strong> 给每个参数分配不同学习率，梯度大的参数步长小、反之步长大。</p>"
+      },
+      {
+        "term": "AdamW vs Adam 的关键差异",
+        "explain": "<p>Adam 的 L2 正则通过 loss 加 <code>λ‖θ‖²</code> 实现，这个正则项会进入梯度、进入 m/v，<span class=\"key-point\">被二阶矩 v 缩放后效果就乱了</span>——对梯度大的参数正则实际变弱，正则行为和预期不符。</p><p>AdamW 的做法：<strong>直接在参数更新步骤里减去 η·λ·θ</strong>：</p><div class=\"formula\">θ_t = θ_(t-1) - η · (m̂_t / (√v̂_t + ε) + λ·θ_(t-1))</div><p>这样 weight decay 不受 v 影响，正则效果正确。</p>"
+      },
+      {
+        "term": "8bit Adam",
+        "explain": "<p>bitsandbytes 库的实现，把 m/v 量化成 8bit，<span class=\"key-point\">优化器显存减半</span>。关键技巧是 block-wise quantization——每 2048 个元素用一个独立的 scale，避免 outlier 破坏整体精度。损失可以忽略，但显存显著节约。</p>"
+      },
+      {
+        "term": "Lion 优化器",
+        "explain": "<p>Google 2023 年提出的替代，用 <code>sign(m_t)</code> 更新而不是 <code>m_t / √v_t</code>。只维护一阶动量，<span class=\"key-point\">显存比 AdamW 少一半</span>（不要 v）。在大模型训练上效果接近或略好于 AdamW，但超参需要重新调。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ib10",
+    "cat": "字节·LLM面",
+    "q": "LeetCode 股票系列（121/122/123/188）的通解",
+    "bullets": [
+      "121（1 次）：一次遍历维护最小价格和最大利润，O(n)/O(1)",
+      "122（无限次）：贪心，只要明天比今天高就买卖",
+      "123（最多 2 次）：四个状态 DP（buy1/sell1/buy2/sell2）",
+      "188（最多 k 次）：dp[j] buy/sell 二维 DP，O(nk)/O(k)",
+      "通解：dp[i][j][0/1] = 第 i 天、用了 j 次交易、持/不持股的最大收益"
+    ],
+    "details": [
+      {
+        "term": "188 最通用解法（k 次）",
+        "explain": "<div class=\"formula\">def maxProfit(k, prices):<br>&nbsp;&nbsp;n = len(prices)<br>&nbsp;&nbsp;if k &gt;= n // 2:  # 退化成 122<br>&nbsp;&nbsp;&nbsp;&nbsp;return sum(max(0, prices[i]-prices[i-1]) for i in range(1, n))<br>&nbsp;&nbsp;buy = [-inf] * (k+1)<br>&nbsp;&nbsp;sell = [0] * (k+1)<br>&nbsp;&nbsp;for p in prices:<br>&nbsp;&nbsp;&nbsp;&nbsp;for j in range(1, k+1):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buy[j]  = max(buy[j],  sell[j-1] - p)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sell[j] = max(sell[j], buy[j]    + p)<br>&nbsp;&nbsp;return sell[k]</div><p>O(nk) 时间，O(k) 空间。是整个系列的母题。</p>"
+      },
+      {
+        "term": "为什么这一家族能统一",
+        "explain": "<p>所有题本质都是 <code>dp[i][j][0/1]</code>：第 i 天、用了 j 次交易、持/不持股票的最大收益。</p><ul><li><strong>121</strong>：j=1 固定</li><li><strong>122</strong>：j 无限制（退化成贪心）</li><li><strong>123</strong>：j=2 固定</li><li><strong>188</strong>：j=k 通用</li></ul><p>掌握 188 的 DP 框架后，121/122/123 都能用它退化得出。</p>"
+      },
+      {
+        "term": "含冷冻期（309）",
+        "explain": "<p>多一个「冷冻期」状态。从 sell 状态不能直接转到 buy，必须经过一天冷冻期。状态机：<code>hold → sold → cold → hold</code>。</p>"
+      },
+      {
+        "term": "含手续费（714）",
+        "explain": "<p>每次 sell 时额外减 fee：<code>sell = max(sell, buy + p - fee)</code>。本质是改变贪心/DP 的阈值——只有价差大于 fee 的波动才值得交易。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 1
+  }
+]

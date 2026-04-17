@@ -1,0 +1,410 @@
+[
+  {
+    "id": "iad01",
+    "cat": "Agent深度面",
+    "q": "模型和 Agent 的区别是什么？",
+    "bullets": [
+      "模型 = 单次推理引擎（输入→输出，无状态，不和外界交互）",
+      "Agent = 持续决策系统（感知→思考→行动→观察循环，有目标/工具/记忆）",
+      "核心差异四维度：状态、工具、记忆、行动——模型全没有，Agent 全有",
+      "类比：模型是大脑，Agent 是有手有脚有眼睛的人",
+      "上下文工程是让 Agent 的大脑获得正确信息的手段，但 Agent 还需要工具+记忆+行动循环"
+    ],
+    "details": [
+      {
+        "term": "五维度对比",
+        "explain": "<table border='1' style='border-collapse:collapse;'><tr><th>维度</th><th>模型</th><th>Agent</th></tr><tr><td><strong>状态</strong></td><td>无状态（每次推理独立）</td><td>有状态（跨轮保持上下文）</td></tr><tr><td><strong>工具</strong></td><td>没有（只能生成文本）</td><td>有（能调 API/数据库/文件系统）</td></tr><tr><td><strong>记忆</strong></td><td>只有 context window 内</td><td>有持久化记忆（短期+长期）</td></tr><tr><td><strong>行动</strong></td><td>不能执行（只输出建议）</td><td>能执行（工具调用改变外部状态）</td></tr><tr><td><strong>目标</strong></td><td>被动响应（回答问题）</td><td>主动追求（完成任务）</td></tr></table>"
+      },
+      {
+        "term": "常见追问：上下文工程是不是让模型变成 Agent",
+        "explain": "<p>不完全是。上下文工程解决的是「给 Agent 的大脑正确的信息」这一个维度。Agent 还需要：</p><ul><li><strong>工具层</strong>：能力原子（调用 API、读写文件）</li><li><strong>记忆层</strong>：跨会话持久化信息</li><li><strong>行动循环</strong>：感知→思考→行动→观察的持续迭代</li></ul><p>上下文工程是 Agent 设计的<span class='key-point'>核心技术手段</span>，但不是全部。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "iad02",
+    "cat": "Agent深度面",
+    "q": "本地工具、MCP Tools、Skill 三者的区别？",
+    "bullets": [
+      "三者是不同抽象层级：本地工具(函数) < MCP(协议) < Skill(编排)",
+      "本地工具：硬编码在 Agent 里的函数（Read/Bash/Grep），启动即可用",
+      "MCP Tools：通过 MCP 协议从外部 server 暴露的工具，走 JSON-RPC 通信",
+      "Skill：markdown 工作流指令包，可编排多个工具 + 注入领域知识 + 定义流程约束",
+      "一个 Skill 可以同时使用本地工具和 MCP 工具（如 remote-train 编排 Bash + SSH）"
+    ],
+    "details": [
+      {
+        "term": "对比表",
+        "explain": "<table border='1' style='border-collapse:collapse;'><tr><th></th><th>本地工具</th><th>MCP Tools</th><th>Skill</th></tr><tr><td><strong>是什么</strong></td><td>硬编码函数</td><td>协议层暴露的工具</td><td>markdown 工作流</td></tr><tr><td><strong>抽象层级</strong></td><td>函数调用</td><td>标准化工具暴露</td><td>工具编排+知识注入</td></tr><tr><td><strong>生命周期</strong></td><td>启动即可用</td><td>需 MCP server 运行</td><td>按需动态加载</td></tr><tr><td><strong>通信</strong></td><td>进程内</td><td>JSON-RPC over stdio</td><td>无通信(prompt 注入)</td></tr></table>"
+      },
+      {
+        "term": "类比",
+        "explain": "<p><strong>本地工具</strong> = 你手里的锤子螺丝刀<br><strong>MCP</strong> = 五金店的标准货架（任何人都能来买）<br><strong>Skill</strong> = 宜家家具组装说明书（告诉你第几步用哪个工具、怎么用、注意什么）</p><p><span class='key-point'>Skill 是工具的使用说明书，不是工具本身</span>。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "iad03",
+    "cat": "Agent深度面",
+    "q": "为什么 Anthropic 做了 Skill 而不只做 MCP？Skill 里有没有工具？",
+    "bullets": [
+      "MCP 和 Skill 是互补关系：MCP 解决「工具怎么接入」，Skill 解决「工具怎么用好」",
+      "MCP 是插座标准，Skill 是使用说明书——有了插座不代表会用电器",
+      "Skill 能做 MCP 做不到的事：编码领域知识、定义流程约束、组合多种工具",
+      "Skill 不「包含」工具，而是「编排」工具——本体是 markdown 指令",
+      "Skill 可引导 Agent 使用已有工具（Bash/Read/MCP 工具等），但不能注册新 tool schema"
+    ],
+    "details": [
+      {
+        "term": "Skill 比 MCP 多什么",
+        "explain": "<p>MCP schema 只能定义「这个工具接受什么参数、返回什么」，但表达不了：</p><ul><li><strong>什么时候触发</strong>（trigger 条件）</li><li><strong>按什么流程执行</strong>（step-by-step workflow）</li><li><strong>有哪些约束和陷阱</strong>（domain knowledge）</li><li><strong>失败后怎么重试</strong>（error handling）</li></ul><p>例：数据库 MCP 只定义了 query/insert/delete 三个 tool。但 Skill 可以告诉 Agent：「<span class='key-point'>删除操作必须先确认、写操作必须在事务内、查询超过 1000 行要分页</span>」。这些知识 MCP schema 表达不了。</p>"
+      },
+      {
+        "term": "Skill 里有没有工具",
+        "explain": "<p>严格说<span class='key-point'>没有</span>。Skill 本体是 SKILL.md 文件（markdown），不定义新 tool schema。</p><p>但 Skill 目录下可以有 <code>scripts/*.js</code> 辅助脚本——这些脚本通过 Bash 工具执行，不是 Skill 原生的工具。</p><p><strong>Skill 不能注册新工具</strong>。如果需要新工具能力，应该写 MCP server 或用 Bash 执行自定义脚本。Skill 的职责是编排，不是创造新能力。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "iad04",
+    "cat": "Agent深度面",
+    "q": "Claude Code 的记忆架构？上下文真的等于记忆吗？",
+    "bullets": [
+      "上下文 ≠ 记忆：上下文是运行时窗口，记忆是持久化存储；记忆被加载到上下文，但上下文里大部分不是记忆",
+      "两套互补系统：CLAUDE.md（人写的指令）+ Auto Memory（Claude 自己写的结构化笔记）",
+      "Auto Memory = 文件即记忆：~/.claude/projects/<project>/memory/ 下的 markdown 文件",
+      "分层加载：system prompt → auto memory index(200行) → CLAUDE.md → rules → skill descriptions",
+      "设计哲学：没有向量库、没有数据库——markdown 文件 + grep 搜索就够了"
+    ],
+    "details": [
+      {
+        "term": "两套记忆系统",
+        "explain": "<p><strong>CLAUDE.md 文件（人写的）</strong></p><ul><li>层级：项目级 <code>.claude/CLAUDE.md</code> → 用户级 <code>~/.claude/CLAUDE.md</code></li><li>全量加载，不限大小</li><li>内容：代码规范、协作偏好、项目约束</li></ul><p><strong>Auto Memory（Claude 写的）</strong></p><ul><li>位置：<code>~/.claude/projects/&lt;project&gt;/memory/</code></li><li>结构：<code>MEMORY.md</code>（索引，前 200 行加载）+ 各主题文件（按需读取）</li><li>四种类型：user / feedback / project / reference</li></ul>"
+      },
+      {
+        "term": "分层加载顺序",
+        "explain": "<div class='formula'>1. System prompt（~4K token，隐藏）<br>2. Auto memory index（MEMORY.md 前 200 行）<br>3. CLAUDE.md 文件（全量）<br>4. User/Project rules（.claude/rules/）<br>5. Skill descriptions（仅名称+描述）<br>6. 对话历史 + 工具结果（运行时）</div><p>Skill 的全文只在被调用时才加载到 context——这是<span class='key-point'>按需加载</span>的典型实践。</p>"
+      },
+      {
+        "term": "为什么「文件即记忆」",
+        "explain": "<p>比数据库更简单、更可调试、更可版本控制：</p><ul><li><strong>调试</strong>：直接 cat 文件就能看记忆内容</li><li><strong>版本控制</strong>：git 追踪记忆变化</li><li><strong>协作</strong>：团队共享 CLAUDE.md 统一规范</li><li><strong>搜索</strong>：grep 就够（不需要 embedding）</li></ul><p>Claude Code 证明了：<span class='key-point'>对于 Agent 的工作记忆，简单的文件系统比复杂的向量库更实用</span>。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "iad05",
+    "cat": "Agent深度面",
+    "q": "为什么 Claude Code 不用 RAG 检索代码而是直接用 grep？",
+    "bullets": [
+      "代码搜索的特点：通常知道要搜什么（函数名/变量名/错误码），不需要语义理解",
+      "grep 是确定性的——精确匹配，结果可验证，零幻觉风险",
+      "RAG 需要 embedding 预处理 + 向量库 + re-index，代码的 embedding 质量还不稳定",
+      "grep 天然实时：搜的是当前文件系统，文件改了立刻生效，不需要重新 index",
+      "核心哲学：可审计的确定性搜索 > 黑箱的语义检索"
+    ],
+    "details": [
+      {
+        "term": "对比表",
+        "explain": "<table border='1' style='border-collapse:collapse;'><tr><th>维度</th><th>grep/Glob</th><th>RAG</th></tr><tr><td><strong>确定性</strong></td><td>精确匹配，可验证</td><td>语义近似，可能漏检</td></tr><tr><td><strong>幻觉风险</strong></td><td>零</td><td>有(embedding距离≠语义等价)</td></tr><tr><td><strong>预处理</strong></td><td>零</td><td>需要 embedding + 向量库</td></tr><tr><td><strong>增量更新</strong></td><td>天然实时</td><td>需要 re-index</td></tr><tr><td><strong>代码适用性</strong></td><td>极好(精确匹配)</td><td>一般(代码embedding不稳定)</td></tr><tr><td><strong>可审计</strong></td><td>完全透明</td><td>黑箱</td></tr></table>"
+      },
+      {
+        "term": "什么时候 RAG 更好",
+        "explain": "<p>这<span class='key-point'>不是说 RAG 不好</span>——对自然语言文档检索 RAG 更优。区别在于：</p><ul><li><strong>代码搜索</strong>：用户知道要搜什么（函数名/类名/关键词）→ grep 最快最准</li><li><strong>文档搜索</strong>：用户问「怎么配置 SSL」，不知道文档里具体关键词是什么 → 需要语义匹配</li></ul><p>Claude Code 的设计：代码用 grep（确定性），知识库用 memory 文件（简单），都不用 RAG。这是「<span class='key-point'>够用就好，不过度工程化</span>」的设计哲学。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "iad06",
+    "cat": "Agent深度面",
+    "q": "有没有了解过最前沿的记忆设计？",
+    "bullets": [
+      "MemGPT/Letta：OS 虚拟内存思想，Agent 主动 page in/out 上下文",
+      "Mem0：Memory-as-a-Service，自动抽取+去重+检索，三层(用户/会话/Agent)",
+      "A-MoF(Microsoft)：把历史反馈当一等公民记忆对象，主动检索改进行为",
+      "Generative Agents(Stanford)：memory stream + reflection + 按 recency*importance*relevance 检索",
+      "共同趋势：分层记忆/主动管理(非append-only)/结构化存储(图>向量)/记忆整合"
+    ],
+    "details": [
+      {
+        "term": "MemGPT / Letta",
+        "explain": "<p>Packer et al., 2023-2024。<span class='key-point'>把 OS 虚拟内存概念搬到 LLM</span>：</p><ul><li>main context = RAM（有限，高速）</li><li>外部存储 = 磁盘（无限，慢）</li><li>Agent <strong>自己决定</strong>什么信息需要 page in/out</li></ul><p>关键创新：不是被动地截断 context，而是 Agent 主动管理——「我需要之前的会议记录」→ page in；「这段对话不重要了」→ page out。</p><p>Letta 是产品化版本，开源框架。</p>"
+      },
+      {
+        "term": "Mem0",
+        "explain": "<p>Memory-as-a-Service 层，三层记忆：</p><ul><li><strong>用户级</strong>：跨会话持久（偏好、身份）</li><li><strong>会话级</strong>：单次会话内（当前任务状态）</li><li><strong>Agent 级</strong>：Agent 自身经验（从错误中学习）</li></ul><p>2024 底引入 <strong>Graph Memory</strong>——用知识图谱表示关系型记忆，<span class='key-point'>图/关系表示优于 flat 向量检索</span>，特别在需要推理「A 和 B 的关系」时。</p>"
+      },
+      {
+        "term": "跨所有工作的共同趋势",
+        "explain": "<ol><li><strong>分层记忆</strong>：工作记忆 / 情景记忆 / 语义记忆（映射人类认知架构）</li><li><strong>主动管理</strong>：Agent 自己决定存什么忘什么，不是 append-only</li><li><strong>结构化存储</strong>：图/关系 &gt; flat 向量</li><li><strong>记忆整合</strong>：定期压缩老记忆（类似人类睡眠时的记忆巩固）</li></ol><p>这些趋势和 Claude Code 的 auto memory 设计理念一致——<span class='key-point'>Claude Code 的 memory 也是主动管理、结构化文件、有过期清理机制</span>。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "iad07",
+    "cat": "Agent深度面",
+    "q": "开发 Agent 的流程？借鉴了哪些产品的思路？",
+    "bullets": [
+      "流程：问题建模 → Baseline(GPT few-shot) → 架构选型 → 迭代训练(SFT→GRPO) → 评测闭环",
+      "核心原则：先跑 baseline 确定瓶颈再设计架构——不是先搭架构再找问题",
+      "借鉴 Claude Code 的 Tool Use 架构：Agent 通过结构化工具调用和外界交互",
+      "借鉴 Cursor 的上下文裁剪：给模型正确的信息而不是所有信息",
+      "借鉴自动驾驶 Sim-in-the-Loop：每个 action 先过仿真器验证再执行"
+    ],
+    "details": [
+      {
+        "term": "为什么先跑 baseline",
+        "explain": "<p>大模型的能力边界不确定，先跑 baseline 才能知道瓶颈在哪里。</p><p>SiLR 项目的经历：最初假设「模型会生成非法操作」——只有在跑了 GPT-5.4 baseline 后才得到验证：<span class='key-point'>65% 的失败是因为安全违规</span>。这个发现直接导致了 simulator-in-the-loop 的设计。</p><p>如果先搭架构再发现问题，可能搭了一个解决错误问题的架构。</p>"
+      },
+      {
+        "term": "借鉴产品一览",
+        "explain": "<table border='1' style='border-collapse:collapse;'><tr><th>产品/论文</th><th>借鉴了什么</th></tr><tr><td><strong>Claude Code</strong></td><td>Tool Use 架构：结构化工具调用</td></tr><tr><td><strong>Cursor</strong></td><td>上下文裁剪：只给模型需要的信息</td></tr><tr><td><strong>LangGraph</strong></td><td>多 Agent DAG 编排</td></tr><tr><td><strong>ReAct 论文</strong></td><td>Thought-Action-Observation 循环</td></tr><tr><td><strong>自动驾驶</strong></td><td>Sim-in-the-Loop 安全验证</td></tr><tr><td><strong>DeepSeek-R1</strong></td><td>GRPO 训练方法</td></tr></table>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "iad08",
+    "cat": "Agent深度面",
+    "q": "[手撕] 实现 Skill 系统：注册、发现、调用",
+    "bullets": [
+      "目录结构：.agents/skills/<name>/skill.yaml + scripts/*.js",
+      "三模块：SkillRegistry(扫描+解析YAML) / SkillRouter(关键词匹配) / SkillExecutor(child_process执行)",
+      "YAML 必须字段：name / description / trigger(触发关键词列表) / scripts(脚本路径列表)",
+      "发现用关键词匹配（简单可靠）——不用语义匹配，对应 Claude Code 实际做法",
+      "调用用 child_process（隔离性好）——脚本不影响主进程"
+    ],
+    "details": [
+      {
+        "term": "完整实现代码",
+        "explain": "<div class='formula'>// skill.yaml 示例<br>{<br>&nbsp;&nbsp;name: 'weather-report',<br>&nbsp;&nbsp;description: '查询城市天气并生成报告',<br>&nbsp;&nbsp;trigger: ['天气', 'weather', '气温'],<br>&nbsp;&nbsp;scripts: ['scripts/fetch-weather.js']<br>}<br><br>// ── SkillRegistry ──<br>const fs = require('fs');<br>const path = require('path');<br>const yaml = require('js-yaml');<br><br>class SkillRegistry {<br>&nbsp;&nbsp;constructor(baseDir) {<br>&nbsp;&nbsp;&nbsp;&nbsp;this.baseDir = baseDir;<br>&nbsp;&nbsp;&nbsp;&nbsp;this.skills = new Map();<br>&nbsp;&nbsp;}<br>&nbsp;&nbsp;scan() {<br>&nbsp;&nbsp;&nbsp;&nbsp;const dirs = fs.readdirSync(this.baseDir,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ withFileTypes: true })<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.filter(d =&gt; d.isDirectory());<br>&nbsp;&nbsp;&nbsp;&nbsp;for (const dir of dirs) {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const yamlPath = path.join(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.baseDir, dir.name, 'skill.yaml');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!fs.existsSync(yamlPath)) continue;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const config = yaml.load(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fs.readFileSync(yamlPath, 'utf8'));<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;config._dir = path.join(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.baseDir, dir.name);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.skills.set(config.name, config);<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;return this.skills.size;<br>&nbsp;&nbsp;}<br>&nbsp;&nbsp;get(name) { return this.skills.get(name); }<br>&nbsp;&nbsp;list() { return [...this.skills.values()]; }<br>}</div>"
+      },
+      {
+        "term": "SkillRouter + SkillExecutor",
+        "explain": "<div class='formula'>// ── SkillRouter ──<br>class SkillRouter {<br>&nbsp;&nbsp;constructor(registry) {<br>&nbsp;&nbsp;&nbsp;&nbsp;this.registry = registry;<br>&nbsp;&nbsp;}<br>&nbsp;&nbsp;match(userInput) {<br>&nbsp;&nbsp;&nbsp;&nbsp;const input = userInput.toLowerCase();<br>&nbsp;&nbsp;&nbsp;&nbsp;const scored = [];<br>&nbsp;&nbsp;&nbsp;&nbsp;for (const skill of this.registry.list()) {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const hits = (skill.trigger || [])<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.filter(t =&gt; input.includes(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t.toLowerCase())).length;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (hits &gt; 0) scored.push({skill, hits});<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;scored.sort((a,b) =&gt; b.hits - a.hits);<br>&nbsp;&nbsp;&nbsp;&nbsp;return scored[0]?.skill || null;<br>&nbsp;&nbsp;}<br>}<br><br>// ── SkillExecutor ──<br>const { execFileSync } = require('child_process');<br><br>class SkillExecutor {<br>&nbsp;&nbsp;run(skill, args = {}) {<br>&nbsp;&nbsp;&nbsp;&nbsp;const results = [];<br>&nbsp;&nbsp;&nbsp;&nbsp;for (const script of skill.scripts) {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const fullPath = path.join(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;skill._dir, script);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const output = execFileSync(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'node', [fullPath,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JSON.stringify(args)],<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ encoding: 'utf8',<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timeout: 30000 });<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;results.push({ script, output });<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;return results;<br>&nbsp;&nbsp;}<br>}<br><br>// ── 使用示例 ──<br>const reg = new SkillRegistry('.agents/skills');<br>reg.scan();<br>const router = new SkillRouter(reg);<br>const exec = new SkillExecutor();<br><br>const skill = router.match('查一下东京天气');<br>if (skill) exec.run(skill, {city: 'Tokyo'});</div>"
+      },
+      {
+        "term": "设计决策解释",
+        "explain": "<ul><li><strong>发现用关键词匹配还是语义匹配？</strong><br>关键词匹配。简单可靠，和 Claude Code 的实际做法一致——<span class='key-point'>skill description 在 context 里，由模型自己做语义判断</span>，routing 层只负责粗筛</li><li><strong>调用用 child_process 还是 VM？</strong><br>child_process。隔离性好（脚本不影响主进程），失败只影响一个脚本</li><li><strong>为什么 YAML 不用 JSON？</strong><br>YAML 更可读，支持注释，写配置文件更友好</li><li><strong>timeout 设多少？</strong><br>30 秒。对大部分脚本够用，太长会卡住 Agent 主循环</li></ul>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "iad09",
+    "cat": "Agent深度面",
+    "q": "[项目深挖] 业务流程 + 最核心最有价值的一步",
+    "bullets": [
+      "SiLR 流程：故障→采集状态→Agent分析→决定操作→仿真器验证→执行/重试→恢复完成",
+      "最核心的是 Simulator-in-the-Loop 验证——把不可信的 LLM 输出变成经过验证的安全操作",
+      "没有验证的 Agent 不敢在安全关键领域上线——幻觉一次就是一次事故",
+      "这个 pattern 可迁移到任何有 simulator 的领域（金融合规/医药剂量/代码沙箱）",
+      "97% 恢复成功率、0% 安全违规率证明了这个设计的有效性"
+    ],
+    "details": [
+      {
+        "term": "完整业务流程",
+        "explain": "<div class='formula'>电网故障发生<br>→ 1. SCADA 采集电网状态<br>→ 2. 状态转成结构化 observation<br>→ 3. Agent(Analyzer) 分析局势<br>→ 4. Agent(Actor) 决定操作<br>→ 5. 仿真器验证安全性<br>→ 5a. 通过 → 执行，更新状态 → 回到 2<br>→ 5b. 失败 → 返回原因 → Agent 重新决策<br>→ 6. 恢复完成或达到最大步数 → 结束</div>"
+      },
+      {
+        "term": "为什么不是其他步骤最核心",
+        "explain": "<p>面试官可能追问「分析步骤不重要吗」。回答：</p><ul><li><strong>分析</strong>可以用 prompt engineering 做到足够好</li><li><strong>决策</strong>可以通过 SFT/GRPO 持续优化</li><li>但<span class='key-point'>验证是唯一不可替代的安全保障</span>——即使分析和决策都完美，没有验证就不敢上线</li></ul><p>这也是为什么项目叫 <strong>S</strong>imulation-<strong>i</strong>n-the-<strong>L</strong>oop <strong>R</strong>easoning——验证是名字里的 C 位。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "iad10",
+    "cat": "Agent深度面",
+    "q": "[项目深挖] Agent 拆分决策 + 协作机制 + 状态设计",
+    "bullets": [
+      "起初单 Agent 做所有事→发现分析+决策+验证塞一个 prompt 太长，模型顾此失彼",
+      "拆成三角色：Analyzer(读状态) → Actor(决定操作) → Verifier(仿真器验证)",
+      "踩坑：最初拆 5 个 Agent（含 Planner/Reviewer），通信开销太大 → 合并成 3 个",
+      "协作机制：Bounded ReAct Loop 串行执行（每步依赖前一步结果，不能并行）",
+      "共享状态：{step, grid_state, action_history, current_analysis, remaining_budget}"
+    ],
+    "details": [
+      {
+        "term": "上下文裁剪策略",
+        "explain": "<ul><li><strong>Analyzer</strong>：拿完整电网状态（需要全局视野）</li><li><strong>Actor</strong>：拿 analysis + 简化状态 + action_history（不需要原始电压数据）</li><li><strong>Verifier</strong>：拿 proposed_action + 必要电气约束（最精简）</li></ul><p>原则：<span class='key-point'>每个 Agent 只看它需要的信息</span>。如果 Verifier 看到太多上下文，反而会被分析内容带偏（它应该只管「这个操作安不安全」，不应该被「分析看起来合理」影响判断）。</p>"
+      },
+      {
+        "term": "踩坑：5 Agent → 3 Agent",
+        "explain": "<p>最初拆了 5 个 Agent（Analyzer, Planner, Actor, Verifier, Reviewer），发现：</p><ul><li>Agent 间 context 传递开销太大，延迟翻倍</li><li>Planner 和 Actor 的分界线模糊——「计划做什么」和「决定做什么」在电网恢复里几乎一样</li><li>Reviewer 只在最后用一次，可以合并到 Verifier 的规则检查里</li></ul><p>教训：<span class='key-point'>能合则合</span>——Agent 数量不是越多越好，每多一个 Agent 就多一次通信和上下文切换。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "iad11",
+    "cat": "Agent深度面",
+    "q": "[项目深挖] 错误传播控制 + Reviewer 机制",
+    "bullets": [
+      "三层防御：Verifier 仿真器兜底 → Retry 反馈重试(最多3次) → Failsafe 终止并报告",
+      "Reviewer 用规则+模型双重判断：规则层查电压/功率/过载；模型层评价方案合理性",
+      "发现问题后不重跑全链路，而是回退到 Actor 从当前状态重新决策",
+      "核心设计：已执行的操作不能撤销（合了的闸不能拆回去），所以只能从当前状态继续",
+      "Verifier 是「被动防线」——Analyzer 分析错了、Actor 操作错了，只要仿真器跑不通就不执行"
+    ],
+    "details": [
+      {
+        "term": "错误传播的三层防御",
+        "explain": "<ol><li><strong>Verifier 兜底</strong>（最关键）：Analyzer 分析错了、Actor 操作错了，只要仿真器跑不通就不会执行。<span class='key-point'>错误不会传播到真实系统</span></li><li><strong>Retry 机制</strong>：Verifier 拒绝后，把错误原因（「线路 L3 过载」）反馈给 Actor 重新决策，最多 3 次</li><li><strong>Failsafe</strong>：超过最大 retry 或最大步数，直接终止并报告「无法恢复」——绝不冒险</li></ol>"
+      },
+      {
+        "term": "Reviewer 的判断逻辑",
+        "explain": "<p><strong>规则层</strong>（硬约束，不可违反）：</p><ul><li>电压是否在 [0.95, 1.05] pu 内</li><li>功率平衡是否满足</li><li>是否有线路过载</li></ul><p><strong>模型层</strong>（软判断，参考性质）：</p><ul><li>整体方案是否合理（有没有不必要的操作）</li><li>操作顺序是否最优</li></ul><p><span class='key-point'>规则层的否决是绝对的，模型层只是建议</span>。这样即使模型层误判也不会造成安全问题。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "iad12",
+    "cat": "Agent深度面",
+    "q": "[项目深挖] SFT 策略 + 效果评估",
+    "bullets": [
+      "只在 Actor 上做 SFT——Analyzer/Verifier 的任务标准化，prompt engineering 够用",
+      "Actor 的决策空间最大、最容易出错，SFT 能直接教它「什么操作序列能恢复电网」",
+      "数据来源：仿真器生成 1000+ 故障场景 → 规则引擎生成最优路径 → 人工校验",
+      "成功率 72%→89%，平均步数 5.1→3.8，安全违规率 18%→3%",
+      "SFT 提升显著但有天花板——模仿正确不等于理解为什么正确"
+    ],
+    "details": [
+      {
+        "term": "为什么不在全系统统一 SFT",
+        "explain": "<p>Analyzer 的任务是「读取电网状态生成分析」——给它一个好的 prompt template（包含如何读拓扑、如何判断关键节点）就够了，SFT 的边际收益低。</p><p>Verifier 的核心是调用仿真器——这是确定性的工程逻辑，不需要 SFT。</p><p><span class='key-point'>Actor 是唯一需要「从经验中学习」的组件</span>——面对同一个故障状态，什么操作序列能最快恢复、什么操作会导致级联故障，这些知识 prompt 表达不了，需要从数据中学。</p>"
+      },
+      {
+        "term": "SFT 数据生产 pipeline",
+        "explain": "<div class='formula'>1. 仿真器随机生成 1000+ 故障场景<br>&nbsp;&nbsp;&nbsp;(不同故障位置/类型/严重程度)<br>2. 传统电力算法(规则引擎)生成<br>&nbsp;&nbsp;&nbsp;最优恢复路径<br>3. 人工电力工程师校验<br>&nbsp;&nbsp;&nbsp;(删除不合理/不安全的路径)<br>4. 转成 SFT 格式:<br>&nbsp;&nbsp;&nbsp;input: 电网状态 observation<br>&nbsp;&nbsp;&nbsp;output: 最优 action 序列</div>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "iad13",
+    "cat": "Agent深度面",
+    "q": "[项目深挖] GRPO + Reward Model 训练 + 信任度",
+    "bullets": [
+      "为什么用 GRPO 而非继续 SFT：SFT 只学「正确长什么样」，RL 能学「好坏的程度」",
+      "电网恢复有天然 reward：仿真器直接给出恢复比例和违规情况",
+      "GRPO 流程：N 个 rollout → 仿真器打分 → reward 标准化当 advantage → 更新策略",
+      "Reward = 负荷恢复比例×0.6 + 步数效率×0.2 + 安全违规惩罚×0.2",
+      "RM 不完全信任——仿真器有建模误差，加了保守约束：宁可少恢复也不冒安全风险"
+    ],
+    "details": [
+      {
+        "term": "GRPO 接入流程",
+        "explain": "<div class='formula'>1. Actor 对同一故障场景生成 N 个<br>&nbsp;&nbsp;&nbsp;候选操作序列 (rollout)<br>2. 每个序列在仿真器里跑一遍<br>&nbsp;&nbsp;&nbsp;得到 reward<br>3. reward 标准化:<br>&nbsp;&nbsp;&nbsp;advantage_i = (R_i - mean(R)) / std(R)<br>4. 用 advantage 更新 Actor 策略<br>&nbsp;&nbsp;&nbsp;(正 advantage 的操作被强化)</div>"
+      },
+      {
+        "term": "Reward 设计 + 信任度",
+        "explain": "<p><strong>Reward 三项加权</strong>：</p><ul><li>负荷恢复比例（0-1）× 0.6 ← 核心目标</li><li>操作步数效率 × 0.2 ← 越少越好</li><li>安全违规惩罚(-0.5/次) × 0.2 ← 硬约束</li></ul><p><strong>为什么不完全信任 RM？</strong></p><ul><li>仿真器有建模误差（和真实电力系统偏差约 5%）</li><li>做了两个保障：1) 和真实数据校准；2) reward 加了保守约束——<span class='key-point'>宁可少恢复一点负荷也不冒安全风险</span></li></ul>"
+      },
+      {
+        "term": "为什么 GRPO 不是 PPO",
+        "explain": "<p>GRPO 省掉 critic 网络——14B 模型训 PPO 需要额外一个 14B 的 critic，显存翻倍。GRPO 直接用一组 rollout 的 reward 做标准化当 advantage，<span class='key-point'>显存减半，训练更稳定</span>。</p><p>这是跟 DeepSeek-R1 学的——R1 也是用 GRPO 替代 PPO。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "iad14",
+    "cat": "Agent深度面",
+    "q": "[项目深挖] RAG 检索优化 + chunk 切分",
+    "bullets": [
+      "反直觉发现：小语料下 BM25 Char 3-gram(81.8%) >> Dense embedding(47.3%)",
+      "Hybrid RRF 反而拉低 Recall@1 到 72.7%——Dense 的错误排得高挤掉了 BM25 的正确结果",
+      "Reranker 是均衡器：加了 bge-reranker 后三种方法都收敛到 96.4% Recall@5",
+      "chunk 切分：段落自然切分 + 512字滑动窗口(50% overlap)；表格单独处理(每行一条)",
+      "踩坑：技术规格书段落 3000 字远超 chunk 上限 → 必须二次切分"
+    ],
+    "details": [
+      {
+        "term": "BM25 为什么打败 Dense",
+        "explain": "<p><strong>小语料（160 文档/359 chunks）+ 日语专业术语</strong>这个组合对 Dense 很不友好：</p><ul><li>Embedding 模型没见过足够多的日语电力术语</li><li>语料太小，向量空间稀疏，语义区分度低</li><li>BM25 Char 3-gram 不做分词，<span class='key-point'>直接匹配字符片段</span>——对复合词（「需給調整」）不会因为分词错误丢信息</li></ul><p>教训：<span class='key-point'>不要默认 Dense 就是更好的方案</span>——语料规模、语言、领域都会影响最优选择。</p>"
+      },
+      {
+        "term": "Hybrid 为什么反而更差",
+        "explain": "<p>RRF (Reciprocal Rank Fusion) 假设两路召回都有正贡献——但如果 Dense 在 Top-1 经常返回错误文档：</p><ul><li>RRF 会把 Dense 的错误结果排到较高位</li><li>挤掉了 BM25 原本在 Top-1 的正确结果</li></ul><p>Hybrid 的价值在 <strong>Recall@5+</strong>（不遗漏好文档），而不是 Top-1 准确率。</p>"
+      },
+      {
+        "term": "Chunk 切分经验",
+        "explain": "<ul><li><strong>默认</strong>：按文档段落自然切分</li><li><strong>长段落</strong>：512 字滑动窗口 + 50% overlap</li><li><strong>表格</strong>：每行转成一条文本，保留表头（「列名: 值」格式）</li><li><strong>代码块</strong>：不切（代码切了就没意义）</li></ul><p>踩坑：技术规格书一个段落 3000 字 → 不切就超过 embedding 上下文长度 → 必须二次切分。<span class='key-point'>切分规则要根据文档实际特点调整，没有银弹</span>。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "iad15",
+    "cat": "Agent深度面",
+    "q": "[项目深挖] 系统评测 + 自动评测可靠性 + 线上效果",
+    "bullets": [
+      "三层评测：组件级(单元测试) / 场景级(66个IEEE 39-bus场景) / 对比级(vs GPT/规则/消融)",
+      "自动评测可靠性：仿真器是 ground truth（物理引擎判定，非人工打分）",
+      "确定性评测：同一场景同一 seed 跑多次结果一致",
+      "每次代码变更跑全部 66 场景回归——CI 级别的评测纪律",
+      "线上效果指标（预设）：仿真器覆盖率(故障类型占比) + 人工复核率"
+    ],
+    "details": [
+      {
+        "term": "三层评测详细",
+        "explain": "<table border='1' style='border-collapse:collapse;'><tr><th>层级</th><th>方法</th><th>指标</th></tr><tr><td><strong>组件级</strong></td><td>自动化单元测试</td><td>各模块输入输出正确率</td></tr><tr><td><strong>场景级</strong></td><td>66 个 IEEE 39-bus 故障场景</td><td>恢复成功率 97%<br>安全违规率 0%<br>平均步数 3.2</td></tr><tr><td><strong>对比级</strong></td><td>vs GPT-5.4 / 规则引擎 / 消融变体</td><td>消融实验 + A/B 对比</td></tr></table>"
+      },
+      {
+        "term": "评测可靠性保障",
+        "explain": "<ul><li><strong>Ground truth 来自仿真器</strong>：电压、功率、过载都是物理计算，不是人工打分——<span class='key-point'>最客观的评价标准</span></li><li><strong>确定性</strong>：同一场景同一 seed 多次跑结果完全一致</li><li><strong>回归测试</strong>：每次代码/模型变更都跑全部 66 场景回归</li><li><strong>消融实验</strong>：去掉 Verifier / 去掉 SFT / 去掉 GRPO 分别测，证明每个组件的必要性</li></ul>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "iad16",
+    "cat": "Agent深度面",
+    "q": "[项目深挖] 多层 Memory 设计 + 用户维度限制",
+    "bullets": [
+      "不分层的问题：第 5 步时 context 已很长，模型开始遗忘；早期详细状态占 token 但已过时",
+      "三层：Working(当前状态+上步结果) / Episodic(历史操作摘要) / Semantic(电网知识规则)",
+      "按需加载：Working 每步完整注入；Episodic 最近 3 步摘要；Semantic 按需检索",
+      "电力场景不涉及用户个性化——但金融场景需要用户风险偏好/持仓/合规",
+      "金融 Memory 限制：强合规(GDPR/个人信息保护)、过期清除、用户间隔离是硬约束"
+    ],
+    "details": [
+      {
+        "term": "三层 Memory 详细",
+        "explain": "<ul><li><strong>Working Memory</strong>（当前步）：完整电网状态 + 上一步操作结果 → <span class='key-point'>每步都完整注入</span></li><li><strong>Episodic Memory</strong>（历史操作）：最近 3 步的操作摘要（「步骤 1 合了 B12，恢复了 L3」）；更早的只保留一句话「已恢复 XX% 负荷」</li><li><strong>Semantic Memory</strong>（知识规则）：电网拓扑知识、操作约束规则 → 只在 Actor 需要查规则时按需检索</li></ul>"
+      },
+      {
+        "term": "为什么不全量注入",
+        "explain": "<p>如果每步都把全部历史操作详情塞进去：</p><ul><li>到第 5 步时 context 已经 8K+ token</li><li>早期的详细电网状态已经过时（状态变了），但占着宝贵的 context 空间</li><li>实测：<span class='key-point'>全量注入的成功率比按需加载低 8%</span>——因为模型被过时信息干扰了决策</li></ul>"
+      },
+      {
+        "term": "金融场景的 Memory 限制",
+        "explain": "<p>如果做金融领域 Agent，用户维度 Memory 有特殊约束：</p><ul><li><strong>合规</strong>：GDPR/个人信息保护法要求用户数据可删除、有留存期限</li><li><strong>过期清除</strong>：用户偏好必须有 TTL，过期自动清除</li><li><strong>用户隔离</strong>：用户 A 的交易偏好<span class='key-point'>绝不能泄露到用户 B 的 context</span>——这是硬约束，违反就是数据泄露事件</li><li><strong>审计</strong>：每一次 Memory 读写都要有审计日志</li></ul>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  }
+]

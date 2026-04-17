@@ -1,0 +1,462 @@
+[
+  {
+    "id": "ita01",
+    "cat": "腾讯·Agent面",
+    "q": "项目里把 skill 直接塞 system prompt，skill 太多怎么处理？",
+    "bullets": [
+      "不能全部常驻 system prompt——会占满上下文、候选噪声大、模型混淆",
+      "做成外部注册表：system prompt 只留最小规则和调用协议，skill 按需动态注入",
+      "一层 skill routing：规则/分类模型/向量检索先筛 top-k",
+      "再把 top-k skill 的 description、参数 schema、few-shot 拼进 prompt",
+      "长 skill 拆成摘要版和完整版：先注摘要，确定调用后再加载详细说明"
+    ],
+    "details": [
+      {
+        "term": "Skill 向量检索",
+        "explain": "<p>把 skill description 当文档、用户 query 当问题——本质就是 RAG。检索模型可以是一个小的 embedding model（bge-small 足够），甚至规则都行。</p><p><span class=\"key-point\">关键不是召回多准，而是召回的候选集能覆盖正确答案</span>——后面还有 rerank 和 schema 校验兜底。</p>"
+      },
+      {
+        "term": "Skill 摘要生成",
+        "explain": "<p>在 skill 注册时用 LLM 离线生成一次摘要，<span class=\"key-point\">不用每次 in-context 压缩</span>。摘要要保留：</p><ul><li>核心用途（一句话）</li><li>适用场景 / 禁用场景</li><li>关键参数</li></ul><p>详细说明（参数 schema、failure mode、调用示例）放在详细版，模型确定要调用后再加载。</p>"
+      },
+      {
+        "term": "预缓存 prompt 片段",
+        "explain": "<p>经常共现的 skill 组合可以预缓存好 prompt 片段。比如「订单查询 + 物流查询」经常一起出现，可以把两个 skill 的 prompt 拼好存起来，命中时直接用。</p><p>更进一步——配合 <strong>prompt caching</strong>（Claude / OpenAI 都支持），经常用的 skill prompt 能享受成本折扣。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ita02",
+    "cat": "腾讯·Agent面",
+    "q": "两个 skill description 相似导致选错怎么办？",
+    "bullets": [
+      "给 skill 增加更强的判别信息，而不是继续堆模糊描述",
+      "结构化定义：升级成 schema（适用/禁用场景、参数、返回格式、前置/失败条件、示例）",
+      "两阶段选择：先召回 top-k（粗排），再让模型根据参数约束做 rerank（精排）",
+      "负样本示例：明确告诉模型「什么问题不应该调用这个 skill」",
+      "执行前 schema 校验 + rule check，即使模型选错也不能继续误调"
+    ],
+    "details": [
+      {
+        "term": "适用场景 vs 禁用场景",
+        "explain": "<p>这是 prompt 工程里被低估的技巧——<span class=\"key-point\">负面约束比正面描述更能降低误召回</span>。</p><p>例：两个 skill 都叫「查询订单」，一个是「电商订单」一个是「外卖订单」。如果只写正面描述会混，但如果各自加上「禁用场景：本 skill 不处理外卖/不处理电商」，召回质量立刻提升。</p>"
+      },
+      {
+        "term": "Rerank 用什么模型",
+        "explain": "<p>精排这一步通常用<span class=\"key-point\">更便宜的小模型</span>（Haiku / 4o-mini / Qwen-7B），主模型只负责最终执行。这样既能保证召回准确率，又能控制成本。</p><p>输入给 rerank 的内容是「用户 query + 所有候选 skill 的结构化 schema + 参数约束」，输出是排序后的 top-1 或 top-3。</p>"
+      },
+      {
+        "term": "语义长期接近怎么办",
+        "explain": "<p>如果两个 skill 语义长期接近，通常要在<span class=\"key-point\">系统设计层面合并成一个 skill</span>，再由内部参数路由。不然前面再怎么写 prompt，后面也会持续混。</p><p>例：「查北京天气」和「查上海天气」不是两个 skill，而是一个 skill 带 city 参数。</p>"
+      },
+      {
+        "term": "执行前校验",
+        "explain": "<p>即使模型选错了，也要靠执行前校验兜底：</p><ul><li><strong>Schema 校验</strong>：参数类型/必填/枚举值</li><li><strong>Rule check</strong>：业务规则（金额上限、权限范围）</li><li><strong>白名单</strong>：当前用户能调用的 skill 集合</li></ul><p><span class=\"key-point\">把模型当成一个不可信的输入源，所有关键决策都要二次校验</span>。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ita03",
+    "cat": "腾讯·Agent面",
+    "q": "Agent 设计里最重要的部分是什么？",
+    "bullets": [
+      "上下文工程（Context Engineering）是 Agent 设计的核心",
+      "Agent 不是单轮问答，而是一个持续决策系统",
+      "模型能看到什么信息、顺序和优先级、什么是规则/证据/历史，都直接影响稳定性",
+      "上下文工程做得好：模型像受控执行器，知道目标、约束、工具、状态、输出格式",
+      "核心金句：Agent 的核心不是「给模型更多信息」，而是「给模型正确的信息」"
+    ],
+    "details": [
+      {
+        "term": "为什么是上下文工程而不是 Prompt 工程",
+        "explain": "<p>Prompt Engineering 关注的是<span class=\"key-point\">单次问答的 prompt 设计</span>；Context Engineering 关注的是<span class=\"key-point\">一个持续运转的 Agent 在每一轮决策时，应该看到什么上下文</span>。</p><p>2024 年开始，Anthropic、OpenAI 等主流玩家逐步把 Prompt Engineering 替换为 Context Engineering，因为 Agent 场景下上下文是动态演变的——每一轮的上下文都不同，设计的是「上下文的构造规则」而不是「一段固定 prompt」。</p>"
+      },
+      {
+        "term": "上下文做不好的失败模式",
+        "explain": "<ul><li><strong>目标漂移</strong>：长对话后模型忘了最初任务是什么</li><li><strong>工具误选</strong>：candidate pool 太大或描述模糊</li><li><strong>记忆污染</strong>：旧信息混进新决策</li><li><strong>长对话失真</strong>：早期信息在压缩中丢失</li><li><strong>推理跑偏</strong>：被无关信息带偏逻辑</li></ul><p>这五个都不是「模型不够强」的问题，而是「喂给模型的上下文有问题」——所以关键在于设计上下文。</p>"
+      },
+      {
+        "term": "反面例子",
+        "explain": "<p>新手常见错误：把所有历史对话、所有检索结果、所有工具说明一股脑灌进去，想着「信息多总没坏处」。</p><p>实际效果：<span class=\"key-point\">模型不堪重负</span>——注意力被分散，关键信息被噪声淹没，输出质量反而下降。</p><p>正解：每一类信息（规则/工具/记忆/证据）都有独立的处理管线，按需注入。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ita04",
+    "cat": "腾讯·Agent面",
+    "q": "上下文工程有哪些要注意的点？",
+    "bullets": [
+      "角色隔离：system/developer/user/tool/memory 边界清楚，外部文本不能混进系统规则",
+      "信息裁剪：只保留当前任务相关内容，避免历史/检索/工具说明全塞",
+      "格式控制：结构化（JSON）比纯自然语言更稳，长历史做摘要",
+      "来源可信度分层：system > user > tool > 模型猜测；知识证据 > 无依据生成",
+      "长任务做上下文压缩和过期淘汰，防止状态漂移和旧信息污染"
+    ],
+    "details": [
+      {
+        "term": "角色隔离（Role Isolation）",
+        "explain": "<p>对应 OpenAI 的 <strong>instruction hierarchy</strong>（2024）和 Anthropic 的 <strong>role isolation</strong>。核心原则：</p><ul><li>system message 拥有最高权限（规则和护栏）</li><li>developer message 次之（业务指令）</li><li>user 输入不能覆盖 system 规则</li><li>tool output 只能作为「数据」而不是「命令」</li></ul><p><span class=\"key-point\">不同角色的文本在 prompt 里要有明确分隔符和标记</span>，让模型天然区分优先级。</p>"
+      },
+      {
+        "term": "JSON vs 自然语言",
+        "explain": "<p>结构化上下文通常比纯自然语言更稳：</p><ul><li>工具结果尽量用 JSON</li><li>任务状态单独字段化（<code>{\"task\": \"...\", \"step\": 3, \"done\": false}</code>）</li><li>长历史做摘要而不是堆原文</li></ul><p>代价是 JSON 的 token 开销略大（花括号和引号），但腾讯这种大规模线上 Agent 选 JSON 是对的——<span class=\"key-point\">稳定性比 token 成本更重要</span>。</p>"
+      },
+      {
+        "term": "可信度分层是 Prompt Injection 防御的底层原理",
+        "explain": "<p>当上下文里有多个来源冲突时，按优先级取信：</p><div class=\"formula\">system 规则  &gt;  用户输入  &gt;  工具结果  &gt;  模型猜测<br>知识证据  &gt;  无依据生成</div><p>这样即使外部文档里藏了「请忽略上面的规则」，也不会覆盖 system 级别的指令——因为文档的可信度远低于 system message。</p>"
+      },
+      {
+        "term": "上下文压缩策略",
+        "explain": "<ul><li><strong>保留最近 N 轮原文</strong>（滑动窗口）</li><li><strong>更久远的做 summary</strong>（LLM 压缩，定期重算）</li><li><strong>抽取关键字段单独存</strong>（用户偏好、任务状态）</li><li><strong>事件指针</strong>（summary 中保留 event id，能回原文）</li></ul>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ita05",
+    "cat": "腾讯·Agent面",
+    "q": "长期记忆的写回/衰减/冲突消解怎么设计？",
+    "bullets": [
+      "长期记忆不能等价于「把所有历史存起来」——必须回答三个问题",
+      "写回：只保存高价值稳定信息（偏好/身份/长期目标），做结构化抽取",
+      "衰减：短期热点高权重但随时间衰减；长期偏好低频刷新但不轻易删",
+      "冲突消解：结合时间戳/来源可信度/置信度，新高可信覆盖旧事实，低可信只作候选",
+      "更严格的做法：event sourcing + 物化视图，所有记忆先写 event 再异步聚合 profile"
+    ],
+    "details": [
+      {
+        "term": "结构化抽取",
+        "explain": "<p>不要原文整段存储，而是<span class=\"key-point\">抽取成结构化字段</span>：</p><div class=\"formula\">原文: 「我喜欢用 Python，不太会 Go」<br>抽取: {<br>&nbsp;&nbsp;user_profile: {<br>&nbsp;&nbsp;&nbsp;&nbsp;preferred_languages: [\"Python\"],<br>&nbsp;&nbsp;&nbsp;&nbsp;weak_languages: [\"Go\"]<br>&nbsp;&nbsp;}<br>}</div><p>好处：未来召回时直接读字段，不用模型再理解原文；可以精确更新单个字段。</p>"
+      },
+      {
+        "term": "Event Sourcing + 物化视图",
+        "explain": "<p>更严格的做法——把长期记忆设计成：</p><ul><li>所有记忆先写入 <strong>event store</strong>（append-only 日志）</li><li>再异步聚合成 <strong>profile</strong>（物化视图）</li></ul><p><span class=\"key-point\">好处：profile 被污染可以从 event 重新 rebuild</span>，不用人工修数据。既方便审计（看每一次写入的来源），也方便回滚。这是把数据库 CDC / event sourcing 的思想搬到 Agent Memory 上。</p>"
+      },
+      {
+        "term": "冲突消解的三个维度",
+        "explain": "<ol><li><strong>时间戳</strong>：新事实优先级更高</li><li><strong>来源可信度</strong>：用户明确说的 &gt; 工具抽取的 &gt; 模型推测的</li><li><strong>置信度</strong>：抽取时的 confidence score</li></ol><p>规则：<span class=\"key-point\">新的高可信事实覆盖旧事实；低可信内容只作为候选不直接替换</span>。</p>"
+      },
+      {
+        "term": "存储介质选型",
+        "explain": "<ul><li><strong>向量库</strong>（Pinecone/Weaviate）：适合「模糊语义召回」</li><li><strong>结构化库</strong>（Postgres JSONB）：适合「精确字段查询」</li><li><strong>图数据库</strong>（Neo4j）：适合「关系型记忆」（用户 → 偏好 → 标签）</li></ul><p>实际项目通常<span class=\"key-point\">混用</span>——event store 用 Postgres，profile 用 JSONB，语义召回用向量库。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ita06",
+    "cat": "腾讯·Agent面",
+    "q": "并行 Tool Calling 怎么既提升吞吐又保证一致性和可回放？",
+    "bullets": [
+      "核心不是「同时调多个接口」，而是解决依赖关系/状态一致性/结果合并/失败回滚",
+      "只有互不依赖的工具才能并行（天气和汇率可以一起发，链式依赖必须串行）",
+      "状态一致性：工具结果先写临时观察区，由调度器统一合并，避免并发写污染",
+      "可回放：每次调用带 trace_id/step_id/输入/输出/耗时，组成完整执行 DAG",
+      "副作用操作（发消息/下单）必须加幂等键，不然重复重试会造成真实业务重复写"
+    ],
+    "details": [
+      {
+        "term": "依赖关系判定",
+        "explain": "<p>并行的前提是工具间无依赖。判定方式：</p><ul><li><strong>静态分析</strong>：看工具调用参数是否引用了其他工具的输出</li><li><strong>运行时</strong>：维护一个 DAG，参数已就绪的节点都可以立即发</li></ul><p>例：「天气查询」和「汇率查询」没有依赖，可以并行；「订单查询」→「查询用户详情（带 order.user_id）」必须串行——第二步依赖第一步的结果。</p>"
+      },
+      {
+        "term": "临时观察区",
+        "explain": "<p>一般不让多个工具直接修改共享状态，而是：</p><ol><li>每个工具把结果写到<span class=\"key-point\">独立的临时区</span></li><li>所有并行调用完成后，调度器<span class=\"key-point\">统一合并</span>到主状态</li></ol><p>好处：并发不会互相污染，单个工具失败不影响其他；合并时可以做优先级/冲突处理。</p>"
+      },
+      {
+        "term": "执行 DAG 与 trace",
+        "explain": "<p>每次调用都记录：</p><div class=\"formula\">{<br>&nbsp;&nbsp;trace_id: \"abc123\",<br>&nbsp;&nbsp;step_id: 5,<br>&nbsp;&nbsp;tool: \"query_weather\",<br>&nbsp;&nbsp;input: {city: \"Tokyo\"},<br>&nbsp;&nbsp;output: {temp: 18, ...},<br>&nbsp;&nbsp;duration_ms: 234,<br>&nbsp;&nbsp;parent_step: 3<br>}</div><p>最后组成完整的执行 DAG。<span class=\"key-point\">这件事可以复用 OpenTelemetry 或自研 trace，不必重造轮子</span>。</p>"
+      },
+      {
+        "term": "幂等键",
+        "explain": "<p>对于发消息、创建订单、提工单这些副作用操作，并行执行前通常要做幂等键：</p><ul><li>客户端生成一个 <code>idempotency_key</code>（UUID 或业务唯一 ID）</li><li>服务端在请求去重表里查这个 key，命中直接返回之前结果</li></ul><p><span class=\"key-point\">LLM 不知道「重复 rollout 的代价」</span>——执行器必须兜底，不然重复重试会造成真实业务重复写入。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ita07",
+    "cat": "腾讯·Agent面",
+    "q": "了解主流的 Agent 设计吗？",
+    "bullets": [
+      "ReAct：边推理边行动，Thought→Action→Observation 循环；简单通用但易死循环",
+      "Plan-and-Execute：先规划再按步骤执行，比纯 ReAct 更稳，适合长任务",
+      "Router：先任务分类，再路由给子 Agent 或工具链；适合任务差异大",
+      "Workflow + Agent：固定流程里嵌局部自主决策，在线业务最常用",
+      "Supervisor / Blackboard：多 Agent 协作模式，中心化调度 vs 共享状态"
+    ],
+    "details": [
+      {
+        "term": "ReAct 详细",
+        "explain": "<p>最经典的 Agent pattern：<code>Thought → Action → Observation → Thought → ...</code></p><p>模型通过思考、调用工具、观察结果、继续思考来完成任务。</p><ul><li><strong>优点</strong>：简单通用、易实现</li><li><strong>缺点</strong>：<span class=\"key-point\">容易原地打转</span>（见 Q15 死循环处理）、长任务时 context 爆炸</li></ul>"
+      },
+      {
+        "term": "Plan-and-Execute",
+        "explain": "<p>先生成一个完整计划（plan），再逐步执行（execute）。</p><ul><li><strong>优点</strong>：可解释性强，可以审查计划后再执行；适合<span class=\"key-point\">长任务</span></li><li><strong>缺点</strong>：计划一旦错难以纠正——执行中间才发现 plan 有问题，已经浪费了资源</li></ul><p>改进：re-plan 机制，执行时发现偏差可以回头重新规划。</p>"
+      },
+      {
+        "term": "Workflow + Agent（最实用）",
+        "explain": "<p>目前企业落地<span class=\"key-point\">最多的形态</span>——LLM 负责「软决策」，固定流程负责「硬约束」。</p><p>例：客服系统的 SOP 固定（接单 → 确认身份 → 处理 → 回访），但「处理」这一步用 Agent 自由决策调什么工具。这样可控性高，又能利用模型的灵活性。</p>"
+      },
+      {
+        "term": "Supervisor vs Blackboard",
+        "explain": "<p><strong>Supervisor 模式</strong>：主 Agent 拆解任务并分派给多个子 Agent。<span class=\"key-point\">中心化调度</span>（LangGraph、AutoGen）。</p><p><strong>Blackboard 模式</strong>：多个 Agent 通过共享状态协作，<span class=\"key-point\">去中心化</span>（实验室场景多）。</p><p>纯点对点自由协作也有，但线上比较少，因为不容易治理。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ita08",
+    "cat": "腾讯·Agent面",
+    "q": "MCP、A2A、Function Calling 的本质区别？",
+    "bullets": [
+      "本质差异是抽象层级不同——不是互斥，而是不同层次的协议",
+      "Function Calling：调用一个函数，单机式工具调用协议",
+      "MCP：暴露一组标准能力，标准化的上下文和工具暴露协议",
+      "A2A：Agent 与 Agent 之间的协作协议，重点是多智能体交换任务/状态/结果",
+      "工程选型：单应用内用 FC / 多客户端共享工具用 MCP / 多 Agent 分工用 A2A"
+    ],
+    "details": [
+      {
+        "term": "Function Calling 的定位",
+        "explain": "<p>模型输出结构化调用意图（tool name + params JSON），<span class=\"key-point\">宿主进程负责执行函数并把结果返回</span>。</p><p>重点在「模型怎么调用本地或受控工具」。适合<strong>单应用内的工具调用</strong>，不涉及外部系统集成。</p><p>代表：OpenAI Functions、Anthropic Tool Use、Gemini Function Calling。</p>"
+      },
+      {
+        "term": "MCP（Model Context Protocol）",
+        "explain": "<p>Anthropic 2024 底提的标准，解决的是「<span class=\"key-point\">外部能力如何以标准方式被模型客户端发现和调用</span>」。</p><p>把<strong>资源、工具、提示模板</strong>等能力统一封装出来，任何支持 MCP 的客户端（Claude Desktop、VS Code、Cursor）都能发现并使用。</p><p>适合<strong>多个模型客户端或 IDE 共享一套工具和资源能力</strong>。目前生态增长最快。</p>"
+      },
+      {
+        "term": "A2A（Agent-to-Agent）",
+        "explain": "<p>Google 2025 年推的协议，更偏<span class=\"key-point\">Agent 与 Agent 之间的协作</span>。</p><p>重点不是「一个模型调一个函数」，而是「<strong>多个智能体之间如何交换任务、状态和结果</strong>」。</p><p>适合多 Agent 分工协作、任务派发、结果汇总的场景。还在发展期。</p>"
+      },
+      {
+        "term": "工程选型的决策树",
+        "explain": "<ul><li>只是单应用内工具调用 → <strong>Function Calling</strong> 足够</li><li>要让多个模型客户端或 IDE 共享一套工具和资源能力 → <strong>MCP</strong> 合适</li><li>多 Agent 分工协作、任务派发、结果汇总 → <strong>A2A</strong> 合适</li></ul><p>本质上这三个是<span class=\"key-point\">不同抽象层的协议</span>——一个大型 Agent 系统可能同时用三种。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ita09",
+    "cat": "腾讯·Agent面",
+    "q": "RAG 接到 Agent 里，一般怎么设计？",
+    "bullets": [
+      "RAG 不应该是固定的「先查后答」，而应该作为 Agent 的一个决策节点",
+      "Agent 自己判断：这个问题是否真的需要外部访问？",
+      "把 RAG 包成一个工具，Agent 自己决定何时调用",
+      "检索结果要做切片、注入和来源标注，生成时要求只根据证据回答",
+      "没证据就明确说不确定——这样才能真正降低幻觉"
+    ],
+    "details": [
+      {
+        "term": "Agentic RAG vs 传统 RAG",
+        "explain": "<p><strong>传统 RAG</strong>：「每问必查」——固定 pipeline Query → Retrieve → Generate。简单但浪费，很多问题根本不需要查（比如「1+1=?」）。</p><p><strong>Agentic RAG</strong>：<span class=\"key-point\">看情况再查</span>——Agent 先判断是否需要检索、需要查什么、查几次、怎么重写 query。</p><p>这是 2024-2025 的主流升级方向。</p>"
+      },
+      {
+        "term": "Query Rewrite",
+        "explain": "<p>用户问「我的订单呢」→ Agent 重写成「用户 X 最近 7 天订单状态」，再去检索。</p><p>重写的好处：</p><ul><li>补充上下文（用户身份、时间范围）</li><li>消除歧义</li><li>更适合检索系统（BM25 和 embedding 都对明确的查询更友好）</li></ul>"
+      },
+      {
+        "term": "Query Decomposition",
+        "explain": "<p>多跳问题拆成多个子查询：</p><div class=\"formula\">原问题: \"去年销量最高的产品在今年的评价怎么样?\"<br>拆解:<br>  1. 查询去年销量最高的产品<br>  2. 查询这个产品今年的评价</div><p>每个子查询独立检索，结果合并后再生成答案。这是<span class=\"key-point\">复杂问答的关键优化</span>。</p>"
+      },
+      {
+        "term": "证据标注与幻觉防御",
+        "explain": "<p>召回结果带 <code>doc_id / 段落 id / 时间戳</code>，生成时：</p><ul><li>prompt 强制「只根据证据答」</li><li>每个断言要求标注来源</li><li>没证据的问题明确说「我不确定」</li></ul><p><span class=\"key-point\">「不知道就说不知道」是降幻觉的核心思路——比微调更有效</span>。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ita10",
+    "cat": "腾讯·Agent面",
+    "q": "Tool Calling 和普通函数调用的区别？",
+    "bullets": [
+      "普通函数调用：程序写死的，谁调用/传什么参数都由开发者控制",
+      "Tool Calling：模型根据任务上下文自主输出工具名和参数，必须加一层校验",
+      "工程四层架构：工具注册层 / 参数 schema 层 / 执行器层 / 审计日志层",
+      "模型只能输出候选调用，服务端负责白名单、schema 校验、超时、幂等、错误包装",
+      "真正上线时不能把工具执行权直接交给模型"
+    ],
+    "details": [
+      {
+        "term": "四层架构详细",
+        "explain": "<div class=\"formula\">┌─────────────────┐<br>│ 1. 工具注册层    │  定义 schema、白名单<br>├─────────────────┤<br>│ 2. 参数 schema 层│  校验模型输出参数合法性<br>├─────────────────┤<br>│ 3. 执行器层      │  真正调用、超时、重试<br>├─────────────────┤<br>│ 4. 审计日志层    │  记录每次调用，用于回放<br>└─────────────────┘</div><p>这个架构可以直接当做 Agent 平台的设计蓝本——OpenAI/Anthropic/Gemini 的实际实现本质都是这个模型。</p>"
+      },
+      {
+        "term": "为什么模型输出不能直接信任",
+        "explain": "<p>LLM 输出的 tool call 可能出现：</p><ul><li>调用了不存在的工具</li><li>参数类型错（字符串当数字）</li><li>参数超出业务范围（金额 -1000）</li><li>被 prompt injection 诱导调用敏感 API</li></ul><p>所以服务端必须做：<span class=\"key-point\">白名单校验 + 参数校验 + 超时控制 + 幂等控制 + 错误包装</span>。</p>"
+      },
+      {
+        "term": "错误包装",
+        "explain": "<p>工具执行失败时，不要把原始 stack trace 丢给模型——而是包装成结构化的错误：</p><div class=\"formula\">{<br>&nbsp;&nbsp;status: \"error\",<br>&nbsp;&nbsp;code: \"PARAM_INVALID\",<br>&nbsp;&nbsp;message: \"city 参数不能为空\",<br>&nbsp;&nbsp;suggestion: \"请提供城市名称\"<br>}</div><p>这样模型能理解错误原因并重试，而不是被 stack trace 搞迷糊。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ita11",
+    "cat": "腾讯·Agent面",
+    "q": "Agent 的 Memory 一般怎么做？",
+    "bullets": [
+      "三层记忆：短期（最近对话+当前状态）/ 长期（稳定事实）/ 摘要（压缩历史）",
+      "短期保证会话连贯，通常是 context window 内的 messages",
+      "长期保存用户偏好/身份/长期目标，结构化存储（profile 字段或知识图谱）",
+      "摘要用于长对话中压缩历史，把对话提炼成关键事件减少 token 占用",
+      "落地原则：保留最近 N 轮原文 + 久远内容压 summary + 关键字段单独存"
+    ],
+    "details": [
+      {
+        "term": "三层记忆的交互",
+        "explain": "<p>短期记忆放最近 N 轮原文，到了滑动窗口边界就被「摘要化」进长期记忆或摘要存储。</p><p>长期记忆按需召回——每轮对话开始时根据当前 query 检索相关的长期记忆，注入 prompt。</p><p><span class=\"key-point\">不会把所有对话原文都塞进去</span>，这是一个严重的新手错误。</p>"
+      },
+      {
+        "term": "摘要记忆的风险",
+        "explain": "<p>主要风险是「<strong>摘要丢细节</strong>」——模型自己总结的时候会漏掉关键信息，尤其是当时看起来不重要但后面变关键的细节。</p><p>解决方案：<span class=\"key-point\">在 summary 里保留 event pointers，能回原文</span>。当模型发现需要更详细的信息时，再从 event store 拉原始对话。</p>"
+      },
+      {
+        "term": "按需召回 vs 全量拼接",
+        "explain": "<p>错误做法：每次把整个长期记忆都拼到 prompt 里（token 爆炸，且噪声大）。</p><p>正确做法：<span class=\"key-point\">按需召回</span>——根据当前 query 语义检索最相关的 top-k 条记忆注入，不相关的不动。</p><p>这和 RAG 本质一致——长期记忆就是「关于用户的知识库」。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ita12",
+    "cat": "腾讯·Agent面",
+    "q": "Prompt Injection 在 Agent 场景怎么防？",
+    "bullets": [
+      "Agent 场景更危险——不仅生成错文本，还可能误调工具/越权执行/触发真实业务",
+      "角色和优先级隔离：外部知识不能覆盖系统规则",
+      "把检索文档视为证据，不视为命令——即使文档里写「请忽略上面」也不执行",
+      "所有工具调用白名单 + 参数校验，高风险操作显式确认",
+      "核心原则：不靠一句 prompt 防住，而是靠系统设计让模型即使被诱导也没越权能力"
+    ],
+    "details": [
+      {
+        "term": "为什么 Agent 场景更危险",
+        "explain": "<p>传统 LLM 被 inject 了最多就是生成错文本——用户自己判断是否接受。</p><p>Agent 场景下，模型输出会直接触发<span class=\"key-point\">真实业务操作</span>：</p><ul><li>调用 API（转账、下单、删除）</li><li>修改数据库</li><li>发送消息</li><li>访问文件系统</li></ul><p>被 inject 一次，真实世界就会出错。所以防御的重点<span class=\"key-point\">不是「模型不被骗」，而是「即使被骗也无法造成实际损失」</span>。</p>"
+      },
+      {
+        "term": "五层防御",
+        "explain": "<ol><li><strong>角色和优先级隔离</strong>：外部文本和系统规则严格分离</li><li><strong>检索文档视为证据不视为命令</strong>：文档只是「数据」</li><li><strong>工具调用白名单 + 参数校验</strong>：高风险操作显式确认</li><li><strong>输出和调用链路可追踪</strong>：出问题能回放</li><li><strong>输入清洗和风险分类</strong>：对明显越权或诱导做拦截</li></ol>"
+      },
+      {
+        "term": "Sudo 模式",
+        "explain": "<p>高风险操作（转账、删除、发送邮件、写入生产数据）<span class=\"key-point\">必须人工确认</span>——即使模型被劫持也无法造成真实损失。</p><p>实现方式：这些操作对应的工具带有 <code>requires_confirmation: true</code> 标记，执行前必须弹窗让用户明确授权。只有「读」类操作可以自动执行。</p>"
+      },
+      {
+        "term": "核心金句",
+        "explain": "<p><span class=\"key-point\">不要指望 prompt 护栏，要指望系统护栏</span>。</p><p>任何「请不要调用 xxx 工具」的 prompt 都可以被巧妙的 injection 绕过——真正的防御是让那个工具根本不在当前用户的白名单里，或者执行前必须人工授权。</p><p>对应 Anthropic Constitutional AI 和 OpenAI Instruction Hierarchy 的思路。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ita13",
+    "cat": "腾讯·Agent面",
+    "q": "怎么评估一个 Agent 系统的效果？",
+    "bullets": [
+      "四层评估：回答质量 / 工具质量 / 任务质量 / 系统质量",
+      "回答质量：准确性、完整性、是否基于证据",
+      "工具质量：选工具是否正确、参数是否正确、调用是否成功",
+      "任务质量：一次会话是否完成目标、是否需要追问、是否需要人工接管",
+      "核心观点：Agent 不是单个模型的分数，而是整条链路的分数"
+    ],
+    "details": [
+      {
+        "term": "四层评估详细",
+        "explain": "<ol><li><strong>回答质量</strong>：准确性、完整性、是否基于证据（RAG 场景）</li><li><strong>工具质量</strong>：选工具是否正确、参数是否正确、调用是否成功</li><li><strong>任务质量</strong>：一次会话是否完成目标、是否需要追问、是否需要人工接管</li><li><strong>系统质量</strong>：耗时、成本、token、错误率、稳定性</li></ol>"
+      },
+      {
+        "term": "RAG 的专项评估",
+        "explain": "<p>如果 Agent 里有 RAG，还要单独评估：</p><ul><li><strong>召回命中率</strong>（recall@k）</li><li><strong>rerank 效果</strong>（NDCG）</li><li><strong>答案引用质量</strong>（回答是否真的基于召回内容）</li></ul><p>这三个指标独立于最终回答质量——RAG 可能召回了正确文档但模型没用，或者召回了错文档但模型蒙对了。都要分开看。</p>"
+      },
+      {
+        "term": "最容易被忽略的指标：工具选择准确率",
+        "explain": "<p>很多 Agent「答得挺好但工具链乱七八糟」——用错工具反而靠模型补救。这种系统上线后不稳定，需要<span class=\"key-point\">单独盯工具选择准确率</span>，不能只看最终答案。</p>"
+      },
+      {
+        "term": "真实业务的金标准：人工接管率",
+        "explain": "<p>低接管率 = 真上线。</p><p>不管 benchmark 跑多高，如果线上每 10 次对话有 3 次需要人工介入，那就不算成功。<span class=\"key-point\">人工接管率是真实业务里最客观的指标</span>——它直接反映 Agent 能不能独立闭环任务。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ita14",
+    "cat": "腾讯·Agent面",
+    "q": "线上 Agent 经常选错工具，怎么排查？",
+    "bullets": [
+      "排查通常不是看最后一步，而是看「候选集是怎么来的、为什么这么选、执行前有没有二次校验」",
+      "第一步：看 tool description 和 schema 设计，边界是否模糊",
+      "第二步：看 skill routing 层，是否一次性喂了过多候选造成噪声竞争",
+      "第三步：看 prompt 和 few-shot 示例，最近是否改过 system prompt",
+      "第四步：回放 trace，检查模型选工具前看到了哪些上下文"
+    ],
+    "details": [
+      {
+        "term": "三段排查法",
+        "explain": "<p>对应软件工程的「input → process → output」debug 范式：</p><ol><li><strong>候选集（input）</strong>：模型看到的工具选项是怎么来的？</li><li><strong>决策过程（process）</strong>：模型为什么这么选？上下文有没有误导？</li><li><strong>执行校验（output）</strong>：执行前有没有拦截？</li></ol><p><span class=\"key-point\">90% 的问题在候选集这一步</span>——要么喂太多、要么 description 模糊。</p>"
+      },
+      {
+        "term": "常见根因",
+        "explain": "<ul><li><strong>description 边界模糊</strong>：两个 skill 都写得像通用工具</li><li><strong>参数 schema 不区分场景</strong>：同样的参数可以塞不同意图</li><li><strong>skill routing 召回太多</strong>：给模型 20 个候选，噪声盖过信号</li><li><strong>few-shot 示例带歪</strong>：示例里有错误引导</li><li><strong>历史记忆污染</strong>：之前调错过，记忆让模型重复错选</li><li><strong>用户输入歧义</strong>：用户自己说得不清楚</li></ul>"
+      },
+      {
+        "term": "Trace 回放",
+        "explain": "<p>回放 trace 是最关键的排查工具——<span class=\"key-point\">没 trace 就没办法排查</span>。</p><p>trace 应该记录：</p><ul><li>模型当时看到的完整 prompt（system + user + 历史 + 候选工具）</li><li>模型的输出（包括 tool call 和 reasoning）</li><li>执行器的校验结果</li><li>最终调用的工具和参数</li></ul><p>有这些信息后，问题几乎一定能定位。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ita15",
+    "cat": "腾讯·Agent面",
+    "q": "长任务场景怎么避免 Agent 无限推理或死循环？",
+    "bullets": [
+      "四类终止条件：状态机+硬限制 / 成功失败定义 / 重复检测 / 无进展检测",
+      "硬性限制：最大推理步数、最大工具调用次数、最大 token 开销、最大执行时长",
+      "成功/失败定义：什么叫完成、什么叫失败、什么情况需要补信息",
+      "重复检测：连续几步调同一工具得相似结果 → 强制终止或返回阶段性结论",
+      "无进展检测：连续 N 步 plan/observation 不变 → 终止"
+    ],
+    "details": [
+      {
+        "term": "硬性预算（budget）",
+        "explain": "<p>这是最后的兜底——即使算法层漏了，预算也不会爆：</p><ul><li><strong>Step budget</strong>：最大推理步数（通常 10-30）</li><li><strong>Tool call budget</strong>：最大工具调用次数</li><li><strong>Token budget</strong>：最大累计 token 消耗</li><li><strong>Time budget</strong>：最大执行时长（wall clock）</li></ul><p>对应传统算法里的「iteration budget」概念。<span class=\"key-point\">这些限制是不可讨论的 hard limit</span>——达到就立刻停。</p>"
+      },
+      {
+        "term": "重复检测",
+        "explain": "<p>如果连续几步都：</p><ul><li>调用同一个工具</li><li>得到相似结果（用 embedding similarity 判定）</li><li>没有带来新证据</li></ul><p>就应该<span class=\"key-point\">强制终止或返回阶段性结论</span>。这对应 Q7 里 ReAct 的死循环问题——纯 ReAct 很容易在原地打转，重复检测是主要解药。</p>"
+      },
+      {
+        "term": "无进展检测",
+        "explain": "<p>更进阶的检测——不只是重复调用，而是<span class=\"key-point\">整体状态没有进展</span>：</p><ul><li>连续 N 步 plan 不变</li><li>连续 N 步 observation 没有新信息</li><li>连续 N 步 reward 不变（如果有 reward 信号）</li></ul><p>这些信号表明 Agent 已经陷入停滞，继续执行只是浪费预算。</p>"
+      },
+      {
+        "term": "成功/失败定义",
+        "explain": "<p>长任务必须<span class=\"key-point\">明确成功和失败的定义</span>，否则 Agent 永远不知道什么时候该停：</p><ul><li><strong>完成</strong>：什么条件满足视为任务完成？</li><li><strong>失败</strong>：什么条件视为任务不可能完成？</li><li><strong>需要补信息</strong>：什么情况要让用户补充输入？</li></ul><p>三者都要显式定义在 system prompt 或 workflow 里，<span class=\"key-point\">不能让模型自己判断</span>。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  }
+]

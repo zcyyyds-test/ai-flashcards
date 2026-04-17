@@ -1,5 +1,5 @@
 // Auto-generated from data/*.json — edit the JSON files, then run: bash build-cards.sh
-// Generated: 2026-04-06T15:59:39
+// Generated: 2026-04-17T03:54:05
 const BUILTIN_CARDS = [
   {
     "id": "s01",
@@ -7689,6 +7689,1878 @@ const BUILTIN_CARDS = [
       "平均O(n)、最悪O(n²)（ランダムpivotで回避）。Heap解法O(n log k)もよく使われる",
       "面接での追加質問：なぜランダムpivotか？（ソート済み配列でO(n²)に退化するのを防ぐ）。派生：最小Heapでtop-kを維持"
     ],
+    "lv": 2
+  },
+  {
+    "id": "ib01",
+    "cat": "字节·LLM面",
+    "q": "了解 DeepSeek-R1 吗？介绍一下",
+    "bullets": [
+      "深度求索开源的推理增强型 LLM，以 DeepSeek-V3 为基座 + 大规模 RL pipeline 训出",
+      "主力 671B 总参数 / 37B 激活（MoE），另开源 1.5B~70B 系列蒸馏小模型",
+      "基座架构：Decoder-only Transformer + MLA（Multi-head Latent Attention）+ DeepSeekMoE",
+      "训练路线：R1-Zero 走纯 RL 验证可行性；R1 正式版用 SFT 冷启动 → RL → SFT → RL 的多阶段管线",
+      "定位对标 OpenAI o1，数学/代码/逻辑推理 benchmark 接近 o1"
+    ],
+    "details": [
+      {
+        "term": "R1-Zero vs R1",
+        "explain": "<p><strong>R1-Zero</strong>：跳过 SFT 直接用 GRPO 做 RL，证明了「RL 能让模型自发涌现反思/自检行为」，但输出混乱、中英夹杂、语言切换严重。</p><p><strong>R1</strong>：加了冷启动 SFT 数据修复可读性和格式问题，然后走「SFT → RL → SFT 再对齐 → RL」的多阶段管线。R1-Zero 是学术 demo，R1 是可用产品。</p>"
+      },
+      {
+        "term": "GRPO",
+        "explain": "<p>DeepSeek 为 R1 设计的策略优化算法，相比 PPO <span class=\"key-point\">省掉 critic 网络</span>——直接用一组 rollout 的 reward 做标准化当 advantage。</p><div class=\"formula\">advantage_i = (R_i - mean(R)) / std(R)</div><p>好处：显存减半（没有 critic），训练稳定，特别适合 reasoning 任务这种 reward 信号稀疏的场景。</p>"
+      },
+      {
+        "term": "R1 与 V3 的关系",
+        "explain": "<p>R1 的基座就是 V3——可以看作「V3 + RL-for-reasoning」。V3 提供基础的语言能力和知识，R1 在上面叠加长推理链的能力。两者是递进关系，不是替代关系。</p>"
+      },
+      {
+        "term": "蒸馏小模型为何有效",
+        "explain": "<p>把 R1 生成的长 CoT 当作 SFT 数据喂给 Qwen/Llama 小模型，推理能力<span class=\"key-point\">直接继承</span>，不需要小模型自己再做 RL。实验证明 1.5B 的蒸馏模型在 AIME 上能超过 GPT-4o，说明「推理能力可以用 SFT 传递」。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ib02",
+    "cat": "字节·LLM面",
+    "q": "R1 的 MLA 如何实现 KV-Cache 节约？",
+    "bullets": [
+      "核心思想：把 K 和 V 压到一个低维 latent 空间再缓存，只缓存 latent 向量",
+      "压缩：共享的 down-projection 把 hidden state 投到 latent c_KV（d_c << h·d_k）",
+      "解压：每个 head 用独立 up-projection 从 c_KV 还原 K、V",
+      "关键优化：up-projection 可以吸收进 Q 的投影，数学上等价于直接在 latent 空间算 attention",
+      "RoPE 单独走一条「解耦通路」，避免破坏投影吸收技巧"
+    ],
+    "details": [
+      {
+        "term": "MHA / MQA / GQA / MLA 对比",
+        "explain": "<div class=\"formula\">MHA: 缓存 h · n · d_k<br>MQA: 缓存 1 · n · d_k  （所有 head 共享一组 KV）<br>GQA: 缓存 g · n · d_k  （分组共享，Llama2/3 采用）<br>MLA: 缓存 n · d_c      （低秩压缩到 latent）</div><p>MQA 压得狠但效果掉；GQA 是 MHA/MQA 的折中；<span class=\"key-point\">MLA 在压缩率和效果之间更优</span>——DeepSeek 实测 MLA 比 GQA 显存省得多、效果还更好。</p>"
+      },
+      {
+        "term": "为什么 up-projection 能被吸收",
+        "explain": "<p>数学上 <code>attention_score = Q · W_UK · c_KV</code>，可以改写成 <code>(Q · W_UK) · c_KV</code>。W_UK 在推理时可以<span class=\"key-point\">预先合并到 Q 的投影矩阵里</span>，这样推理时根本不需要真的还原出 K、V，直接在 latent 空间算 attention 就行。V 侧同理。</p>"
+      },
+      {
+        "term": "MLA 对 RoPE 的特殊处理",
+        "explain": "<p>RoPE 作用在 Q、K 上会破坏前面的「投影吸收」技巧（因为 RoPE 是非线性的旋转）。MLA 的解决方案是<span class=\"key-point\">把少量维度拆出来专门走 RoPE 通路</span>——这部分维度正常缓存 K 的旋转结果，其余大部分维度走 latent 压缩通路。两路拼起来当最终的 K。</p>"
+      },
+      {
+        "term": "长上下文下的增益",
+        "explain": "<p>上下文越长，KV-Cache 占总显存的比例越高。n=128K 时传统 MHA 的 KV-Cache 会爆炸，而 MLA 压缩后显存可能只有 MHA 的 1/10 以下。这是 DeepSeek 敢做 128K context window 的底气。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ib03",
+    "cat": "字节·LLM面",
+    "q": "R1 在 SFT 时冷启动的目的？",
+    "bullets": [
+      "冷启动 = RL 之前先用少量高质量 CoT 数据做一轮轻量 SFT",
+      "目的一：修复 R1-Zero 的可读性问题（输出混乱、中英夹杂、格式乱）",
+      "目的二：给 RL 一个好起点，让模型先学会「think step by step」基本范式",
+      "目的三：稳定训练，降低 RL 阶段方差，避免 reward hacking 和崩溃",
+      "数据来源：人工整理几千条高质量 CoT + R1-Zero 生成后人工筛选"
+    ],
+    "details": [
+      {
+        "term": "为什么叫「冷」启动",
+        "explain": "<p>对应 RL 的「热」训练——先用监督信号把模型调到一个合理状态，再上 RL 这个高方差优化器。如果模型一开始就是随机的，RL 探索长 CoT 的效率极低，而且容易学偏。</p>"
+      },
+      {
+        "term": "和 InstructGPT 的 SFT 区别",
+        "explain": "<p><strong>InstructGPT</strong> 的 SFT 是主力对齐手段，数据量大（万到十万级），目标是全面对齐人类偏好。</p><p><strong>R1 的冷启动 SFT</strong> 只是 RL 前的热身，数据量小（几千条），目标只是<span class=\"key-point\">注入「CoT 格式」和「基本指令能力」</span>，真正的推理能力还是靠后续的 RL 涌现出来。</p>"
+      },
+      {
+        "term": "不冷启动行不行",
+        "explain": "<p>行——就是 R1-Zero。能用但不好用：推理能力在，但输出不是人类能舒服阅读的格式。学术上证明了 RL 的潜力，产品上必须加冷启动。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ib04",
+    "cat": "字节·LLM面",
+    "q": "位置编码是什么？解释 RoPE",
+    "bullets": [
+      "位置编码给 token 注入序列位置信息——self-attention 本身置换不变，不加位置编码「我爱你」和「你爱我」对模型完全一样",
+      "RoPE = Rotary Position Embedding：把位置信息编码成复平面上的旋转，作用在 Q、K 上",
+      "对位置 m 的 Q 向量，旋转角度 m·θ_i；内积只依赖相对位置 (m-n)",
+      "天然具备相对位置感知，且有一定外推能力（配合 YaRN 可扩展 4-32 倍训练长度）",
+      "现已成为主流：Llama、Qwen、DeepSeek 全部采用"
+    ],
+    "details": [
+      {
+        "term": "RoPE 的数学本质",
+        "explain": "<div class=\"formula\">把 Q/K 两两配对看作复数: q_2i + i·q_2i+1<br>旋转角度 θ_i = 10000^(-2i/d)<br>位置 m 旋转后: q_m = q · e^(i·m·θ)<br>内积: &lt;q_m, k_n&gt; = Re(q·k* · e^(i·(m-n)·θ))</div><p><span class=\"key-point\">两个 token 的 attention score 只依赖相对位置 (m-n)</span>——即使绝对位置不同，相对距离相同的 token 对 attention 模式一致。这就是 RoPE 的核心魅力。</p>"
+      },
+      {
+        "term": "RoPE 为什么能外推",
+        "explain": "<p>旋转的周期性+远距离衰减特性让模型对「没见过的相对位置」有一定泛化。但纯 RoPE 的外推能力其实有限——超出训练长度 2 倍左右就开始掉点。真正的长度外推靠 <strong>YaRN</strong>（对 RoPE 的频率做 NTK-aware 缩放）+ 少量长文本微调实现。</p>"
+      },
+      {
+        "term": "和其他位置编码对比",
+        "explain": "<p><strong>Sinusoidal</strong>（原版 Transformer）：绝对位置正弦编码加到 embedding 上，外推差</p><p><strong>Learned</strong>（BERT/GPT-2）：每个位置学一个 embedding，无外推能力</p><p><strong>ALiBi</strong>（BLOOM/MPT）：attention bias 线性衰减，外推好但没有显式方向感</p><p><strong>RoPE</strong>（Llama/Qwen/DeepSeek）：旋转形式，相对位置天然，外推好，<span class=\"key-point\">目前最流行</span></p>"
+      },
+      {
+        "term": "MLA 和 RoPE 的冲突",
+        "explain": "<p>RoPE 是非线性操作，会破坏 MLA 的「up-projection 吸收到 Q」这个数学技巧。DeepSeek 的解决方案是<span class=\"key-point\">拆出少量维度单独走 RoPE 通路</span>，其余大部分维度走 latent 压缩通路。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ib05",
+    "cat": "字节·LLM面",
+    "q": "14B 模型的推理和训练显存估算",
+    "bullets": [
+      "核心公式：参数显存 + 梯度显存 + 优化器状态 + 激活显存",
+      "14B FP16/BF16 推理：权重 28GB + KV-Cache + overhead ≈ 30-35GB（单 A100 80G 能塞）",
+      "14B 全参训练（Adam+BF16）：约 250-300GB ≈ 参数量 × 16-20 字节",
+      "14B INT4 推理仅需 7GB → 消费级 3090/4090 能跑",
+      "LoRA 微调显存 ≈ 推理 + 小梯度 ≈ 40-50GB，单卡 A100 可行"
+    ],
+    "details": [
+      {
+        "term": "训练显存明细（Adam+BF16 混合精度）",
+        "explain": "<div class=\"formula\">权重 (BF16):   14B × 2 = 28 GB<br>梯度 (BF16):   14B × 2 = 28 GB<br>Adam m (FP32): 14B × 4 = 56 GB<br>Adam v (FP32): 14B × 4 = 56 GB<br>主权重 (FP32): 14B × 4 = 56 GB<br>────────────────────────<br>小计:                   224 GB (不含激活)<br>激活 (batch=1,seq=2K):  +20~50 GB<br>总计:                 ≈ 250-300 GB</div><p>这就是为什么 14B 全参训练需要 <span class=\"key-point\">4×A100 80G 以上 + ZeRO</span>。</p>"
+      },
+      {
+        "term": "为什么训练显存是推理的 10 倍",
+        "explain": "<ul><li><strong>梯度</strong>：推理没有</li><li><strong>优化器状态（Adam m/v）</strong>：推理没有，且需要 FP32 高精度</li><li><strong>FP32 主权重副本</strong>：混合精度训练必备</li><li><strong>激活</strong>：反向传播需要，推理不需要</li></ul><p>这四项加起来远超参数本身。<span class=\"key-point\">Adam 优化器的内存开销是大头</span>——这也是为什么 SGD / Lion / 8bit Adam 等优化器受关注。</p>"
+      },
+      {
+        "term": "怎么压到单卡",
+        "explain": "<ul><li><strong>LoRA / QLoRA</strong>：冻结基座，只训小矩阵</li><li><strong>Gradient Checkpointing</strong>：不存激活，反向时重算</li><li><strong>ZeRO-3 / FSDP</strong>：参数、梯度、优化器状态切分到多卡</li><li><strong>CPU Offload</strong>：把不活跃的状态搬到 CPU</li><li><strong>8bit Adam</strong>：bitsandbytes，把 m/v 量化到 8bit</li></ul>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ib06",
+    "cat": "字节·LLM面",
+    "q": "显存占用和哪些因素相关？",
+    "bullets": [
+      "参数量（线性）、精度（FP32/BF16/FP16/INT8/INT4）、优化器（SGD<Adam）",
+      "batch size（激活 ∝ batch）、序列长度（激活 ∝ seq，attention 还有 O(n²)）",
+      "模型深度（激活 ∝ layers）",
+      "训练技巧：梯度累积（时间换空间）、gradient checkpointing（不存激活）",
+      "推理时 KV-Cache ∝ batch × seq × layers × hidden，长上下文是显存杀手"
+    ],
+    "details": [
+      {
+        "term": "FSDP / ZeRO 原理",
+        "explain": "<p>把参数、梯度、优化器状态<span class=\"key-point\">切分到多张卡上</span>，用的时候再 all-gather。</p><ul><li><strong>ZeRO-1</strong>：只切优化器状态（省 4×）</li><li><strong>ZeRO-2</strong>：切优化器 + 梯度（省 8×）</li><li><strong>ZeRO-3 / FSDP</strong>：切优化器 + 梯度 + 参数（省 N×，N=GPU 数）</li></ul><p>代价是通信开销——ZeRO-3 的通信成本最高，但在 NVLink 互联下可以接受。</p>"
+      },
+      {
+        "term": "Flash Attention 省显存吗",
+        "explain": "<p>省——而且省得非常狠。核心是把 attention 计算 fuse 成 tiled kernel，<span class=\"key-point\">不再显式存 n×n 的 attention 矩阵</span>，反向时用 recomputation 重新算。从 O(n²) 内存降到 O(n)，同时因为更好的 GPU 内存访问模式反而更快。</p>"
+      },
+      {
+        "term": "为什么 Adam 优化器状态要 FP32",
+        "explain": "<p>低精度累加误差大，尤其是二阶矩 v_t 这种需要长期累积的状态。BF16 的精度（7 位尾数）不足以准确维护 β₂=0.999 的指数移动平均——累积误差会让优化器跑偏。所以即使参数和梯度用 BF16，优化器状态必须 FP32。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ib07",
+    "cat": "字节·LLM面",
+    "q": "大模型灾难性遗忘是什么？如何解决？",
+    "bullets": [
+      "现象：在新任务上微调后，旧任务（包括基座能力）性能显著下降",
+      "本质：参数更新时旧任务相关的权重被覆盖",
+      "参数层面：LoRA/Adapter 冻结基座只训小矩阵，部分层冻结",
+      "数据层面：混合训练（新+少量旧）、知识蒸馏、经验回放",
+      "正则化 + 小学习率 + 少 epoch 是训练技巧组合拳"
+    ],
+    "details": [
+      {
+        "term": "LoRA 为什么能缓解遗忘",
+        "explain": "<p>基座权重<span class=\"key-point\">完全冻结</span>，新知识都进 LoRA 的 B·A 矩阵。极端情况下想回到基座，只要把 LoRA 去掉就行——完全无损。对比全参微调，LoRA 的遗忘风险几乎可控为零。</p><p>但 LoRA 的容量有限，学不下太多新知识。在遗忘和容量之间权衡时，rank 越大容量越大、遗忘风险越高。</p>"
+      },
+      {
+        "term": "多阶段 SFT 的顺序影响",
+        "explain": "<p>有影响——<span class=\"key-point\">后训的任务留下的印记最深</span>，所以重要任务放后面。常见的经验法则：通用对话 → 领域知识 → 指令对齐 → 风格微调。工业界更激进的做法是用 rehearsal（每个阶段都混入前一阶段的数据）。</p>"
+      },
+      {
+        "term": "EWC（Elastic Weight Consolidation）",
+        "explain": "<p>在新任务 loss 上加一个正则项：<code>λ · Σ F_i · (θ_i - θ*_i)²</code>，其中 F_i 是 Fisher 信息矩阵（衡量参数 i 对旧任务的重要性）。</p><p>直觉：<span class=\"key-point\">对旧任务重要的参数更新要付出更大代价</span>。但计算 Fisher 矩阵贵，实际落地不多。</p>"
+      },
+      {
+        "term": "RLHF 会不会遗忘",
+        "explain": "<p>会——RLHF 在对齐人类偏好的同时会削弱 base model 的一些能力（所谓「alignment tax」）。这也是现在流行 DPO、IPO 等相对温和的偏好优化方法的原因之一——它们更接近 SFT，偏离 base 的程度更小。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ib08",
+    "cat": "字节·LLM面",
+    "q": "BF16、FP16、FP32 对比",
+    "bullets": [
+      "FP32：1+8+23，动态范围大精度高，4 字节",
+      "FP16：1+5+10，精度高但范围小（容易溢出），2 字节，Pascal+ 支持",
+      "BF16：1+8+7，动态范围=FP32，精度低，2 字节，Ampere+ 支持",
+      "FP16 必须用 loss scaling 防溢出；BF16 开箱即用更稳定",
+      "现代大模型都用 BF16——A100/H100 原生支持，稳定性 >> FP16"
+    ],
+    "details": [
+      {
+        "term": "为什么 FP16 需要 loss scaling",
+        "explain": "<p>FP16 动态范围只有 6e-5 ~ 6.5e4，梯度很容易：</p><ul><li><strong>大梯度溢出</strong>：变成 inf，参数被破坏</li><li><strong>小梯度下溢</strong>：变成 0，更新消失</li></ul><p>解决方案：<span class=\"key-point\">把 loss 乘以 2^16 再反向</span>，梯度会被同步放大 2^16 倍，下溢风险消失；优化器更新时除回去。动态 loss scaling 会根据是否出现 inf 自动调整 scale 因子。</p>"
+      },
+      {
+        "term": "BF16 为什么更稳定",
+        "explain": "<p>BF16 有 8 位指数（和 FP32 一样），动态范围覆盖 1e-38 ~ 1e38，<span class=\"key-point\">和 FP32 完全一致</span>——所以溢出和下溢几乎不会发生，完全不需要 loss scaling。</p><p>代价是只有 7 位尾数，相对误差约 7.8e-3——比 FP16 的 9.8e-4 大一个数量级，但大模型训练对这个精度不敏感。</p>"
+      },
+      {
+        "term": "FP8 是什么",
+        "explain": "<p>H100 引入的更低精度浮点，两种格式：</p><ul><li><strong>E4M3</strong>：1+4+3，精度优先（用于前向 activation）</li><li><strong>E5M2</strong>：1+5+2，范围优先（用于反向 gradient）</li></ul><p>需要 per-tensor scaling 配合才能稳定训练。Transformer Engine 库在 H100 上能做到 FP8 训练 + BF16 精度。</p>"
+      },
+      {
+        "term": "混合精度中哪些要 FP32",
+        "explain": "<p>即使用 BF16 训练，这些地方仍然用 FP32：</p><ul><li>Loss 计算（数值稳定）</li><li>Softmax（容易溢出）</li><li>LayerNorm 的统计量</li><li>Optimizer states（m, v）</li><li>Master weights（主权重副本）</li></ul>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ib09",
+    "cat": "字节·LLM面",
+    "q": "Adam 和 AdamW 的原理",
+    "bullets": [
+      "Adam = Momentum（一阶动量）+ RMSProp（二阶动量自适应学习率）",
+      "m_t = β₁m + (1-β₁)g；v_t = β₂v + (1-β₂)g²；偏差修正后更新",
+      "AdamW 改动：解耦 weight decay，直接在更新步骤减 η·λ·θ",
+      "AdamW 的 weight decay 不会被二阶矩缩放削弱，正则效果正确",
+      "现代大模型全部用 AdamW——泛化更好、超参更稳定"
+    ],
+    "details": [
+      {
+        "term": "Adam 更新公式",
+        "explain": "<div class=\"formula\">m_t = β₁·m_(t-1) + (1-β₁)·g_t         一阶矩<br>v_t = β₂·v_(t-1) + (1-β₂)·g_t²        二阶矩<br>m̂_t = m_t / (1-β₁^t)                 偏差修正<br>v̂_t = v_t / (1-β₂^t)<br>θ_t = θ_(t-1) - η · m̂_t / (√v̂_t + ε)</div><p>典型超参：β₁=0.9, β₂=0.999, ε=1e-8。</p><p><strong>m_t</strong> 提供方向惯性让更新更平滑；<strong>v_t</strong> 给每个参数分配不同学习率，梯度大的参数步长小、反之步长大。</p>"
+      },
+      {
+        "term": "AdamW vs Adam 的关键差异",
+        "explain": "<p>Adam 的 L2 正则通过 loss 加 <code>λ‖θ‖²</code> 实现，这个正则项会进入梯度、进入 m/v，<span class=\"key-point\">被二阶矩 v 缩放后效果就乱了</span>——对梯度大的参数正则实际变弱，正则行为和预期不符。</p><p>AdamW 的做法：<strong>直接在参数更新步骤里减去 η·λ·θ</strong>：</p><div class=\"formula\">θ_t = θ_(t-1) - η · (m̂_t / (√v̂_t + ε) + λ·θ_(t-1))</div><p>这样 weight decay 不受 v 影响，正则效果正确。</p>"
+      },
+      {
+        "term": "8bit Adam",
+        "explain": "<p>bitsandbytes 库的实现，把 m/v 量化成 8bit，<span class=\"key-point\">优化器显存减半</span>。关键技巧是 block-wise quantization——每 2048 个元素用一个独立的 scale，避免 outlier 破坏整体精度。损失可以忽略，但显存显著节约。</p>"
+      },
+      {
+        "term": "Lion 优化器",
+        "explain": "<p>Google 2023 年提出的替代，用 <code>sign(m_t)</code> 更新而不是 <code>m_t / √v_t</code>。只维护一阶动量，<span class=\"key-point\">显存比 AdamW 少一半</span>（不要 v）。在大模型训练上效果接近或略好于 AdamW，但超参需要重新调。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ib10",
+    "cat": "字节·LLM面",
+    "q": "LeetCode 股票系列（121/122/123/188）的通解",
+    "bullets": [
+      "121（1 次）：一次遍历维护最小价格和最大利润，O(n)/O(1)",
+      "122（无限次）：贪心，只要明天比今天高就买卖",
+      "123（最多 2 次）：四个状态 DP（buy1/sell1/buy2/sell2）",
+      "188（最多 k 次）：dp[j] buy/sell 二维 DP，O(nk)/O(k)",
+      "通解：dp[i][j][0/1] = 第 i 天、用了 j 次交易、持/不持股的最大收益"
+    ],
+    "details": [
+      {
+        "term": "188 最通用解法（k 次）",
+        "explain": "<div class=\"formula\">def maxProfit(k, prices):<br>&nbsp;&nbsp;n = len(prices)<br>&nbsp;&nbsp;if k &gt;= n // 2:  # 退化成 122<br>&nbsp;&nbsp;&nbsp;&nbsp;return sum(max(0, prices[i]-prices[i-1]) for i in range(1, n))<br>&nbsp;&nbsp;buy = [-inf] * (k+1)<br>&nbsp;&nbsp;sell = [0] * (k+1)<br>&nbsp;&nbsp;for p in prices:<br>&nbsp;&nbsp;&nbsp;&nbsp;for j in range(1, k+1):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buy[j]  = max(buy[j],  sell[j-1] - p)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sell[j] = max(sell[j], buy[j]    + p)<br>&nbsp;&nbsp;return sell[k]</div><p>O(nk) 时间，O(k) 空间。是整个系列的母题。</p>"
+      },
+      {
+        "term": "为什么这一家族能统一",
+        "explain": "<p>所有题本质都是 <code>dp[i][j][0/1]</code>：第 i 天、用了 j 次交易、持/不持股票的最大收益。</p><ul><li><strong>121</strong>：j=1 固定</li><li><strong>122</strong>：j 无限制（退化成贪心）</li><li><strong>123</strong>：j=2 固定</li><li><strong>188</strong>：j=k 通用</li></ul><p>掌握 188 的 DP 框架后，121/122/123 都能用它退化得出。</p>"
+      },
+      {
+        "term": "含冷冻期（309）",
+        "explain": "<p>多一个「冷冻期」状态。从 sell 状态不能直接转到 buy，必须经过一天冷冻期。状态机：<code>hold → sold → cold → hold</code>。</p>"
+      },
+      {
+        "term": "含手续费（714）",
+        "explain": "<p>每次 sell 时额外减 fee：<code>sell = max(sell, buy + p - fee)</code>。本质是改变贪心/DP 的阈值——只有价差大于 fee 的波动才值得交易。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 1
+  },
+  {
+    "id": "ita01",
+    "cat": "腾讯·Agent面",
+    "q": "项目里把 skill 直接塞 system prompt，skill 太多怎么处理？",
+    "bullets": [
+      "不能全部常驻 system prompt——会占满上下文、候选噪声大、模型混淆",
+      "做成外部注册表：system prompt 只留最小规则和调用协议，skill 按需动态注入",
+      "一层 skill routing：规则/分类模型/向量检索先筛 top-k",
+      "再把 top-k skill 的 description、参数 schema、few-shot 拼进 prompt",
+      "长 skill 拆成摘要版和完整版：先注摘要，确定调用后再加载详细说明"
+    ],
+    "details": [
+      {
+        "term": "Skill 向量检索",
+        "explain": "<p>把 skill description 当文档、用户 query 当问题——本质就是 RAG。检索模型可以是一个小的 embedding model（bge-small 足够），甚至规则都行。</p><p><span class=\"key-point\">关键不是召回多准，而是召回的候选集能覆盖正确答案</span>——后面还有 rerank 和 schema 校验兜底。</p>"
+      },
+      {
+        "term": "Skill 摘要生成",
+        "explain": "<p>在 skill 注册时用 LLM 离线生成一次摘要，<span class=\"key-point\">不用每次 in-context 压缩</span>。摘要要保留：</p><ul><li>核心用途（一句话）</li><li>适用场景 / 禁用场景</li><li>关键参数</li></ul><p>详细说明（参数 schema、failure mode、调用示例）放在详细版，模型确定要调用后再加载。</p>"
+      },
+      {
+        "term": "预缓存 prompt 片段",
+        "explain": "<p>经常共现的 skill 组合可以预缓存好 prompt 片段。比如「订单查询 + 物流查询」经常一起出现，可以把两个 skill 的 prompt 拼好存起来，命中时直接用。</p><p>更进一步——配合 <strong>prompt caching</strong>（Claude / OpenAI 都支持），经常用的 skill prompt 能享受成本折扣。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ita02",
+    "cat": "腾讯·Agent面",
+    "q": "两个 skill description 相似导致选错怎么办？",
+    "bullets": [
+      "给 skill 增加更强的判别信息，而不是继续堆模糊描述",
+      "结构化定义：升级成 schema（适用/禁用场景、参数、返回格式、前置/失败条件、示例）",
+      "两阶段选择：先召回 top-k（粗排），再让模型根据参数约束做 rerank（精排）",
+      "负样本示例：明确告诉模型「什么问题不应该调用这个 skill」",
+      "执行前 schema 校验 + rule check，即使模型选错也不能继续误调"
+    ],
+    "details": [
+      {
+        "term": "适用场景 vs 禁用场景",
+        "explain": "<p>这是 prompt 工程里被低估的技巧——<span class=\"key-point\">负面约束比正面描述更能降低误召回</span>。</p><p>例：两个 skill 都叫「查询订单」，一个是「电商订单」一个是「外卖订单」。如果只写正面描述会混，但如果各自加上「禁用场景：本 skill 不处理外卖/不处理电商」，召回质量立刻提升。</p>"
+      },
+      {
+        "term": "Rerank 用什么模型",
+        "explain": "<p>精排这一步通常用<span class=\"key-point\">更便宜的小模型</span>（Haiku / 4o-mini / Qwen-7B），主模型只负责最终执行。这样既能保证召回准确率，又能控制成本。</p><p>输入给 rerank 的内容是「用户 query + 所有候选 skill 的结构化 schema + 参数约束」，输出是排序后的 top-1 或 top-3。</p>"
+      },
+      {
+        "term": "语义长期接近怎么办",
+        "explain": "<p>如果两个 skill 语义长期接近，通常要在<span class=\"key-point\">系统设计层面合并成一个 skill</span>，再由内部参数路由。不然前面再怎么写 prompt，后面也会持续混。</p><p>例：「查北京天气」和「查上海天气」不是两个 skill，而是一个 skill 带 city 参数。</p>"
+      },
+      {
+        "term": "执行前校验",
+        "explain": "<p>即使模型选错了，也要靠执行前校验兜底：</p><ul><li><strong>Schema 校验</strong>：参数类型/必填/枚举值</li><li><strong>Rule check</strong>：业务规则（金额上限、权限范围）</li><li><strong>白名单</strong>：当前用户能调用的 skill 集合</li></ul><p><span class=\"key-point\">把模型当成一个不可信的输入源，所有关键决策都要二次校验</span>。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ita03",
+    "cat": "腾讯·Agent面",
+    "q": "Agent 设计里最重要的部分是什么？",
+    "bullets": [
+      "上下文工程（Context Engineering）是 Agent 设计的核心",
+      "Agent 不是单轮问答，而是一个持续决策系统",
+      "模型能看到什么信息、顺序和优先级、什么是规则/证据/历史，都直接影响稳定性",
+      "上下文工程做得好：模型像受控执行器，知道目标、约束、工具、状态、输出格式",
+      "核心金句：Agent 的核心不是「给模型更多信息」，而是「给模型正确的信息」"
+    ],
+    "details": [
+      {
+        "term": "为什么是上下文工程而不是 Prompt 工程",
+        "explain": "<p>Prompt Engineering 关注的是<span class=\"key-point\">单次问答的 prompt 设计</span>；Context Engineering 关注的是<span class=\"key-point\">一个持续运转的 Agent 在每一轮决策时，应该看到什么上下文</span>。</p><p>2024 年开始，Anthropic、OpenAI 等主流玩家逐步把 Prompt Engineering 替换为 Context Engineering，因为 Agent 场景下上下文是动态演变的——每一轮的上下文都不同，设计的是「上下文的构造规则」而不是「一段固定 prompt」。</p>"
+      },
+      {
+        "term": "上下文做不好的失败模式",
+        "explain": "<ul><li><strong>目标漂移</strong>：长对话后模型忘了最初任务是什么</li><li><strong>工具误选</strong>：candidate pool 太大或描述模糊</li><li><strong>记忆污染</strong>：旧信息混进新决策</li><li><strong>长对话失真</strong>：早期信息在压缩中丢失</li><li><strong>推理跑偏</strong>：被无关信息带偏逻辑</li></ul><p>这五个都不是「模型不够强」的问题，而是「喂给模型的上下文有问题」——所以关键在于设计上下文。</p>"
+      },
+      {
+        "term": "反面例子",
+        "explain": "<p>新手常见错误：把所有历史对话、所有检索结果、所有工具说明一股脑灌进去，想着「信息多总没坏处」。</p><p>实际效果：<span class=\"key-point\">模型不堪重负</span>——注意力被分散，关键信息被噪声淹没，输出质量反而下降。</p><p>正解：每一类信息（规则/工具/记忆/证据）都有独立的处理管线，按需注入。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ita04",
+    "cat": "腾讯·Agent面",
+    "q": "上下文工程有哪些要注意的点？",
+    "bullets": [
+      "角色隔离：system/developer/user/tool/memory 边界清楚，外部文本不能混进系统规则",
+      "信息裁剪：只保留当前任务相关内容，避免历史/检索/工具说明全塞",
+      "格式控制：结构化（JSON）比纯自然语言更稳，长历史做摘要",
+      "来源可信度分层：system > user > tool > 模型猜测；知识证据 > 无依据生成",
+      "长任务做上下文压缩和过期淘汰，防止状态漂移和旧信息污染"
+    ],
+    "details": [
+      {
+        "term": "角色隔离（Role Isolation）",
+        "explain": "<p>对应 OpenAI 的 <strong>instruction hierarchy</strong>（2024）和 Anthropic 的 <strong>role isolation</strong>。核心原则：</p><ul><li>system message 拥有最高权限（规则和护栏）</li><li>developer message 次之（业务指令）</li><li>user 输入不能覆盖 system 规则</li><li>tool output 只能作为「数据」而不是「命令」</li></ul><p><span class=\"key-point\">不同角色的文本在 prompt 里要有明确分隔符和标记</span>，让模型天然区分优先级。</p>"
+      },
+      {
+        "term": "JSON vs 自然语言",
+        "explain": "<p>结构化上下文通常比纯自然语言更稳：</p><ul><li>工具结果尽量用 JSON</li><li>任务状态单独字段化（<code>{\"task\": \"...\", \"step\": 3, \"done\": false}</code>）</li><li>长历史做摘要而不是堆原文</li></ul><p>代价是 JSON 的 token 开销略大（花括号和引号），但腾讯这种大规模线上 Agent 选 JSON 是对的——<span class=\"key-point\">稳定性比 token 成本更重要</span>。</p>"
+      },
+      {
+        "term": "可信度分层是 Prompt Injection 防御的底层原理",
+        "explain": "<p>当上下文里有多个来源冲突时，按优先级取信：</p><div class=\"formula\">system 规则  &gt;  用户输入  &gt;  工具结果  &gt;  模型猜测<br>知识证据  &gt;  无依据生成</div><p>这样即使外部文档里藏了「请忽略上面的规则」，也不会覆盖 system 级别的指令——因为文档的可信度远低于 system message。</p>"
+      },
+      {
+        "term": "上下文压缩策略",
+        "explain": "<ul><li><strong>保留最近 N 轮原文</strong>（滑动窗口）</li><li><strong>更久远的做 summary</strong>（LLM 压缩，定期重算）</li><li><strong>抽取关键字段单独存</strong>（用户偏好、任务状态）</li><li><strong>事件指针</strong>（summary 中保留 event id，能回原文）</li></ul>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ita05",
+    "cat": "腾讯·Agent面",
+    "q": "长期记忆的写回/衰减/冲突消解怎么设计？",
+    "bullets": [
+      "长期记忆不能等价于「把所有历史存起来」——必须回答三个问题",
+      "写回：只保存高价值稳定信息（偏好/身份/长期目标），做结构化抽取",
+      "衰减：短期热点高权重但随时间衰减；长期偏好低频刷新但不轻易删",
+      "冲突消解：结合时间戳/来源可信度/置信度，新高可信覆盖旧事实，低可信只作候选",
+      "更严格的做法：event sourcing + 物化视图，所有记忆先写 event 再异步聚合 profile"
+    ],
+    "details": [
+      {
+        "term": "结构化抽取",
+        "explain": "<p>不要原文整段存储，而是<span class=\"key-point\">抽取成结构化字段</span>：</p><div class=\"formula\">原文: 「我喜欢用 Python，不太会 Go」<br>抽取: {<br>&nbsp;&nbsp;user_profile: {<br>&nbsp;&nbsp;&nbsp;&nbsp;preferred_languages: [\"Python\"],<br>&nbsp;&nbsp;&nbsp;&nbsp;weak_languages: [\"Go\"]<br>&nbsp;&nbsp;}<br>}</div><p>好处：未来召回时直接读字段，不用模型再理解原文；可以精确更新单个字段。</p>"
+      },
+      {
+        "term": "Event Sourcing + 物化视图",
+        "explain": "<p>更严格的做法——把长期记忆设计成：</p><ul><li>所有记忆先写入 <strong>event store</strong>（append-only 日志）</li><li>再异步聚合成 <strong>profile</strong>（物化视图）</li></ul><p><span class=\"key-point\">好处：profile 被污染可以从 event 重新 rebuild</span>，不用人工修数据。既方便审计（看每一次写入的来源），也方便回滚。这是把数据库 CDC / event sourcing 的思想搬到 Agent Memory 上。</p>"
+      },
+      {
+        "term": "冲突消解的三个维度",
+        "explain": "<ol><li><strong>时间戳</strong>：新事实优先级更高</li><li><strong>来源可信度</strong>：用户明确说的 &gt; 工具抽取的 &gt; 模型推测的</li><li><strong>置信度</strong>：抽取时的 confidence score</li></ol><p>规则：<span class=\"key-point\">新的高可信事实覆盖旧事实；低可信内容只作为候选不直接替换</span>。</p>"
+      },
+      {
+        "term": "存储介质选型",
+        "explain": "<ul><li><strong>向量库</strong>（Pinecone/Weaviate）：适合「模糊语义召回」</li><li><strong>结构化库</strong>（Postgres JSONB）：适合「精确字段查询」</li><li><strong>图数据库</strong>（Neo4j）：适合「关系型记忆」（用户 → 偏好 → 标签）</li></ul><p>实际项目通常<span class=\"key-point\">混用</span>——event store 用 Postgres，profile 用 JSONB，语义召回用向量库。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ita06",
+    "cat": "腾讯·Agent面",
+    "q": "并行 Tool Calling 怎么既提升吞吐又保证一致性和可回放？",
+    "bullets": [
+      "核心不是「同时调多个接口」，而是解决依赖关系/状态一致性/结果合并/失败回滚",
+      "只有互不依赖的工具才能并行（天气和汇率可以一起发，链式依赖必须串行）",
+      "状态一致性：工具结果先写临时观察区，由调度器统一合并，避免并发写污染",
+      "可回放：每次调用带 trace_id/step_id/输入/输出/耗时，组成完整执行 DAG",
+      "副作用操作（发消息/下单）必须加幂等键，不然重复重试会造成真实业务重复写"
+    ],
+    "details": [
+      {
+        "term": "依赖关系判定",
+        "explain": "<p>并行的前提是工具间无依赖。判定方式：</p><ul><li><strong>静态分析</strong>：看工具调用参数是否引用了其他工具的输出</li><li><strong>运行时</strong>：维护一个 DAG，参数已就绪的节点都可以立即发</li></ul><p>例：「天气查询」和「汇率查询」没有依赖，可以并行；「订单查询」→「查询用户详情（带 order.user_id）」必须串行——第二步依赖第一步的结果。</p>"
+      },
+      {
+        "term": "临时观察区",
+        "explain": "<p>一般不让多个工具直接修改共享状态，而是：</p><ol><li>每个工具把结果写到<span class=\"key-point\">独立的临时区</span></li><li>所有并行调用完成后，调度器<span class=\"key-point\">统一合并</span>到主状态</li></ol><p>好处：并发不会互相污染，单个工具失败不影响其他；合并时可以做优先级/冲突处理。</p>"
+      },
+      {
+        "term": "执行 DAG 与 trace",
+        "explain": "<p>每次调用都记录：</p><div class=\"formula\">{<br>&nbsp;&nbsp;trace_id: \"abc123\",<br>&nbsp;&nbsp;step_id: 5,<br>&nbsp;&nbsp;tool: \"query_weather\",<br>&nbsp;&nbsp;input: {city: \"Tokyo\"},<br>&nbsp;&nbsp;output: {temp: 18, ...},<br>&nbsp;&nbsp;duration_ms: 234,<br>&nbsp;&nbsp;parent_step: 3<br>}</div><p>最后组成完整的执行 DAG。<span class=\"key-point\">这件事可以复用 OpenTelemetry 或自研 trace，不必重造轮子</span>。</p>"
+      },
+      {
+        "term": "幂等键",
+        "explain": "<p>对于发消息、创建订单、提工单这些副作用操作，并行执行前通常要做幂等键：</p><ul><li>客户端生成一个 <code>idempotency_key</code>（UUID 或业务唯一 ID）</li><li>服务端在请求去重表里查这个 key，命中直接返回之前结果</li></ul><p><span class=\"key-point\">LLM 不知道「重复 rollout 的代价」</span>——执行器必须兜底，不然重复重试会造成真实业务重复写入。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ita07",
+    "cat": "腾讯·Agent面",
+    "q": "了解主流的 Agent 设计吗？",
+    "bullets": [
+      "ReAct：边推理边行动，Thought→Action→Observation 循环；简单通用但易死循环",
+      "Plan-and-Execute：先规划再按步骤执行，比纯 ReAct 更稳，适合长任务",
+      "Router：先任务分类，再路由给子 Agent 或工具链；适合任务差异大",
+      "Workflow + Agent：固定流程里嵌局部自主决策，在线业务最常用",
+      "Supervisor / Blackboard：多 Agent 协作模式，中心化调度 vs 共享状态"
+    ],
+    "details": [
+      {
+        "term": "ReAct 详细",
+        "explain": "<p>最经典的 Agent pattern：<code>Thought → Action → Observation → Thought → ...</code></p><p>模型通过思考、调用工具、观察结果、继续思考来完成任务。</p><ul><li><strong>优点</strong>：简单通用、易实现</li><li><strong>缺点</strong>：<span class=\"key-point\">容易原地打转</span>（见 Q15 死循环处理）、长任务时 context 爆炸</li></ul>"
+      },
+      {
+        "term": "Plan-and-Execute",
+        "explain": "<p>先生成一个完整计划（plan），再逐步执行（execute）。</p><ul><li><strong>优点</strong>：可解释性强，可以审查计划后再执行；适合<span class=\"key-point\">长任务</span></li><li><strong>缺点</strong>：计划一旦错难以纠正——执行中间才发现 plan 有问题，已经浪费了资源</li></ul><p>改进：re-plan 机制，执行时发现偏差可以回头重新规划。</p>"
+      },
+      {
+        "term": "Workflow + Agent（最实用）",
+        "explain": "<p>目前企业落地<span class=\"key-point\">最多的形态</span>——LLM 负责「软决策」，固定流程负责「硬约束」。</p><p>例：客服系统的 SOP 固定（接单 → 确认身份 → 处理 → 回访），但「处理」这一步用 Agent 自由决策调什么工具。这样可控性高，又能利用模型的灵活性。</p>"
+      },
+      {
+        "term": "Supervisor vs Blackboard",
+        "explain": "<p><strong>Supervisor 模式</strong>：主 Agent 拆解任务并分派给多个子 Agent。<span class=\"key-point\">中心化调度</span>（LangGraph、AutoGen）。</p><p><strong>Blackboard 模式</strong>：多个 Agent 通过共享状态协作，<span class=\"key-point\">去中心化</span>（实验室场景多）。</p><p>纯点对点自由协作也有，但线上比较少，因为不容易治理。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ita08",
+    "cat": "腾讯·Agent面",
+    "q": "MCP、A2A、Function Calling 的本质区别？",
+    "bullets": [
+      "本质差异是抽象层级不同——不是互斥，而是不同层次的协议",
+      "Function Calling：调用一个函数，单机式工具调用协议",
+      "MCP：暴露一组标准能力，标准化的上下文和工具暴露协议",
+      "A2A：Agent 与 Agent 之间的协作协议，重点是多智能体交换任务/状态/结果",
+      "工程选型：单应用内用 FC / 多客户端共享工具用 MCP / 多 Agent 分工用 A2A"
+    ],
+    "details": [
+      {
+        "term": "Function Calling 的定位",
+        "explain": "<p>模型输出结构化调用意图（tool name + params JSON），<span class=\"key-point\">宿主进程负责执行函数并把结果返回</span>。</p><p>重点在「模型怎么调用本地或受控工具」。适合<strong>单应用内的工具调用</strong>，不涉及外部系统集成。</p><p>代表：OpenAI Functions、Anthropic Tool Use、Gemini Function Calling。</p>"
+      },
+      {
+        "term": "MCP（Model Context Protocol）",
+        "explain": "<p>Anthropic 2024 底提的标准，解决的是「<span class=\"key-point\">外部能力如何以标准方式被模型客户端发现和调用</span>」。</p><p>把<strong>资源、工具、提示模板</strong>等能力统一封装出来，任何支持 MCP 的客户端（Claude Desktop、VS Code、Cursor）都能发现并使用。</p><p>适合<strong>多个模型客户端或 IDE 共享一套工具和资源能力</strong>。目前生态增长最快。</p>"
+      },
+      {
+        "term": "A2A（Agent-to-Agent）",
+        "explain": "<p>Google 2025 年推的协议，更偏<span class=\"key-point\">Agent 与 Agent 之间的协作</span>。</p><p>重点不是「一个模型调一个函数」，而是「<strong>多个智能体之间如何交换任务、状态和结果</strong>」。</p><p>适合多 Agent 分工协作、任务派发、结果汇总的场景。还在发展期。</p>"
+      },
+      {
+        "term": "工程选型的决策树",
+        "explain": "<ul><li>只是单应用内工具调用 → <strong>Function Calling</strong> 足够</li><li>要让多个模型客户端或 IDE 共享一套工具和资源能力 → <strong>MCP</strong> 合适</li><li>多 Agent 分工协作、任务派发、结果汇总 → <strong>A2A</strong> 合适</li></ul><p>本质上这三个是<span class=\"key-point\">不同抽象层的协议</span>——一个大型 Agent 系统可能同时用三种。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ita09",
+    "cat": "腾讯·Agent面",
+    "q": "RAG 接到 Agent 里，一般怎么设计？",
+    "bullets": [
+      "RAG 不应该是固定的「先查后答」，而应该作为 Agent 的一个决策节点",
+      "Agent 自己判断：这个问题是否真的需要外部访问？",
+      "把 RAG 包成一个工具，Agent 自己决定何时调用",
+      "检索结果要做切片、注入和来源标注，生成时要求只根据证据回答",
+      "没证据就明确说不确定——这样才能真正降低幻觉"
+    ],
+    "details": [
+      {
+        "term": "Agentic RAG vs 传统 RAG",
+        "explain": "<p><strong>传统 RAG</strong>：「每问必查」——固定 pipeline Query → Retrieve → Generate。简单但浪费，很多问题根本不需要查（比如「1+1=?」）。</p><p><strong>Agentic RAG</strong>：<span class=\"key-point\">看情况再查</span>——Agent 先判断是否需要检索、需要查什么、查几次、怎么重写 query。</p><p>这是 2024-2025 的主流升级方向。</p>"
+      },
+      {
+        "term": "Query Rewrite",
+        "explain": "<p>用户问「我的订单呢」→ Agent 重写成「用户 X 最近 7 天订单状态」，再去检索。</p><p>重写的好处：</p><ul><li>补充上下文（用户身份、时间范围）</li><li>消除歧义</li><li>更适合检索系统（BM25 和 embedding 都对明确的查询更友好）</li></ul>"
+      },
+      {
+        "term": "Query Decomposition",
+        "explain": "<p>多跳问题拆成多个子查询：</p><div class=\"formula\">原问题: \"去年销量最高的产品在今年的评价怎么样?\"<br>拆解:<br>  1. 查询去年销量最高的产品<br>  2. 查询这个产品今年的评价</div><p>每个子查询独立检索，结果合并后再生成答案。这是<span class=\"key-point\">复杂问答的关键优化</span>。</p>"
+      },
+      {
+        "term": "证据标注与幻觉防御",
+        "explain": "<p>召回结果带 <code>doc_id / 段落 id / 时间戳</code>，生成时：</p><ul><li>prompt 强制「只根据证据答」</li><li>每个断言要求标注来源</li><li>没证据的问题明确说「我不确定」</li></ul><p><span class=\"key-point\">「不知道就说不知道」是降幻觉的核心思路——比微调更有效</span>。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ita10",
+    "cat": "腾讯·Agent面",
+    "q": "Tool Calling 和普通函数调用的区别？",
+    "bullets": [
+      "普通函数调用：程序写死的，谁调用/传什么参数都由开发者控制",
+      "Tool Calling：模型根据任务上下文自主输出工具名和参数，必须加一层校验",
+      "工程四层架构：工具注册层 / 参数 schema 层 / 执行器层 / 审计日志层",
+      "模型只能输出候选调用，服务端负责白名单、schema 校验、超时、幂等、错误包装",
+      "真正上线时不能把工具执行权直接交给模型"
+    ],
+    "details": [
+      {
+        "term": "四层架构详细",
+        "explain": "<div class=\"formula\">┌─────────────────┐<br>│ 1. 工具注册层    │  定义 schema、白名单<br>├─────────────────┤<br>│ 2. 参数 schema 层│  校验模型输出参数合法性<br>├─────────────────┤<br>│ 3. 执行器层      │  真正调用、超时、重试<br>├─────────────────┤<br>│ 4. 审计日志层    │  记录每次调用，用于回放<br>└─────────────────┘</div><p>这个架构可以直接当做 Agent 平台的设计蓝本——OpenAI/Anthropic/Gemini 的实际实现本质都是这个模型。</p>"
+      },
+      {
+        "term": "为什么模型输出不能直接信任",
+        "explain": "<p>LLM 输出的 tool call 可能出现：</p><ul><li>调用了不存在的工具</li><li>参数类型错（字符串当数字）</li><li>参数超出业务范围（金额 -1000）</li><li>被 prompt injection 诱导调用敏感 API</li></ul><p>所以服务端必须做：<span class=\"key-point\">白名单校验 + 参数校验 + 超时控制 + 幂等控制 + 错误包装</span>。</p>"
+      },
+      {
+        "term": "错误包装",
+        "explain": "<p>工具执行失败时，不要把原始 stack trace 丢给模型——而是包装成结构化的错误：</p><div class=\"formula\">{<br>&nbsp;&nbsp;status: \"error\",<br>&nbsp;&nbsp;code: \"PARAM_INVALID\",<br>&nbsp;&nbsp;message: \"city 参数不能为空\",<br>&nbsp;&nbsp;suggestion: \"请提供城市名称\"<br>}</div><p>这样模型能理解错误原因并重试，而不是被 stack trace 搞迷糊。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ita11",
+    "cat": "腾讯·Agent面",
+    "q": "Agent 的 Memory 一般怎么做？",
+    "bullets": [
+      "三层记忆：短期（最近对话+当前状态）/ 长期（稳定事实）/ 摘要（压缩历史）",
+      "短期保证会话连贯，通常是 context window 内的 messages",
+      "长期保存用户偏好/身份/长期目标，结构化存储（profile 字段或知识图谱）",
+      "摘要用于长对话中压缩历史，把对话提炼成关键事件减少 token 占用",
+      "落地原则：保留最近 N 轮原文 + 久远内容压 summary + 关键字段单独存"
+    ],
+    "details": [
+      {
+        "term": "三层记忆的交互",
+        "explain": "<p>短期记忆放最近 N 轮原文，到了滑动窗口边界就被「摘要化」进长期记忆或摘要存储。</p><p>长期记忆按需召回——每轮对话开始时根据当前 query 检索相关的长期记忆，注入 prompt。</p><p><span class=\"key-point\">不会把所有对话原文都塞进去</span>，这是一个严重的新手错误。</p>"
+      },
+      {
+        "term": "摘要记忆的风险",
+        "explain": "<p>主要风险是「<strong>摘要丢细节</strong>」——模型自己总结的时候会漏掉关键信息，尤其是当时看起来不重要但后面变关键的细节。</p><p>解决方案：<span class=\"key-point\">在 summary 里保留 event pointers，能回原文</span>。当模型发现需要更详细的信息时，再从 event store 拉原始对话。</p>"
+      },
+      {
+        "term": "按需召回 vs 全量拼接",
+        "explain": "<p>错误做法：每次把整个长期记忆都拼到 prompt 里（token 爆炸，且噪声大）。</p><p>正确做法：<span class=\"key-point\">按需召回</span>——根据当前 query 语义检索最相关的 top-k 条记忆注入，不相关的不动。</p><p>这和 RAG 本质一致——长期记忆就是「关于用户的知识库」。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ita12",
+    "cat": "腾讯·Agent面",
+    "q": "Prompt Injection 在 Agent 场景怎么防？",
+    "bullets": [
+      "Agent 场景更危险——不仅生成错文本，还可能误调工具/越权执行/触发真实业务",
+      "角色和优先级隔离：外部知识不能覆盖系统规则",
+      "把检索文档视为证据，不视为命令——即使文档里写「请忽略上面」也不执行",
+      "所有工具调用白名单 + 参数校验，高风险操作显式确认",
+      "核心原则：不靠一句 prompt 防住，而是靠系统设计让模型即使被诱导也没越权能力"
+    ],
+    "details": [
+      {
+        "term": "为什么 Agent 场景更危险",
+        "explain": "<p>传统 LLM 被 inject 了最多就是生成错文本——用户自己判断是否接受。</p><p>Agent 场景下，模型输出会直接触发<span class=\"key-point\">真实业务操作</span>：</p><ul><li>调用 API（转账、下单、删除）</li><li>修改数据库</li><li>发送消息</li><li>访问文件系统</li></ul><p>被 inject 一次，真实世界就会出错。所以防御的重点<span class=\"key-point\">不是「模型不被骗」，而是「即使被骗也无法造成实际损失」</span>。</p>"
+      },
+      {
+        "term": "五层防御",
+        "explain": "<ol><li><strong>角色和优先级隔离</strong>：外部文本和系统规则严格分离</li><li><strong>检索文档视为证据不视为命令</strong>：文档只是「数据」</li><li><strong>工具调用白名单 + 参数校验</strong>：高风险操作显式确认</li><li><strong>输出和调用链路可追踪</strong>：出问题能回放</li><li><strong>输入清洗和风险分类</strong>：对明显越权或诱导做拦截</li></ol>"
+      },
+      {
+        "term": "Sudo 模式",
+        "explain": "<p>高风险操作（转账、删除、发送邮件、写入生产数据）<span class=\"key-point\">必须人工确认</span>——即使模型被劫持也无法造成真实损失。</p><p>实现方式：这些操作对应的工具带有 <code>requires_confirmation: true</code> 标记，执行前必须弹窗让用户明确授权。只有「读」类操作可以自动执行。</p>"
+      },
+      {
+        "term": "核心金句",
+        "explain": "<p><span class=\"key-point\">不要指望 prompt 护栏，要指望系统护栏</span>。</p><p>任何「请不要调用 xxx 工具」的 prompt 都可以被巧妙的 injection 绕过——真正的防御是让那个工具根本不在当前用户的白名单里，或者执行前必须人工授权。</p><p>对应 Anthropic Constitutional AI 和 OpenAI Instruction Hierarchy 的思路。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ita13",
+    "cat": "腾讯·Agent面",
+    "q": "怎么评估一个 Agent 系统的效果？",
+    "bullets": [
+      "四层评估：回答质量 / 工具质量 / 任务质量 / 系统质量",
+      "回答质量：准确性、完整性、是否基于证据",
+      "工具质量：选工具是否正确、参数是否正确、调用是否成功",
+      "任务质量：一次会话是否完成目标、是否需要追问、是否需要人工接管",
+      "核心观点：Agent 不是单个模型的分数，而是整条链路的分数"
+    ],
+    "details": [
+      {
+        "term": "四层评估详细",
+        "explain": "<ol><li><strong>回答质量</strong>：准确性、完整性、是否基于证据（RAG 场景）</li><li><strong>工具质量</strong>：选工具是否正确、参数是否正确、调用是否成功</li><li><strong>任务质量</strong>：一次会话是否完成目标、是否需要追问、是否需要人工接管</li><li><strong>系统质量</strong>：耗时、成本、token、错误率、稳定性</li></ol>"
+      },
+      {
+        "term": "RAG 的专项评估",
+        "explain": "<p>如果 Agent 里有 RAG，还要单独评估：</p><ul><li><strong>召回命中率</strong>（recall@k）</li><li><strong>rerank 效果</strong>（NDCG）</li><li><strong>答案引用质量</strong>（回答是否真的基于召回内容）</li></ul><p>这三个指标独立于最终回答质量——RAG 可能召回了正确文档但模型没用，或者召回了错文档但模型蒙对了。都要分开看。</p>"
+      },
+      {
+        "term": "最容易被忽略的指标：工具选择准确率",
+        "explain": "<p>很多 Agent「答得挺好但工具链乱七八糟」——用错工具反而靠模型补救。这种系统上线后不稳定，需要<span class=\"key-point\">单独盯工具选择准确率</span>，不能只看最终答案。</p>"
+      },
+      {
+        "term": "真实业务的金标准：人工接管率",
+        "explain": "<p>低接管率 = 真上线。</p><p>不管 benchmark 跑多高，如果线上每 10 次对话有 3 次需要人工介入，那就不算成功。<span class=\"key-point\">人工接管率是真实业务里最客观的指标</span>——它直接反映 Agent 能不能独立闭环任务。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ita14",
+    "cat": "腾讯·Agent面",
+    "q": "线上 Agent 经常选错工具，怎么排查？",
+    "bullets": [
+      "排查通常不是看最后一步，而是看「候选集是怎么来的、为什么这么选、执行前有没有二次校验」",
+      "第一步：看 tool description 和 schema 设计，边界是否模糊",
+      "第二步：看 skill routing 层，是否一次性喂了过多候选造成噪声竞争",
+      "第三步：看 prompt 和 few-shot 示例，最近是否改过 system prompt",
+      "第四步：回放 trace，检查模型选工具前看到了哪些上下文"
+    ],
+    "details": [
+      {
+        "term": "三段排查法",
+        "explain": "<p>对应软件工程的「input → process → output」debug 范式：</p><ol><li><strong>候选集（input）</strong>：模型看到的工具选项是怎么来的？</li><li><strong>决策过程（process）</strong>：模型为什么这么选？上下文有没有误导？</li><li><strong>执行校验（output）</strong>：执行前有没有拦截？</li></ol><p><span class=\"key-point\">90% 的问题在候选集这一步</span>——要么喂太多、要么 description 模糊。</p>"
+      },
+      {
+        "term": "常见根因",
+        "explain": "<ul><li><strong>description 边界模糊</strong>：两个 skill 都写得像通用工具</li><li><strong>参数 schema 不区分场景</strong>：同样的参数可以塞不同意图</li><li><strong>skill routing 召回太多</strong>：给模型 20 个候选，噪声盖过信号</li><li><strong>few-shot 示例带歪</strong>：示例里有错误引导</li><li><strong>历史记忆污染</strong>：之前调错过，记忆让模型重复错选</li><li><strong>用户输入歧义</strong>：用户自己说得不清楚</li></ul>"
+      },
+      {
+        "term": "Trace 回放",
+        "explain": "<p>回放 trace 是最关键的排查工具——<span class=\"key-point\">没 trace 就没办法排查</span>。</p><p>trace 应该记录：</p><ul><li>模型当时看到的完整 prompt（system + user + 历史 + 候选工具）</li><li>模型的输出（包括 tool call 和 reasoning）</li><li>执行器的校验结果</li><li>最终调用的工具和参数</li></ul><p>有这些信息后，问题几乎一定能定位。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ita15",
+    "cat": "腾讯·Agent面",
+    "q": "长任务场景怎么避免 Agent 无限推理或死循环？",
+    "bullets": [
+      "四类终止条件：状态机+硬限制 / 成功失败定义 / 重复检测 / 无进展检测",
+      "硬性限制：最大推理步数、最大工具调用次数、最大 token 开销、最大执行时长",
+      "成功/失败定义：什么叫完成、什么叫失败、什么情况需要补信息",
+      "重复检测：连续几步调同一工具得相似结果 → 强制终止或返回阶段性结论",
+      "无进展检测：连续 N 步 plan/observation 不变 → 终止"
+    ],
+    "details": [
+      {
+        "term": "硬性预算（budget）",
+        "explain": "<p>这是最后的兜底——即使算法层漏了，预算也不会爆：</p><ul><li><strong>Step budget</strong>：最大推理步数（通常 10-30）</li><li><strong>Tool call budget</strong>：最大工具调用次数</li><li><strong>Token budget</strong>：最大累计 token 消耗</li><li><strong>Time budget</strong>：最大执行时长（wall clock）</li></ul><p>对应传统算法里的「iteration budget」概念。<span class=\"key-point\">这些限制是不可讨论的 hard limit</span>——达到就立刻停。</p>"
+      },
+      {
+        "term": "重复检测",
+        "explain": "<p>如果连续几步都：</p><ul><li>调用同一个工具</li><li>得到相似结果（用 embedding similarity 判定）</li><li>没有带来新证据</li></ul><p>就应该<span class=\"key-point\">强制终止或返回阶段性结论</span>。这对应 Q7 里 ReAct 的死循环问题——纯 ReAct 很容易在原地打转，重复检测是主要解药。</p>"
+      },
+      {
+        "term": "无进展检测",
+        "explain": "<p>更进阶的检测——不只是重复调用，而是<span class=\"key-point\">整体状态没有进展</span>：</p><ul><li>连续 N 步 plan 不变</li><li>连续 N 步 observation 没有新信息</li><li>连续 N 步 reward 不变（如果有 reward 信号）</li></ul><p>这些信号表明 Agent 已经陷入停滞，继续执行只是浪费预算。</p>"
+      },
+      {
+        "term": "成功/失败定义",
+        "explain": "<p>长任务必须<span class=\"key-point\">明确成功和失败的定义</span>，否则 Agent 永远不知道什么时候该停：</p><ul><li><strong>完成</strong>：什么条件满足视为任务完成？</li><li><strong>失败</strong>：什么条件视为任务不可能完成？</li><li><strong>需要补信息</strong>：什么情况要让用户补充输入？</li></ul><p>三者都要显式定义在 system prompt 或 workflow 里，<span class=\"key-point\">不能让模型自己判断</span>。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "its01",
+    "cat": "腾讯·SA面",
+    "q": "如何与非技术成员沟通技术方案？",
+    "bullets": [
+      "核心做法：公用术语、多举例、可视化",
+      "避免纯技术术语（API/数据同步），用生活比喻替代",
+      "借助流程图/架构图/对比图说明技术流程",
+      "沟通顺序：结论 → 类比 → 细节，先让对方抓住「是什么、为什么」",
+      "非技术成员关注「能不能用、有什么好处」，而不是「技术栈是什么」"
+    ],
+    "details": [
+      {
+        "term": "经典场景示例",
+        "explain": "<p>在一次产品联调中，把「API 接口」翻译成「餐厅后厨的点菜单」——产品经理点菜（请求），厨房做菜（服务），用菜单沟通就不会出错。后端团队和产品经理快速达成共识。</p><p>关键经验：<span class=\"key-point\">非技术成员更关注「价值和体验」，再关注「实现细节」</span>——沟通时要先回答前者。</p>"
+      },
+      {
+        "term": "SA 的核心价值",
+        "explain": "<p>SA（Solution Architect）的核心价值就是<span class=\"key-point\">「翻译器」</span>——</p><ul><li>把客户需求翻译成技术方案</li><li>把技术方案翻译成客户能理解的价值</li></ul><p>优秀 SA 的沟通 = <strong>业务语言 + 技术深度</strong>。常见失败模式：SA 掉进「技术炫耀」陷阱，用术语把客户劝退。</p>"
+      },
+      {
+        "term": "沟通的三层结构",
+        "explain": "<p>面向非技术人员讲技术方案时，用三层结构：</p><ol><li><strong>Why</strong>：这个方案能解决什么业务问题（客户能 get 的价值）</li><li><strong>What</strong>：方案长什么样（架构图/流程图）</li><li><strong>How</strong>：技术细节（留给技术同学的问题）</li></ol><p>先讲 Why，再讲 What，最后如果对方想深入再讲 How——千万别倒过来。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "its02",
+    "cat": "腾讯·SA面",
+    "q": "如何简化复杂技术概念？",
+    "bullets": [
+      "三步法：抽象本质 → 匹配类比物 → 加功能类比和情感代入",
+      "找到技术和生活场景的原理相似点",
+      "用熟悉的生活物品做类比，降低认知成本",
+      "让对方能「感觉到」概念，而不是「记住」概念",
+      "注意说明类比的边界，避免产生错误预期"
+    ],
+    "details": [
+      {
+        "term": "经典类比库",
+        "explain": "<ul><li><strong>区块链</strong> → 「班级集体记账本」：每人都抄一份，改账要全班同意</li><li><strong>CPU/硬盘</strong> → 「大脑/仓库」：CPU 负责算，硬盘负责存</li><li><strong>缓存</strong> → 「书桌」：不是每本书都从图书馆取，常用的放书桌更快</li><li><strong>负载均衡</strong> → 「餐厅迎宾」：均匀分桌不让一个服务员忙死</li><li><strong>数据库索引</strong> → 「书的目录」：有目录不用翻全书</li></ul>"
+      },
+      {
+        "term": "类比的危险",
+        "explain": "<p>类比必然有损耗——过度依赖容易让客户产生<span class=\"key-point\">错误预期</span>。</p><p>例：把「云计算」比作「水电」→ 客户可能以为「像水电一样便宜」，但实际上云服务有很多隐形成本。</p><p><strong>进阶技巧</strong>：先给类比建立认知，<span class=\"key-point\">再给「类比的边界」</span>——「注意，这个比喻只到这里为止」。</p>"
+      },
+      {
+        "term": "情感代入",
+        "explain": "<p>好的类比不只是功能相似，还要让对方<span class=\"key-point\">能共情</span>。</p><p>例：讲「数据库事务」时，不要只说「ACID 四特性」，而是说「你给老板转账时，如果钱从你账户扣了但没到老板账户，你是不是要急死？事务就是保证要么都成功、要么都不动」。</p><p>客户立刻 get——因为他能感觉到「不事务」的痛苦。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 1
+  },
+  {
+    "id": "its03",
+    "cat": "腾讯·SA面",
+    "q": "处理意见分歧的方法？",
+    "bullets": [
+      "四步法：倾听 → 挖掘分歧点 → 提供替代方案 → 共识决策",
+      "先倾听让对方完整表达，不急着反驳",
+      "分清分歧在「目标」「路径」还是「优先级」三个层级",
+      "不是「我对你错」而是「还有没有第三种路径」",
+      "用数据或原则说服——成本、风险、用户影响面"
+    ],
+    "details": [
+      {
+        "term": "分歧的三个层级",
+        "explain": "<ul><li><strong>目标分歧</strong>：双方对「要达成什么」有分歧 → 退到更上层共识，重新对齐目标</li><li><strong>路径分歧</strong>：目标一致但「怎么做」不同 → 对比各自的 trade-off（成本/时间/风险/稳定性）</li><li><strong>优先级分歧</strong>：路径都可行但「先做什么」不同 → 看约束条件（deadline、预算、核心用户）</li></ul><p><span class=\"key-point\">先判断分歧在哪一层，才能对症下药</span>——否则各说各话永远解决不了。</p>"
+      },
+      {
+        "term": "黄金法则",
+        "explain": "<p><span class=\"key-point\">不要让客户觉得「被推销」，要让客户觉得「自己做了更好的决定」</span>。</p><p>把分歧从「人对人」转成「观点对观点」——别陷入「你错我对」的对立。</p><p>承认对方部分正确（<strong>先赢共情，再争观点</strong>），对方会更容易听进去你的建议。</p>"
+      },
+      {
+        "term": "SA 场景的典型分歧",
+        "explain": "<p>SA 最常见的分歧：<strong>客户想要 A，但 A 不可行/不划算，怎么引导客户接受 B</strong>。</p><p>错误做法：直接说「A 不行」——客户会觉得被否定。</p><p>正确做法：</p><ol><li>先确认 A 背后真正的需求是什么</li><li>指出 A 的隐性成本（让客户自己发现问题）</li><li>提出 B 作为「同样能解决核心需求但代价更小」的选择</li><li>让客户自己做决定</li></ol>"
+      }
+    ],
+    "group": "面经",
+    "lv": 1
+  },
+  {
+    "id": "its04",
+    "cat": "腾讯·SA面",
+    "q": "讲你参与过的一个课程项目",
+    "bullets": [
+      "用 STAR-L 框架：Situation / Task / Action / Result / Learning",
+      "项目目标要明确（做什么、服务谁、解决什么问题）",
+      "需求分析拆成核心需求和非核心需求",
+      "技术选型讲清楚为什么选这套栈（不是炫技）",
+      "成果量化 + Learning 反思——SA 面试特别看重反思能力"
+    ],
+    "details": [
+      {
+        "term": "STAR-L 框架",
+        "explain": "<ul><li><strong>Situation</strong>：项目背景——什么场景下的项目</li><li><strong>Task</strong>：你的角色和核心任务</li><li><strong>Action</strong>：<span class=\"key-point\">你做了什么（不是团队做了什么）</span></li><li><strong>Result</strong>：<span class=\"key-point\">量化结果</span>（用户数、性能指标、成本节约）</li><li><strong>Learning</strong>：这个项目教会你什么</li></ul><p>SA 面试和技术面试的差异就在 L——技术面试关心 R 就够了，SA 面试<span class=\"key-point\">特别看重反思能力</span>。</p>"
+      },
+      {
+        "term": "量化的关键技巧",
+        "explain": "<p>能量化就量化：</p><ul><li>用户数：「500 注册用户，日活 30+」</li><li>性能：「搜索响应从 2s 降到 200ms」</li><li>成本：「Redis 缓存后 DB QPS 下降 70%」</li><li>时间：「2 周上线 MVP」</li></ul><p>没有数字的成果是空洞的——<span class=\"key-point\">SA 面试官最怕听到「这个项目挺成功的」</span>这种模糊表述。</p>"
+      },
+      {
+        "term": "讲项目的反面模式",
+        "explain": "<ul><li>❌ 只讲技术细节不讲业务价值</li><li>❌ 讲团队做了什么而不是「我做了什么」</li><li>❌ 没有量化结果</li><li>❌ 没有反思——全是顺利，没有学到教训</li><li>❌ 吹牛——细节对不上，被追问就穿帮</li></ul><p>正解：讲一个<span class=\"key-point\">有挑战、有反思、有成长的真实项目</span>，比讲一个完美但空洞的项目强 10 倍。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 1
+  },
+  {
+    "id": "its05",
+    "cat": "腾讯·SA面",
+    "q": "云计算概念和传统服务器的区别",
+    "bullets": [
+      "云计算 = 通过互联网按需提供计算资源，核心是弹性/按需付费/无需管理底层硬件",
+      "三大特点：弹性扩展、按需付费、托管运维",
+      "成本结构：CapEx（资本支出）→ OpEx（运营支出），对现金流友好",
+      "扩展性：秒级弹性 vs 物理采购需要数周",
+      "可用性：多 AZ/多 Region 容灾 vs 单机房挂全挂"
+    ],
+    "details": [
+      {
+        "term": "对比表",
+        "explain": "<table border=\"1\" style=\"border-collapse:collapse;\"><tr><th>维度</th><th>传统服务器</th><th>云服务</th></tr><tr><td><strong>资本支出</strong></td><td>初期硬件采购大</td><td>按月付，零初期</td></tr><tr><td><strong>运维</strong></td><td>自建机房、换硬盘</td><td>云厂商托管</td></tr><tr><td><strong>扩展性</strong></td><td>物理采购，周期长</td><td>秒级弹性</td></tr><tr><td><strong>可用性</strong></td><td>单机房挂全挂</td><td>多 AZ/Region 容灾</td></tr><tr><td><strong>成本结构</strong></td><td>CapEx</td><td>OpEx</td></tr></table>"
+      },
+      {
+        "term": "量化示例",
+        "explain": "<p>客户从传统「自建机房」迁到「阿里云 ECS」：</p><ul><li>综合成本下降 <span class=\"key-point\">30%-50%</span></li><li>运维人力需求显著降低</li><li>上线速度从「月」缩短到「天」</li></ul><p>但<span class=\"key-point\">不是所有企业都适合上云</span>——强合规、超大规模、极度稳定的场景（银行核心系统、超大规模互联网公司）自建可能更划算。</p>"
+      },
+      {
+        "term": "SA 视角的上云动机",
+        "explain": "<ul><li><strong>财务视角</strong>：CapEx → OpEx，对现金流友好</li><li><strong>技术视角</strong>：弹性能应对业务波峰波谷</li><li><strong>战略视角</strong>：把「非核心能力」交给专业厂商，聚焦业务</li></ul><p>和客户讲云计算不能只讲技术——要讲<span class=\"key-point\">「这三个视角，客户最关心哪个」</span>，然后重点切入。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "its06",
+    "cat": "腾讯·SA面",
+    "q": "IaaS、PaaS、SaaS 的区别",
+    "bullets": [
+      "IaaS（基础设施即服务）：提供虚拟机/存储/网络等裸硬件资源",
+      "PaaS（平台即服务）：提供开发平台和运行环境，你只写代码",
+      "SaaS（软件即服务）：直接提供可用的软件产品",
+      "举例：EC2/ECS 是 IaaS，Heroku/App Engine 是 PaaS，Salesforce/Office 365 是 SaaS",
+      "选型原则：强定制用 IaaS，快速上线用 PaaS，现成功能用 SaaS"
+    ],
+    "details": [
+      {
+        "term": "披萨类比",
+        "explain": "<p>经典且好用的类比：</p><ul><li><strong>自建机房</strong> = 家里自己烤披萨（买炉子、和面、烤）</li><li><strong>IaaS</strong> = 买冷冻披萨自己烤（面饼和酱料都有，只需要烤箱）</li><li><strong>PaaS</strong> = 叫外卖披萨（直接送到家，加热即可）</li><li><strong>SaaS</strong> = 去披萨店吃（什么都不用管）</li></ul><p>这个类比的优点：<span class=\"key-point\">客户立刻理解「管理责任的边界」</span>。</p>"
+      },
+      {
+        "term": "主流产品对应",
+        "explain": "<table border=\"1\" style=\"border-collapse:collapse;\"><tr><th>层级</th><th>举例</th><th>用户做什么</th></tr><tr><td><strong>IaaS</strong></td><td>AWS EC2、阿里云 ECS、Azure VM</td><td>装 OS、装数据库、部署应用</td></tr><tr><td><strong>PaaS</strong></td><td>Heroku、Google App Engine、阿里云 EDAS</td><td>写代码、push 上去</td></tr><tr><td><strong>SaaS</strong></td><td>Salesforce、钉钉、Office 365</td><td>直接使用</td></tr></table>"
+      },
+      {
+        "term": "FaaS（Serverless）",
+        "explain": "<p>比 PaaS 更细粒度的一层——<span class=\"key-point\">只跑函数不跑进程</span>。代表产品：AWS Lambda、阿里云函数计算。</p><p>特点：</p><ul><li>按调用次数和执行时间计费</li><li>无需管理服务器（连容器都不用管）</li><li>自动扩缩容</li></ul><p>适合：事件驱动、流量波动大、调用稀疏的场景（比如图片处理、webhook 响应）。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "its07",
+    "cat": "腾讯·SA面",
+    "q": "企业上云时考虑的因素",
+    "bullets": [
+      "四大维度：成本 / 性能 / 安全 / 业务",
+      "成本：初期迁移+改造、长期运维、隐性成本（培训/流程）",
+      "性能：稳定性（SLA）、扩展性、延迟（地理位置）",
+      "安全：数据合规（GDPR/等保）、权限控制、数据主权",
+      "核心观点：上云不是「要不要」的问题，而是「如何科学上云」的问题"
+    ],
+    "details": [
+      {
+        "term": "四大维度详细",
+        "explain": "<p><strong>成本</strong></p><ul><li>初期投入：迁移成本、改造成本</li><li>长期运维：订阅费 vs 硬件折旧</li><li>隐性成本：培训、流程改造</li></ul><p><strong>性能</strong></p><ul><li>稳定性（SLA 保障）</li><li>扩展性（弹性粒度和速度）</li><li>延迟（和客户的地理距离）</li></ul><p><strong>安全</strong></p><ul><li>数据合规（GDPR、等保、行业法规）</li><li>权限控制（IAM 细粒度权限）</li><li>数据主权（数据存在哪里）</li></ul><p><strong>业务</strong></p><ul><li>业务增速（高增长 → 弹性需求大）</li><li>全球化部署（是否需要多地域）</li><li>业务连续性（容灾、备份策略）</li></ul>"
+      },
+      {
+        "term": "混合云 vs 多云",
+        "explain": "<p><strong>混合云</strong>：部分敏感业务留在私有云，其他上公有云——银行典型做法。核心系统留在自建 IDC，面向用户的边缘服务上云。</p><p><strong>多云</strong>：同时用多家云厂商，<span class=\"key-point\">避免厂商锁定（vendor lock-in）</span>。代价是运维复杂度翻倍，因为每家云的 API 都不一样。</p>"
+      },
+      {
+        "term": "上云成熟度模型（6R）",
+        "explain": "<ol><li><strong>Rehost</strong>（搬过去）：Lift-and-Shift，最简单，只是换个地方跑</li><li><strong>Replatform</strong>（改一点）：小改动利用云特性（比如用 RDS 替换自建 MySQL）</li><li><strong>Refactor</strong>（重构）：大改架构，充分利用云原生特性</li><li><strong>Rearchitect</strong>（重新设计）：从头设计一套云原生架构</li><li><strong>Retire</strong>（退役）：某些业务不再需要，直接关掉</li><li><strong>Retain</strong>（保留）：某些业务暂时不上云</li></ol>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "its08",
+    "cat": "腾讯·SA面",
+    "q": "团队任务分配与进度管理",
+    "bullets": [
+      "三步法：任务分配 / 进度管理 / 风险应对",
+      "分配：按能力匹配 + 意愿，每个模块有 owner 和 backup",
+      "管理：每日站会（15 分钟三句话）、周会回顾、看板可视化",
+      "风险：缓冲时间 15-20%、定期复盘、有人卡住及时调配或砍范围",
+      "SA 项目还要管理客户预期——很多项目失败是预期管理问题"
+    ],
+    "details": [
+      {
+        "term": "每日站会的三句话",
+        "explain": "<p>每日站会限制 15 分钟，每人只说三句话：</p><ol><li><strong>昨天做了什么</strong></li><li><strong>今天做什么</strong></li><li><strong>有没有阻塞</strong>（blocker）</li></ol><p><span class=\"key-point\">不讨论，只同步</span>——有阻塞的拉单独会议深入。这是敏捷 Scrum 的标准做法。</p>"
+      },
+      {
+        "term": "缓冲时间的艺术",
+        "explain": "<p>每个里程碑预留 <span class=\"key-point\">15-20% 的缓冲</span>，理由：</p><ul><li>开发总是超时（Hofstadter 定律）</li><li>需求变更不可避免</li><li>意外的技术债</li></ul><p>不留缓冲 = 注定延期。但也不能留太多（超过 30%），否则团队会 parkinson（工作会填满所有时间）。</p>"
+      },
+      {
+        "term": "SA 项目的特殊性",
+        "explain": "<p>SA 项目不是纯开发项目，而是「<strong>咨询 + 方案 + 交付</strong>」的复合项目。特殊点：</p><ul><li><strong>客户预期管理</strong>：很多项目失败不是技术问题，是预期不一致</li><li><strong>甘特图对客户更重要</strong>：客户比团队更需要看到进度</li><li><strong>里程碑仪表盘</strong>是必备——每周给客户看一次进度</li></ul><p><span class=\"key-point\">失败的 SA 项目 70% 是预期管理失败</span>，只有 30% 是技术原因。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 1
+  },
+  {
+    "id": "its09",
+    "cat": "腾讯·SA面",
+    "q": "技术咨询（SA）需要哪些核心能力？",
+    "bullets": [
+      "硬技能：结构化思维 / 方案设计 / 数据分析",
+      "软技能：商业洞察 / 跨领域沟通 / 快速学习 / 客户价值观",
+      "结构化思维 = 能把模糊需求拆成清晰问题",
+      "商业洞察 = 理解客户的业务逻辑和行业趋势",
+      "快速学习 = 每个客户都是新行业，必须快速建立领域知识"
+    ],
+    "details": [
+      {
+        "term": "T 型人才",
+        "explain": "<p>SA 的理想画像是 <strong>T 型人才</strong>——<span class=\"key-point\">一专多能</span>：</p><ul><li>竖的一竖：<strong>一个技术方向深入</strong>（比如云架构、数据、AI）</li><li>横的一横：<strong>其他方向广度够用</strong>（能跨领域沟通、能快速学新东西）</li></ul><p>纯技术专家缺横向能力，无法理解客户业务；纯 PM 缺纵向能力，无法给出可信的技术方案。</p>"
+      },
+      {
+        "term": "SA 的成长路径",
+        "explain": "<p>Junior SA → SA → Senior SA → Principal SA / Architect</p><ul><li><strong>Junior</strong>（0-2 年）：跟着做项目，学习方法论</li><li><strong>SA</strong>（2-5 年）：独立负责中小项目</li><li><strong>Senior SA</strong>（5-10 年）：负责大型复杂项目，带团队</li><li><strong>Principal SA</strong>（10+ 年）：定义行业最佳实践，行业影响力</li></ul>"
+      },
+      {
+        "term": "认证体系",
+        "explain": "<p>SA 岗位的硬通货：</p><ul><li><strong>AWS Solutions Architect</strong>（Associate/Professional）</li><li><strong>Azure Solutions Architect Expert</strong></li><li><strong>Google Cloud Professional Cloud Architect</strong></li><li><strong>阿里云 ACP / ACE</strong></li></ul><p>认证不是万能的，但<span class=\"key-point\">没认证的 SA 很难让客户信任</span>——认证是最直接的可信度证明。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 1
+  },
+  {
+    "id": "its10",
+    "cat": "腾讯·SA面",
+    "q": "你的个人优势是什么？（应届生版）",
+    "bullets": [
+      "三大差异化优势：学习能力 / 沟通能力 / 行业敏感度",
+      "学习能力：1 周学会 Power BI、2 周上手 Spring Boot 级别的具体例子",
+      "沟通能力：跨专业技术协作经验（社团/课程项目）",
+      "行业敏感度：主动跟踪云计算/AI/大模型技术趋势",
+      "每个优势必须有 1-2 个具体例子，能量化就量化"
+    ],
+    "details": [
+      {
+        "term": "「不要空话」原则",
+        "explain": "<p>错误答法：</p><blockquote>「我学习能力强、沟通能力好、抗压能力强……」</blockquote><p>面试官内心：「谁都会说，然后呢？」</p><p>正确答法：</p><blockquote>「我学习能力强——举个例子，课程项目要求用 Power BI 做数据仪表盘，我之前完全没接触过，1 周内从教程到上线独立完成了 5 个 dashboard。」</blockquote><p><span class=\"key-point\">每个优势必须有具体例子+数字支撑</span>。</p>"
+      },
+      {
+        "term": "量化的技巧",
+        "explain": "<ul><li><strong>时间</strong>：「1 周学会」「2 小时上手」</li><li><strong>规模</strong>：「协调 5 人团队」「服务 500 用户」</li><li><strong>提升</strong>：「性能提升 30%」「成本节约 50%」</li><li><strong>对比</strong>：「相比之前方案快 5 倍」</li></ul><p>没有数字的成就 = 空气。</p>"
+      },
+      {
+        "term": "和岗位对齐",
+        "explain": "<p>优势要<span class=\"key-point\">和 SA 岗位的核心需求挂钩</span>：</p><ul><li>学习能力 → 对应「每个客户都是新行业」</li><li>沟通能力 → 对应「跨团队协作」</li><li>行业敏感度 → 对应「技术咨询要懂趋势」</li></ul><p>不要讲「我编程能力强」——这对 SA 岗位优先级没那么高。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 1
+  },
+  {
+    "id": "its11",
+    "cat": "腾讯·SA面",
+    "q": "快速学习新行业知识的方法？",
+    "bullets": [
+      "三板斧：行业报告 / 专家访谈 / 实践对比",
+      "行业报告：头腰尾快速阅读法（摘要 → 关键图表 → 结论）",
+      "专家访谈：准备 10 个关键问题清单请教从业者",
+      "实践技能：用熟悉技术对比行业需求（「云计算弹性」理解零售旺季）",
+      "进阶：看竞品 / 建知识库 / 和客户聊天 / 参加行业会议"
+    ],
+    "details": [
+      {
+        "term": "头腰尾快速阅读法",
+        "explain": "<ul><li><strong>头</strong>：摘要 + 核心结论（5 分钟抓住 60% 价值）</li><li><strong>腰</strong>：关键图表 + 数据（20 分钟抓住 90% 价值）</li><li><strong>尾</strong>：结论 + 建议 + 参考文献</li></ul><p>优质来源：<span class=\"key-point\">艾瑞、IDC、Gartner、各大云厂商白皮书</span>。</p><p>读报告的核心技巧：<strong>不要读完整篇</strong>——一份 100 页的报告里真正有价值的可能只有 10 页，按「头腰尾」筛出重点。</p>"
+      },
+      {
+        "term": "10 个关键问题清单",
+        "explain": "<p>采访从业者前准备 10 个问题，例如：</p><ol><li>这个行业的<strong>核心痛点</strong>是什么？</li><li>这个行业的<strong>决策者</strong>关注什么？</li><li>这个行业的<strong>主要玩家</strong>和<strong>竞争格局</strong>？</li><li>这个行业的<strong>技术趋势</strong>是什么？</li><li>这个行业的<strong>典型客户</strong>长什么样？</li><li>这个行业的常见误区是什么？</li><li>最成功的案例是什么？为什么？</li><li>最失败的案例是什么？为什么？</li><li>近 3 年最大的变化是什么？</li><li>未来 3 年预计会怎么变？</li></ol>"
+      },
+      {
+        "term": "技术类比法",
+        "explain": "<p>把陌生行业的问题映射到自己熟悉的技术场景：</p><ul><li>用「云计算弹性」理解<strong>零售行业旺季</strong>的服务器需求</li><li>用「数据库事务」理解<strong>金融行业交易</strong>的一致性要求</li><li>用「负载均衡」理解<strong>教育行业开学</strong>的流量峰值</li><li>用「CDN」理解<strong>视频行业</strong>的全球分发</li></ul><p><span class=\"key-point\">用已有的知识框架快速「接住」新行业</span>，学习效率指数提升。</p>"
+      },
+      {
+        "term": "SA 的学习工具箱",
+        "explain": "<ul><li><strong>看竞品</strong>：竞争对手的方案就是最好的行业教材</li><li><strong>做笔记</strong>：每个行业建一个知识库（Notion/Obsidian）</li><li><strong>和客户聊天</strong>：客户是最好的老师——每次会议都是学习机会</li><li><strong>参加行业会议</strong>：一天能对齐一个行业的主流观点</li></ul>"
+      }
+    ],
+    "group": "面经",
+    "lv": 1
+  },
+  {
+    "id": "iad01",
+    "cat": "Agent深度面",
+    "q": "模型和 Agent 的区别是什么？",
+    "bullets": [
+      "模型 = 单次推理引擎（输入→输出，无状态，不和外界交互）",
+      "Agent = 持续决策系统（感知→思考→行动→观察循环，有目标/工具/记忆）",
+      "核心差异四维度：状态、工具、记忆、行动——模型全没有，Agent 全有",
+      "类比：模型是大脑，Agent 是有手有脚有眼睛的人",
+      "上下文工程是让 Agent 的大脑获得正确信息的手段，但 Agent 还需要工具+记忆+行动循环"
+    ],
+    "details": [
+      {
+        "term": "五维度对比",
+        "explain": "<table border='1' style='border-collapse:collapse;'><tr><th>维度</th><th>模型</th><th>Agent</th></tr><tr><td><strong>状态</strong></td><td>无状态（每次推理独立）</td><td>有状态（跨轮保持上下文）</td></tr><tr><td><strong>工具</strong></td><td>没有（只能生成文本）</td><td>有（能调 API/数据库/文件系统）</td></tr><tr><td><strong>记忆</strong></td><td>只有 context window 内</td><td>有持久化记忆（短期+长期）</td></tr><tr><td><strong>行动</strong></td><td>不能执行（只输出建议）</td><td>能执行（工具调用改变外部状态）</td></tr><tr><td><strong>目标</strong></td><td>被动响应（回答问题）</td><td>主动追求（完成任务）</td></tr></table>"
+      },
+      {
+        "term": "常见追问：上下文工程是不是让模型变成 Agent",
+        "explain": "<p>不完全是。上下文工程解决的是「给 Agent 的大脑正确的信息」这一个维度。Agent 还需要：</p><ul><li><strong>工具层</strong>：能力原子（调用 API、读写文件）</li><li><strong>记忆层</strong>：跨会话持久化信息</li><li><strong>行动循环</strong>：感知→思考→行动→观察的持续迭代</li></ul><p>上下文工程是 Agent 设计的<span class='key-point'>核心技术手段</span>，但不是全部。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "iad02",
+    "cat": "Agent深度面",
+    "q": "本地工具、MCP Tools、Skill 三者的区别？",
+    "bullets": [
+      "三者是不同抽象层级：本地工具(函数) < MCP(协议) < Skill(编排)",
+      "本地工具：硬编码在 Agent 里的函数（Read/Bash/Grep），启动即可用",
+      "MCP Tools：通过 MCP 协议从外部 server 暴露的工具，走 JSON-RPC 通信",
+      "Skill：markdown 工作流指令包，可编排多个工具 + 注入领域知识 + 定义流程约束",
+      "一个 Skill 可以同时使用本地工具和 MCP 工具（如 remote-train 编排 Bash + SSH）"
+    ],
+    "details": [
+      {
+        "term": "对比表",
+        "explain": "<table border='1' style='border-collapse:collapse;'><tr><th></th><th>本地工具</th><th>MCP Tools</th><th>Skill</th></tr><tr><td><strong>是什么</strong></td><td>硬编码函数</td><td>协议层暴露的工具</td><td>markdown 工作流</td></tr><tr><td><strong>抽象层级</strong></td><td>函数调用</td><td>标准化工具暴露</td><td>工具编排+知识注入</td></tr><tr><td><strong>生命周期</strong></td><td>启动即可用</td><td>需 MCP server 运行</td><td>按需动态加载</td></tr><tr><td><strong>通信</strong></td><td>进程内</td><td>JSON-RPC over stdio</td><td>无通信(prompt 注入)</td></tr></table>"
+      },
+      {
+        "term": "类比",
+        "explain": "<p><strong>本地工具</strong> = 你手里的锤子螺丝刀<br><strong>MCP</strong> = 五金店的标准货架（任何人都能来买）<br><strong>Skill</strong> = 宜家家具组装说明书（告诉你第几步用哪个工具、怎么用、注意什么）</p><p><span class='key-point'>Skill 是工具的使用说明书，不是工具本身</span>。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "iad03",
+    "cat": "Agent深度面",
+    "q": "为什么 Anthropic 做了 Skill 而不只做 MCP？Skill 里有没有工具？",
+    "bullets": [
+      "MCP 和 Skill 是互补关系：MCP 解决「工具怎么接入」，Skill 解决「工具怎么用好」",
+      "MCP 是插座标准，Skill 是使用说明书——有了插座不代表会用电器",
+      "Skill 能做 MCP 做不到的事：编码领域知识、定义流程约束、组合多种工具",
+      "Skill 不「包含」工具，而是「编排」工具——本体是 markdown 指令",
+      "Skill 可引导 Agent 使用已有工具（Bash/Read/MCP 工具等），但不能注册新 tool schema"
+    ],
+    "details": [
+      {
+        "term": "Skill 比 MCP 多什么",
+        "explain": "<p>MCP schema 只能定义「这个工具接受什么参数、返回什么」，但表达不了：</p><ul><li><strong>什么时候触发</strong>（trigger 条件）</li><li><strong>按什么流程执行</strong>（step-by-step workflow）</li><li><strong>有哪些约束和陷阱</strong>（domain knowledge）</li><li><strong>失败后怎么重试</strong>（error handling）</li></ul><p>例：数据库 MCP 只定义了 query/insert/delete 三个 tool。但 Skill 可以告诉 Agent：「<span class='key-point'>删除操作必须先确认、写操作必须在事务内、查询超过 1000 行要分页</span>」。这些知识 MCP schema 表达不了。</p>"
+      },
+      {
+        "term": "Skill 里有没有工具",
+        "explain": "<p>严格说<span class='key-point'>没有</span>。Skill 本体是 SKILL.md 文件（markdown），不定义新 tool schema。</p><p>但 Skill 目录下可以有 <code>scripts/*.js</code> 辅助脚本——这些脚本通过 Bash 工具执行，不是 Skill 原生的工具。</p><p><strong>Skill 不能注册新工具</strong>。如果需要新工具能力，应该写 MCP server 或用 Bash 执行自定义脚本。Skill 的职责是编排，不是创造新能力。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "iad04",
+    "cat": "Agent深度面",
+    "q": "Claude Code 的记忆架构？上下文真的等于记忆吗？",
+    "bullets": [
+      "上下文 ≠ 记忆：上下文是运行时窗口，记忆是持久化存储；记忆被加载到上下文，但上下文里大部分不是记忆",
+      "两套互补系统：CLAUDE.md（人写的指令）+ Auto Memory（Claude 自己写的结构化笔记）",
+      "Auto Memory = 文件即记忆：~/.claude/projects/<project>/memory/ 下的 markdown 文件",
+      "分层加载：system prompt → auto memory index(200行) → CLAUDE.md → rules → skill descriptions",
+      "设计哲学：没有向量库、没有数据库——markdown 文件 + grep 搜索就够了"
+    ],
+    "details": [
+      {
+        "term": "两套记忆系统",
+        "explain": "<p><strong>CLAUDE.md 文件（人写的）</strong></p><ul><li>层级：项目级 <code>.claude/CLAUDE.md</code> → 用户级 <code>~/.claude/CLAUDE.md</code></li><li>全量加载，不限大小</li><li>内容：代码规范、协作偏好、项目约束</li></ul><p><strong>Auto Memory（Claude 写的）</strong></p><ul><li>位置：<code>~/.claude/projects/&lt;project&gt;/memory/</code></li><li>结构：<code>MEMORY.md</code>（索引，前 200 行加载）+ 各主题文件（按需读取）</li><li>四种类型：user / feedback / project / reference</li></ul>"
+      },
+      {
+        "term": "分层加载顺序",
+        "explain": "<div class='formula'>1. System prompt（~4K token，隐藏）<br>2. Auto memory index（MEMORY.md 前 200 行）<br>3. CLAUDE.md 文件（全量）<br>4. User/Project rules（.claude/rules/）<br>5. Skill descriptions（仅名称+描述）<br>6. 对话历史 + 工具结果（运行时）</div><p>Skill 的全文只在被调用时才加载到 context——这是<span class='key-point'>按需加载</span>的典型实践。</p>"
+      },
+      {
+        "term": "为什么「文件即记忆」",
+        "explain": "<p>比数据库更简单、更可调试、更可版本控制：</p><ul><li><strong>调试</strong>：直接 cat 文件就能看记忆内容</li><li><strong>版本控制</strong>：git 追踪记忆变化</li><li><strong>协作</strong>：团队共享 CLAUDE.md 统一规范</li><li><strong>搜索</strong>：grep 就够（不需要 embedding）</li></ul><p>Claude Code 证明了：<span class='key-point'>对于 Agent 的工作记忆，简单的文件系统比复杂的向量库更实用</span>。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "iad05",
+    "cat": "Agent深度面",
+    "q": "为什么 Claude Code 不用 RAG 检索代码而是直接用 grep？",
+    "bullets": [
+      "代码搜索的特点：通常知道要搜什么（函数名/变量名/错误码），不需要语义理解",
+      "grep 是确定性的——精确匹配，结果可验证，零幻觉风险",
+      "RAG 需要 embedding 预处理 + 向量库 + re-index，代码的 embedding 质量还不稳定",
+      "grep 天然实时：搜的是当前文件系统，文件改了立刻生效，不需要重新 index",
+      "核心哲学：可审计的确定性搜索 > 黑箱的语义检索"
+    ],
+    "details": [
+      {
+        "term": "对比表",
+        "explain": "<table border='1' style='border-collapse:collapse;'><tr><th>维度</th><th>grep/Glob</th><th>RAG</th></tr><tr><td><strong>确定性</strong></td><td>精确匹配，可验证</td><td>语义近似，可能漏检</td></tr><tr><td><strong>幻觉风险</strong></td><td>零</td><td>有(embedding距离≠语义等价)</td></tr><tr><td><strong>预处理</strong></td><td>零</td><td>需要 embedding + 向量库</td></tr><tr><td><strong>增量更新</strong></td><td>天然实时</td><td>需要 re-index</td></tr><tr><td><strong>代码适用性</strong></td><td>极好(精确匹配)</td><td>一般(代码embedding不稳定)</td></tr><tr><td><strong>可审计</strong></td><td>完全透明</td><td>黑箱</td></tr></table>"
+      },
+      {
+        "term": "什么时候 RAG 更好",
+        "explain": "<p>这<span class='key-point'>不是说 RAG 不好</span>——对自然语言文档检索 RAG 更优。区别在于：</p><ul><li><strong>代码搜索</strong>：用户知道要搜什么（函数名/类名/关键词）→ grep 最快最准</li><li><strong>文档搜索</strong>：用户问「怎么配置 SSL」，不知道文档里具体关键词是什么 → 需要语义匹配</li></ul><p>Claude Code 的设计：代码用 grep（确定性），知识库用 memory 文件（简单），都不用 RAG。这是「<span class='key-point'>够用就好，不过度工程化</span>」的设计哲学。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "iad06",
+    "cat": "Agent深度面",
+    "q": "有没有了解过最前沿的记忆设计？",
+    "bullets": [
+      "MemGPT/Letta：OS 虚拟内存思想，Agent 主动 page in/out 上下文",
+      "Mem0：Memory-as-a-Service，自动抽取+去重+检索，三层(用户/会话/Agent)",
+      "A-MoF(Microsoft)：把历史反馈当一等公民记忆对象，主动检索改进行为",
+      "Generative Agents(Stanford)：memory stream + reflection + 按 recency*importance*relevance 检索",
+      "共同趋势：分层记忆/主动管理(非append-only)/结构化存储(图>向量)/记忆整合"
+    ],
+    "details": [
+      {
+        "term": "MemGPT / Letta",
+        "explain": "<p>Packer et al., 2023-2024。<span class='key-point'>把 OS 虚拟内存概念搬到 LLM</span>：</p><ul><li>main context = RAM（有限，高速）</li><li>外部存储 = 磁盘（无限，慢）</li><li>Agent <strong>自己决定</strong>什么信息需要 page in/out</li></ul><p>关键创新：不是被动地截断 context，而是 Agent 主动管理——「我需要之前的会议记录」→ page in；「这段对话不重要了」→ page out。</p><p>Letta 是产品化版本，开源框架。</p>"
+      },
+      {
+        "term": "Mem0",
+        "explain": "<p>Memory-as-a-Service 层，三层记忆：</p><ul><li><strong>用户级</strong>：跨会话持久（偏好、身份）</li><li><strong>会话级</strong>：单次会话内（当前任务状态）</li><li><strong>Agent 级</strong>：Agent 自身经验（从错误中学习）</li></ul><p>2024 底引入 <strong>Graph Memory</strong>——用知识图谱表示关系型记忆，<span class='key-point'>图/关系表示优于 flat 向量检索</span>，特别在需要推理「A 和 B 的关系」时。</p>"
+      },
+      {
+        "term": "跨所有工作的共同趋势",
+        "explain": "<ol><li><strong>分层记忆</strong>：工作记忆 / 情景记忆 / 语义记忆（映射人类认知架构）</li><li><strong>主动管理</strong>：Agent 自己决定存什么忘什么，不是 append-only</li><li><strong>结构化存储</strong>：图/关系 &gt; flat 向量</li><li><strong>记忆整合</strong>：定期压缩老记忆（类似人类睡眠时的记忆巩固）</li></ol><p>这些趋势和 Claude Code 的 auto memory 设计理念一致——<span class='key-point'>Claude Code 的 memory 也是主动管理、结构化文件、有过期清理机制</span>。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "iad07",
+    "cat": "Agent深度面",
+    "q": "开发 Agent 的流程？借鉴了哪些产品的思路？",
+    "bullets": [
+      "流程：问题建模 → Baseline(GPT few-shot) → 架构选型 → 迭代训练(SFT→GRPO) → 评测闭环",
+      "核心原则：先跑 baseline 确定瓶颈再设计架构——不是先搭架构再找问题",
+      "借鉴 Claude Code 的 Tool Use 架构：Agent 通过结构化工具调用和外界交互",
+      "借鉴 Cursor 的上下文裁剪：给模型正确的信息而不是所有信息",
+      "借鉴自动驾驶 Sim-in-the-Loop：每个 action 先过仿真器验证再执行"
+    ],
+    "details": [
+      {
+        "term": "为什么先跑 baseline",
+        "explain": "<p>大模型的能力边界不确定，先跑 baseline 才能知道瓶颈在哪里。</p><p>SiLR 项目的经历：最初假设「模型会生成非法操作」——只有在跑了 GPT-5.4 baseline 后才得到验证：<span class='key-point'>65% 的失败是因为安全违规</span>。这个发现直接导致了 simulator-in-the-loop 的设计。</p><p>如果先搭架构再发现问题，可能搭了一个解决错误问题的架构。</p>"
+      },
+      {
+        "term": "借鉴产品一览",
+        "explain": "<table border='1' style='border-collapse:collapse;'><tr><th>产品/论文</th><th>借鉴了什么</th></tr><tr><td><strong>Claude Code</strong></td><td>Tool Use 架构：结构化工具调用</td></tr><tr><td><strong>Cursor</strong></td><td>上下文裁剪：只给模型需要的信息</td></tr><tr><td><strong>LangGraph</strong></td><td>多 Agent DAG 编排</td></tr><tr><td><strong>ReAct 论文</strong></td><td>Thought-Action-Observation 循环</td></tr><tr><td><strong>自动驾驶</strong></td><td>Sim-in-the-Loop 安全验证</td></tr><tr><td><strong>DeepSeek-R1</strong></td><td>GRPO 训练方法</td></tr></table>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "iad08",
+    "cat": "Agent深度面",
+    "q": "[手撕] 实现 Skill 系统：注册、发现、调用",
+    "bullets": [
+      "目录结构：.agents/skills/<name>/skill.yaml + scripts/*.js",
+      "三模块：SkillRegistry(扫描+解析YAML) / SkillRouter(关键词匹配) / SkillExecutor(child_process执行)",
+      "YAML 必须字段：name / description / trigger(触发关键词列表) / scripts(脚本路径列表)",
+      "发现用关键词匹配（简单可靠）——不用语义匹配，对应 Claude Code 实际做法",
+      "调用用 child_process（隔离性好）——脚本不影响主进程"
+    ],
+    "details": [
+      {
+        "term": "完整实现代码",
+        "explain": "<div class='formula'>// skill.yaml 示例<br>{<br>&nbsp;&nbsp;name: 'weather-report',<br>&nbsp;&nbsp;description: '查询城市天气并生成报告',<br>&nbsp;&nbsp;trigger: ['天气', 'weather', '气温'],<br>&nbsp;&nbsp;scripts: ['scripts/fetch-weather.js']<br>}<br><br>// ── SkillRegistry ──<br>const fs = require('fs');<br>const path = require('path');<br>const yaml = require('js-yaml');<br><br>class SkillRegistry {<br>&nbsp;&nbsp;constructor(baseDir) {<br>&nbsp;&nbsp;&nbsp;&nbsp;this.baseDir = baseDir;<br>&nbsp;&nbsp;&nbsp;&nbsp;this.skills = new Map();<br>&nbsp;&nbsp;}<br>&nbsp;&nbsp;scan() {<br>&nbsp;&nbsp;&nbsp;&nbsp;const dirs = fs.readdirSync(this.baseDir,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ withFileTypes: true })<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.filter(d =&gt; d.isDirectory());<br>&nbsp;&nbsp;&nbsp;&nbsp;for (const dir of dirs) {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const yamlPath = path.join(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.baseDir, dir.name, 'skill.yaml');<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!fs.existsSync(yamlPath)) continue;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const config = yaml.load(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fs.readFileSync(yamlPath, 'utf8'));<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;config._dir = path.join(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.baseDir, dir.name);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.skills.set(config.name, config);<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;return this.skills.size;<br>&nbsp;&nbsp;}<br>&nbsp;&nbsp;get(name) { return this.skills.get(name); }<br>&nbsp;&nbsp;list() { return [...this.skills.values()]; }<br>}</div>"
+      },
+      {
+        "term": "SkillRouter + SkillExecutor",
+        "explain": "<div class='formula'>// ── SkillRouter ──<br>class SkillRouter {<br>&nbsp;&nbsp;constructor(registry) {<br>&nbsp;&nbsp;&nbsp;&nbsp;this.registry = registry;<br>&nbsp;&nbsp;}<br>&nbsp;&nbsp;match(userInput) {<br>&nbsp;&nbsp;&nbsp;&nbsp;const input = userInput.toLowerCase();<br>&nbsp;&nbsp;&nbsp;&nbsp;const scored = [];<br>&nbsp;&nbsp;&nbsp;&nbsp;for (const skill of this.registry.list()) {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const hits = (skill.trigger || [])<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.filter(t =&gt; input.includes(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t.toLowerCase())).length;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (hits &gt; 0) scored.push({skill, hits});<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;scored.sort((a,b) =&gt; b.hits - a.hits);<br>&nbsp;&nbsp;&nbsp;&nbsp;return scored[0]?.skill || null;<br>&nbsp;&nbsp;}<br>}<br><br>// ── SkillExecutor ──<br>const { execFileSync } = require('child_process');<br><br>class SkillExecutor {<br>&nbsp;&nbsp;run(skill, args = {}) {<br>&nbsp;&nbsp;&nbsp;&nbsp;const results = [];<br>&nbsp;&nbsp;&nbsp;&nbsp;for (const script of skill.scripts) {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const fullPath = path.join(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;skill._dir, script);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const output = execFileSync(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'node', [fullPath,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JSON.stringify(args)],<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ encoding: 'utf8',<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timeout: 30000 });<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;results.push({ script, output });<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;return results;<br>&nbsp;&nbsp;}<br>}<br><br>// ── 使用示例 ──<br>const reg = new SkillRegistry('.agents/skills');<br>reg.scan();<br>const router = new SkillRouter(reg);<br>const exec = new SkillExecutor();<br><br>const skill = router.match('查一下东京天气');<br>if (skill) exec.run(skill, {city: 'Tokyo'});</div>"
+      },
+      {
+        "term": "设计决策解释",
+        "explain": "<ul><li><strong>发现用关键词匹配还是语义匹配？</strong><br>关键词匹配。简单可靠，和 Claude Code 的实际做法一致——<span class='key-point'>skill description 在 context 里，由模型自己做语义判断</span>，routing 层只负责粗筛</li><li><strong>调用用 child_process 还是 VM？</strong><br>child_process。隔离性好（脚本不影响主进程），失败只影响一个脚本</li><li><strong>为什么 YAML 不用 JSON？</strong><br>YAML 更可读，支持注释，写配置文件更友好</li><li><strong>timeout 设多少？</strong><br>30 秒。对大部分脚本够用，太长会卡住 Agent 主循环</li></ul>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "iad09",
+    "cat": "Agent深度面",
+    "q": "[项目深挖] 业务流程 + 最核心最有价值的一步",
+    "bullets": [
+      "SiLR 流程：故障→采集状态→Agent分析→决定操作→仿真器验证→执行/重试→恢复完成",
+      "最核心的是 Simulator-in-the-Loop 验证——把不可信的 LLM 输出变成经过验证的安全操作",
+      "没有验证的 Agent 不敢在安全关键领域上线——幻觉一次就是一次事故",
+      "这个 pattern 可迁移到任何有 simulator 的领域（金融合规/医药剂量/代码沙箱）",
+      "97% 恢复成功率、0% 安全违规率证明了这个设计的有效性"
+    ],
+    "details": [
+      {
+        "term": "完整业务流程",
+        "explain": "<div class='formula'>电网故障发生<br>→ 1. SCADA 采集电网状态<br>→ 2. 状态转成结构化 observation<br>→ 3. Agent(Analyzer) 分析局势<br>→ 4. Agent(Actor) 决定操作<br>→ 5. 仿真器验证安全性<br>→ 5a. 通过 → 执行，更新状态 → 回到 2<br>→ 5b. 失败 → 返回原因 → Agent 重新决策<br>→ 6. 恢复完成或达到最大步数 → 结束</div>"
+      },
+      {
+        "term": "为什么不是其他步骤最核心",
+        "explain": "<p>面试官可能追问「分析步骤不重要吗」。回答：</p><ul><li><strong>分析</strong>可以用 prompt engineering 做到足够好</li><li><strong>决策</strong>可以通过 SFT/GRPO 持续优化</li><li>但<span class='key-point'>验证是唯一不可替代的安全保障</span>——即使分析和决策都完美，没有验证就不敢上线</li></ul><p>这也是为什么项目叫 <strong>S</strong>imulation-<strong>i</strong>n-the-<strong>L</strong>oop <strong>R</strong>easoning——验证是名字里的 C 位。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "iad10",
+    "cat": "Agent深度面",
+    "q": "[项目深挖] Agent 拆分决策 + 协作机制 + 状态设计",
+    "bullets": [
+      "起初单 Agent 做所有事→发现分析+决策+验证塞一个 prompt 太长，模型顾此失彼",
+      "拆成三角色：Analyzer(读状态) → Actor(决定操作) → Verifier(仿真器验证)",
+      "踩坑：最初拆 5 个 Agent（含 Planner/Reviewer），通信开销太大 → 合并成 3 个",
+      "协作机制：Bounded ReAct Loop 串行执行（每步依赖前一步结果，不能并行）",
+      "共享状态：{step, grid_state, action_history, current_analysis, remaining_budget}"
+    ],
+    "details": [
+      {
+        "term": "上下文裁剪策略",
+        "explain": "<ul><li><strong>Analyzer</strong>：拿完整电网状态（需要全局视野）</li><li><strong>Actor</strong>：拿 analysis + 简化状态 + action_history（不需要原始电压数据）</li><li><strong>Verifier</strong>：拿 proposed_action + 必要电气约束（最精简）</li></ul><p>原则：<span class='key-point'>每个 Agent 只看它需要的信息</span>。如果 Verifier 看到太多上下文，反而会被分析内容带偏（它应该只管「这个操作安不安全」，不应该被「分析看起来合理」影响判断）。</p>"
+      },
+      {
+        "term": "踩坑：5 Agent → 3 Agent",
+        "explain": "<p>最初拆了 5 个 Agent（Analyzer, Planner, Actor, Verifier, Reviewer），发现：</p><ul><li>Agent 间 context 传递开销太大，延迟翻倍</li><li>Planner 和 Actor 的分界线模糊——「计划做什么」和「决定做什么」在电网恢复里几乎一样</li><li>Reviewer 只在最后用一次，可以合并到 Verifier 的规则检查里</li></ul><p>教训：<span class='key-point'>能合则合</span>——Agent 数量不是越多越好，每多一个 Agent 就多一次通信和上下文切换。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "iad11",
+    "cat": "Agent深度面",
+    "q": "[项目深挖] 错误传播控制 + Reviewer 机制",
+    "bullets": [
+      "三层防御：Verifier 仿真器兜底 → Retry 反馈重试(最多3次) → Failsafe 终止并报告",
+      "Reviewer 用规则+模型双重判断：规则层查电压/功率/过载；模型层评价方案合理性",
+      "发现问题后不重跑全链路，而是回退到 Actor 从当前状态重新决策",
+      "核心设计：已执行的操作不能撤销（合了的闸不能拆回去），所以只能从当前状态继续",
+      "Verifier 是「被动防线」——Analyzer 分析错了、Actor 操作错了，只要仿真器跑不通就不执行"
+    ],
+    "details": [
+      {
+        "term": "错误传播的三层防御",
+        "explain": "<ol><li><strong>Verifier 兜底</strong>（最关键）：Analyzer 分析错了、Actor 操作错了，只要仿真器跑不通就不会执行。<span class='key-point'>错误不会传播到真实系统</span></li><li><strong>Retry 机制</strong>：Verifier 拒绝后，把错误原因（「线路 L3 过载」）反馈给 Actor 重新决策，最多 3 次</li><li><strong>Failsafe</strong>：超过最大 retry 或最大步数，直接终止并报告「无法恢复」——绝不冒险</li></ol>"
+      },
+      {
+        "term": "Reviewer 的判断逻辑",
+        "explain": "<p><strong>规则层</strong>（硬约束，不可违反）：</p><ul><li>电压是否在 [0.95, 1.05] pu 内</li><li>功率平衡是否满足</li><li>是否有线路过载</li></ul><p><strong>模型层</strong>（软判断，参考性质）：</p><ul><li>整体方案是否合理（有没有不必要的操作）</li><li>操作顺序是否最优</li></ul><p><span class='key-point'>规则层的否决是绝对的，模型层只是建议</span>。这样即使模型层误判也不会造成安全问题。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "iad12",
+    "cat": "Agent深度面",
+    "q": "[项目深挖] SFT 策略 + 效果评估",
+    "bullets": [
+      "只在 Actor 上做 SFT——Analyzer/Verifier 的任务标准化，prompt engineering 够用",
+      "Actor 的决策空间最大、最容易出错，SFT 能直接教它「什么操作序列能恢复电网」",
+      "数据来源：仿真器生成 1000+ 故障场景 → 规则引擎生成最优路径 → 人工校验",
+      "成功率 72%→89%，平均步数 5.1→3.8，安全违规率 18%→3%",
+      "SFT 提升显著但有天花板——模仿正确不等于理解为什么正确"
+    ],
+    "details": [
+      {
+        "term": "为什么不在全系统统一 SFT",
+        "explain": "<p>Analyzer 的任务是「读取电网状态生成分析」——给它一个好的 prompt template（包含如何读拓扑、如何判断关键节点）就够了，SFT 的边际收益低。</p><p>Verifier 的核心是调用仿真器——这是确定性的工程逻辑，不需要 SFT。</p><p><span class='key-point'>Actor 是唯一需要「从经验中学习」的组件</span>——面对同一个故障状态，什么操作序列能最快恢复、什么操作会导致级联故障，这些知识 prompt 表达不了，需要从数据中学。</p>"
+      },
+      {
+        "term": "SFT 数据生产 pipeline",
+        "explain": "<div class='formula'>1. 仿真器随机生成 1000+ 故障场景<br>&nbsp;&nbsp;&nbsp;(不同故障位置/类型/严重程度)<br>2. 传统电力算法(规则引擎)生成<br>&nbsp;&nbsp;&nbsp;最优恢复路径<br>3. 人工电力工程师校验<br>&nbsp;&nbsp;&nbsp;(删除不合理/不安全的路径)<br>4. 转成 SFT 格式:<br>&nbsp;&nbsp;&nbsp;input: 电网状态 observation<br>&nbsp;&nbsp;&nbsp;output: 最优 action 序列</div>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "iad13",
+    "cat": "Agent深度面",
+    "q": "[项目深挖] GRPO + Reward Model 训练 + 信任度",
+    "bullets": [
+      "为什么用 GRPO 而非继续 SFT：SFT 只学「正确长什么样」，RL 能学「好坏的程度」",
+      "电网恢复有天然 reward：仿真器直接给出恢复比例和违规情况",
+      "GRPO 流程：N 个 rollout → 仿真器打分 → reward 标准化当 advantage → 更新策略",
+      "Reward = 负荷恢复比例×0.6 + 步数效率×0.2 + 安全违规惩罚×0.2",
+      "RM 不完全信任——仿真器有建模误差，加了保守约束：宁可少恢复也不冒安全风险"
+    ],
+    "details": [
+      {
+        "term": "GRPO 接入流程",
+        "explain": "<div class='formula'>1. Actor 对同一故障场景生成 N 个<br>&nbsp;&nbsp;&nbsp;候选操作序列 (rollout)<br>2. 每个序列在仿真器里跑一遍<br>&nbsp;&nbsp;&nbsp;得到 reward<br>3. reward 标准化:<br>&nbsp;&nbsp;&nbsp;advantage_i = (R_i - mean(R)) / std(R)<br>4. 用 advantage 更新 Actor 策略<br>&nbsp;&nbsp;&nbsp;(正 advantage 的操作被强化)</div>"
+      },
+      {
+        "term": "Reward 设计 + 信任度",
+        "explain": "<p><strong>Reward 三项加权</strong>：</p><ul><li>负荷恢复比例（0-1）× 0.6 ← 核心目标</li><li>操作步数效率 × 0.2 ← 越少越好</li><li>安全违规惩罚(-0.5/次) × 0.2 ← 硬约束</li></ul><p><strong>为什么不完全信任 RM？</strong></p><ul><li>仿真器有建模误差（和真实电力系统偏差约 5%）</li><li>做了两个保障：1) 和真实数据校准；2) reward 加了保守约束——<span class='key-point'>宁可少恢复一点负荷也不冒安全风险</span></li></ul>"
+      },
+      {
+        "term": "为什么 GRPO 不是 PPO",
+        "explain": "<p>GRPO 省掉 critic 网络——14B 模型训 PPO 需要额外一个 14B 的 critic，显存翻倍。GRPO 直接用一组 rollout 的 reward 做标准化当 advantage，<span class='key-point'>显存减半，训练更稳定</span>。</p><p>这是跟 DeepSeek-R1 学的——R1 也是用 GRPO 替代 PPO。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "iad14",
+    "cat": "Agent深度面",
+    "q": "[项目深挖] RAG 检索优化 + chunk 切分",
+    "bullets": [
+      "反直觉发现：小语料下 BM25 Char 3-gram(81.8%) >> Dense embedding(47.3%)",
+      "Hybrid RRF 反而拉低 Recall@1 到 72.7%——Dense 的错误排得高挤掉了 BM25 的正确结果",
+      "Reranker 是均衡器：加了 bge-reranker 后三种方法都收敛到 96.4% Recall@5",
+      "chunk 切分：段落自然切分 + 512字滑动窗口(50% overlap)；表格单独处理(每行一条)",
+      "踩坑：技术规格书段落 3000 字远超 chunk 上限 → 必须二次切分"
+    ],
+    "details": [
+      {
+        "term": "BM25 为什么打败 Dense",
+        "explain": "<p><strong>小语料（160 文档/359 chunks）+ 日语专业术语</strong>这个组合对 Dense 很不友好：</p><ul><li>Embedding 模型没见过足够多的日语电力术语</li><li>语料太小，向量空间稀疏，语义区分度低</li><li>BM25 Char 3-gram 不做分词，<span class='key-point'>直接匹配字符片段</span>——对复合词（「需給調整」）不会因为分词错误丢信息</li></ul><p>教训：<span class='key-point'>不要默认 Dense 就是更好的方案</span>——语料规模、语言、领域都会影响最优选择。</p>"
+      },
+      {
+        "term": "Hybrid 为什么反而更差",
+        "explain": "<p>RRF (Reciprocal Rank Fusion) 假设两路召回都有正贡献——但如果 Dense 在 Top-1 经常返回错误文档：</p><ul><li>RRF 会把 Dense 的错误结果排到较高位</li><li>挤掉了 BM25 原本在 Top-1 的正确结果</li></ul><p>Hybrid 的价值在 <strong>Recall@5+</strong>（不遗漏好文档），而不是 Top-1 准确率。</p>"
+      },
+      {
+        "term": "Chunk 切分经验",
+        "explain": "<ul><li><strong>默认</strong>：按文档段落自然切分</li><li><strong>长段落</strong>：512 字滑动窗口 + 50% overlap</li><li><strong>表格</strong>：每行转成一条文本，保留表头（「列名: 值」格式）</li><li><strong>代码块</strong>：不切（代码切了就没意义）</li></ul><p>踩坑：技术规格书一个段落 3000 字 → 不切就超过 embedding 上下文长度 → 必须二次切分。<span class='key-point'>切分规则要根据文档实际特点调整，没有银弹</span>。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "iad15",
+    "cat": "Agent深度面",
+    "q": "[项目深挖] 系统评测 + 自动评测可靠性 + 线上效果",
+    "bullets": [
+      "三层评测：组件级(单元测试) / 场景级(66个IEEE 39-bus场景) / 对比级(vs GPT/规则/消融)",
+      "自动评测可靠性：仿真器是 ground truth（物理引擎判定，非人工打分）",
+      "确定性评测：同一场景同一 seed 跑多次结果一致",
+      "每次代码变更跑全部 66 场景回归——CI 级别的评测纪律",
+      "线上效果指标（预设）：仿真器覆盖率(故障类型占比) + 人工复核率"
+    ],
+    "details": [
+      {
+        "term": "三层评测详细",
+        "explain": "<table border='1' style='border-collapse:collapse;'><tr><th>层级</th><th>方法</th><th>指标</th></tr><tr><td><strong>组件级</strong></td><td>自动化单元测试</td><td>各模块输入输出正确率</td></tr><tr><td><strong>场景级</strong></td><td>66 个 IEEE 39-bus 故障场景</td><td>恢复成功率 97%<br>安全违规率 0%<br>平均步数 3.2</td></tr><tr><td><strong>对比级</strong></td><td>vs GPT-5.4 / 规则引擎 / 消融变体</td><td>消融实验 + A/B 对比</td></tr></table>"
+      },
+      {
+        "term": "评测可靠性保障",
+        "explain": "<ul><li><strong>Ground truth 来自仿真器</strong>：电压、功率、过载都是物理计算，不是人工打分——<span class='key-point'>最客观的评价标准</span></li><li><strong>确定性</strong>：同一场景同一 seed 多次跑结果完全一致</li><li><strong>回归测试</strong>：每次代码/模型变更都跑全部 66 场景回归</li><li><strong>消融实验</strong>：去掉 Verifier / 去掉 SFT / 去掉 GRPO 分别测，证明每个组件的必要性</li></ul>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "iad16",
+    "cat": "Agent深度面",
+    "q": "[项目深挖] 多层 Memory 设计 + 用户维度限制",
+    "bullets": [
+      "不分层的问题：第 5 步时 context 已很长，模型开始遗忘；早期详细状态占 token 但已过时",
+      "三层：Working(当前状态+上步结果) / Episodic(历史操作摘要) / Semantic(电网知识规则)",
+      "按需加载：Working 每步完整注入；Episodic 最近 3 步摘要；Semantic 按需检索",
+      "电力场景不涉及用户个性化——但金融场景需要用户风险偏好/持仓/合规",
+      "金融 Memory 限制：强合规(GDPR/个人信息保护)、过期清除、用户间隔离是硬约束"
+    ],
+    "details": [
+      {
+        "term": "三层 Memory 详细",
+        "explain": "<ul><li><strong>Working Memory</strong>（当前步）：完整电网状态 + 上一步操作结果 → <span class='key-point'>每步都完整注入</span></li><li><strong>Episodic Memory</strong>（历史操作）：最近 3 步的操作摘要（「步骤 1 合了 B12，恢复了 L3」）；更早的只保留一句话「已恢复 XX% 负荷」</li><li><strong>Semantic Memory</strong>（知识规则）：电网拓扑知识、操作约束规则 → 只在 Actor 需要查规则时按需检索</li></ul>"
+      },
+      {
+        "term": "为什么不全量注入",
+        "explain": "<p>如果每步都把全部历史操作详情塞进去：</p><ul><li>到第 5 步时 context 已经 8K+ token</li><li>早期的详细电网状态已经过时（状态变了），但占着宝贵的 context 空间</li><li>实测：<span class='key-point'>全量注入的成功率比按需加载低 8%</span>——因为模型被过时信息干扰了决策</li></ul>"
+      },
+      {
+        "term": "金融场景的 Memory 限制",
+        "explain": "<p>如果做金融领域 Agent，用户维度 Memory 有特殊约束：</p><ul><li><strong>合规</strong>：GDPR/个人信息保护法要求用户数据可删除、有留存期限</li><li><strong>过期清除</strong>：用户偏好必须有 TTL，过期自动清除</li><li><strong>用户隔离</strong>：用户 A 的交易偏好<span class='key-point'>绝不能泄露到用户 B 的 context</span>——这是硬约束，违反就是数据泄露事件</li><li><strong>审计</strong>：每一次 Memory 读写都要有审计日志</li></ul>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ieg01",
+    "cat": "工程实践面",
+    "q": "如何设计一个多智能体系统？从需求到落地的完整思路",
+    "bullets": [
+      "四步法:问题分解 → 角色设计 → 通信协议 → 容错机制",
+      "核心决策:角色是<span class='highlight'>同构协作</span>(都做类似事)还是<span class='highlight'>异构分工</span>(各有所长)",
+      "通信模式:shared memory / message passing / blackboard / pub-sub 选一个",
+      "编排结构:<span class='highlight'>串行链</span>/<span class='highlight'>DAG</span>/<span class='highlight'>环形循环</span>(ReAct)/<span class='highlight'>Hierarchical</span>(主管-工作者)",
+      "兜底机制:超时熔断 + 预算上限 + 输出校验 + 人在回路(critical 任务)"
+    ],
+    "details": [
+      {
+        "term": "角色设计:同构 vs 异构",
+        "explain": "<p><strong>同构协作</strong>:N 个 Agent 能力一样,通过投票/辩论产生最终答案(MAD、Multi-Agent Debate)<br>例:多个 Agent 独立回答同一个问题,Judge 选最好的<br><strong>优点</strong>:鲁棒、易扩展<br><strong>缺点</strong>:成本 ×N、重复工作</p><p><strong>异构分工</strong>:每个 Agent 专注一个领域,输出组合成最终结果<br>例:Analyzer + Actor + Verifier(SiLR);Researcher + Writer + Editor(写作 Agent)<br><strong>优点</strong>:上下文精简、可独立优化<br><strong>缺点</strong>:边界模糊时职责不清、通信开销</p><p><span class='key-point'>大部分生产系统用异构分工 + 3-5 个 Agent</span>。再多就难以维护。</p>"
+      },
+      {
+        "term": "通信协议对比",
+        "explain": "<table border='1' style='border-collapse:collapse;'><tr><th>模式</th><th>适用</th><th>坑</th></tr><tr><td><strong>Shared Memory</strong></td><td>紧耦合小团队(3-5 Agent)</td><td>并发冲突、状态爆炸</td></tr><tr><td><strong>Message Passing</strong></td><td>松耦合、异步</td><td>消息丢失、顺序问题</td></tr><tr><td><strong>Blackboard</strong></td><td>协同解决未知问题</td><td>谁先写、谁先读需要调度</td></tr><tr><td><strong>Pub-Sub</strong></td><td>事件驱动、大规模</td><td>需要 broker、延迟不可控</td></tr></table><p>实践中最常用是<span class='key-point'>共享状态字典 + JSON schema</span>——简单直接,调试方便。</p>"
+      },
+      {
+        "term": "容错机制四件套",
+        "explain": "<ol><li><strong>超时熔断</strong>:每个 Agent 调用设 timeout(通常 30-60s),超时切降级逻辑</li><li><strong>预算上限</strong>:总 token 预算 / 总步数上限,防止无限循环。ReAct 通常 max_steps=10~15</li><li><strong>输出校验</strong>:JSON schema 校验 + 业务规则校验(如金额范围、权限白名单)</li><li><strong>人在回路</strong>:关键决策(支付、删除、对外发消息)必须 human approve。Claude Code 的 permission 机制就是这个思想</li></ol><p>没有这四样的多 Agent 系统不敢上生产——<span class='key-point'>LLM 的不确定性决定了必须有显式兜底</span>。</p>"
+      },
+      {
+        "term": "面试追问:如何测试多 Agent 系统",
+        "explain": "<p>三层测试:</p><ul><li><strong>单 Agent unit test</strong>:mock 上下游,测单个 Agent 的输入输出</li><li><strong>集成测试</strong>:用真实 LLM + 固定种子(temperature=0),跑 golden test case 集</li><li><strong>回归测试</strong>:每次代码改动后跑 N 次相同场景,看成功率是否下降</li></ul><p><span class='key-point'>LLM 测试最难的是非确定性</span>——解决办法是固定 seed + 评估多轮结果分布,而不是盯单次输出。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ieg02",
+    "cat": "工程实践面",
+    "q": "如何从头做一个 Agent harness?最小可用版本包含哪些组件?",
+    "bullets": [
+      "Harness = Agent 的「运行时外壳」:提供工具调度、上下文管理、执行隔离、状态持久化",
+      "最小可用版(MVP)六组件:<span class='highlight'>Loop Engine</span> + <span class='highlight'>Tool Registry</span> + <span class='highlight'>Context Manager</span> + <span class='highlight'>Logger</span> + <span class='highlight'>Permission</span> + <span class='highlight'>State Store</span>",
+      "Loop Engine:解析模型输出→识别 tool_call→执行→把 observation 塞回 context→再问模型",
+      "Context Manager:system prompt + 历史 + 工具结果的拼接、裁剪、压缩",
+      "生产级再加:sandboxing/streaming/checkpoint/rollback/multi-turn memory"
+    ],
+    "details": [
+      {
+        "term": "Loop Engine 核心伪代码",
+        "explain": "<div class='formula'>async function run(userInput) {<br>&nbsp;&nbsp;const ctx = buildContext(userInput);<br>&nbsp;&nbsp;for (let step = 0; step &lt; MAX_STEPS; step++) {<br>&nbsp;&nbsp;&nbsp;&nbsp;const resp = await llm.call(ctx, tools);<br>&nbsp;&nbsp;&nbsp;&nbsp;if (resp.stop_reason === 'end_turn') {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return resp.content;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;if (resp.tool_calls) {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const results = await Promise.all(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resp.tool_calls.map(tc =&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;registry.execute(tc)));<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.push({ role: 'assistant',<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;content: resp.content,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tool_calls: resp.tool_calls });<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.push({ role: 'tool', content: results });<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;}<br>&nbsp;&nbsp;throw new Error('max steps exceeded');<br>}</div><p>这个循环是 Claude Code / Cursor / Aider 的共同内核,只是外围包装不同。</p>"
+      },
+      {
+        "term": "Tool Registry 设计",
+        "explain": "<p>一个 tool 最少四字段:</p><ul><li><code>name</code>:工具名(唯一)</li><li><code>description</code>:给模型看的用途说明</li><li><code>parameters</code>:JSON Schema 参数定义</li><li><code>handler</code>:实际执行函数</li></ul><p><strong>进阶</strong>:加上 <code>permission_level</code>(read/write/exec)、<code>timeout</code>、<code>retry_policy</code>、<code>dry_run</code>。</p><p>Claude Code 的 Read/Grep/Bash/Edit 都是这个模式——<span class='key-point'>工具本身就是一个带 schema 的异步函数</span>。</p>"
+      },
+      {
+        "term": "Context Manager 三大难题",
+        "explain": "<ol><li><strong>拼接</strong>:system prompt + 工具描述 + 历史 + 当前输入,顺序和分隔符影响模型行为</li><li><strong>裁剪</strong>:超过 context window 时先裁什么?通常保留 system + 最近 N 轮 + 关键中间结果</li><li><strong>压缩</strong>:用小模型把老对话压缩成摘要——Claude Code 的 compaction、OpenAI Codex 的 summarization 都用这个</li></ol><p><span class='key-point'>好的 Context Manager 决定 Agent 能走多远</span>——差的系统 20 步就上下文爆炸,好的可以跑 100+ 步。</p>"
+      },
+      {
+        "term": "生产级组件补充",
+        "explain": "<ul><li><strong>Sandbox</strong>:Bash 工具必须跑在沙箱里(Docker/Firecracker/bwrap),否则能 <code>rm -rf /</code></li><li><strong>Streaming</strong>:SSE 流式输出,用户不用干等</li><li><strong>Checkpoint</strong>:每步状态存盘,挂了能恢复</li><li><strong>Rollback</strong>:文件修改前备份,失败能回滚(Claude Code 的 Write 用的 shadow copy)</li><li><strong>Multi-turn Memory</strong>:跨会话持久化(见 Claude Code 的 auto memory)</li></ul>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ieg03",
+    "cat": "工程实践面",
+    "q": "分析过 Claude Code 的源码吗?核心架构和关键设计点",
+    "bullets": [
+      "Claude Code 是闭源产品,但通过<span class='highlight'>抓包 + 行为观察 + 官方文档</span>能还原核心架构",
+      "核心模块:<span class='highlight'>CLI 入口</span>/<span class='highlight'>Agent Loop</span>/<span class='highlight'>Tool Layer</span>/<span class='highlight'>Context Engine</span>/<span class='highlight'>Memory</span>/<span class='highlight'>Hook System</span>/<span class='highlight'>Permission</span>",
+      "关键设计 1:<span class='highlight'>工具是一等公民</span>——Read/Edit/Bash/Grep/Glob 都是 schema+handler,同构接口",
+      "关键设计 2:<span class='highlight'>Skill 是 markdown 工作流</span>——不引入新工具,而是编排现有工具 + 注入领域知识",
+      "关键设计 3:<span class='highlight'>Memory 是文件系统</span>——没有向量库,markdown + grep 就够了"
+    ],
+    "details": [
+      {
+        "term": "如何分析闭源 Agent 的源码",
+        "explain": "<p>虽然 Claude Code 闭源,但可以通过以下方式逆向理解:</p><ol><li><strong>读官方文档 + Anthropic blog</strong>:tool use、caching、skill 等都有技术博客</li><li><strong>抓包 API 请求</strong>:看 <code>messages</code> 数组结构、tool_use content block、system prompt 片段</li><li><strong>行为观察</strong>:故意让它做奇怪的事,看 fallback 是什么</li><li><strong>参考开源实现</strong>:<code>opencode</code>(SST)、<code>aider</code>、<code>continue.dev</code>,架构高度相似</li><li><strong>SDK 源码</strong>:<code>@anthropic-ai/claude-agent-sdk</code> 是 Claude Code 的 runtime 开源版</li></ol><p><span class='key-point'>@anthropic-ai/claude-agent-sdk 基本就是 Claude Code 的骨架</span>——读这个能理解 80%。</p>"
+      },
+      {
+        "term": "核心架构图(推测)",
+        "explain": "<div class='formula'>┌─────────────────────────────┐<br>│     CLI / TUI (Ink + React) │<br>├─────────────────────────────┤<br>│   Agent Loop (tool-use loop)│<br>├──────┬──────────┬───────────┤<br>│ Tools│  Context │  Memory   │<br>│ (fn) │  Engine  │  (MD files)│<br>├──────┴──────────┴───────────┤<br>│   Permission &amp; Hooks        │<br>├─────────────────────────────┤<br>│   Anthropic API Client      │<br>│   (streaming + caching)     │<br>└─────────────────────────────┘</div><p>每一层都可以独立替换——这就是为什么能有 opencode 这样的等价实现。</p>"
+      },
+      {
+        "term": "关键设计:Tool Use 统一接口",
+        "explain": "<p>Claude Code 所有能力都是 tool:</p><ul><li><strong>文件层</strong>:Read、Write、Edit、Glob</li><li><strong>搜索层</strong>:Grep(ripgrep wrapper)</li><li><strong>执行层</strong>:Bash(sandboxed)</li><li><strong>Agent 层</strong>:Agent(子 Agent 派发)、Task(状态机)</li><li><strong>记忆层</strong>:读写 MEMORY.md + topic files</li></ul><p><span class='key-point'>统一接口的好处:可组合、可 mock、可 instrument</span>。测试时 mock 掉 Bash 就能跑端到端。</p>"
+      },
+      {
+        "term": "关键设计:Skill 的「指令即代码」",
+        "explain": "<p>Skill 的本体是 <code>SKILL.md</code>——frontmatter 定义触发条件,正文是 prompt 指令。</p><p>这是一个很反直觉但非常 powerful 的设计:<span class='key-point'>不引入新 API,而是用 prompt 扩展行为</span>。</p><ul><li>新增 Skill = 写个 markdown,不改 Agent 代码</li><li>Skill 的版本控制 = git(和代码一起管理)</li><li>Skill 的分发 = 打包成 plugin,放到 ~/.claude/plugins/</li></ul><p>这让 Agent 的能力扩展<strong>不依赖开发者发版</strong>——任何用户都能写 Skill。</p>"
+      },
+      {
+        "term": "面试回答模板",
+        "explain": "<p>即使没真正读过源码,也能这样答:</p><p>「Claude Code 虽然闭源,但通过 Anthropic 的 <strong>claude-agent-sdk 开源</strong>+技术博客+行为观察,可以还原其核心架构。主要看过:</p><ul><li>tool-use 循环的实现(和 ReAct 一致,但 tool_use 是 API 原生结构化 content block,不是 prompt parse)</li><li>Skill 系统(markdown 指令包 + frontmatter routing)</li><li>Auto Memory(~/.claude/projects 下的 markdown 文件,grep 检索)</li><li>Permission 机制(工具分级 + 用户确认)」</li></ul><p><span class='key-point'>重点不是「读过源码」而是「理解其设计权衡」</span>——能说出为什么不用 RAG、为什么用 markdown、为什么工具要有 schema。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ieg04",
+    "cat": "工程实践面",
+    "q": "Claude Code / Codex / OpenCode 的使用区别?(产品视角)",
+    "bullets": [
+      "Claude Code:<span class='highlight'>Anthropic 官方</span>,聚焦<span class='highlight'>编码 agent</span>,深度集成 Skill/Hook/MCP/Sub-agent",
+      "Codex CLI:<span class='highlight'>OpenAI 官方</span>,轻量级 coding assistant,偏<span class='highlight'>快速上手</span>、接 GPT-5.x",
+      "OpenCode(SST):<span class='highlight'>开源等价物</span>,TUI 好看,支持多模型(Anthropic/OpenAI/本地)",
+      "日常 workflow 差异:Claude Code 长链路迭代最强,Codex 快速 one-shot,OpenCode 适合自托管/省钱",
+      "选型:<span class='highlight'>团队生产用 Claude Code</span>(工程化完善) / <span class='highlight'>个人探索用 Codex</span>(低门槛) / <span class='highlight'>自托管用 OpenCode</span>(开源免费)"
+    ],
+    "details": [
+      {
+        "term": "功能对比表",
+        "explain": "<table border='1' style='border-collapse:collapse;'><tr><th>能力</th><th>Claude Code</th><th>Codex CLI</th><th>OpenCode</th></tr><tr><td><strong>Tool Use</strong></td><td>✓ 原生</td><td>✓ 原生</td><td>✓ 原生</td></tr><tr><td><strong>Sub-Agent</strong></td><td>✓ Agent 工具</td><td>✗</td><td>部分支持</td></tr><tr><td><strong>Skill 系统</strong></td><td>✓ markdown 包</td><td>✗</td><td>✗</td></tr><tr><td><strong>MCP</strong></td><td>✓ 官方支持</td><td>部分</td><td>✓</td></tr><tr><td><strong>Hook</strong></td><td>✓ 事件钩子</td><td>✗</td><td>✗</td></tr><tr><td><strong>Memory</strong></td><td>✓ Auto Memory</td><td>轻量</td><td>自定义</td></tr><tr><td><strong>多模型</strong></td><td>Anthropic only</td><td>OpenAI only</td><td>✓ 任意 provider</td></tr><tr><td><strong>开源</strong></td><td>SDK 开源,主体闭源</td><td>CLI 部分开源</td><td>✓ 完全开源</td></tr></table>"
+      },
+      {
+        "term": "典型 workflow 差异",
+        "explain": "<p><strong>Claude Code</strong>(适合复杂项目):</p><ol><li><code>CLAUDE.md</code> 写项目约定</li><li>Skill 包管理特殊工作流(如 debug、review)</li><li>sub-agent 并行探索</li><li>hook 自动格式化/提交</li></ol><p><strong>Codex CLI</strong>(适合一次性任务):</p><ol><li>一个 prompt 描述需求</li><li>看建议 → approve/reject</li><li>done</li></ol><p><strong>OpenCode</strong>(适合受限环境):</p><ol><li>配置 provider(OpenRouter / 本地 Ollama)</li><li>用和 Claude Code 类似的 TUI</li><li>无 Anthropic 依赖,可完全离线</li></ol>"
+      },
+      {
+        "term": "成本/速度对比",
+        "explain": "<ul><li><strong>Claude Code</strong>:Opus 贵但强,Sonnet 性价比王者,有 prompt caching 后单轮成本下降 90%</li><li><strong>Codex CLI</strong>:GPT-5.x 默认是 mini/nano,便宜但能力弱;GPT-5.1 thinking 贵但解难题强</li><li><strong>OpenCode</strong>:用 OpenRouter 可以切换到 DeepSeek-R1/Qwen3-32B 等便宜/免费模型</li></ul><p>面试时回答:<span class='key-point'>我个人习惯用 Claude Code 做日常开发,用 Codex 做 second opinion(跨模型验证),用 OpenCode 在隔离环境跑</span>。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ieg05",
+    "cat": "工程实践面",
+    "q": "Claude Code / Codex / OpenCode 的设计区别?(架构视角)",
+    "bullets": [
+      "核心差异在<span class='highlight'>扩展机制</span>、<span class='highlight'>记忆模型</span>、<span class='highlight'>多 Agent 支持</span>",
+      "Claude Code:<span class='highlight'>Skill + Hook + Sub-agent</span> 三件套,扩展能力最强",
+      "Codex:<span class='highlight'>简化至极</span>,只有 tool use,无 skill/hook,追求「开箱即用」",
+      "OpenCode:<span class='highlight'>可插拔架构</span>,provider/tool/UI 都能换,但生态小",
+      "设计哲学差异:Anthropic 押注<span class='highlight'>上下文工程</span>,OpenAI 押注<span class='highlight'>模型能力</span>,OpenCode 押注<span class='highlight'>开放性</span>"
+    ],
+    "details": [
+      {
+        "term": "扩展机制对比",
+        "explain": "<p><strong>Claude Code</strong>:</p><ul><li>Skill = prompt 工作流包(不改代码)</li><li>Hook = 事件钩子(PreToolUse/PostToolUse/Stop)</li><li>MCP = 标准协议接外部工具</li><li>Sub-agent = 独立上下文子 Agent</li></ul><p><strong>Codex</strong>:只有「function calling」,扩展 = 改代码或 system prompt。</p><p><strong>OpenCode</strong>:提供 plugin API,但需要写 TypeScript 代码。</p><p><span class='key-point'>Claude Code 的思路:「能用 prompt 解决的,不要用代码」</span>——Skill、CLAUDE.md、memory 都是这个思想。</p>"
+      },
+      {
+        "term": "记忆模型对比",
+        "explain": "<table border='1' style='border-collapse:collapse;'><tr><th></th><th>Claude Code</th><th>Codex</th><th>OpenCode</th></tr><tr><td><strong>持久化</strong></td><td>auto memory(MD 文件)</td><td>AGENTS.md(静态)</td><td>session file(JSON)</td></tr><tr><td><strong>主动更新</strong></td><td>✓(Claude 自己写)</td><td>✗</td><td>✗</td></tr><tr><td><strong>分类</strong></td><td>user/feedback/project/reference</td><td>无分类</td><td>无分类</td></tr><tr><td><strong>检索</strong></td><td>grep</td><td>全量加载</td><td>手动管理</td></tr></table><p><span class='key-point'>Claude Code 的 auto memory 是目前最先进的——Agent 自己决定存什么</span>。</p>"
+      },
+      {
+        "term": "上下文压缩策略对比",
+        "explain": "<p><strong>Claude Code</strong>:</p><ul><li>Compaction:老消息用小模型压成摘要</li><li>Prompt Caching:system + 工具定义缓存,命中成本 ×0.1</li><li>Context Window Warning:接近上限时提示用户 <code>/compact</code></li></ul><p><strong>Codex</strong>:</p><ul><li>简单的滑动窗口,老消息直接截断</li><li>短期记忆靠 re-index</li></ul><p><strong>OpenCode</strong>:</p><ul><li>用户手动管理,提供 <code>/compact</code> 等命令</li></ul><p><span class='key-point'>Context 管理的精细度决定 Agent 能处理多长任务</span>——Claude Code 能跑几小时的迭代。</p>"
+      },
+      {
+        "term": "面试高级回答:三种哲学",
+        "explain": "<p>三者代表了对「Agent 核心瓶颈」的不同押注:</p><ul><li><strong>Anthropic(Claude Code)</strong>:瓶颈是<span class='key-point'>上下文组织</span>——所以投入 Skill/Memory/Caching</li><li><strong>OpenAI(Codex)</strong>:瓶颈是<span class='key-point'>模型推理能力</span>——所以投入 GPT-5.x 推理训练,工具层保持简单</li><li><strong>SST(OpenCode)</strong>:瓶颈是<span class='key-point'>模型绑定</span>——所以做了 provider 抽象层,任何模型都能用</li></ul><p>这三条路径都成立,<strong>对应了不同的产品形态</strong>。面试时能说出这层「哲学差异」比单纯列功能更出彩。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ieg06",
+    "cat": "工程实践面",
+    "q": "计算机网络基础回顾(面试 top20 考点)",
+    "bullets": [
+      "七层模型 vs 四层模型:<span class='highlight'>物→数→网→传→会→表→应</span> / TCP/IP 四层",
+      "TCP 三次握手:SYN → SYN+ACK → ACK;四次挥手:FIN → ACK → FIN → ACK",
+      "HTTP 1.1 vs 2 vs 3:长连接/多路复用+HPACK/QUIC(UDP)",
+      "HTTPS:TLS 握手 = 非对称协商对称密钥 + 证书验证",
+      "DNS:递归查询 → 根→顶级→权威 DNS;常见坑:TTL、CNAME 链、DNS 污染"
+    ],
+    "details": [
+      {
+        "term": "TCP 三次握手为什么不是两次",
+        "explain": "<p>两次握手无法确认「客户端有接收能力」——服务端 SYN+ACK 后直接建连,如果这个包丢了,客户端根本不知道连接已建,会导致状态不一致、资源浪费。</p><p>三次握手本质是<span class='key-point'>双向确认收发能力</span>:</p><ol><li>SYN:客户端说「我想连」</li><li>SYN+ACK:服务端说「我收到了,我也想连」</li><li>ACK:客户端说「确认你收到了」</li></ol><p>这样双方都确认了「对方能收我的包,我能收对方的包」。</p>"
+      },
+      {
+        "term": "HTTP/2 vs HTTP/3",
+        "explain": "<p><strong>HTTP/2</strong>(2015):</p><ul><li>多路复用(同一 TCP 连接跑多个请求)</li><li>HPACK 头压缩</li><li>Server Push</li><li><span class='key-point'>问题:TCP 层的「队头阻塞」——一个包丢失阻塞所有流</span></li></ul><p><strong>HTTP/3</strong>(2022,基于 QUIC):</p><ul><li>基于 UDP,没有 TCP 队头阻塞</li><li>连接迁移(手机切 WiFi 不断开)</li><li>0-RTT 握手(复用会话)</li></ul><p>实际意义:视频流、实时通信场景 HTTP/3 延迟降 30%+,但中间设备(防火墙)对 UDP 支持差。</p>"
+      },
+      {
+        "term": "HTTPS/TLS 握手流程",
+        "explain": "<div class='formula'>Client                  Server<br>&nbsp;&nbsp;|--ClientHello(随机数A)-&gt;|<br>&nbsp;&nbsp;|&lt;-ServerHello(随机数B)-|<br>&nbsp;&nbsp;|&lt;-Certificate---------|<br>&nbsp;&nbsp;|&lt;-ServerHelloDone-----|<br>&nbsp;&nbsp;|(验证证书有效性)       |<br>&nbsp;&nbsp;|--PreMasterSecret----&gt;|&nbsp;(用服务端公钥加密)<br>&nbsp;&nbsp;|(双方用 A+B+PMS 算出对称密钥)<br>&nbsp;&nbsp;|--Finished-----------&gt;|<br>&nbsp;&nbsp;|&lt;-Finished------------|<br>&nbsp;&nbsp;|===加密通信开始===&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</div><p><span class='key-point'>核心:非对称加密协商对称密钥,后续用对称密钥通信</span>——非对称贵,对称快。</p>"
+      },
+      {
+        "term": "常见面试坑",
+        "explain": "<ul><li><strong>HTTP 无状态</strong>:Session/Cookie 是怎么实现「有状态」的?(服务器存 session,客户端 cookie 带 sessionId)</li><li><strong>CORS</strong>:浏览器的同源策略 + 预检请求(OPTIONS)</li><li><strong>GET vs POST</strong>:语义、幂等性、缓存性、URL 长度限制(工程实践差异)</li><li><strong>WebSocket</strong>:HTTP 升级握手(Upgrade: websocket),后续全双工二进制帧</li><li><strong>负载均衡层级</strong>:L4(TCP 级) vs L7(HTTP 级),各自能看到什么</li><li><strong>CDN 原理</strong>:DNS 智能调度 → 就近边缘节点 → 回源</li></ul>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ieg07",
+    "cat": "工程实践面",
+    "q": "云服务使用经验?主要对比 AWS / GCP / Azure / 腾讯云",
+    "bullets": [
+      "四大云:<span class='highlight'>AWS(先行者生态最全)</span>/<span class='highlight'>GCP(数据+AI 强)</span>/<span class='highlight'>Azure(企业+微软生态)</span>/<span class='highlight'>腾讯云(中国业务)</span>",
+      "核心服务家族:<span class='highlight'>计算(EC2/GCE/VM)</span>/<span class='highlight'>存储(S3/GCS/Blob/COS)</span>/<span class='highlight'>数据库(RDS/Spanner/SQL/CDB)</span>/<span class='highlight'>Serverless(Lambda/Cloud Functions)</span>",
+      "AI 相关:<span class='highlight'>AWS Bedrock</span>/<span class='highlight'>Azure OpenAI Service</span>/<span class='highlight'>GCP Vertex AI</span>/<span class='highlight'>腾讯混元</span>",
+      "选型关键:数据主权(中国业务选国内云)、生态绑定(已用 AD → Azure)、价格(Spot/Preemptible 差异大)",
+      "成本控制三板斧:<span class='highlight'>Reserved Instance</span>(长期预定)+<span class='highlight'>Spot</span>(可中断)+<span class='highlight'>Auto Scaling</span>(按需伸缩)"
+    ],
+    "details": [
+      {
+        "term": "面试回答模板",
+        "explain": "<p>如果没深度用过,可以老实说:「我主要用过 X 做 Y,对其他云有概念性了解」。然后展示:</p><ol><li>用过的部分:具体做过什么(跑 LLM 推理?存数据?部署 web 服务?)</li><li>踩过的坑:流量费、数据出境费、冷启动、cold data 归档</li><li>选型思考:为什么选这个云而不是别的</li></ol><p><span class='key-point'>面试官问云服务不是要考你记住所有产品名,而是看你的「分布式系统常识」</span>——能不能理解「计算和存储分离」「就近部署」「可用区」这些概念。</p>"
+      },
+      {
+        "term": "LLM 相关云服务对比",
+        "explain": "<table border='1' style='border-collapse:collapse;'><tr><th></th><th>托管 LLM API</th><th>微调</th><th>GPU 租用</th></tr><tr><td><strong>AWS</strong></td><td>Bedrock(Claude/Llama/Mistral)</td><td>Bedrock Fine-tuning</td><td>EC2 P5/P4d(H100/A100)</td></tr><tr><td><strong>Azure</strong></td><td>Azure OpenAI</td><td>Azure OpenAI Fine-tuning</td><td>Azure NDm/NCv4</td></tr><tr><td><strong>GCP</strong></td><td>Vertex AI(Gemini)</td><td>Vertex AI Tuning</td><td>GCE A3/A2(H100/A100)</td></tr><tr><td><strong>腾讯云</strong></td><td>混元大模型</td><td>TI 平台</td><td>GT4/GN10(A100/V100)</td></tr></table>"
+      },
+      {
+        "term": "常见成本坑",
+        "explain": "<ul><li><strong>Egress 流量费</strong>:从云厂商往外传数据贵(每 GB $0.09),从外面传进来免费。跨云/混合云场景容易翻车</li><li><strong>冷启动</strong>:Lambda/Cloud Functions 冷启动 2-10s,高并发 QPS 场景要 pre-warm</li><li><strong>GPU 可用性</strong>:H100 经常无货,要靠 Reservation 提前锁</li><li><strong>跨 AZ 通信</strong>:同 region 跨 AZ 流量也收费,架构设计要考虑</li><li><strong>数据出境</strong>:中国业务出境有监管限制(个保法+数据安全法)</li></ul>"
+      },
+      {
+        "term": "Linux + 云的常用组合",
+        "explain": "<div class='formula'>面试常问「在云上怎么部署一个 Web 服务」:<br><br>1. 买 VM(EC2/GCE) + 配安全组(80/443/22)<br>2. SSH 上去:ssh ubuntu@&lt;ip&gt;<br>3. 装 Docker:<br>&nbsp;&nbsp;curl -fsSL https://get.docker.com | sh<br>4. docker-compose.yml:<br>&nbsp;&nbsp;app + nginx + postgres<br>5. nginx 反向代理 443 → app:3000<br>6. Let's Encrypt certbot 拿证书<br>7. systemd 或 docker restart=always 保活<br>8. CloudWatch/Stackdriver 收日志</div><p>进阶:换成 <code>ECS/GKE/AKS</code> 容器编排 + <code>ALB/LB</code> 负载均衡 + <code>Auto Scaling Group</code>。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ieg08",
+    "cat": "工程实践面",
+    "q": "熟悉的 Linux 命令?面试常考 30 个",
+    "bullets": [
+      "文件操作:<code>ls</code>/<code>cd</code>/<code>cp</code>/<code>mv</code>/<code>rm</code>/<code>mkdir</code>/<code>find</code>/<code>ln</code>",
+      "文本处理:<code>cat</code>/<code>less</code>/<code>head</code>/<code>tail</code>/<code>grep</code>/<code>sed</code>/<code>awk</code>/<code>sort</code>/<code>uniq</code>/<code>wc</code>",
+      "进程管理:<code>ps</code>/<code>top</code>/<code>htop</code>/<code>kill</code>/<code>nohup</code>/<code>&amp;</code>/<code>jobs</code>/<code>bg</code>/<code>fg</code>",
+      "网络工具:<code>curl</code>/<code>wget</code>/<code>ssh</code>/<code>scp</code>/<code>netstat</code>/<code>ss</code>/<code>tcpdump</code>/<code>nc</code>/<code>dig</code>",
+      "系统监控:<code>df</code>/<code>du</code>/<code>free</code>/<code>uptime</code>/<code>iostat</code>/<code>vmstat</code>/<code>journalctl</code>/<code>systemctl</code>"
+    ],
+    "details": [
+      {
+        "term": "高频面试场景题",
+        "explain": "<p><strong>Q1:一个文件 10G,怎么看开头/结尾?</strong><br><code>head -n 100 file</code>(前 100 行)/ <code>tail -n 100 file</code> / <code>tail -f log</code>(跟踪新增)</p><p><strong>Q2:进程占用 CPU 100%,怎么排查?</strong><br><code>top</code> 找 PID → <code>strace -p &lt;PID&gt;</code> 看系统调用 → <code>cat /proc/&lt;PID&gt;/status</code> → <code>gdb -p &lt;PID&gt;</code> 附加调试</p><p><strong>Q3:磁盘满了,怎么找大文件?</strong><br><code>du -sh /* 2&gt;/dev/null | sort -hr | head</code>(按大小排序找大目录)<br><code>find / -size +1G -type f 2&gt;/dev/null</code>(找 >1G 文件)</p><p><strong>Q4:怎么看某端口被哪个进程占用?</strong><br><code>ss -tlnp | grep :8080</code> 或 <code>lsof -i:8080</code> 或 <code>netstat -tlnp</code></p><p><strong>Q5:怎么后台跑个长任务?</strong><br><code>nohup python train.py &gt; train.log 2&gt;&amp;1 &amp;</code> — nohup 防止 SIGHUP,重定向输出,&amp; 放后台</p>"
+      },
+      {
+        "term": "管道+组合拳",
+        "explain": "<div class='formula'># 统计日志里每个 IP 的访问次数<br>awk '{print $1}' access.log | sort | uniq -c | sort -rn | head<br><br># 找过去 1 小时修改过的 .py 文件<br>find . -name '*.py' -mmin -60<br><br># 替换所有文件里的字符串<br>grep -rl 'old_text' . | xargs sed -i 's/old_text/new_text/g'<br><br># 监控文件变化<br>tail -f app.log | grep --line-buffered ERROR<br><br># 批量 kill<br>ps aux | grep python | awk '{print $2}' | xargs kill -9</div><p><span class='key-point'>管道是 Linux 哲学:每个工具做一件事,用管道组合起来</span>。面试时能熟练写组合就是加分项。</p>"
+      },
+      {
+        "term": "权限 &amp; chmod",
+        "explain": "<p>三类用户:owner / group / others,每类三种权限:r(4) / w(2) / x(1)。</p><p><code>chmod 755 script.sh</code> = rwxr-xr-x = owner 全部权限,其他人只能读+执行<br><code>chmod 644 file</code> = rw-r--r-- = 默认文件权限<br><code>chmod +x script.sh</code> = 给所有人加执行权限</p><p><strong>特殊权限</strong>:</p><ul><li><code>chmod 4755</code>:setuid,以文件 owner 身份执行(<code>passwd</code> 就是这样)</li><li><code>chmod 1755</code>:sticky bit,只有 owner 能删自己的文件(<code>/tmp</code> 就是这样)</li></ul>"
+      },
+      {
+        "term": "vim 基本操作(编辑器题必问)",
+        "explain": "<div class='formula'>普通模式 ← Esc ← 编辑模式<br>&nbsp;&nbsp;i:光标前插入<br>&nbsp;&nbsp;a:光标后插入<br>&nbsp;&nbsp;o:下一行新建<br>&nbsp;&nbsp;dd:删行&nbsp;&nbsp;yy:复制行&nbsp;&nbsp;p:粘贴<br>&nbsp;&nbsp;/pattern:搜索&nbsp;&nbsp;n:下一个<br>&nbsp;&nbsp;:%s/old/new/g:全局替换<br>&nbsp;&nbsp;:w&nbsp;保存&nbsp;&nbsp;:q 退出&nbsp;&nbsp;:wq 保存并退出&nbsp;&nbsp;:q! 强制退出</div><p>面试遇到「在纯文本编辑器写代码」时,对 vim 熟的能快速改动——这和 BST 删除节点题是一类场景。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 1
+  },
+  {
+    "id": "ieg09",
+    "cat": "工程实践面",
+    "q": "[手撕] 实现二叉搜索树:构建 + 三种遍历 + 格式化打印",
+    "bullets": [
+      "BST 定义:左子树所有节点 < 根 < 右子树所有节点",
+      "插入:<span class='highlight'>递归比较,小往左,大往右,等就返回</span>",
+      "遍历三种:<span class='highlight'>前序(根左右)</span>/<span class='highlight'>中序(左根右=有序输出)</span>/<span class='highlight'>后序(左右根)</span>",
+      "格式化打印:先计算树高度,按层级 BFS 输出,用空格/缩进体现结构",
+      "关键陷阱:空树、重复值、打印时的对齐宽度"
+    ],
+    "details": [
+      {
+        "term": "完整实现(Python)",
+        "explain": "<div class='formula'>class Node:<br>&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self, val):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.val = val<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.left = None<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.right = None<br><br>class BST:<br>&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.root = None<br><br>&nbsp;&nbsp;&nbsp;&nbsp;def insert(self, val):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.root = self._insert(self.root, val)<br><br>&nbsp;&nbsp;&nbsp;&nbsp;def _insert(self, node, val):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if node is None:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return Node(val)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if val &lt; node.val:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node.left = self._insert(node.left, val)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elif val &gt; node.val:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node.right = self._insert(node.right, val)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# val == node.val 时忽略(BST 通常不允许重复)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return node</div>"
+      },
+      {
+        "term": "三种遍历",
+        "explain": "<div class='formula'>def inorder(node, result):<br>&nbsp;&nbsp;&nbsp;&nbsp;\"\"\"左→根→右:输出有序\"\"\"<br>&nbsp;&nbsp;&nbsp;&nbsp;if node is None: return<br>&nbsp;&nbsp;&nbsp;&nbsp;inorder(node.left, result)<br>&nbsp;&nbsp;&nbsp;&nbsp;result.append(node.val)<br>&nbsp;&nbsp;&nbsp;&nbsp;inorder(node.right, result)<br><br>def preorder(node, result):<br>&nbsp;&nbsp;&nbsp;&nbsp;\"\"\"根→左→右:复制树/序列化\"\"\"<br>&nbsp;&nbsp;&nbsp;&nbsp;if node is None: return<br>&nbsp;&nbsp;&nbsp;&nbsp;result.append(node.val)<br>&nbsp;&nbsp;&nbsp;&nbsp;preorder(node.left, result)<br>&nbsp;&nbsp;&nbsp;&nbsp;preorder(node.right, result)<br><br>def postorder(node, result):<br>&nbsp;&nbsp;&nbsp;&nbsp;\"\"\"左→右→根:删除树/计算子树大小\"\"\"<br>&nbsp;&nbsp;&nbsp;&nbsp;if node is None: return<br>&nbsp;&nbsp;&nbsp;&nbsp;postorder(node.left, result)<br>&nbsp;&nbsp;&nbsp;&nbsp;postorder(node.right, result)<br>&nbsp;&nbsp;&nbsp;&nbsp;result.append(node.val)</div><p><span class='key-point'>中序遍历 BST = 升序输出</span>——这是判断「一棵树是不是 BST」的最简方法。</p>"
+      },
+      {
+        "term": "格式化打印(层级对齐)",
+        "explain": "<div class='formula'>def pretty_print(root):<br>&nbsp;&nbsp;&nbsp;&nbsp;if not root: return \"(empty)\"<br>&nbsp;&nbsp;&nbsp;&nbsp;h = height(root)<br>&nbsp;&nbsp;&nbsp;&nbsp;width = (2 ** h - 1) * 3&nbsp;&nbsp;# 节点占 3 字符<br>&nbsp;&nbsp;&nbsp;&nbsp;lines = []<br>&nbsp;&nbsp;&nbsp;&nbsp;level = [root]<br>&nbsp;&nbsp;&nbsp;&nbsp;for lvl in range(h):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;line = \"\"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gap = width // (2 ** lvl)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next_level = []<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for n in level:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pad = \" \" * (gap // 2)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;val = str(n.val).center(3) if n else \"   \"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;line += pad + val + pad + \" \"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if n:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next_level.extend([n.left, n.right])<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next_level.extend([None, None])<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lines.append(line)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;level = next_level<br>&nbsp;&nbsp;&nbsp;&nbsp;return \"\\n\".join(lines)<br><br>def height(node):<br>&nbsp;&nbsp;&nbsp;&nbsp;if not node: return 0<br>&nbsp;&nbsp;&nbsp;&nbsp;return 1 + max(height(node.left),<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height(node.right))</div>"
+      },
+      {
+        "term": "预期输出示例",
+        "explain": "<p>插入 [5, 3, 7, 1, 4, 6, 8] 后:</p><div class='formula'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5<br>&nbsp;&nbsp;&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7<br>&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;6&nbsp;&nbsp;&nbsp;8<br><br>中序:1 3 4 5 6 7 8&nbsp;&nbsp;&nbsp;(有序)<br>前序:5 3 1 4 7 6 8&nbsp;&nbsp;&nbsp;(根先)<br>后序:1 4 3 6 8 7 5&nbsp;&nbsp;&nbsp;(根最后)</div>"
+      }
+    ],
+    "group": "面经",
+    "lv": 2
+  },
+  {
+    "id": "ieg10",
+    "cat": "工程实践面",
+    "q": "[手撕·纯文本编辑器] BST 删除节点(三种情况完整实现)",
+    "bullets": [
+      "删除是 BST 最难的操作——<span class='highlight'>要维持 BST 性质</span>",
+      "三种情况:(1)<span class='highlight'>叶子</span>直接删 / (2)<span class='highlight'>单子树</span>用子树顶替 / (3)<span class='highlight'>双子树</span>用中序后继替换",
+      "中序后继 = 右子树的最左节点(比当前大的最小值)",
+      "也可以用前驱:左子树的最右节点(比当前小的最大值)",
+      "陷阱:递归更新父节点引用、删除后的返回值处理、根节点被删的情况"
+    ],
+    "details": [
+      {
+        "term": "三种情况图解",
+        "explain": "<div class='formula'>Case 1: 叶子节点<br>&nbsp;&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;删除 3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5<br>&nbsp;&nbsp;&nbsp;/&nbsp;\\&nbsp;&nbsp;&nbsp;────→&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\<br>&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7<br><br>Case 2: 单子树<br>&nbsp;&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;删除 3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5<br>&nbsp;&nbsp;&nbsp;/&nbsp;\\&nbsp;&nbsp;&nbsp;────→&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;\\<br>&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;7<br>&nbsp;/<br>1<br><br>Case 3: 双子树(最难)<br>&nbsp;&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;删除 3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5<br>&nbsp;&nbsp;&nbsp;/&nbsp;\\&nbsp;&nbsp;&nbsp;────→&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;\\<br>&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;7<br>&nbsp;/&nbsp;\\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/<br>1&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1<br><br>(4 = 3 的中序后继=右子树最左)</div>"
+      },
+      {
+        "term": "完整删除实现",
+        "explain": "<div class='formula'>def delete(root, val):<br>&nbsp;&nbsp;&nbsp;&nbsp;if root is None:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return None<br><br>&nbsp;&nbsp;&nbsp;&nbsp;# 先找到要删的节点<br>&nbsp;&nbsp;&nbsp;&nbsp;if val &lt; root.val:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;root.left = delete(root.left, val)<br>&nbsp;&nbsp;&nbsp;&nbsp;elif val &gt; root.val:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;root.right = delete(root.right, val)<br>&nbsp;&nbsp;&nbsp;&nbsp;else:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# 找到了!开始删除<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Case 1+2: 0 or 1 child<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if root.left is None:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return root.right&nbsp;&nbsp;# 可能是 None<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if root.right is None:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return root.left<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Case 3: 两个子树<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# 找右子树的最左节点(中序后继)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;successor = root.right<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while successor.left:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;successor = successor.left<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# 用后继值替换当前节点<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;root.val = successor.val<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# 再从右子树删除那个后继<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;root.right = delete(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;root.right, successor.val)<br><br>&nbsp;&nbsp;&nbsp;&nbsp;return root</div>"
+      },
+      {
+        "term": "关键点解释",
+        "explain": "<ol><li><strong>为什么用中序后继</strong>?因为它是「右子树中最小的」,替换后仍满足 BST 性质(它比当前节点的左子树所有值大)</li><li><strong>为什么 successor 最多只有一个右子树</strong>?因为它是最左节点,没有左子树——所以删 successor 是 Case 1/2,不会再递归</li><li><strong>为什么要返回 root</strong>?因为父节点要重新指向修改后的子树——<span class='key-point'>这是递归 BST 操作的通用套路</span></li><li><strong>时间复杂度</strong>?O(h),平均 O(log n),最坏 O(n)(退化成链表)</li></ol>"
+      },
+      {
+        "term": "面试时的 debug checklist",
+        "explain": "<p>纯文本编辑器手写的常见坑:</p><ul><li><code>if root is None: return None</code> 别忘了</li><li><code>elif val &gt; root.val</code> 不能写成 <code>else</code>——等于是要处理删除的</li><li>找 successor 时写 <code>while successor.left is not None</code> 别写成 <code>while successor.left.left</code></li><li>Case 3 里替换完值之后,<strong>必须</strong>再递归删掉 successor 那个节点——只改值会导致 successor 残留</li><li>返回 <code>root</code> 别漏</li></ul><p><span class='key-point'>面试时边写边讲思路</span>,比安静写完更重要——面试官看的是解决问题的过程。</p>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ieg11",
+    "cat": "工程实践面",
+    "q": "主流开源 Agent Harness 对比:LangGraph / AutoGen / CrewAI / MetaGPT",
+    "bullets": [
+      "LangGraph(LangChain):<span class='highlight'>图式编排</span>,节点+边+状态,适合<span class='highlight'>复杂控制流</span>",
+      "AutoGen(Microsoft):<span class='highlight'>多 Agent 对话</span>,UserProxy + Assistant 交互,代码执行强",
+      "CrewAI:<span class='highlight'>角色扮演</span>风格,Crew/Agent/Task/Tool 抽象,上手最快",
+      "MetaGPT:<span class='highlight'>SOP 驱动</span>,模拟软件公司角色(PM/Architect/Engineer),适合完整项目",
+      "选型:<span class='highlight'>复杂流程 LangGraph</span> / <span class='highlight'>代码任务 AutoGen</span> / <span class='highlight'>快速原型 CrewAI</span> / <span class='highlight'>整项目 MetaGPT</span>"
+    ],
+    "details": [
+      {
+        "term": "核心抽象对比",
+        "explain": "<table border='1' style='border-collapse:collapse;'><tr><th></th><th>核心抽象</th><th>控制流</th><th>状态管理</th></tr><tr><td><strong>LangGraph</strong></td><td>Node/Edge/State</td><td>图(DAG/环)</td><td>TypedDict 全局状态</td></tr><tr><td><strong>AutoGen</strong></td><td>Agent 对话</td><td>消息传递</td><td>隐式在消息历史</td></tr><tr><td><strong>CrewAI</strong></td><td>Crew/Agent/Task</td><td>sequential/hierarchical</td><td>Task 输出链式</td></tr><tr><td><strong>MetaGPT</strong></td><td>Role/Action/SOP</td><td>SOP 工作流</td><td>共享 blackboard</td></tr></table>"
+      },
+      {
+        "term": "LangGraph 典型用法",
+        "explain": "<div class='formula'>from langgraph.graph import StateGraph<br><br>class State(TypedDict):<br>&nbsp;&nbsp;&nbsp;&nbsp;messages: list<br>&nbsp;&nbsp;&nbsp;&nbsp;step: int<br><br>def analyzer(state):<br>&nbsp;&nbsp;&nbsp;&nbsp;# ... 调 LLM 分析<br>&nbsp;&nbsp;&nbsp;&nbsp;return {\"messages\": [...]}<br><br>def actor(state): ...<br>def verifier(state): ...<br><br>graph = StateGraph(State)<br>graph.add_node(\"analyze\", analyzer)<br>graph.add_node(\"act\", actor)<br>graph.add_node(\"verify\", verifier)<br><br>graph.add_edge(\"analyze\", \"act\")<br>graph.add_edge(\"act\", \"verify\")<br># 条件边:验证失败回到 act<br>graph.add_conditional_edges(\"verify\",<br>&nbsp;&nbsp;&nbsp;&nbsp;lambda s: \"act\" if s[\"failed\"] else END)<br><br>app = graph.compile()</div><p><span class='key-point'>LangGraph 适合把一个 Agent 流程「显式画出来」</span>——状态机思维。</p>"
+      },
+      {
+        "term": "AutoGen 典型用法",
+        "explain": "<div class='formula'>from autogen import AssistantAgent, UserProxyAgent<br><br>assistant = AssistantAgent(<br>&nbsp;&nbsp;&nbsp;&nbsp;name=\"coder\",<br>&nbsp;&nbsp;&nbsp;&nbsp;llm_config={\"model\": \"gpt-4\"})<br><br>user_proxy = UserProxyAgent(<br>&nbsp;&nbsp;&nbsp;&nbsp;name=\"user\",<br>&nbsp;&nbsp;&nbsp;&nbsp;code_execution_config={<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"work_dir\": \"./tmp\"})<br><br>user_proxy.initiate_chat(<br>&nbsp;&nbsp;&nbsp;&nbsp;assistant,<br>&nbsp;&nbsp;&nbsp;&nbsp;message=\"写一个冒泡排序并测试\")</div><p>AutoGen 的特色:<span class='key-point'>UserProxy 能真的执行代码</span>——写完代码自动跑,失败了自动改。</p>"
+      },
+      {
+        "term": "选型决策树",
+        "explain": "<div class='formula'>需求: 多 Agent 流程<br>├─ 流程可画成图? → LangGraph<br>├─ 主要是代码任务? → AutoGen<br>├─ 需要快速 demo? → CrewAI<br>├─ 完整软件项目? → MetaGPT<br>└─ 深度定制? → 自己实现 harness<br><br>生产环境建议:<br>- 简单: CrewAI + 补关键缺陷<br>- 中等: LangGraph + 自己包一层<br>- 复杂: 参考开源架构自己搭<br>&nbsp;&nbsp;(就像 Claude Code 没用任何上述框架)</div>"
+      }
+    ],
+    "group": "面经",
+    "lv": 3
+  },
+  {
+    "id": "ieg12",
+    "cat": "工程实践面",
+    "q": "工程实践面总结:为什么 Agentic RL 背得熟还是会凉?",
+    "bullets": [
+      "<span class='highlight'>算法 ≠ 工程</span>:会 GRPO 推导不代表能部署一个 Agent 系统",
+      "工程面考察的是<span class='highlight'>「能不能把东西跑起来」</span>——从网络/Linux/云/开源框架到手撕代码",
+      "面试官关心「合作成本」:<span class='highlight'>你上手一个开源项目需要多久</span>?能不能独立 debug?",
+      "弥补方法:<span class='highlight'>读源码 + 复现 + 发 issue/PR</span>,比刷题更能建立工程直觉",
+      "下一步优先级:<span class='highlight'>Claude Agent SDK 源码</span> > <span class='highlight'>LangGraph 官方示例复现</span> > <span class='highlight'>部署一个端到端 Agent 上生产</span>"
+    ],
+    "details": [
+      {
+        "term": "算法强 vs 工程强的区别",
+        "explain": "<table border='1' style='border-collapse:collapse;'><tr><th>算法强</th><th>工程强</th></tr><tr><td>会推导 PPO/GRPO 公式</td><td>能用 TRL/verl 把训练真的跑起来</td></tr><tr><td>懂 Attention 机制</td><td>知道 Flash Attention 怎么编译/调优</td></tr><tr><td>读过 ReAct 论文</td><td>部署过带 sandbox 的 Agent 上生产</td></tr><tr><td>理解 MCP 协议</td><td>写过一个 MCP server 并调试通</td></tr><tr><td>知道 Claude Code 有 Skill</td><td>写过一个 Skill 并被别人用过</td></tr></table><p>大厂面试(尤其资深岗)<span class='key-point'>越来越偏工程</span>——因为算法研究员不缺,能把系统跑稳的工程师稀缺。</p>"
+      },
+      {
+        "term": "补工程的最快路径",
+        "explain": "<ol><li><strong>读一个开源 Agent 项目源码</strong>:首推 <code>@anthropic-ai/claude-agent-sdk</code> 或 <code>opencode</code>。目标是能画出架构图、说出每个模块的职责</li><li><strong>复现一个端到端 demo</strong>:不是跑 README 的 Hello World,而是改一个有意义的 feature(加个新工具/改 context 压缩策略)</li><li><strong>给开源项目提 issue/PR</strong>:不管是 bug report 还是文档修正,哪怕一个 typo——<span class='key-point'>「开源协作经验」在简历上权重很高</span></li><li><strong>部署一个能被别人用的 Agent</strong>:不用上线,哪怕只给一个朋友用,走完「从本地 → 服务器 → 公网访问」全流程</li><li><strong>记录踩坑</strong>:写技术博客/笔记,把踩过的坑写清楚——面试时这些比背答案更有说服力</li></ol>"
+      },
+      {
+        "term": "常见工程面考察信号",
+        "explain": "<p>面试官问这些其实在考:</p><ul><li><strong>「了解计算机网络吗」</strong> → 考你能不能排查接口超时、SSL 问题、CORS</li><li><strong>「用过云服务吗」</strong> → 考你懂不懂成本/运维/扩展性</li><li><strong>「Linux 命令熟吗」</strong> → 考你能不能在服务器上独立排障</li><li><strong>「分析过 Claude Code 源码吗」</strong> → 考你读没读过真实工程代码(不止学术论文)</li><li><strong>「手撕 BST」</strong> → 考你基础数据结构还扎不扎实(算法岗必问)</li></ul><p><span class='key-point'>每一个问题都是一个小陷阱——不会就说不会,但要能说出「怎么学」和「替代方案」</span>。</p>"
+      },
+      {
+        "term": "心态调整",
+        "explain": "<p>工程实践确实比算法概念更难「突击」——<strong>它是时间堆出来的</strong>。但不代表没救:</p><ul><li>每周<span class='key-point'>读一个开源项目的核心模块</span>(500 行内)</li><li>每月<span class='key-point'>部署一次</span>自己写的东西(哪怕是静态网站)</li><li>每季度<span class='key-point'>学一个新工具</span>(K8s / Terraform / Prometheus)</li></ul><p>半年下来工程面就不会再凉。</p><p>这次凉不是终点,是「知道自己该补什么」的起点。</p>"
+      }
+    ],
+    "group": "面经",
     "lv": 2
   }
 ];

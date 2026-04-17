@@ -118,5 +118,35 @@
     "cat": "编程题-Medium",
     "count": 17,
     "group": "编程题"
+  },
+  {
+    "file": "interview-bytedance.json",
+    "cat": "字节·LLM面",
+    "count": 10,
+    "group": "面经"
+  },
+  {
+    "file": "interview-tencent-agent.json",
+    "cat": "腾讯·Agent面",
+    "count": 15,
+    "group": "面经"
+  },
+  {
+    "file": "interview-tencent-sa.json",
+    "cat": "腾讯·SA面",
+    "count": 11,
+    "group": "面经"
+  },
+  {
+    "file": "interview-agent-deep.json",
+    "cat": "Agent深度面",
+    "count": 16,
+    "group": "面经"
+  },
+  {
+    "file": "interview-engineering.json",
+    "cat": "工程实践面",
+    "count": 12,
+    "group": "面经"
   }
 ]
