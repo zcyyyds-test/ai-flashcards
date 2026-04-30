@@ -396,13 +396,27 @@
     letter-spacing: 0.02em;
   }
   .card-counter span { color: var(--text-dim); font-weight: 700; }
+  .study-layout {
+    width: 100%;
+    max-width: 1180px;
+    display: grid;
+    grid-template-columns: minmax(420px, 680px) minmax(340px, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+  .flashcard-column {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
   /* ══════════════════════════════════════════════════════
      Flashcard
      ══════════════════════════════════════════════════════ */
   .card-wrap {
     perspective: 1600px;
-    width: 100%; max-width: 760px; height: 440px;
+    width: 100%; height: 440px;
     cursor: pointer; user-select: none;
     animation: cardIn 0.5s var(--ease);
   }
@@ -538,6 +552,115 @@
   .card-back .num { color: var(--amber); font-weight: 700; font-family: var(--mono); }
 
   /* ══════════════════════════════════════════════════════
+     Knowledge panel
+     ══════════════════════════════════════════════════════ */
+  .knowledge-panel {
+    width: 100%;
+    min-height: 440px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--card-shadow);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 156px;
+  }
+  .knowledge-head {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .knowledge-eyebrow {
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .knowledge-title {
+    font-size: 1rem;
+    font-family: var(--font-display);
+    color: var(--text);
+    line-height: 1.45;
+    font-weight: 700;
+  }
+  .knowledge-count {
+    flex-shrink: 0;
+    font-size: 0.68rem;
+    color: var(--indigo);
+    background: var(--indigo-dim);
+    border: 1px solid rgba(50,75,145,0.16);
+    border-radius: 999px;
+    padding: 5px 10px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  .knowledge-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 16px 0 12px;
+  }
+  .knowledge-tab {
+    border: 1px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text-dim);
+    border-radius: 999px;
+    padding: 7px 12px;
+    font-size: 0.72rem;
+    font-family: var(--font);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s var(--ease-out);
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .knowledge-tab:hover {
+    border-color: var(--border-lit);
+    color: var(--text);
+  }
+  .knowledge-tab.active {
+    background: var(--indigo-dim);
+    border-color: rgba(50,75,145,0.28);
+    color: var(--indigo);
+  }
+  .knowledge-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .knowledge-empty {
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.84rem;
+    line-height: 1.7;
+    padding: 28px;
+    background: var(--bg-surface);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+  }
+  .knowledge-detail-title {
+    color: var(--indigo);
+    font-size: 0.86rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    padding-left: 12px;
+    border-left: 3px solid var(--indigo);
+  }
+
+  /* ══════════════════════════════════════════════════════
      Details / Glossary
      ══════════════════════════════════════════════════════ */
   .details-section {
@@ -616,6 +739,24 @@
   .term-explain table { width: 100%; font-size: 0.74rem; margin: 8px 0; border-collapse: collapse; }
   .term-explain table th, .term-explain table td { padding: 6px 8px; border: 1px solid var(--border); text-align: left; }
   .term-explain table th { background: var(--bg-hover); color: var(--indigo); font-weight: 700; }
+  .term-explain code {
+    background: var(--indigo-dim); padding: 2px 6px;
+    border-radius: 4px; font-family: var(--mono);
+    font-size: 0.78rem; color: var(--indigo);
+    border: 1px solid rgba(50,75,145,0.15);
+  }
+  .term-explain pre {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    line-height: 1.65;
+    white-space: pre;
+  }
 
   /* ══════════════════════════════════════════════════════
      Action buttons (rating)
@@ -1029,6 +1170,16 @@
     .cat-progress { padding: 18px 20px; }
     .action-btn { min-width: 72px; padding: 10px 14px; font-size: 0.74rem; }
   }
+  @media (max-width: 980px) {
+    .study-layout {
+      grid-template-columns: 1fr;
+      max-width: 760px;
+    }
+    .knowledge-panel {
+      position: static;
+      min-height: 320px;
+    }
+  }
   @media (max-width: 480px) {
     .card-wrap { height: 600px; }
     .action-btn { min-width: 64px; padding: 9px 10px; font-size: 0.7rem; }
@@ -1102,31 +1253,46 @@
     </div>
   </div>
   <div class="card-counter"><span id="card-pos">0</span> / <span id="card-total">0</span></div>
-  <div class="card-wrap" id="card-wrap" onclick="flipCard(event)">
-    <div class="card-inner" id="card-inner">
-      <div class="card-face card-front" id="card-front">
-        <div class="card-cat-tag" id="cf-cat"></div>
-        <div class="card-q" id="cf-q"></div>
-        <div class="card-flip-hint">点击或按空格键查看答案</div>
-        <div class="mastered-badge">✓ 已掌握</div>
+  <div class="study-layout">
+    <section class="flashcard-column">
+      <div class="card-wrap" id="card-wrap" onclick="flipCard(event)">
+        <div class="card-inner" id="card-inner">
+          <div class="card-face card-front" id="card-front">
+            <div class="card-cat-tag" id="cf-cat"></div>
+            <div class="card-q" id="cf-q"></div>
+            <div class="card-flip-hint">点击或按空格键查看答案</div>
+            <div class="mastered-badge">✓ 已掌握</div>
+          </div>
+          <div class="card-face card-back" id="card-back">
+            <div class="card-cat-tag" id="cb-cat"></div>
+            <div class="answer-title">要点</div>
+            <ul id="cb-bullets"></ul>
+          </div>
+        </div>
       </div>
-      <div class="card-face card-back" id="card-back">
-        <div class="card-cat-tag" id="cb-cat"></div>
-        <div class="answer-title">要点</div>
-        <ul id="cb-bullets"></ul>
-        <div id="cb-details" class="details-section" style="display:none"></div>
-      </div>
-    </div>
-  </div>
 
-  <div class="card-actions" id="card-actions">
-    <button class="action-btn btn-again" onclick="rate(1)">重来<span class="interval" id="iv-1"></span></button>
-    <button class="action-btn btn-hard" onclick="rate(2)">困难<span class="interval" id="iv-2"></span></button>
-    <button class="action-btn btn-good" onclick="rate(3)">良好<span class="interval" id="iv-3"></span></button>
-    <button class="action-btn btn-easy" onclick="rate(4)">简单<span class="interval" id="iv-4"></span></button>
-    <button class="action-btn btn-next" onclick="navigate(1)">下一张 →</button>
+      <div class="card-actions" id="card-actions">
+        <button class="action-btn btn-again" onclick="rate(1)">重来<span class="interval" id="iv-1"></span></button>
+        <button class="action-btn btn-hard" onclick="rate(2)">困难<span class="interval" id="iv-2"></span></button>
+        <button class="action-btn btn-good" onclick="rate(3)">良好<span class="interval" id="iv-3"></span></button>
+        <button class="action-btn btn-easy" onclick="rate(4)">简单<span class="interval" id="iv-4"></span></button>
+        <button class="action-btn btn-next" onclick="navigate(1)">下一张 →</button>
+      </div>
+      <div class="rate-hint" id="rate-hint">翻转卡片后显示评分按钮</div>
+    </section>
+
+    <aside class="knowledge-panel" id="knowledge-panel" aria-live="polite">
+      <div class="knowledge-head">
+        <div>
+          <div class="knowledge-eyebrow">Knowledge</div>
+          <div class="knowledge-title" id="knowledge-title">知识扩展</div>
+        </div>
+        <div class="knowledge-count" id="knowledge-count">0</div>
+      </div>
+      <div class="knowledge-tabs" id="knowledge-tabs"></div>
+      <div class="knowledge-body" id="knowledge-body"></div>
+    </aside>
   </div>
-  <div class="rate-hint" id="rate-hint">翻转卡片后显示评分按钮</div>
 
   <div class="cat-progress collapsed" id="cat-progress-panel">
     <button class="cat-progress-title" id="cat-progress-toggle" type="button" onclick="toggleCatProgress()" aria-expanded="false">各分类掌握进度</button>
@@ -1153,7 +1319,7 @@
   </div>
 </div>
 
-<script src="data/cards.js?v=11"></script>
+<script src="data/cards.js?v=12"></script>
 <script src="fsrs.js?v=7"></script>
 <script>
 
@@ -1181,6 +1347,7 @@ let reviewMode = false;
 let currentLang = localStorage.getItem('ai_fc_lang') || 'zh';
 let currentTheme = localStorage.getItem('ai_fc_theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 let catProgressCollapsed = localStorage.getItem(CAT_PROGRESS_COLLAPSED_KEY) !== 'false';
+let knowledgeDetailIndex = 0;
 
 function getAllCards() {
   return [...BUILTIN_CARDS, ...customCards];
@@ -1360,13 +1527,16 @@ function render() {
     document.getElementById('card-wrap').style.display = 'none';
     document.getElementById('card-actions').style.display = 'none';
     document.getElementById('rate-hint').classList.remove('show');
+    document.getElementById('knowledge-panel').style.display = 'none';
     document.querySelector('.card-counter').innerHTML = '<span style="color:#666">没有符合条件的卡片</span>';
     updateStats(); updateCatProgress();
     return;
   }
   document.getElementById('card-wrap').style.display = '';
+  document.getElementById('knowledge-panel').style.display = '';
 
   isFlipped = false;
+  knowledgeDetailIndex = 0;
   document.getElementById('card-inner').classList.remove('flipped');
   updateRateButtons();
 
@@ -1383,20 +1553,59 @@ function render() {
   const ul = document.getElementById('cb-bullets');
   const bullets = (currentLang === 'ja' && card.bullets_ja) ? card.bullets_ja : card.bullets;
   ul.innerHTML = bullets.map(b => `<li><div class="bullet-text">${b}</div></li>`).join('');
-
-  // Render details/glossary section if present
-  const detailsContainer = document.getElementById('cb-details');
-  const details = (currentLang === 'ja' && card.details_ja) ? card.details_ja : (card.details || []);
-  if (details.length > 0) {
-    detailsContainer.style.display = '';
-    detailsContainer.innerHTML = details.map(d => `<details class="term-detail"><summary>${d.term}</summary><div class="term-explain">${d.explain}</div></details>`).join('');
-  } else {
-    detailsContainer.style.display = 'none';
-    detailsContainer.innerHTML = '';
-  }
+  renderKnowledgePanel(card);
 
   updateStats();
   updateCatProgress();
+}
+
+function getCardDetails(card) {
+  return (currentLang === 'ja' && card.details_ja) ? card.details_ja : (card.details || []);
+}
+
+function escapeHtml(text) {
+  return String(text || '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[ch]));
+}
+
+function renderKnowledgePanel(card) {
+  const title = document.getElementById('knowledge-title');
+  const count = document.getElementById('knowledge-count');
+  const tabs = document.getElementById('knowledge-tabs');
+  const body = document.getElementById('knowledge-body');
+  if (!title || !count || !tabs || !body) return;
+
+  const details = getCardDetails(card);
+  title.textContent = currentLang === 'ja' ? '知識拡張' : '知识扩展';
+  count.textContent = details.length ? `${Math.min(knowledgeDetailIndex + 1, details.length)}/${details.length}` : '0';
+
+  if (!isFlipped) {
+    tabs.innerHTML = '';
+    body.innerHTML = `<div class="knowledge-empty">${currentLang === 'ja' ? 'カードをめくると、この問題に対応する補足知識がここに表示されます。' : '翻转主卡片后，这里会显示对应的知识扩展。'}</div>`;
+    return;
+  }
+
+  if (!details.length) {
+    tabs.innerHTML = '';
+    body.innerHTML = `<div class="knowledge-empty">${currentLang === 'ja' ? 'このカードには補足知識がありません。' : '这张卡片暂时没有扩展知识。'}</div>`;
+    return;
+  }
+
+  if (knowledgeDetailIndex >= details.length) knowledgeDetailIndex = 0;
+  tabs.innerHTML = details.map((d, i) => (
+    `<button class="knowledge-tab${i === knowledgeDetailIndex ? ' active' : ''}" onclick="selectKnowledgeDetail(${i})" title="${escapeHtml(d.term)}">${escapeHtml(d.term)}</button>`
+  )).join('');
+
+  const detail = details[knowledgeDetailIndex];
+  body.innerHTML = `<div class="knowledge-detail-title">${escapeHtml(detail.term)}</div><div class="term-explain">${detail.explain}</div>`;
+}
+
+function selectKnowledgeDetail(index) {
+  const card = currentCard();
+  if (!card) return;
+  knowledgeDetailIndex = index;
+  renderKnowledgePanel(card);
 }
 
 function updateRateButtons() {
@@ -1487,11 +1696,12 @@ function toggleCatProgress() {
 // ═══════════════════════════════════════════════════════════════
 function flipCard(e) {
   if(!currentCard()) return;
-  // Don't flip when clicking details/summary or links inside the card back
-  if(e && e.target.closest('.details-section, summary, .term-detail, a')) return;
+  // Don't flip when clicking links inside the card back
+  if(e && e.target.closest('a')) return;
   isFlipped = !isFlipped;
   document.getElementById('card-inner').classList.toggle('flipped', isFlipped);
   updateRateButtons();
+  renderKnowledgePanel(currentCard());
 }
 
 function navigate(dir) {

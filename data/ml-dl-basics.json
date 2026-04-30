@@ -38,12 +38,8 @@
         "explain": "<p>关联学习率调度、过拟合正则化、SFT/DPO/GRPO 超参。SiLR/LoRA 微调里 AdamW、warmup、effective batch 和 rank 是一起调的。</p>"
       },
       {
-        "term": "面试表达",
-        "explain": "<p><span class=\"key-point\">面试可以说：SGD 简单但依赖 lr，Adam 用一二阶矩提升收敛，AdamW 修正了 Adam 中 L2 与权重衰减耦合的问题。LLM 微调我默认 AdamW+warmup+cosine，再用验证集调 lr。</span></p>"
-      },
-      {
-        "term": "知识连接",
-        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+        "term": "补充与实战整理",
+        "explain": "<p><strong>面试表达</strong></p><p><span class=\"key-point\">面试可以说：SGD 简单但依赖 lr，Adam 用一二阶矩提升收敛，AdamW 修正了 Adam 中 L2 与权重衰减耦合的问题。LLM 微调我默认 AdamW+warmup+cosine，再用验证集调 lr。</span></p><p><strong>知识连接</strong></p><p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
       }
     ],
     "details_ja": [
@@ -64,12 +60,8 @@
         "explain": "<p>学習率スケジュール、正則化、SFT/DPO/GRPO、LoRA 微調整と関連する。</p>"
       },
       {
-        "term": "面接での言い方",
-        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。オプティマイザの比較：SGD / Adam / AdamW では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
-      },
-      {
-        "term": "知識の接続",
-        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+        "term": "補足と実戦整理",
+        "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。オプティマイザの比較：SGD / Adam / AdamW では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
       }
     ]
   },
@@ -114,16 +106,8 @@
         "explain": "<p>关联模型容量、LoRA rank、数据增强、交叉验证。PowerTS 或 SiLR 这类小数据微调要特别关注 rank、epochs 和 early stopping。</p>"
       },
       {
-        "term": "面试表达",
-        "explain": "<p><span class=\"key-point\">面试表达：过拟合是模型记住训练样本而没有学到可迁移规律。我会用验证曲线确认，再按数据增强、正则化、降低容量、早停的顺序处理。</span></p>"
-      },
-      {
-        "term": "知识连接",
-        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
-      },
-      {
-        "term": "迁移练习",
-        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+        "term": "补充与实战整理",
+        "explain": "<p><strong>面试表达</strong></p><p><span class=\"key-point\">面试表达：过拟合是模型记住训练样本而没有学到可迁移规律。我会用验证曲线确认，再按数据增强、正则化、降低容量、早停的顺序处理。</span></p><p><strong>知识连接</strong></p><p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul><p><strong>迁移练习</strong></p><p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
       }
     ],
     "details_ja": [
@@ -144,16 +128,8 @@
         "explain": "<p>モデル容量、データ拡張、LoRA rank、交差検証、early stopping と関連する。</p>"
       },
       {
-        "term": "面接での言い方",
-        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。過学習と正則化 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
-      },
-      {
-        "term": "知識の接続",
-        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
-      },
-      {
-        "term": "転用練習",
-        "explain": "<p><strong>知識を転用して確認する：</strong>この概念を訓練、推論、評価、顧客導入の四場面に置き、何を改善し、どんなコストとリスクを生むか考える。</p><ul><li>境界を説明できれば暗記ではない。</li><li>プロジェクトに接続できれば実務知識になる。</li><li>検証方法まで言えれば工程判断として使える。</li></ul>"
+        "term": "補足と実戦整理",
+        "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。過学習と正則化 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul><p><strong>転用練習</strong></p><p><strong>知識を転用して確認する：</strong>この概念を訓練、推論、評価、顧客導入の四場面に置き、何を改善し、どんなコストとリスクを生むか考える。</p><ul><li>境界を説明できれば暗記ではない。</li><li>プロジェクトに接続できれば実務知識になる。</li><li>検証方法まで言えれば工程判断として使える。</li></ul>"
       }
     ]
   },
@@ -196,12 +172,8 @@
         "explain": "<p>关联 embedding、对比学习、bge-m3 微调、GAN/RL 的目标函数。RAG 检索召回提升通常不是靠 CE，而是靠对比学习式的 ranking loss。</p>"
       },
       {
-        "term": "面试表达",
-        "explain": "<p><span class=\"key-point\">面试可以说：loss 是业务目标的可微代理。分类用 CE，回归常用 MSE/MAE，不平衡用 focal，语义检索用 contrastive 或 triplet，并且要说明负样本构造。</span></p>"
-      },
-      {
-        "term": "知识连接",
-        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+        "term": "补充与实战整理",
+        "explain": "<p><strong>面试表达</strong></p><p><span class=\"key-point\">面试可以说：loss 是业务目标的可微代理。分类用 CE，回归常用 MSE/MAE，不平衡用 focal，语义检索用 contrastive 或 triplet，并且要说明负样本构造。</span></p><p><strong>知识连接</strong></p><p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
       }
     ],
     "details_ja": [
@@ -222,12 +194,8 @@
         "explain": "<p>分類・回帰・埋め込み学習、対比学習、RAG 検索のランキング損失と関連する。</p><p>プロジェクト文脈では、<span class=\"key-point\">Triplet Loss：(anchor, positive, negative)の三つ組 → 自身のbge-m3ファインチューニングで使用</span></p>"
       },
       {
-        "term": "面接での言い方",
-        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。損失関数の選択 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
-      },
-      {
-        "term": "知識の接続",
-        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+        "term": "補足と実戦整理",
+        "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。損失関数の選択 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
       }
     ]
   },
@@ -270,16 +238,8 @@
         "explain": "<p>关联残差连接、梯度消失、模型压缩和 TensorRT 部署。Edge AI 项目中量化 CNN/视觉模型到 Jetson Nano，就是结构和硬件约束共同决定方案。</p>"
       },
       {
-        "term": "面试表达",
-        "explain": "<p><span class=\"key-point\">面试表达：CNN 的核心是局部连接和参数共享，用较少参数捕捉空间模式。谈到部署时我会补充卷积算子成熟、可量化、在边缘设备上吞吐稳定。</span></p>"
-      },
-      {
-        "term": "知识连接",
-        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
-      },
-      {
-        "term": "迁移练习",
-        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+        "term": "补充与实战整理",
+        "explain": "<p><strong>面试表达</strong></p><p><span class=\"key-point\">面试表达：CNN 的核心是局部连接和参数共享，用较少参数捕捉空间模式。谈到部署时我会补充卷积算子成熟、可量化、在边缘设备上吞吐稳定。</span></p><p><strong>知识连接</strong></p><p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul><p><strong>迁移练习</strong></p><p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
       }
     ],
     "details_ja": [
@@ -300,12 +260,8 @@
         "explain": "<p>Residual Connection、勾配消失、モデル圧縮、TensorRT/Jetson での Edge AI 配備と関連する。</p><p>プロジェクト文脈では、<span class=\"key-point\">自身のEdge AIプロジェクト：TensorRTで視覚モデルを量子化・高速化しJetson Nanoにデプロイ</span></p>"
       },
       {
-        "term": "面接での言い方",
-        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。CNNの中核概念 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
-      },
-      {
-        "term": "知識の接続",
-        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+        "term": "補足と実戦整理",
+        "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。CNNの中核概念 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
       }
     ]
   },
@@ -348,16 +304,8 @@
         "explain": "<p>关联梯度消失、Attention 演进、PowerTS 中 LSTM vs LLM 对比。你的 PowerTS 结果说明模型选择要看任务结构，而不是追最新架构。</p>"
       },
       {
-        "term": "面试表达",
-        "explain": "<p><span class=\"key-point\">面试可说：RNN 的瓶颈是长距离依赖和串行计算，LSTM/GRU 用门控缓解但没有根治；Transformer 用 attention 一跳连接替代递推，所以更易并行和扩展。</span></p>"
-      },
-      {
-        "term": "知识连接",
-        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
-      },
-      {
-        "term": "迁移练习",
-        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+        "term": "补充与实战整理",
+        "explain": "<p><strong>面试表达</strong></p><p><span class=\"key-point\">面试可说：RNN 的瓶颈是长距离依赖和串行计算，LSTM/GRU 用门控缓解但没有根治；Transformer 用 attention 一跳连接替代递推，所以更易并行和扩展。</span></p><p><strong>知识连接</strong></p><p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul><p><strong>迁移练习</strong></p><p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
       }
     ],
     "details_ja": [
@@ -378,12 +326,8 @@
         "explain": "<p>勾配消失、Attention の進化、時系列予測、PowerTS における LSTM と LLM の比較と関連する。</p><p>プロジェクト文脈では、<span class=\"key-point\">自身の経験：PowerTSにおいてLSTMはLLMより精度が13倍高く、推論は約1ms vs 約5-10s → シンプルなモデルが特定の場面では最適解</span></p>"
       },
       {
-        "term": "面接での言い方",
-        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。RNN / LSTM / GRU では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
-      },
-      {
-        "term": "知識の接続",
-        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+        "term": "補足と実戦整理",
+        "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。RNN / LSTM / GRU では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
       }
     ]
   },
@@ -426,12 +370,8 @@
         "explain": "<p>关联 Transformer Layer Norm、残差连接、梯度消失、LLaMA/Qwen 的 RMSNorm。LLM 微调时 batch 很小，所以 Layer/RMSNorm 的独立性特别重要。</p>"
       },
       {
-        "term": "面试表达",
-        "explain": "<p><span class=\"key-point\">面试表达：BN 依赖 batch 统计，LN 依赖单样本特征统计。Transformer 用 LN/RMSNorm 是因为序列长度和 batch size 可变，而且推理常是单样本。</span></p>"
-      },
-      {
-        "term": "知识连接",
-        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+        "term": "补充与实战整理",
+        "explain": "<p><strong>面试表达</strong></p><p><span class=\"key-point\">面试表达：BN 依赖 batch 统计，LN 依赖单样本特征统计。Transformer 用 LN/RMSNorm 是因为序列长度和 batch size 可变，而且推理常是单样本。</span></p><p><strong>知识连接</strong></p><p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
       }
     ],
     "details_ja": [
@@ -452,12 +392,8 @@
         "explain": "<p>Layer Norm、RMSNorm、Pre-Norm Transformer、LLaMA/Qwen の安定学習と関連する。</p>"
       },
       {
-        "term": "面接での言い方",
-        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Batch Norm vs Layer Norm では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
-      },
-      {
-        "term": "知識の接続",
-        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+        "term": "補足と実戦整理",
+        "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Batch Norm vs Layer Norm では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
       }
     ]
   },
@@ -500,16 +436,8 @@
         "explain": "<p>关联损失函数、数据增强、类别不平衡。电力系统稀有事件增强就是用生成模型补充少数类，但还要验证增强样本是否提升真实测试集。</p>"
       },
       {
-        "term": "面试表达",
-        "explain": "<p><span class=\"key-point\">面试可答：GAN 是生成器和判别器的对抗优化，优点是样本锐利，难点是训练不稳定和模式崩塌。实际项目我会用下游指标验证，而不只看 FID。</span></p>"
-      },
-      {
-        "term": "知识连接",
-        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
-      },
-      {
-        "term": "迁移练习",
-        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+        "term": "补充与实战整理",
+        "explain": "<p><strong>面试表达</strong></p><p><span class=\"key-point\">面试可答：GAN 是生成器和判别器的对抗优化，优点是样本锐利，难点是训练不稳定和模式崩塌。实际项目我会用下游指标验证，而不只看 FID。</span></p><p><strong>知识连接</strong></p><p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul><p><strong>迁移练习</strong></p><p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
       }
     ],
     "details_ja": [
@@ -530,16 +458,8 @@
         "explain": "<p>生成モデル、損失関数、データ拡張、稀少イベントのクラス不均衡対策と関連する。</p><p>プロジェクト文脈では、<span class=\"key-point\">自身の経験：学部プロジェクトでGANを用いて電力系統のレアイベントデータを拡張 → クラス不均衡問題を解消</span></p>"
       },
       {
-        "term": "面接での言い方",
-        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。GANの原理と応用 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
-      },
-      {
-        "term": "知識の接続",
-        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
-      },
-      {
-        "term": "転用練習",
-        "explain": "<p><strong>知識を転用して確認する：</strong>この概念を訓練、推論、評価、顧客導入の四場面に置き、何を改善し、どんなコストとリスクを生むか考える。</p><ul><li>境界を説明できれば暗記ではない。</li><li>プロジェクトに接続できれば実務知識になる。</li><li>検証方法まで言えれば工程判断として使える。</li></ul>"
+        "term": "補足と実戦整理",
+        "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。GANの原理と応用 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul><p><strong>転用練習</strong></p><p><strong>知識を転用して確認する：</strong>この概念を訓練、推論、評価、顧客導入の四場面に置き、何を改善し、どんなコストとリスクを生むか考える。</p><ul><li>境界を説明できれば暗記ではない。</li><li>プロジェクトに接続できれば実務知識になる。</li><li>検証方法まで言えれば工程判断として使える。</li></ul>"
       }
     ]
   },
@@ -582,16 +502,8 @@
         "explain": "<p>关联 RLHF、Reward Hacking、Agent 安全、SiLR/电力控制经验。PPO 在 RLHF 中优化文本 policy，本质仍是序列决策。</p>"
       },
       {
-        "term": "面试表达",
-        "explain": "<p><span class=\"key-point\">面试表达：RL 的关键词是状态、动作、奖励、策略和价值函数。PPO 通过限制每次策略更新幅度提升稳定性，DDPG 适合连续控制。</span></p>"
-      },
-      {
-        "term": "知识连接",
-        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
-      },
-      {
-        "term": "迁移练习",
-        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+        "term": "补充与实战整理",
+        "explain": "<p><strong>面试表达</strong></p><p><span class=\"key-point\">面试表达：RL 的关键词是状态、动作、奖励、策略和价值函数。PPO 通过限制每次策略更新幅度提升稳定性，DDPG 适合连续控制。</span></p><p><strong>知识连接</strong></p><p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul><p><strong>迁移练习</strong></p><p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
       }
     ],
     "details_ja": [
@@ -612,12 +524,8 @@
         "explain": "<p>RLHF、PPO、Reward Hacking、Agent 安全、電力制御の経験と関連する。</p><p>プロジェクト文脈では、<span class=\"key-point\">DDPG：Actor-Critic + 連続行動空間 → ロボット/電力制御に適する</span></p>"
       },
       {
-        "term": "面接での言い方",
-        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。強化学習の基礎：PPO / DDPG では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
-      },
-      {
-        "term": "知識の接続",
-        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+        "term": "補足と実戦整理",
+        "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。強化学習の基礎：PPO / DDPG では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
       }
     ]
   },
@@ -660,16 +568,8 @@
         "explain": "<p>关联 Embedding、RAG 检索、bge-m3 微调和损失函数选择。Recall@1 的提升通常来自更好的正负样本构造，而不仅是换模型。</p>"
       },
       {
-        "term": "面试表达",
-        "explain": "<p><span class=\"key-point\">面试可以说：对比学习的目标是让相似样本在 embedding 空间靠近、不相似样本远离。项目里我会重点讲正负样本构造和 in-batch negatives 的效率。</span></p>"
-      },
-      {
-        "term": "知识连接",
-        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
-      },
-      {
-        "term": "迁移练习",
-        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+        "term": "补充与实战整理",
+        "explain": "<p><strong>面试表达</strong></p><p><span class=\"key-point\">面试可以说：对比学习的目标是让相似样本在 embedding 空间靠近、不相似样本远离。项目里我会重点讲正负样本构造和 in-batch negatives 的效率。</span></p><p><strong>知识连接</strong></p><p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul><p><strong>迁移练习</strong></p><p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
       }
     ],
     "details_ja": [
@@ -690,12 +590,8 @@
         "explain": "<p>Embedding、RAG、bge-m3 微調整、MultipleNegativesRankingLoss と関連する。</p><p>プロジェクト文脈では、<span class=\"key-point\">自身の応用：bge-m3ファインチューニングでMultipleNegativesRankingLoss（対照学習の変種）を使用、in-batch negativesで効率向上</span></p>"
       },
       {
-        "term": "面接での言い方",
-        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。対照学習（Contrastive Learning） では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
-      },
-      {
-        "term": "知識の接続",
-        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+        "term": "補足と実戦整理",
+        "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。対照学習（Contrastive Learning） では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
       }
     ]
   },
@@ -762,12 +658,8 @@
         "explain": "<p>Self-Attention、Transformer、Flash Attention、MQA/GQA と関連する。</p>"
       },
       {
-        "term": "面接での言い方",
-        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Attention機構の進化 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
-      },
-      {
-        "term": "知識の接続",
-        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+        "term": "補足と実戦整理",
+        "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Attention機構の進化 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
       }
     ]
   },
@@ -812,12 +704,8 @@
         "explain": "<p>关联 RNN/LSTM、CNN ResNet、Transformer Pre-Norm、LLM 训练超参。max_grad_norm=1.0 是很多 LLM 微调配置里的默认安全阀。</p>"
       },
       {
-        "term": "面试表达",
-        "explain": "<p><span class=\"key-point\">面试可答：本质是链式法则下梯度连乘导致尺度失控。解决思路是让信号和梯度在层间保持稳定：初始化、非饱和激活、残差、归一化和裁剪。</span></p>"
-      },
-      {
-        "term": "知识连接",
-        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+        "term": "补充与实战整理",
+        "explain": "<p><strong>面试表达</strong></p><p><span class=\"key-point\">面试可答：本质是链式法则下梯度连乘导致尺度失控。解决思路是让信号和梯度在层间保持稳定：初始化、非饱和激活、残差、归一化和裁剪。</span></p><p><strong>知识连接</strong></p><p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
       }
     ],
     "details_ja": [
@@ -838,12 +726,8 @@
         "explain": "<p>RNN/LSTM、ResNet、Pre-Norm、Gradient Clipping、LLM 微調整設定と関連する。</p>"
       },
       {
-        "term": "面接での言い方",
-        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。勾配消失と勾配爆発 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
-      },
-      {
-        "term": "知識の接続",
-        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+        "term": "補足と実戦整理",
+        "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。勾配消失と勾配爆発 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
       }
     ]
   },
@@ -888,12 +772,8 @@
         "explain": "<p>关联 AdamW、SFT/DPO/GRPO 超参、梯度爆炸。LoRA 微调中 lr 较高，warmup 尤其重要。</p>"
       },
       {
-        "term": "面试表达",
-        "explain": "<p><span class=\"key-point\">面试表达：学习率不是常数，而是训练过程的控制曲线。LLM 我默认 warmup+cosine，并根据总步数、batch size 和是否全参/LoRA 调峰值。</span></p>"
-      },
-      {
-        "term": "知识连接",
-        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+        "term": "补充与实战整理",
+        "explain": "<p><strong>面试表达</strong></p><p><span class=\"key-point\">面试表达：学习率不是常数，而是训练过程的控制曲线。LLM 我默认 warmup+cosine，并根据总步数、batch size 和是否全参/LoRA 调峰值。</span></p><p><strong>知识连接</strong></p><p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
       }
     ],
     "details_ja": [
@@ -914,12 +794,8 @@
         "explain": "<p>AdamW、warmup、cosine schedule、SFT/DPO/GRPO の learning rate 設計と関連する。</p>"
       },
       {
-        "term": "面接での言い方",
-        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。学習率スケジューリング戦略 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
-      },
-      {
-        "term": "知識の接続",
-        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+        "term": "補足と実戦整理",
+        "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。学習率スケジューリング戦略 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
       }
     ]
   },
@@ -964,16 +840,8 @@
         "explain": "<p>关联过拟合、GAN、对比学习、蒸馏。电力稀有事件可用生成式增强，但要以真实 holdout 集性能为准。</p>"
       },
       {
-        "term": "面试表达",
-        "explain": "<p><span class=\"key-point\">面试可以说：数据增强不是随便造数据，而是把任务中应当保持不变的因素显式编码进训练。选择增强前先问它是否保持标签。</span></p>"
-      },
-      {
-        "term": "知识连接",
-        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
-      },
-      {
-        "term": "迁移练习",
-        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+        "term": "补充与实战整理",
+        "explain": "<p><strong>面试表达</strong></p><p><span class=\"key-point\">面试可以说：数据增强不是随便造数据，而是把任务中应当保持不变的因素显式编码进训练。选择增强前先问它是否保持标签。</span></p><p><strong>知识连接</strong></p><p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul><p><strong>迁移练习</strong></p><p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
       }
     ],
     "details_ja": [
@@ -994,16 +862,8 @@
         "explain": "<p>過学習、対比学習、GAN、蒸留、LLM 生成データの品質管理と関連する。</p>"
       },
       {
-        "term": "面接での言い方",
-        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。データ拡張技術 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
-      },
-      {
-        "term": "知識の接続",
-        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
-      },
-      {
-        "term": "転用練習",
-        "explain": "<p><strong>知識を転用して確認する：</strong>この概念を訓練、推論、評価、顧客導入の四場面に置き、何を改善し、どんなコストとリスクを生むか考える。</p><ul><li>境界を説明できれば暗記ではない。</li><li>プロジェクトに接続できれば実務知識になる。</li><li>検証方法まで言えれば工程判断として使える。</li></ul>"
+        "term": "補足と実戦整理",
+        "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。データ拡張技術 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul><p><strong>転用練習</strong></p><p><strong>知識を転用して確認する：</strong>この概念を訓練、推論、評価、顧客導入の四場面に置き、何を改善し、どんなコストとリスクを生むか考える。</p><ul><li>境界を説明できれば暗記ではない。</li><li>プロジェクトに接続できれば実務知識になる。</li><li>検証方法まで言えれば工程判断として使える。</li></ul>"
       }
     ]
   },
@@ -1048,12 +908,8 @@
         "explain": "<p>关联 LLM 量化、Edge AI TensorRT、LoRA/QLoRA 和 vLLM serving。边缘部署通常要同时考虑模型大小、算子支持和校准数据。</p>"
       },
       {
-        "term": "面试表达",
-        "explain": "<p><span class=\"key-point\">面试表达：剪枝减结构，蒸馏转移知识，量化降精度。实际部署我会用端到端延迟和精度评估，而不是只看参数量。</span></p>"
-      },
-      {
-        "term": "知识连接",
-        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+        "term": "补充与实战整理",
+        "explain": "<p><strong>面试表达</strong></p><p><span class=\"key-point\">面试表达：剪枝减结构，蒸馏转移知识，量化降精度。实际部署我会用端到端延迟和精度评估，而不是只看参数量。</span></p><p><strong>知识连接</strong></p><p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
       }
     ],
     "details_ja": [
@@ -1074,12 +930,8 @@
         "explain": "<p>量子化、蒸留、剪定、Edge AI、QLoRA、serving コスト削減と関連する。</p>"
       },
       {
-        "term": "面接での言い方",
-        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。モデル圧縮：枝刈り、蒸留、量子化 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
-      },
-      {
-        "term": "知識の接続",
-        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+        "term": "補足と実戦整理",
+        "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。モデル圧縮：枝刈り、蒸留、量子化 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
       }
     ]
   },
@@ -1124,12 +976,8 @@
         "explain": "<p>关联过拟合、学习率/rank/epochs 搜索、PowerTS 时序任务。LLM 微调数据少时，最好用固定验证集加少量网格，而不是无限试到过拟合验证集。</p>"
       },
       {
-        "term": "面试表达",
-        "explain": "<p><span class=\"key-point\">面试可说：CV 提供更稳的泛化估计，搜索方法是在预算内找超参。我会强调防止 leakage，并根据数据类型选择 K-Fold、stratified 或 time split。</span></p>"
-      },
-      {
-        "term": "知识连接",
-        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+        "term": "补充与实战整理",
+        "explain": "<p><strong>面试表达</strong></p><p><span class=\"key-point\">面试可说：CV 提供更稳的泛化估计，搜索方法是在预算内找超参。我会强调防止 leakage，并根据数据类型选择 K-Fold、stratified 或 time split。</span></p><p><strong>知识连接</strong></p><p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
       }
     ],
     "details_ja": [
@@ -1150,12 +998,8 @@
         "explain": "<p>過学習検出、ハイパーパラメータ探索、時系列分割、LLM 微調整の検証設計と関連する。</p>"
       },
       {
-        "term": "面接での言い方",
-        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。交差検証とハイパーパラメータ探索 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
-      },
-      {
-        "term": "知識の接続",
-        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+        "term": "補足と実戦整理",
+        "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。交差検証とハイパーパラメータ探索 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
       }
     ]
   },
@@ -1222,12 +1066,8 @@
         "explain": "<p>CLM/MLM/Seq2Seq、Transformer、RoPE、GQA、Instruction Tuning と関連する。</p>"
       },
       {
-        "term": "面接での言い方",
-        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Transformerアーキテクチャの変種：GPT vs BERT vs T5 vs LLaMA では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
-      },
-      {
-        "term": "知識の接続",
-        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+        "term": "補足と実戦整理",
+        "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Transformerアーキテクチャの変種：GPT vs BERT vs T5 vs LLaMA では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
       }
     ]
   }
