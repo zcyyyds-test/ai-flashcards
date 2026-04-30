@@ -733,13 +733,41 @@
     box-shadow: var(--card-shadow);
   }
   .cat-progress-title {
+    width: 100%;
+    border: 0;
+    background: transparent;
     font-size: 0.7rem; color: var(--text-muted);
-    margin-bottom: 16px;
+    margin-bottom: 0;
     text-transform: uppercase;
     letter-spacing: 0.14em;
     font-weight: 700;
     padding-left: 10px;
     border-left: 2px solid var(--vermillion);
+    font-family: var(--font);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    text-align: left;
+  }
+  .cat-progress-title:hover { color: var(--text-dim); }
+  .cat-progress-title::after {
+    content: '▸';
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    transition: transform 0.2s var(--ease-out), color 0.2s var(--ease-out);
+  }
+  .cat-progress:not(.collapsed) .cat-progress-title {
+    margin-bottom: 16px;
+  }
+  .cat-progress:not(.collapsed) .cat-progress-title::after {
+    transform: rotate(90deg);
+    color: var(--vermillion);
+  }
+  .cat-progress.collapsed {
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+  .cat-progress.collapsed .cat-rows {
+    display: none;
   }
   .cat-rows { display: flex; flex-direction: column; gap: 9px; }
   .cat-row {
@@ -1100,8 +1128,8 @@
   </div>
   <div class="rate-hint" id="rate-hint">翻转卡片后显示评分按钮</div>
 
-  <div class="cat-progress" id="cat-progress-panel">
-    <div class="cat-progress-title">各分类掌握进度</div>
+  <div class="cat-progress collapsed" id="cat-progress-panel">
+    <button class="cat-progress-title" id="cat-progress-toggle" type="button" onclick="toggleCatProgress()" aria-expanded="false">各分类掌握进度</button>
     <div class="cat-rows" id="cat-rows"></div>
   </div>
 </main>
@@ -1136,6 +1164,7 @@ const FSRS_KEY = 'ai_fc_fsrs_states';
 const LOG_KEY  = 'ai_fc_fsrs_log';
 const SCHEMA_KEY = 'ai_fc_schema_v';
 const CUSTOM_KEY = 'ai_fc_custom_cards';
+const CAT_PROGRESS_COLLAPSED_KEY = 'ai_fc_cat_progress_collapsed';
 
 let fsrsStates = {};   // {cardId: {state, due, stability, difficulty, ...}}
 let reviewLog = [];    // [{cardId, rating, review_time, ...}]
@@ -1151,6 +1180,7 @@ let diffFilter = 0;
 let reviewMode = false;
 let currentLang = localStorage.getItem('ai_fc_lang') || 'zh';
 let currentTheme = localStorage.getItem('ai_fc_theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+let catProgressCollapsed = localStorage.getItem(CAT_PROGRESS_COLLAPSED_KEY) !== 'false';
 
 function getAllCards() {
   return [...BUILTIN_CARDS, ...customCards];
@@ -1434,6 +1464,22 @@ function updateCatProgress() {
       <div class="cat-row-pct">${pct}%</div>
     </div>`;
   }).join('');
+  applyCatProgressState();
+}
+
+function applyCatProgressState() {
+  const panel = document.getElementById('cat-progress-panel');
+  const toggle = document.getElementById('cat-progress-toggle');
+  if (!panel || !toggle) return;
+  panel.classList.toggle('collapsed', catProgressCollapsed);
+  toggle.setAttribute('aria-expanded', String(!catProgressCollapsed));
+  toggle.title = catProgressCollapsed ? '展开各分类掌握进度' : '折叠各分类掌握进度';
+}
+
+function toggleCatProgress() {
+  catProgressCollapsed = !catProgressCollapsed;
+  localStorage.setItem(CAT_PROGRESS_COLLAPSED_KEY, String(catProgressCollapsed));
+  applyCatProgressState();
 }
 
 // ═══════════════════════════════════════════════════════════════
