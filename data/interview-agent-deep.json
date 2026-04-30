@@ -461,7 +461,14 @@
         "term": "プロジェクト接続",
         "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>优先绑定 SiLR / Agentic RL 项目：Analyzer-Actor-Verifier、仿真器验证、SFT/GRPO、RAG 检索优化和多层 memory。</li><li>可用表达：我在项目里遇到的对应问题是「Skill 注册、路由、注入和执行边界」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 深度项目面 / 研究工程 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
       }
-    ]
+    ],
+    "structure": {
+      "type": "建议切分",
+      "notes": [
+        "Skill 系统题可以拆成三层：注册表与schema、发现/路由、调用/错误处理。先讲接口，再讲执行闭环。",
+        "手撕时不要一次写全功能，先实现 register/discover/call 的最小闭环，再补权限、trace 和参数校验。"
+      ]
+    }
   },
   {
     "id": "iad09",

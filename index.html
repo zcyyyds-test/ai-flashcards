@@ -686,6 +686,76 @@
     padding-left: 12px;
     border-left: 3px solid var(--indigo);
   }
+  .related-section {
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .related-title {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .related-list {
+    display: grid;
+    gap: 8px;
+  }
+  .related-card-btn {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-surface);
+    color: var(--text);
+    font-family: var(--font);
+    text-align: left;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: all 0.2s var(--ease-out);
+  }
+  .related-card-btn:hover {
+    border-color: var(--border-lit);
+    background: var(--bg-hover);
+    transform: translateY(-1px);
+  }
+  .related-card-label {
+    display: block;
+    color: var(--indigo);
+    font-size: 0.68rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  .related-card-name {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.45;
+  }
+  .related-card-note {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    line-height: 1.55;
+    margin-top: 5px;
+  }
+  .structure-note-list {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .structure-note-list li {
+    color: var(--text-dim);
+    font-size: 0.82rem;
+    line-height: 1.65;
+    padding: 9px 11px;
+    border-radius: 8px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+  }
 
   /* ══════════════════════════════════════════════════════
      Details / Glossary
@@ -1350,7 +1420,7 @@
   </div>
 </div>
 
-<script src="data/cards.js?v=12"></script>
+<script src="data/cards.js?v=13"></script>
 <script src="fsrs.js?v=7"></script>
 <script>
 
@@ -1654,7 +1724,7 @@ function renderKnowledgePanel(card) {
   )).join('');
 
   const detail = details[knowledgeDetailIndex];
-  body.innerHTML = `<div class="knowledge-detail-title">${escapeHtml(detail.term)}</div><div class="term-explain">${detail.explain}</div>`;
+  body.innerHTML = `<div class="knowledge-detail-title">${escapeHtml(detail.term)}</div><div class="term-explain">${detail.explain}</div>${renderStructureNote(card)}${renderRelatedCards(card)}`;
 }
 
 function selectKnowledgeDetail(index) {
@@ -1671,6 +1741,69 @@ function navigateKnowledgeDetail(dir) {
   if (!details.length) return;
   knowledgeDetailIndex = (knowledgeDetailIndex + dir + details.length) % details.length;
   renderKnowledgePanel(card);
+}
+
+function renderStructureNote(card) {
+  const structure = card.structure;
+  if (!structure || !Array.isArray(structure.notes) || !structure.notes.length) return '';
+  const title = structure.type || '归纳 / 切分建议';
+  const notes = structure.notes
+    .map(note => `<li>${escapeHtml(note)}</li>`)
+    .join('');
+  return `<div class="related-section">
+    <div class="related-title">${escapeHtml(title)}</div>
+    <ul class="structure-note-list">${notes}</ul>
+  </div>`;
+}
+
+function renderRelatedCards(card) {
+  const related = (card.related || [])
+    .map(rel => ({ ...rel, card: getCard(rel.id) }))
+    .filter(rel => rel.card);
+  if (!related.length) return '';
+
+  const items = related.map(rel => {
+    const label = rel.type || '关联';
+    const note = rel.note ? `<span class="related-card-note">${escapeHtml(rel.note)}</span>` : '';
+    return `<button type="button" class="related-card-btn" onclick="openRelatedCard('${escapeHtml(rel.id)}')">
+      <span class="related-card-label">${escapeHtml(label)}</span>
+      <span class="related-card-name">${escapeHtml(rel.card.q)}</span>
+      ${note}
+    </button>`;
+  }).join('');
+
+  return `<div class="related-section">
+    <div class="related-title">关联卡片 / 合并线索</div>
+    <div class="related-list">${items}</div>
+  </div>`;
+}
+
+function openRelatedCard(cardId) {
+  const target = getCard(cardId);
+  if (!target) return;
+
+  reviewMode = false;
+  mode = 'all';
+  diffFilter = 0;
+  shuffled = false;
+  searchQuery = '';
+  currentGroup = target.group || 'ALL';
+  currentCat = target.cat || 'ALL';
+  document.getElementById('review-banner').classList.remove('show');
+  document.getElementById('mode-review').classList.remove('active');
+  ['mode-all','mode-unknown','mode-unmarked'].forEach(id => {
+    document.getElementById(id).classList.toggle('active', id === 'mode-all');
+  });
+  document.getElementById('mode-shuffle').classList.remove('active');
+  [1,2,3].forEach(l => document.getElementById('diff-'+l).classList.remove('active'));
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) searchInput.value = '';
+
+  buildNav();
+  buildList();
+  const targetIndex = displayList.indexOf(cardId);
+  if (targetIndex >= 0) curIdx = targetIndex;
+  render();
 }
 
 function updateRateButtons() {

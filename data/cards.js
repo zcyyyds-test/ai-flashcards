@@ -1,5 +1,5 @@
 // Auto-generated from data/*.json — edit the JSON files, then run: bash build-cards.sh
-// Generated: 2026-05-01T00:53:31
+// Generated: 2026-05-01T01:09:12
 const BUILTIN_CARDS = [
   {
     "id": "s01",
@@ -1777,6 +1777,13 @@ const BUILTIN_CARDS = [
         "term": "深掘り質問への準備",
         "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：① OBSERVE：観測ツールでシステム状態を取得し、~200-300 tokensに圧縮；② REASON+ACT：LLMが推論 + 三層ActionParserで出力を解析；③ VERIFY：SiLR検証器がシャドウシミュレーション上で実行し、4種類の制約をチェック。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>安全 Agent 系の深掘りでは、シミュレータが覆えない制約、verifier 自体の誤り、failsafe の最悪ケースを説明できるようにする。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "g04",
+        "type": "对比版",
+        "note": "先记住 Bounded ReAct 的执行循环，再用 g04 对比标准 ReAct 的边界和取舍。"
+      }
     ]
   },
   {
@@ -1824,6 +1831,13 @@ const BUILTIN_CARDS = [
       {
         "term": "深掘り質問への準備",
         "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：標準ReAct：明確な終了条件がなく、無限ループの可能性がある；三層の境界：ステップ上限(max_steps=8) / リトライ上限(各ステップ最大3回) / Failsafeによるフォールバック；システムに常にフォールバックがあることを保証し、無限ループや危険な判断に陥らない。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>安全 Agent 系の深掘りでは、シミュレータが覆えない制約、verifier 自体の誤り、failsafe の最悪ケースを説明できるようにする。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "g03",
+        "type": "流程版",
+        "note": "g03 是本题的流程骨架，适合先复习每一步的输入输出。"
       }
     ]
   },
@@ -6521,6 +6535,18 @@ const BUILTIN_CARDS = [
         "term": "補足と実戦整理",
         "explain": "<p><strong>よくあるバグ</strong></p><p><strong>頻出ミス：</strong></p><ul><li>valueだけ更新してnodeを移動しない。</li><li>prev/next更新漏れ、hashとlistの不整合。</li></ul><p><strong>派生問題</strong></p><p><strong>応用先：</strong></p><ul><li>TTL cache、thread-safe cache、LFU、MRU、sharded cache、OrderedDict実装。</li></ul><p><strong>復習ルート</strong></p><p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul><p><strong>自己確認</strong></p><p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "ds19",
+        "type": "手写版",
+        "note": "同一主题的底层实现版：哈希表 + 双向链表 + 哨兵节点。"
+      },
+      {
+        "id": "cm08",
+        "type": "题目版",
+        "note": "LC146面试题版本，适合练习完整接口和边界用例。"
+      }
     ]
   },
   {
@@ -6706,6 +6732,13 @@ const BUILTIN_CARDS = [
       {
         "term": "補足と実戦整理",
         "explain": "<p><strong>よくあるバグ</strong></p><p><strong>頻出ミス：</strong></p><ul><li>rootではなく元nodeをunionする。rank/size更新の位置を誤る。</li><li>Kruskalでcycle辺を選ぶ、Primでvisitedを忘れ同じ点を再選択。</li></ul><p><strong>派生問題</strong></p><p><strong>応用先：</strong></p><ul><li>connected components、redundant connection、accounts merge、minimum spanning forest、offline dynamic connectivity。</li></ul><p><strong>復習ルート</strong></p><p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul><p><strong>自己確認</strong></p><p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "ds16",
+        "type": "深度版",
+        "note": "本卡偏算法模板；ds16补结构不变式、count维护和带权并查集扩展。"
       }
     ]
   },
@@ -9851,6 +9884,13 @@ const BUILTIN_CARDS = [
         "term": "補足と実戦整理",
         "explain": "<p><strong>よくあるバグ</strong></p><p><strong>頻出ミス：</strong></p><ul><li>rootではなく元nodeをunionする。rank/size更新の位置を誤る。</li><li>Kruskalでcycle辺を選ぶ、Primでvisitedを忘れ同じ点を再選択。</li></ul><p><strong>派生問題</strong></p><p><strong>応用先：</strong></p><ul><li>connected components、redundant connection、accounts merge、minimum spanning forest、offline dynamic connectivity。</li></ul><p><strong>復習ルート</strong></p><p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul><p><strong>自己確認</strong></p><p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "al13",
+        "type": "速记版",
+        "note": "al13适合刷题前快速回忆 find/union 模板。"
+      }
     ]
   },
   {
@@ -10044,6 +10084,18 @@ const BUILTIN_CARDS = [
       {
         "term": "補足と実戦整理",
         "explain": "<p><strong>よくあるバグ</strong></p><p><strong>頻出ミス：</strong></p><ul><li>valueだけ更新してnodeを移動しない。</li><li>prev/next更新漏れ、hashとlistの不整合。</li></ul><p><strong>派生問題</strong></p><p><strong>応用先：</strong></p><ul><li>TTL cache、thread-safe cache、LFU、MRU、sharded cache、OrderedDict実装。</li></ul><p><strong>復習ルート</strong></p><p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul><p><strong>自己確認</strong></p><p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "al10",
+        "type": "概念版",
+        "note": "先用这张卡确认 LRU 的设计目标和复杂度。"
+      },
+      {
+        "id": "cm08",
+        "type": "题目版",
+        "note": "对应 LC146，可作为本卡的实战入口。"
       }
     ]
   },
@@ -10505,7 +10557,14 @@ const BUILTIN_CARDS = [
       }
     ],
     "group": "基础",
-    "lv": 2
+    "lv": 2,
+    "structure": {
+      "type": "建议切分",
+      "notes": [
+        "这张卡信息量偏大，复习时按 Attention、FFN、残差/LayerNorm、位置编码四块切开，不要一次背完整架构。",
+        "如果后续继续拆卡，建议拆成“Self-Attention计算流程”和“Transformer block工程细节”两张。"
+      ]
+    }
   },
   {
     "id": "l02",
@@ -10723,7 +10782,14 @@ const BUILTIN_CARDS = [
       }
     ],
     "group": "基础",
-    "lv": 3
+    "lv": 3,
+    "related": [
+      {
+        "id": "l29",
+        "type": "扩展版",
+        "note": "先理解 KV Cache，再看 GQA/MQA 如何减少 KV head 带来的显存占用。"
+      }
+    ]
   },
   {
     "id": "l07",
@@ -11071,7 +11137,14 @@ const BUILTIN_CARDS = [
       }
     ],
     "group": "基础",
-    "lv": 3
+    "lv": 3,
+    "related": [
+      {
+        "id": "l17",
+        "type": "归纳版",
+        "note": "l17把 Instruction Tuning、RLHF、DPO 放在同一条对齐路径上比较。"
+      }
+    ]
   },
   {
     "id": "l14",
@@ -11277,7 +11350,14 @@ const BUILTIN_CARDS = [
       }
     ],
     "group": "基础",
-    "lv": 3
+    "lv": 3,
+    "related": [
+      {
+        "id": "l13",
+        "type": "深挖版",
+        "note": "需要讲 DPO loss、KL系数和工程坑时切到 l13。"
+      }
+    ]
   },
   {
     "id": "l18",
@@ -11433,7 +11513,19 @@ const BUILTIN_CARDS = [
       }
     ],
     "group": "基础",
-    "lv": 2
+    "lv": 2,
+    "related": [
+      {
+        "id": "a02",
+        "type": "架构版",
+        "note": "从基础机制切到工程实现：ActionParser、guardrails、结构化输出。"
+      },
+      {
+        "id": "ita10",
+        "type": "面试追问",
+        "note": "适合准备“工具调用到底特殊在哪里”的追问。"
+      }
+    ]
   },
   {
     "id": "l21",
@@ -11597,7 +11689,14 @@ const BUILTIN_CARDS = [
       }
     ],
     "group": "基础",
-    "lv": 2
+    "lv": 2,
+    "structure": {
+      "type": "建议切分",
+      "notes": [
+        "框架选型题建议按目标拆：快速SFT选 Unsloth，偏好优化/自定义训练选 TRL，端到端低门槛交付选 LLaMA-Factory。",
+        "面试回答时先给选择规则，再补显存、数据格式、可扩展性和线上复现实验四个约束。"
+      ]
+    }
   },
   {
     "id": "l24",
@@ -12001,6 +12100,13 @@ const BUILTIN_CARDS = [
         "term": "補足と実戦整理",
         "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。GQA と MQA の KV cache 削減効果 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "l06",
+        "type": "基础版",
+        "note": "GQA/MQA 的收益来自 KV Cache 结构，忘记公式前先回到 l06。"
+      }
     ]
   },
   {
@@ -12066,6 +12172,13 @@ const BUILTIN_CARDS = [
       {
         "term": "補足と実戦整理",
         "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。オプティマイザの比較：SGD / Adam / AdamW では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "ib09",
+        "type": "追问版",
+        "note": "需要单独讲解 AdamW 为什么 decoupled weight decay 时使用。"
       }
     ]
   },
@@ -13204,6 +13317,18 @@ const BUILTIN_CARDS = [
       {
         "term": "補足と実戦整理",
         "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Function Callingの実装メカニズム では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "l20",
+        "type": "基础版",
+        "note": "l20讲通用 Tool Use 机制；本卡偏 Agent 架构实现。"
+      },
+      {
+        "id": "ita10",
+        "type": "面试追问",
+        "note": "用于回答 Tool Calling 与普通函数调用的边界。"
       }
     ]
   },
@@ -14466,6 +14591,13 @@ const BUILTIN_CARDS = [
       {
         "term": "補足と実戦整理",
         "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Prompt Injectionの攻防 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>本番制約</strong></p><p><strong>工程知識は本番制約まで落とす：</strong>正しさだけでなく、観測可能性、ロールバック、拡張性、コスト管理を説明する。</p><ul><li>設計問題では入力、出力、状態、障害復旧、権限境界を先に置く。</li><li>障害対応は再現、層の切り分け、範囲縮小、修正、回帰確認の順で話す。</li><li>顧客向けには技術指標を遅延、費用、転換率、コンプライアンスリスクに翻訳する。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "ita12",
+        "type": "Agent场景版",
+        "note": "pe05偏Prompt安全基础；ita12补工具调用和权限边界。"
       }
     ]
   },
@@ -19203,6 +19335,13 @@ const BUILTIN_CARDS = [
         "term": "補足と実戦整理",
         "explain": "<p><strong>本番制約</strong></p><p><strong>工程知識は本番制約まで落とす：</strong>正しさだけでなく、観測可能性、ロールバック、拡張性、コスト管理を説明する。</p><ul><li>設計問題では入力、出力、状態、障害復旧、権限境界を先に置く。</li><li>障害対応は再現、層の切り分け、範囲縮小、修正、回帰確認の順で話す。</li><li>顧客向けには技術指標を遅延、費用、転換率、コンプライアンスリスクに翻訳する。</li></ul><p><strong>実運用チェック</strong></p><p><strong>工程回答は実運用まで確認する：</strong>どうリリースし、何を監視し、異常をどう検知し、どう戻すかまで話す。</p><ul><li>リリース前：カナリア、回帰テスト、最小権限。</li><li>リリース中：メトリクス、ログサンプリング、アラート閾値。</li><li>リリース後：障害復盤、runbook化、自動チェックへの反映。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "gs13",
+        "type": "远端版",
+        "note": "本卡处理未共享/低风险修改；gs13处理已 push 的安全改写。"
+      }
     ]
   },
   {
@@ -19398,6 +19537,13 @@ const BUILTIN_CARDS = [
       {
         "term": "補足と実戦整理",
         "explain": "<p><strong>本番制約</strong></p><p><strong>工程知識は本番制約まで落とす：</strong>正しさだけでなく、観測可能性、ロールバック、拡張性、コスト管理を説明する。</p><ul><li>設計問題では入力、出力、状態、障害復旧、権限境界を先に置く。</li><li>障害対応は再現、層の切り分け、範囲縮小、修正、回帰確認の順で話す。</li><li>顧客向けには技術指標を遅延、費用、転換率、コンプライアンスリスクに翻訳する。</li></ul><p><strong>実運用チェック</strong></p><p><strong>工程回答は実運用まで確認する：</strong>どうリリースし、何を監視し、異常をどう検知し、どう戻すかまで話す。</p><ul><li>リリース前：カナリア、回帰テスト、最小権限。</li><li>リリース中：メトリクス、ログサンプリング、アラート閾値。</li><li>リリース後：障害復盤、runbook化、自動チェックへの反映。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "gs13",
+        "type": "远端版",
+        "note": "本卡处理漏文件补提交；gs13补充已 push 后的团队协作风险。"
       }
     ]
   },
@@ -19860,6 +20006,18 @@ const BUILTIN_CARDS = [
       {
         "term": "本番制約",
         "explain": "<p><strong>工程知識は本番制約まで落とす：</strong>正しさだけでなく、観測可能性、ロールバック、拡張性、コスト管理を説明する。</p><ul><li>設計問題では入力、出力、状態、障害復旧、権限境界を先に置く。</li><li>障害対応は再現、層の切り分け、範囲縮小、修正、回帰確認の順で話す。</li><li>顧客向けには技術指標を遅延、費用、転換率、コンプライアンスリスクに翻訳する。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "gs03",
+        "type": "本地版",
+        "note": "commit message 还没共享时，优先用 gs03 的轻量流程。"
+      },
+      {
+        "id": "gs06",
+        "type": "漏文件场景",
+        "note": "漏文件与改 message 都属于改写提交历史前要判断是否已共享。"
       }
     ]
   },
@@ -21489,6 +21647,18 @@ const BUILTIN_CARDS = [
         "term": "補足と実戦整理",
         "explain": "<p><strong>よくあるバグ</strong></p><p><strong>頻出ミス：</strong></p><ul><li>valueだけ更新してnodeを移動しない。</li><li>prev/next更新漏れ、hashとlistの不整合。</li></ul><p><strong>派生問題</strong></p><p><strong>応用先：</strong></p><ul><li>TTL cache、thread-safe cache、LFU、MRU、sharded cache、OrderedDict実装。</li></ul><p><strong>復習ルート</strong></p><p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul><p><strong>自己確認</strong></p><p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "ds19",
+        "type": "手写版",
+        "note": "面试官要求不用 OrderedDict 时，切到这张卡。"
+      },
+      {
+        "id": "al10",
+        "type": "概念版",
+        "note": "用于复盘为什么必须同时用哈希表和双向链表。"
+      }
     ]
   },
   {
@@ -22623,6 +22793,13 @@ const BUILTIN_CARDS = [
         "term": "プロジェクト接続",
         "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「自适应优化器和解耦 weight decay」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "m01",
+        "type": "体系版",
+        "note": "ib09偏 AdamW 原理追问；m01横向比较 SGD/Adam/AdamW。"
+      }
     ]
   },
   {
@@ -23029,6 +23206,13 @@ const BUILTIN_CARDS = [
         "term": "プロジェクト接続",
         "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 Skill routing、MCP/function calling、长期记忆、Agentic RAG、trace 回放等项目经验，突出“可控、可测、可回放”。</li><li>可用表达：我在项目里遇到的对应问题是「工具协议、调用校验和执行审计」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 腾讯 Agent / 大模型应用工程 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "ita10",
+        "type": "基础版",
+        "note": "并行 Tool Calling 的前提是先讲清工具调用与普通函数调用的差异。"
+      }
     ]
   },
   {
@@ -23261,6 +23445,23 @@ const BUILTIN_CARDS = [
         "term": "プロジェクト接続",
         "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 Skill routing、MCP/function calling、长期记忆、Agentic RAG、trace 回放等项目经验，突出“可控、可测、可回放”。</li><li>可用表达：我在项目里遇到的对应问题是「工具协议、调用校验和执行审计」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 腾讯 Agent / 大模型应用工程 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "l20",
+        "type": "基础版",
+        "note": "先复习 Function Calling 的系统闭环。"
+      },
+      {
+        "id": "a02",
+        "type": "架构版",
+        "note": "再补 Agent 系统里的解析、校验和回放问题。"
+      },
+      {
+        "id": "ita06",
+        "type": "并行版",
+        "note": "普通 Tool Calling 讲清楚后，再看并行调用的吞吐、一致性和回放问题。"
+      }
     ]
   },
   {
@@ -23376,6 +23577,13 @@ const BUILTIN_CARDS = [
       {
         "term": "プロジェクト接続",
         "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 Skill routing、MCP/function calling、长期记忆、Agentic RAG、trace 回放等项目经验，突出“可控、可测、可回放”。</li><li>可用表达：我在项目里遇到的对应问题是「工具协议、调用校验和执行审计」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 腾讯 Agent / 大模型应用工程 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "pe05",
+        "type": "基础版",
+        "note": "先复习注入攻击的分类、隔离和指令优先级。"
       }
     ]
   },
@@ -24653,7 +24861,14 @@ const BUILTIN_CARDS = [
         "term": "プロジェクト接続",
         "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>优先绑定 SiLR / Agentic RL 项目：Analyzer-Actor-Verifier、仿真器验证、SFT/GRPO、RAG 检索优化和多层 memory。</li><li>可用表达：我在项目里遇到的对应问题是「Skill 注册、路由、注入和执行边界」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 深度项目面 / 研究工程 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
       }
-    ]
+    ],
+    "structure": {
+      "type": "建议切分",
+      "notes": [
+        "Skill 系统题可以拆成三层：注册表与schema、发现/路由、调用/错误处理。先讲接口，再讲执行闭环。",
+        "手撕时不要一次写全功能，先实现 register/discover/call 的最小闭环，再补权限、trace 和参数校验。"
+      ]
+    }
   },
   {
     "id": "iad09",
@@ -25349,6 +25564,13 @@ const BUILTIN_CARDS = [
         "term": "プロジェクト接続",
         "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「Skill 注册、路由、注入和执行边界」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "ieg05",
+        "type": "架构版",
+        "note": "ieg04偏产品使用差异；ieg05解释背后的架构设计差异。"
+      }
     ]
   },
   {
@@ -25406,6 +25628,13 @@ const BUILTIN_CARDS = [
       {
         "term": "プロジェクト接続",
         "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「Skill 注册、路由、注入和执行边界」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "ieg04",
+        "type": "产品版",
+        "note": "架构对比容易抽象，先用产品视角建立直觉。"
       }
     ]
   },
@@ -25639,7 +25868,14 @@ const BUILTIN_CARDS = [
         "term": "プロジェクト接続",
         "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「工程系统组件、排障路径和基础代码能力」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
       }
-    ]
+    ],
+    "structure": {
+      "type": "建议切分",
+      "notes": [
+        "BST 构建 + 遍历 + 打印覆盖面太大，复习时拆成插入不变式、三种遍历、格式化输出三段。",
+        "如果面试时间有限，优先保证 insert/search/traversal 正确；打印树属于展示能力，可作为加分项。"
+      ]
+    }
   },
   {
     "id": "ieg10",
@@ -25697,7 +25933,14 @@ const BUILTIN_CARDS = [
         "term": "プロジェクト接続",
         "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「工程系统组件、排障路径和基础代码能力」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
       }
-    ]
+    ],
+    "structure": {
+      "type": "建议切分",
+      "notes": [
+        "BST 删除建议单独作为一张高优先级卡：叶子节点、单子树、双子树三种情况要能口头跑例子。",
+        "代码前先说明 successor/predecessor 的选择，不然容易在双子树删除时丢失引用或破坏BST不变式。"
+      ]
+    }
   },
   {
     "id": "ieg11",
@@ -25755,7 +25998,14 @@ const BUILTIN_CARDS = [
         "term": "プロジェクト接続",
         "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「工程系统组件、排障路径和基础代码能力」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
       }
-    ]
+    ],
+    "structure": {
+      "type": "归纳轴",
+      "notes": [
+        "开源 Agent Harness 对比不要按项目名字背，按状态管理、工作流表达、协作模型、工具生态、生产可观测性五轴比较。",
+        "面试中先给选择结论：强状态图选 LangGraph，多Agent协作原型看 AutoGen/CrewAI，复杂组织式模拟才谈 MetaGPT。"
+      ]
+    }
   },
   {
     "id": "ieg12",

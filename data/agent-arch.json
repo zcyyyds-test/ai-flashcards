@@ -129,6 +129,18 @@
         "term": "補足と実戦整理",
         "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Function Callingの実装メカニズム では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "l20",
+        "type": "基础版",
+        "note": "l20讲通用 Tool Use 机制；本卡偏 Agent 架构实现。"
+      },
+      {
+        "id": "ita10",
+        "type": "面试追问",
+        "note": "用于回答 Tool Calling 与普通函数调用的边界。"
+      }
     ]
   },
   {

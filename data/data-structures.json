@@ -1045,6 +1045,13 @@
         "term": "補足と実戦整理",
         "explain": "<p><strong>よくあるバグ</strong></p><p><strong>頻出ミス：</strong></p><ul><li>rootではなく元nodeをunionする。rank/size更新の位置を誤る。</li><li>Kruskalでcycle辺を選ぶ、Primでvisitedを忘れ同じ点を再選択。</li></ul><p><strong>派生問題</strong></p><p><strong>応用先：</strong></p><ul><li>connected components、redundant connection、accounts merge、minimum spanning forest、offline dynamic connectivity。</li></ul><p><strong>復習ルート</strong></p><p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul><p><strong>自己確認</strong></p><p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "al13",
+        "type": "速记版",
+        "note": "al13适合刷题前快速回忆 find/union 模板。"
+      }
     ]
   },
   {
@@ -1238,6 +1245,18 @@
       {
         "term": "補足と実戦整理",
         "explain": "<p><strong>よくあるバグ</strong></p><p><strong>頻出ミス：</strong></p><ul><li>valueだけ更新してnodeを移動しない。</li><li>prev/next更新漏れ、hashとlistの不整合。</li></ul><p><strong>派生問題</strong></p><p><strong>応用先：</strong></p><ul><li>TTL cache、thread-safe cache、LFU、MRU、sharded cache、OrderedDict実装。</li></ul><p><strong>復習ルート</strong></p><p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul><p><strong>自己確認</strong></p><p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "al10",
+        "type": "概念版",
+        "note": "先用这张卡确认 LRU 的设计目标和复杂度。"
+      },
+      {
+        "id": "cm08",
+        "type": "题目版",
+        "note": "对应 LC146，可作为本卡的实战入口。"
       }
     ]
   },
