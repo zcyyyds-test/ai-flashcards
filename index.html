@@ -598,6 +598,33 @@
     font-weight: 800;
     font-variant-numeric: tabular-nums;
   }
+  .knowledge-actions {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .knowledge-nav-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s var(--ease-out);
+  }
+  .knowledge-nav-btn:hover:not(:disabled) {
+    border-color: var(--border-lit);
+    color: var(--indigo);
+    background: var(--indigo-dim);
+  }
+  .knowledge-nav-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+  }
   .knowledge-tabs {
     display: flex;
     gap: 8px;
@@ -1214,7 +1241,7 @@
 </div>
 
 <div class="search-bar">
-  <input type="text" id="search-input" placeholder="搜索卡片 (问题或答案)..." oninput="onSearch()">
+  <input type="text" id="search-input" placeholder="搜索卡片 (问题 / 答案 / 扩展知识)..." oninput="onSearch()">
   <button class="toolbar-btn" onclick="openAddModal()">+ 添加卡片</button>
   <button class="toolbar-btn" onclick="exportCards()">导出</button>
   <button class="toolbar-btn" onclick="document.getElementById('import-file').click()">导入</button>
@@ -1239,7 +1266,7 @@
   <span class="sep">|</span>
   <button class="mode-btn btn-review" id="mode-review" onclick="startReviewSession()">开始复习</button>
   <button class="mode-btn" onclick="resetProgress()">重置进度</button>
-  <span class="shortcut-hint"><kbd>空格</kbd> 翻转 &nbsp; <kbd>←</kbd><kbd>→</kbd> 切换 &nbsp; <kbd>1</kbd>重来 <kbd>2</kbd>困难 <kbd>3</kbd>良好 <kbd>4</kbd>简单</span>
+  <span class="shortcut-hint"><kbd>空格</kbd> 翻转 &nbsp; <kbd>←</kbd><kbd>→</kbd> 切换 &nbsp; <kbd>[</kbd><kbd>]</kbd> 知识点 &nbsp; <kbd>/</kbd> 搜索 &nbsp; <kbd>1</kbd>重来 <kbd>2</kbd>困难 <kbd>3</kbd>良好 <kbd>4</kbd>简单</span>
 </div>
 
 <main>
@@ -1287,10 +1314,14 @@
           <div class="knowledge-eyebrow">Knowledge</div>
           <div class="knowledge-title" id="knowledge-title">知识扩展</div>
         </div>
-        <div class="knowledge-count" id="knowledge-count">0</div>
+        <div class="knowledge-actions">
+          <button type="button" class="knowledge-nav-btn" id="knowledge-prev" onclick="navigateKnowledgeDetail(-1)" aria-label="上一个知识点" title="上一个知识点 ([)">‹</button>
+          <div class="knowledge-count" id="knowledge-count">0</div>
+          <button type="button" class="knowledge-nav-btn" id="knowledge-next" onclick="navigateKnowledgeDetail(1)" aria-label="下一个知识点" title="下一个知识点 (])">›</button>
+        </div>
       </div>
-      <div class="knowledge-tabs" id="knowledge-tabs"></div>
-      <div class="knowledge-body" id="knowledge-body"></div>
+      <div class="knowledge-tabs" id="knowledge-tabs" role="tablist" aria-label="知识扩展条目"></div>
+      <div class="knowledge-body" id="knowledge-body" role="tabpanel"></div>
     </aside>
   </div>
 
@@ -1489,8 +1520,28 @@ function onSearch() {
 
 function matchesSearch(card) {
   if (!searchQuery) return true;
-  const text = (card.q + ' ' + card.bullets.join(' ') + ' ' + card.cat + ' ' + (card.q_ja || '') + ' ' + (card.bullets_ja || []).join(' ')).toLowerCase();
+  const text = [
+    card.q,
+    ...(card.bullets || []),
+    card.cat,
+    card.group,
+    card.q_ja || '',
+    ...((card.bullets_ja) || []),
+    collectDetailSearchText(card.details),
+    collectDetailSearchText(card.details_ja),
+  ].join(' ').toLowerCase();
   return searchQuery.split(/\s+/).every(term => text.includes(term));
+}
+
+function collectDetailSearchText(details) {
+  return (details || []).map(d => [
+    d.term || '',
+    stripHtmlText(d.explain || ''),
+  ].join(' ')).join(' ');
+}
+
+function stripHtmlText(value) {
+  return String(value || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1574,11 +1625,16 @@ function renderKnowledgePanel(card) {
   const count = document.getElementById('knowledge-count');
   const tabs = document.getElementById('knowledge-tabs');
   const body = document.getElementById('knowledge-body');
+  const prevBtn = document.getElementById('knowledge-prev');
+  const nextBtn = document.getElementById('knowledge-next');
   if (!title || !count || !tabs || !body) return;
 
   const details = getCardDetails(card);
+  const canNavigateDetails = isFlipped && details.length > 1;
   title.textContent = currentLang === 'ja' ? '知識拡張' : '知识扩展';
   count.textContent = details.length ? `${Math.min(knowledgeDetailIndex + 1, details.length)}/${details.length}` : '0';
+  if (prevBtn) prevBtn.disabled = !canNavigateDetails;
+  if (nextBtn) nextBtn.disabled = !canNavigateDetails;
 
   if (!isFlipped) {
     tabs.innerHTML = '';
@@ -1594,7 +1650,7 @@ function renderKnowledgePanel(card) {
 
   if (knowledgeDetailIndex >= details.length) knowledgeDetailIndex = 0;
   tabs.innerHTML = details.map((d, i) => (
-    `<button class="knowledge-tab${i === knowledgeDetailIndex ? ' active' : ''}" onclick="selectKnowledgeDetail(${i})" title="${escapeHtml(d.term)}">${escapeHtml(d.term)}</button>`
+    `<button type="button" role="tab" aria-selected="${i === knowledgeDetailIndex ? 'true' : 'false'}" class="knowledge-tab${i === knowledgeDetailIndex ? ' active' : ''}" onclick="selectKnowledgeDetail(${i})" title="${escapeHtml(d.term)}">${escapeHtml(d.term)}</button>`
   )).join('');
 
   const detail = details[knowledgeDetailIndex];
@@ -1605,6 +1661,15 @@ function selectKnowledgeDetail(index) {
   const card = currentCard();
   if (!card) return;
   knowledgeDetailIndex = index;
+  renderKnowledgePanel(card);
+}
+
+function navigateKnowledgeDetail(dir) {
+  const card = currentCard();
+  if (!card || !isFlipped) return;
+  const details = getCardDetails(card);
+  if (!details.length) return;
+  knowledgeDetailIndex = (knowledgeDetailIndex + dir + details.length) % details.length;
   renderKnowledgePanel(card);
 }
 
@@ -2027,6 +2092,9 @@ document.addEventListener('keydown', e => {
     case ' ': case 'Enter': e.preventDefault(); flipCard(); break;
     case 'ArrowRight': case 'l': navigate(1); break;
     case 'ArrowLeft': case 'h': navigate(-1); break;
+    case ']': navigateKnowledgeDetail(1); break;
+    case '[': navigateKnowledgeDetail(-1); break;
+    case '/': e.preventDefault(); document.getElementById('search-input').focus(); break;
     case '1': rate(1); break;
     case '2': rate(2); break;
     case '3': rate(3); break;
