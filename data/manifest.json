@@ -20,25 +20,25 @@
   {
     "file": "silr-agent.json",
     "cat": "SiLR-Agent",
-    "count": 18,
+    "count": 28,
     "group": "项目"
   },
   {
     "file": "agentic-rag.json",
     "cat": "Agentic RAG",
-    "count": 15,
+    "count": 23,
     "group": "项目"
   },
   {
     "file": "edge-cloud.json",
     "cat": "云边协同",
-    "count": 13,
+    "count": 20,
     "group": "项目"
   },
   {
     "file": "powerts-llm.json",
     "cat": "PowerTS-LLM",
-    "count": 8,
+    "count": 15,
     "group": "项目"
   },
   {
@@ -56,7 +56,7 @@
   {
     "file": "llm-basics.json",
     "cat": "LLM基础",
-    "count": 25,
+    "count": 29,
     "group": "基础"
   },
   {
@@ -68,7 +68,7 @@
   {
     "file": "agent-arch.json",
     "cat": "Agent架构",
-    "count": 12,
+    "count": 16,
     "group": "基础"
   },
   {

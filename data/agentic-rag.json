@@ -19,7 +19,35 @@
       "完全な検索パイプライン：BM25(Char 3-gram) + Dense(fine-tuned bge-m3) + RRF + Reranker"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Agentic RAG 核心数字</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>Recall@5 = <span class=\"num\">96.4%</span>（加Rerank后）</li><li>Embedding微调：Recall@1 从47.3% → <span class=\"num\">63.6%</span>（+16.4pp）</li><li>10工具Agent框架，支持多跳QA、自反思重试</li><li>55个日语电力领域查询，160+文档→359 chunks</li><li>完整检索pipeline：BM25(Char 3-gram) + Dense(fine-tuned bge-m3) + RRF + Reranker</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Agentic RAG 核心数字</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：Recall@5 = 96.4%（加Rerank后）；Embedding微调：Recall@1 从47.3% → 63.6%（+16.4pp）；10工具Agent框架，支持多跳QA、自反思重试。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>RAG 类追问要准备：gold chunk 怎么定义、Recall@K/MAP 怎么算、第一阶段召回和 rerank 精排各自解决什么问题。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>Agentic RAGの主要指標</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>Recall@5 = <span class=\"num\">96.4%</span>（Rerank適用後）</li><li>Embeddingファインチューニング：Recall@1が47.3% → <span class=\"num\">63.6%</span>（+16.4pp）</li><li>10ツールのAgentフレームワーク、マルチホップQA・自己反省リトライ対応</li><li>55件の日本語電力分野クエリ、160以上の文書→359 chunks</li><li>完全な検索パイプライン：BM25(Char 3-gram) + Dense(fine-tuned bge-m3) + RRF + Reranker</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">Agentic RAGの主要指標</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：Recall@5 = 96.4%（Rerank適用後）；Embeddingファインチューニング：Recall@1が47.3% → 63.6%（+16.4pp）；10ツールのAgentフレームワーク、マルチホップQA・自己反省リトライ対応。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "r02",
@@ -39,7 +67,35 @@
       "Denseはファインチューニング後もBM25に劣るが、両者は補完的（Denseは意味的に関連する文書を発見できる）"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>BM25 vs Dense检索 — 小语料的教训</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>BM25 Recall@1 = <span class=\"num\">81.8%</span>（最高！）；Dense未微调只有47.3%，微调后63.6%</li><li>小语料（359 chunks）上，n-gram模糊匹配比精确形態素更鲁棒</li><li><span class=\"highlight\">\"更精确\"≠\"更好\"</span>，需要实验验证</li><li>Dense微调后仍低于BM25，但两者互补（Dense能找到语义相关的文档）</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">BM25 vs Dense检索 — 小语料的教训</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：BM25 Recall@1 = 81.8%（最高！）；Dense未微调只有47.3%，微调后63.6%；小语料（359 chunks）上，n-gram模糊匹配比精确形態素更鲁棒；\"更精确\"≠\"更好\"，需要实验验证。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>RAG 类追问要准备：gold chunk 怎么定义、Recall@K/MAP 怎么算、第一阶段召回和 rerank 精排各自解决什么问题。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>BM25 vs Dense検索 — 小規模コーパスでの教訓</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>BM25 Recall@1 = <span class=\"num\">81.8%</span>（最高！）；Denseはファインチューニングなしで47.3%、ファインチューニング後63.6%</li><li>小規模コーパス（359 chunks）ではn-gramのファジーマッチングが精密な形態素解析より頑健</li><li><span class=\"highlight\">「より精密」≠「より良い」</span>、実験による検証が必要</li><li>Denseはファインチューニング後もBM25に劣るが、両者は補完的（Denseは意味的に関連する文書を発見できる）</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">BM25 vs Dense検索 — 小規模コーパスでの教訓</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：BM25 Recall@1 = 81.8%（最高！）；Denseはファインチューニングなしで47.3%、ファインチューニング後63.6%；小規模コーパス（359 chunks）ではn-gramのファジーマッチングが精密な形態素解析より頑健；「より精密」≠「より良い」、実験による検証が必要。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "r03",
@@ -53,13 +109,41 @@
       "n-gram对Query和Document用相同tokenizer，一致性好"
     ],
     "bullets_ja": [
-      "Char 3-gram Recall@1 = <span class=\"num\">81.8%</span> vs MeCab = 74.5%、7.3pp高い",
+      "Char 3-gram Recall@1 = <span class=\"num\">81.8%</span> vs MeCab = 74.5%、7.3pp高くなっています",
       "小規模コーパスではn-gramのファジーマッチングが精密な形態素解析より頑健",
       "MeCabは複合語の中間部分を見落とす（\"需給調整\"→\"需給\"+\"調整\"、組み合わせ情報が失われる）",
       "n-gramはQueryとDocumentに同じtokenizerを使用でき、一貫性が良い"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>为什么BM25用Char 3-gram而不是MeCab？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>Char 3-gram Recall@1 = <span class=\"num\">81.8%</span> vs MeCab = 74.5%，高7.3pp</li><li>小语料上n-gram的模糊匹配比精确形態素更鲁棒</li><li>MeCab漏掉复合词中间部分（\"需給調整\"→\"需給\"+\"調整\"，丢失组合信息）</li><li>n-gram对Query和Document用相同tokenizer，一致性好</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">为什么BM25用Char 3-gram而不是MeCab？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：Char 3-gram Recall@1 = 81.8% vs MeCab = 74.5%，高7.3pp；小语料上n-gram的模糊匹配比精确形態素更鲁棒；MeCab漏掉复合词中间部分（\"需給調整\"→\"需給\"+\"調整\"，丢失组合信息）。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>RAG 类追问要准备：gold chunk 怎么定义、Recall@K/MAP 怎么算、第一阶段召回和 rerank 精排各自解决什么问题。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>BM25でMeCabではなくChar 3-gramを使う理由は？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>Char 3-gram Recall@1 = <span class=\"num\">81.8%</span> vs MeCab = 74.5%、7.3pp高くなっています</li><li>小規模コーパスではn-gramのファジーマッチングが精密な形態素解析より頑健</li><li>MeCabは複合語の中間部分を見落とす（\"需給調整\"→\"需給\"+\"調整\"、組み合わせ情報が失われる）</li><li>n-gramはQueryとDocumentに同じtokenizerを使用でき、一貫性が良い</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">BM25でMeCabではなくChar 3-gramを使う理由は？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：Char 3-gram Recall@1 = 81.8% vs MeCab = 74.5%、7.3pp高くなっています；小規模コーパスではn-gramのファジーマッチングが精密な形態素解析より頑健；MeCabは複合語の中間部分を見落とす（\"需給調整\"→\"需給\"+\"調整\"、組み合わせ情報が失われる）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "r04",
@@ -81,7 +165,35 @@
       "RRF重み(BM25=0.75, Dense=1.0)は反直感的——弱いDenseに高い重みを付与"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Hybrid RRF 反直觉结果</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>Hybrid Recall@1 = <span class=\"num\">72.7%</span> < BM25 = 81.8%（Hybrid反而更差！）</li><li>原因：Dense把错误文档排很高，RRF融合时这些高排名错误文档挤掉了BM25的正确Top-1</li><li>加Rerank后差异消失，全部收敛到96.4%</li><li>教训：Hybrid的价值在Recall@5+（不漏掉好文档），不是Top-1准确率</li><li>RRF权重(BM25=0.75, Dense=1.0)是反直觉的——给更弱的Dense更高权重</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Hybrid RRF 反直觉结果</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：Hybrid Recall@1 = 72.7% < BM25 = 81.8%（Hybrid反而更差！）；原因：Dense把错误文档排很高，RRF融合时这些高排名错误文档挤掉了BM25的正确Top-1；加Rerank后差异消失，全部收敛到96.4%。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>Hybrid RRFの反直感的な結果</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>Hybrid Recall@1 = <span class=\"num\">72.7%</span> < BM25 = 81.8%（Hybridの方がむしろ悪い！）</li><li>原因：Denseが誤った文書を高順位に置き、RRF融合時にBM25の正しいTop-1を押し出す</li><li>Rerank適用後は差が消え、全て96.4%に収束</li><li>教訓：Hybridの価値はRecall@5以上（良い文書を漏らさない）にあり、Top-1精度ではない</li><li>RRF重み(BM25=0.75, Dense=1.0)は反直感的——弱いDenseに高い重みを付与</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">Hybrid RRFの反直感的な結果</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：Hybrid Recall@1 = 72.7% < BM25 = 81.8%（Hybridの方がむしろ悪い！）；原因：Denseが誤った文書を高順位に置き、RRF融合時にBM25の正しいTop-1を押し出す；Rerank適用後は差が消え、全て96.4%に収束。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "r05",
@@ -103,7 +215,35 @@
       "モデル：bge-reranker-v2-m3（80Mパラメータ）、レイテンシ~0.25s"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Reranker 为什么叫\"均衡器\"？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>无Rerank：BM25(81.8%) >> Hybrid(72.7%) >> Dense(63.6%)，差距悬殊</li><li>有Rerank：<span class=\"highlight\">全部收敛到80.0% / 96.4%</span></li><li>Cross-Encoder消除了第一阶段所有方法的差异</li><li>是RAG pipeline的安全网——即使第一阶段不完美，Reranker从Top-50中把正确文档捞上来</li><li>模型：bge-reranker-v2-m3（80M参数），延迟~0.25s</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Reranker 为什么叫\"均衡器\"？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：无Rerank：BM25(81.8%) >> Hybrid(72.7%) >> Dense(63.6%)，差距悬殊；有Rerank：全部收敛到80.0% / 96.4%；Cross-Encoder消除了第一阶段所有方法的差异。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>训练类追问要准备：数据从哪里来、怎么过滤坏样本、为什么这个模型/LoRA 配置、训练失败后如何定位到数据、prompt、采样或 reward。</li><li>RAG 类追问要准备：gold chunk 怎么定义、Recall@K/MAP 怎么算、第一阶段召回和 rerank 精排各自解决什么问题。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>Rerankerが「イコライザー」と呼ばれる理由は？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>Rerankなし：BM25(81.8%) >> Hybrid(72.7%) >> Dense(63.6%)、大きな差</li><li>Rerankあり：<span class=\"highlight\">全て80.0% / 96.4%に収束</span></li><li>Cross-Encoderが第一段階の全手法の差を解消する</li><li>RAGパイプラインのセーフティネット——第一段階が不完全でも、RerankerがTop-50から正しい文書を引き上げる</li><li>モデル：bge-reranker-v2-m3（80Mパラメータ）、レイテンシ~0.25s</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">Rerankerが「イコライザー」と呼ばれる理由は？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：Rerankなし：BM25(81.8%) >> Hybrid(72.7%) >> Dense(63.6%)、大きな差；Rerankあり：全て80.0% / 96.4%に収束；Cross-Encoderが第一段階の全手法の差を解消する。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>学習系の深掘りでは、データの作り方、誤データの除去、モデル/LoRA 設定の理由、失敗時に data/prompt/sampling/reward のどこを疑ったかを準備する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "r06",
@@ -118,14 +258,42 @@
       "关键教训：训练中断时Recall@5 -3.6%，跑完才+5.5%——<span class=\"highlight\">中途checkpoint可能比基线更差</span>"
     ],
     "bullets_ja": [
-      "データ：<span class=\"num\">29,799件</span>の日本語トリプレット、9つのオープンソースデータセットから（ドメインアノテーションコストゼロ）",
+      "データ：<span class=\"num\">29,799件</span>の日本語トリプレット、9つのオープンソースデータセットから（ドメイン特化のアノテーションコストはゼロ）",
       "Loss：MultipleNegativesRankingLoss（in-batch negatives + hard negatives）",
       "学習：batch_size=64, epochs=3, lr=2e-5, FP16、<span class=\"num\">~27.6分</span>",
       "効果：Recall@1 <span class=\"num\">+16.4pp</span>、MAP@10 +0.130",
-      "重要な教訓：学習中断時はRecall@5が-3.6%、完走して初めて+5.5%——<span class=\"highlight\">中間checkpointはベースラインより悪い可能性がある</span>"
+      "重要な教訓：学習中断時はRecall@5が-3.6%、学習を完遂して初めて+5.5%——<span class=\"highlight\">中間checkpointはベースラインより悪い可能性がある</span>"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>bge-m3 微调配置</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>数据：<span class=\"num\">29,799条</span> 日语三元组，来自9个开源数据集（零领域标注成本）</li><li>Loss：MultipleNegativesRankingLoss（in-batch negatives + hard negatives）</li><li>训练：batch_size=64, epochs=3, lr=2e-5, FP16，<span class=\"num\">~27.6分钟</span></li><li>效果：Recall@1 <span class=\"num\">+16.4pp</span>，MAP@10 +0.130</li><li>关键教训：训练中断时Recall@5 -3.6%，跑完才+5.5%——<span class=\"highlight\">中途checkpoint可能比基线更差</span></li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">bge-m3 微调配置</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：数据：29,799条 日语三元组，来自9个开源数据集（零领域标注成本）；Loss：MultipleNegativesRankingLoss（in-batch negatives + hard negatives）；训练：batch_size=64, epochs=3, lr=2e-5, FP16，~27.6分钟。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>bge-m3ファインチューニングの設定</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>データ：<span class=\"num\">29,799件</span>の日本語トリプレット、9つのオープンソースデータセットから（ドメイン特化のアノテーションコストはゼロ）</li><li>Loss：MultipleNegativesRankingLoss（in-batch negatives + hard negatives）</li><li>学習：batch_size=64, epochs=3, lr=2e-5, FP16、<span class=\"num\">~27.6分</span></li><li>効果：Recall@1 <span class=\"num\">+16.4pp</span>、MAP@10 +0.130</li><li>重要な教訓：学習中断時はRecall@5が-3.6%、学習を完遂して初めて+5.5%——<span class=\"highlight\">中間checkpointはベースラインより悪い可能性がある</span></li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">bge-m3ファインチューニングの設定</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：データ：29,799件の日本語トリプレット、9つのオープンソースデータセットから（ドメイン特化のアノテーションコストはゼロ）；Loss：MultipleNegativesRankingLoss（in-batch negatives + hard negatives）；学習：batch_size=64, epochs=3, lr=2e-5, FP16、~27.6分。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "r07",
@@ -149,7 +317,35 @@
       "⑥ read_chunk / ⑦ search_by_doc / ⑧ summarize_context / ⑨ decompose_query / ⑩ reflect_and_retry"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>10个工具列表</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>① expand_query(~5.5s) — LLM查询改写</li><li>② retrieve(~0.2s) — BM25/Dense/Hybrid检索</li><li>③ rerank(~0.25s) — Cross-Encoder精排</li><li>④ generate_answer(~10.7s) — LLM生成回答</li><li>⑤ judge_answer(~5.3s) — LLM-as-Judge 5维度评分</li><li>⑥ read_chunk / ⑦ search_by_doc / ⑧ summarize_context / ⑨ decompose_query / ⑩ reflect_and_retry</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">10个工具列表</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：① expand_query(~5.5s) — LLM查询改写；② retrieve(~0.2s) — BM25/Dense/Hybrid检索；③ rerank(~0.25s) — Cross-Encoder精排。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>10ツールの一覧</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>① expand_query(~5.5s) — LLMによるクエリ書き換え</li><li>② retrieve(~0.2s) — BM25/Dense/Hybrid検索</li><li>③ rerank(~0.25s) — Cross-Encoderによる精密ランキング</li><li>④ generate_answer(~10.7s) — LLMによる回答生成</li><li>⑤ judge_answer(~5.3s) — LLM-as-Judgeによる5次元評価</li><li>⑥ read_chunk / ⑦ search_by_doc / ⑧ summarize_context / ⑨ decompose_query / ⑩ reflect_and_retry</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">10ツールの一覧</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：① expand_query(~5.5s) — LLMによるクエリ書き換え；② retrieve(~0.2s) — BM25/Dense/Hybrid検索；③ rerank(~0.25s) — Cross-Encoderによる精密ランキング。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "r08",
@@ -169,7 +365,35 @@
       "デュアルプロトコル対応（Gemini + OpenAI）はカスタム実装の方が容易"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>为什么不用LangChain？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>已有代码覆盖80%（retriever/LLM/reranker），LangChain包装层价值有限</li><li>需要完全控制prompt和guardrails（<span class=\"highlight\">强制调用judge、强制使用retrieve</span>）</li><li>避免依赖膨胀（LangChain引入60+包）</li><li>双协议支持（Gemini + OpenAI）自定义更容易</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">为什么不用LangChain？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：已有代码覆盖80%（retriever/LLM/reranker），LangChain包装层价值有限；需要完全控制prompt和guardrails（强制调用judge、强制使用retrieve）；避免依赖膨胀（LangChain引入60+包）。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>なぜLangChainを使わないのか？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>既存コードで80%をカバー済み（retriever/LLM/reranker）、LangChainのラッパー層の価値は限定的</li><li>promptとguardrailsの完全な制御が必要（<span class=\"highlight\">judge強制呼び出し、retrieve強制使用</span>）</li><li>依存関係の肥大化を回避（LangChainは60以上のパッケージを導入）</li><li>デュアルプロトコル対応（Gemini + OpenAI）はカスタム実装の方が容易</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">なぜLangChainを使わないのか？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：既存コードで80%をカバー済み（retriever/LLM/reranker）、LangChainのラッパー層の価値は限定的；promptとguardrailsの完全な制御が必要（judge強制呼び出し、retrieve強制使用）；依存関係の肥大化を回避（LangChainは60以上のパッケージを導入）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "r09",
@@ -193,7 +417,35 @@
       "overall≤3 → reflect_and_retryを自動トリガー、最大2回リトライ"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>LLM-as-Judge 5个评估维度</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>① Faithfulness — 回答是否忠于检索到的文档</li><li>② Relevance — 回答是否切题</li><li>③ Completeness — 信息是否完整</li><li>④ Context Relevance — 检索到的文档是否够用</li><li>⑤ Overall — 整体质量</li><li>overall≤3 → 自动触发reflect_and_retry，最多重试2次</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">LLM-as-Judge 5个评估维度</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：① Faithfulness — 回答是否忠于检索到的文档；② Relevance — 回答是否切题；③ Completeness — 信息是否完整。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>LLM-as-Judgeの5つの評価軸</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>① Faithfulness — 回答が検索された文書に忠実か</li><li>② Relevance — 回答が質問に合致しているか</li><li>③ Completeness — 情報が十分に網羅されているか</li><li>④ Context Relevance — 検索された文書が十分か</li><li>⑤ Overall — 全体的な品質</li><li>overall≤3 → reflect_and_retryを自動トリガー、最大2回リトライ</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">LLM-as-Judgeの5つの評価軸</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：① Faithfulness — 回答が検索された文書に忠実か；② Relevance — 回答が質問に合致しているか；③ Completeness — 情報が十分に網羅されているか。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "r10",
@@ -213,7 +465,35 @@
       "教訓：<span class=\"highlight\">LLMは最短経路を取る。重要なステップは「推奨」ではなく「強制」で確保する</span>"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Agent不调judge_answer的问题怎么解决？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>问题：LLM只用retrieve+generate_answer就直接回答，走最短路径</li><li>Prompt层：添加\"MUST call judge_answer\"/\"NEVER write answer as plain text\"</li><li>Code层：如果LLM输出文本但没调judge，强制注入一次judge调用</li><li>教训：<span class=\"highlight\">LLM会走最短路径，关键步骤不能靠\"建议\"，要靠强制</span></li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Agent不调judge_answer的问题怎么解决？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：问题：LLM只用retrieve+generate_answer就直接回答，走最短路径；Prompt层：添加\"MUST call judge_answer\"/\"NEVER write answer as plain text\"；Code层：如果LLM输出文本但没调judge，强制注入一次judge调用。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>Agentがjudge_answerを呼ばない問題の解決方法は？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>問題：LLMがretrieve+generate_answerだけで回答し、最短経路を取る</li><li>Prompt層：\"MUST call judge_answer\"/\"NEVER write answer as plain text\"を追加</li><li>Code層：LLMがテキスト出力してjudgeを呼んでいなければ、judge呼び出しを強制注入</li><li>教訓：<span class=\"highlight\">LLMは最短経路を取る。重要なステップは「推奨」ではなく「強制」で確保する</span></li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">Agentがjudge_answerを呼ばない問題の解決方法は？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：問題：LLMがretrieve+generate_answerだけで回答し、最短経路を取る；Prompt層：\"MUST call judge_answer\"/\"NEVER write answer as plain text\"を追加；Code層：LLMがテキスト出力してjudgeを呼んでいなければ、judge呼び出しを強制注入。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "r11",
@@ -237,7 +517,35 @@
       "推奨：BM25+Rerank（シンプルで高効率）またはDense+Rerank（nDCG最高）"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>完整检索结果对比表</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>BM25：Recall@1 <span class=\"num\">81.8%</span> / Recall@5 94.5%（小语料王者）</li><li>Dense(fine-tuned)：Recall@1 63.6% / Recall@5 87.3%</li><li>Hybrid RRF：Recall@1 72.7% / Recall@5 92.7%（不如BM25！）</li><li>BM25+Rerank：Recall@1 80.0% / Recall@5 <span class=\"num\">96.4%</span></li><li>Dense+Rerank：Recall@1 80.0% / Recall@5 96.4% / nDCG <span class=\"num\">0.961</span>（最高）</li><li>推荐：BM25+Rerank（简单高效）或Dense+Rerank（nDCG最高）</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">完整检索结果对比表</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：BM25：Recall@1 81.8% / Recall@5 94.5%（小语料王者）；Dense(fine-tuned)：Recall@1 63.6% / Recall@5 87.3%；Hybrid RRF：Recall@1 72.7% / Recall@5 92.7%（不如BM25！）。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>RAG 类追问要准备：gold chunk 怎么定义、Recall@K/MAP 怎么算、第一阶段召回和 rerank 精排各自解决什么问题。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>検索結果の完全な比較表</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>BM25：Recall@1 <span class=\"num\">81.8%</span> / Recall@5 94.5%（小規模コーパスの王者）</li><li>Dense(fine-tuned)：Recall@1 63.6% / Recall@5 87.3%</li><li>Hybrid RRF：Recall@1 72.7% / Recall@5 92.7%（BM25に劣る！）</li><li>BM25+Rerank：Recall@1 80.0% / Recall@5 <span class=\"num\">96.4%</span></li><li>Dense+Rerank：Recall@1 80.0% / Recall@5 96.4% / nDCG <span class=\"num\">0.961</span>（最高）</li><li>推奨：BM25+Rerank（シンプルで高効率）またはDense+Rerank（nDCG最高）</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">検索結果の完全な比較表</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：BM25：Recall@1 81.8% / Recall@5 94.5%（小規模コーパスの王者）；Dense(fine-tuned)：Recall@1 63.6% / Recall@5 87.3%；Hybrid RRF：Recall@1 72.7% / Recall@5 92.7%（BM25に劣る！）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "r12",
@@ -261,7 +569,35 @@
       "通常、最大の問題は<span class=\"highlight\">ChunkingとEmbedding</span>——これが基盤"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>RAG诊断框架（客户说效果不好时）</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>① Chunking：切分策略是否合理？语义完整性？</li><li>② 检索：Recall@K量化，正确文档能被检索到吗？</li><li>③ Embedding：通用模型对领域术语是否有效？需要微调？</li><li>④ Reranking：有没有Reranker？没有加一个可能直接+10pp</li><li>⑤ 生成：Prompt是否有效？Faithfulness约束？</li><li>通常最大问题在<span class=\"highlight\">Chunking和Embedding</span>——这是基础</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">RAG诊断框架（客户说效果不好时）</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：① Chunking：切分策略是否合理？语义完整性？；② 检索：Recall@K量化，正确文档能被检索到吗？；③ Embedding：通用模型对领域术语是否有效？需要微调？。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>RAG 类追问要准备：gold chunk 怎么定义、Recall@K/MAP 怎么算、第一阶段召回和 rerank 精排各自解决什么问题。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>RAG診断フレームワーク（顧客が効果不十分と言った場合）</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>① Chunking：分割戦略は適切か？意味的完全性は？</li><li>② 検索：Recall@Kで定量化し、正しい文書が検索されるか？</li><li>③ Embedding：汎用モデルはドメイン用語に有効か？ファインチューニングが必要か？</li><li>④ Reranking：Rerankerはあるか？なければ追加するだけで+10ppの可能性</li><li>⑤ 生成：Promptは効果的か？Faithfulness制約は？</li><li>通常、最大の問題は<span class=\"highlight\">ChunkingとEmbedding</span>——これが基盤</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">RAG診断フレームワーク（顧客が効果不十分と言った場合）</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：① Chunking：分割戦略は適切か？意味的完全性は？；② 検索：Recall@Kで定量化し、正しい文書が検索されるか？；③ Embedding：汎用モデルはドメイン用語に有効か？ファインチューニングが必要か？。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "r13",
@@ -276,14 +612,42 @@
       "发现：在小语料上，暴力Char n-gram比精细形態素解析更好"
     ],
     "bullets_ja": [
-      "スペースなし分かち書き：専用のトークナイザーまたはn-gramが必要",
+      "単語間にスペースがない分かち書き：専用のトークナイザーまたはn-gramが必要",
       "三種の文字混在：漢字/ひらがな/カタカナ、同じ概念に複数の表記",
       "複合語問題：\"需給調整\"がMeCabで2語に分割され、意味が失われる",
       "NFKC正規化：全角→半角（\"ＡＢＣ\"→\"ABC\"）、空白文字の統一",
       "発見：小規模コーパスでは力技のChar n-gramが精密な形態素解析より優れる"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>日语RAG的特殊挑战</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>无空格分词：需要专门分词工具或n-gram</li><li>三种字符混用：汉字/平假名/片假名，同一概念多种写法</li><li>复合词问题：\"需給調整\"被MeCab分成两个词，丢失意义</li><li>NFKC正规化：全角→半角（\"ＡＢＣ\"→\"ABC\"），统一空白字符</li><li>发现：在小语料上，暴力Char n-gram比精细形態素解析更好</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">日语RAG的特殊挑战</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：无空格分词：需要专门分词工具或n-gram；三种字符混用：汉字/平假名/片假名，同一概念多种写法；复合词问题：\"需給調整\"被MeCab分成两个词，丢失意义。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>RAG 类追问要准备：gold chunk 怎么定义、Recall@K/MAP 怎么算、第一阶段召回和 rerank 精排各自解决什么问题。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>日本語RAG特有の課題</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>単語間にスペースがない分かち書き：専用のトークナイザーまたはn-gramが必要</li><li>三種の文字混在：漢字/ひらがな/カタカナ、同じ概念に複数の表記</li><li>複合語問題：\"需給調整\"がMeCabで2語に分割され、意味が失われる</li><li>NFKC正規化：全角→半角（\"ＡＢＣ\"→\"ABC\"）、空白文字の統一</li><li>発見：小規模コーパスでは力技のChar n-gramが精密な形態素解析より優れる</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">日本語RAG特有の課題</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：単語間にスペースがない分かち書き：専用のトークナイザーまたはn-gramが必要；三種の文字混在：漢字/ひらがな/カタカナ、同じ概念に複数の表記；複合語問題：\"需給調整\"がMeCabで2語に分割され、意味が失われる。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "r14",
@@ -303,7 +667,35 @@
       "例：\"A規定とB規定の矛盾は？\" → [\"A規定の目的？\", \"B規定の目的？\", \"両者の違い？\"]"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>多跳QA怎么实现？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>decompose_query工具把复杂问题拆成2-4个独立子问题</li><li>分别检索 → 合并去重（by chunk_id）→ 生成综合回答</li><li>Query意图分类（规则）自动识别comparative类问题 → 触发decompose_query</li><li>例：\"A规定和B规定有什么冲突\" → [\"A规定目的？\", \"B规定目的？\", \"两者差异？\"]</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">多跳QA怎么实现？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：decompose_query工具把复杂问题拆成2-4个独立子问题；分别检索 → 合并去重（by chunk_id）→ 生成综合回答；Query意图分类（规则）自动识别comparative类问题 → 触发decompose_query。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>マルチホップQAの実現方法は？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>decompose_queryツールが複雑な質問を2-4個の独立したサブクエリに分解</li><li>それぞれ検索 → マージ・重複排除（chunk_idで）→ 統合回答を生成</li><li>Queryインテント分類（ルールベース）がcomparative系の質問を自動識別 → decompose_queryをトリガー</li><li>例：\"A規定とB規定の矛盾は？\" → [\"A規定の目的？\", \"B規定の目的？\", \"両者の違い？\"]</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">マルチホップQAの実現方法は？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：decompose_queryツールが複雑な質問を2-4個の独立したサブクエリに分解；それぞれ検索 → マージ・重複排除（chunk_idで）→ 統合回答を生成；Queryインテント分類（ルールベース）がcomparative系の質問を自動識別 → decompose_queryをトリガー。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "r15",
@@ -318,9 +710,437 @@
     "bullets_ja": [
       "第一推奨：<span class=\"highlight\">Rerankerの追加</span>——全手法のRecall@5を96.4%に統一向上、レイテンシ+0.25sのみ、すぐ導入可能",
       "第二推奨：<span class=\"highlight\">Embeddingのファインチューニング</span>——Recall@1を+16.4pp、27分の学習、オープンソースデータでアノテーションコストゼロ",
-      "bge-m3はオープンソースでファインチューニング・ローカルデプロイ可能；OpenAI embeddingはファインチューニング不可、日本企業のデータをデバイス外に出さないのは必須要件"
+      "bge-m3はオープンソースでファインチューニングやローカルデプロイが可能です。OpenAIのembeddingはファインチューニングできず、日本企業ではデータを外部に出せないことが要件になる場合があります"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>客户预算有限，只能做一件事提升RAG效果，推荐什么？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>首选：<span class=\"highlight\">加Reranker</span>——把所有方法Recall@5统一提升到96.4%，延迟只+0.25s，开箱即用</li><li>次选：<span class=\"highlight\">Embedding微调</span>——+16.4pp Recall@1，27分钟训练，用开源数据零标注成本</li><li>bge-m3开源可微调本地部署；OpenAI embedding不可微调，日本企業数据不出设备是硬需求</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">客户预算有限，只能做一件事提升RAG效果，推荐什么？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：首选：加Reranker——把所有方法Recall@5统一提升到96.4%，延迟只+0.25s，开箱即用；次选：Embedding微调——+16.4pp Recall@1，27分钟训练，用开源数据零标注成本；bge-m3开源可微调本地部署；OpenAI embedding不可微调，日本企業数据不出设备是硬需求。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>RAG 类追问要准备：gold chunk 怎么定义、Recall@K/MAP 怎么算、第一阶段召回和 rerank 精排各自解决什么问题。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>顧客の予算が限られ、RAG改善で1つだけ実施するなら何を推奨する？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>第一推奨：<span class=\"highlight\">Rerankerの追加</span>——全手法のRecall@5を96.4%に統一向上、レイテンシ+0.25sのみ、すぐ導入可能</li><li>第二推奨：<span class=\"highlight\">Embeddingのファインチューニング</span>——Recall@1を+16.4pp、27分の学習、オープンソースデータでアノテーションコストゼロ</li><li>bge-m3はオープンソースでファインチューニングやローカルデプロイが可能です。OpenAIのembeddingはファインチューニングできず、日本企業ではデータを外部に出せないことが要件になる場合があります</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">顧客の予算が限られ、RAG改善で1つだけ実施するなら何を推奨する？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：第一推奨：Rerankerの追加——全手法のRecall@5を96.4%に統一向上、レイテンシ+0.25sのみ、すぐ導入可能；第二推奨：Embeddingのファインチューニング——Recall@1を+16.4pp、27分の学習、オープンソースデータでアノテーションコストゼロ；bge-m3はオープンソースでファインチューニングやローカルデプロイが可能です。OpenAIのembeddingはファインチューニングできず、日本企業ではデータを外部に出せないことが要件になる場合があります。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "r16",
+    "cat": "Agentic RAG",
+    "q": "Corpus 扩充后哪些结论变了？（55→295 query / 359→4759 chunks）",
+    "q_ja": "評価セット 55→295件、コーパス 359→4759 chunks 拡充後の結論変化",
+    "bullets": [
+      "BM25 R@1：81.8%（小语料王者）→ <span class=\"highlight\">57.6%</span>（大语料退位）",
+      "Dense+Rerank R@1：80% → <span class=\"highlight\">69.5%</span>，反超 BM25+Rerank（68.5%）",
+      "Hybrid R@10 真正优于单方法（93.6% vs BM25 90.2% / Dense 88.1%）— <span class=\"highlight\">小语料反常消失</span>",
+      "自然口语版 QA 比精确版低 11.5pp（79.7% vs 91.2%）— 真实用户的模糊提问更难",
+      "教训：<span class=\"highlight\">评估集规模决定结论</span>，必须用 corpus 大小匹配生产场景的 eval 才有意义"
+    ],
+    "bullets_ja": [
+      "BM25 R@1：81.8% → <span class=\"highlight\">57.6%</span>（小コーパスの王座から退場）",
+      "Dense+Rerank R@1：80% → <span class=\"highlight\">69.5%</span> で BM25+Rerank（68.5%）を逆転",
+      "Hybrid R@10 が大コーパスで真の優位性（93.6% vs BM25 90.2% / Dense 88.1%）",
+      "自然な口語クエリは正確なクエリと比べて -11.5pp（79.7% vs 91.2%）— 実ユーザーの曖昧な質問が難しい",
+      "教訓：<span class=\"highlight\">評価集の規模が結論を決める</span>、生産環境と同等規模で評価しないと意味がない"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Corpus 扩充后哪些结论变了？（55→295 query / 359→4759 chunks）</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>BM25 R@1：81.8%（小语料王者）→ <span class=\"highlight\">57.6%</span>（大语料退位）</li><li>Dense+Rerank R@1：80% → <span class=\"highlight\">69.5%</span>，反超 BM25+Rerank（68.5%）</li><li>Hybrid R@10 真正优于单方法（93.6% vs BM25 90.2% / Dense 88.1%）— <span class=\"highlight\">小语料反常消失</span></li><li>自然口语版 QA 比精确版低 11.5pp（79.7% vs 91.2%）— 真实用户的模糊提问更难</li><li>教训：<span class=\"highlight\">评估集规模决定结论</span>，必须用 corpus 大小匹配生产场景的 eval 才有意义</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Corpus 扩充后哪些结论变了？（55→295 query / 359→4759 chunks）</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：BM25 R@1：81.8%（小语料王者）→ 57.6%（大语料退位）；Dense+Rerank R@1：80% → 69.5%，反超 BM25+Rerank（68.5%）；Hybrid R@10 真正优于单方法（93.6% vs BM25 90.2% / Dense 88.1%）— 小语料反常消失。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>RAG 类追问要准备：gold chunk 怎么定义、Recall@K/MAP 怎么算、第一阶段召回和 rerank 精排各自解决什么问题。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>評価セット 55→295件、コーパス 359→4759 chunks 拡充後の結論変化</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>BM25 R@1：81.8% → <span class=\"highlight\">57.6%</span>（小コーパスの王座から退場）</li><li>Dense+Rerank R@1：80% → <span class=\"highlight\">69.5%</span> で BM25+Rerank（68.5%）を逆転</li><li>Hybrid R@10 が大コーパスで真の優位性（93.6% vs BM25 90.2% / Dense 88.1%）</li><li>自然な口語クエリは正確なクエリと比べて -11.5pp（79.7% vs 91.2%）— 実ユーザーの曖昧な質問が難しい</li><li>教訓：<span class=\"highlight\">評価集の規模が結論を決める</span>、生産環境と同等規模で評価しないと意味がない</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">評価セット 55→295件、コーパス 359→4759 chunks 拡充後の結論変化</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：BM25 R@1：81.8% → 57.6%（小コーパスの王座から退場）；Dense+Rerank R@1：80% → 69.5% で BM25+Rerank（68.5%）を逆転；Hybrid R@10 が大コーパスで真の優位性（93.6% vs BM25 90.2% / Dense 88.1%）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "r17",
+    "cat": "Agentic RAG",
+    "q": "Reranker 微调灾难 — catastrophic forgetting",
+    "q_ja": "Reranker のファインチューニングを試みた結果と base モデルへ戻した理由",
+    "bullets": [
+      "base ruri-v3-reranker-310m R@1=79.6%（off-the-shelf 最强，超 bge-v2-m3 的 73.6% 共 +6pp）",
+      "v1（公开数据 only）：R@1 79.6% → <span class=\"highlight\">66.2%（-13.4pp 致命退化）</span>",
+      "v2（+216 QA domain hard negative ×3 oversample）：R@1 82.4% 看似最佳",
+      "<span class=\"highlight\">JMTEB 公开 benchmark 验证 v2: -18% catastrophic forgetting</span>（domain 微调破坏汎化）",
+      "最终决定：用 base 不微调；教训：<span class=\"highlight\">Cross-encoder 与 embedding 微调本质不同</span>，pre-trained 已强少量数据必 overfit"
+    ],
+    "bullets_ja": [
+      "base ruri-v3 R@1=79.6%（bge-v2-m3 の 73.6% を +6pp 上回る off-the-shelf 最強）",
+      "v1（公開データのみ）-13.4pp 劣化",
+      "v2（domain hard negative）ドメインで +2.8pp だが <span class=\"highlight\">JMTEB で -18% catastrophic forgetting</span>",
+      "最終判断：base を微調整せずそのまま使用",
+      "教訓：cross-encoder は embedding と異なり少量データで過学習しやすい、必ず公開ベンチで汎化を検証"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Reranker 微调灾难 — catastrophic forgetting</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>base ruri-v3-reranker-310m R@1=79.6%（off-the-shelf 最强，超 bge-v2-m3 的 73.6% 共 +6pp）</li><li>v1（公开数据 only）：R@1 79.6% → <span class=\"highlight\">66.2%（-13.4pp 致命退化）</span></li><li>v2（+216 QA domain hard negative ×3 oversample）：R@1 82.4% 看似最佳</li><li><span class=\"highlight\">JMTEB 公开 benchmark 验证 v2: -18% catastrophic forgetting</span>（domain 微调破坏汎化）</li><li>最终决定：用 base 不微调；教训：<span class=\"highlight\">Cross-encoder 与 embedding 微调本质不同</span>，pre-trained 已强少量数据必 overfit</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Reranker 微调灾难 — catastrophic forgetting</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：base ruri-v3-reranker-310m R@1=79.6%（off-the-shelf 最强，超 bge-v2-m3 的 73.6% 共 +6pp）；v1（公开数据 only）：R@1 79.6% → 66.2%（-13.4pp 致命退化）；v2（+216 QA domain hard negative ×3 oversample）：R@1 82.4% 看似最佳。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>训练类追问要准备：数据从哪里来、怎么过滤坏样本、为什么这个模型/LoRA 配置、训练失败后如何定位到数据、prompt、采样或 reward。</li><li>RAG 类追问要准备：gold chunk 怎么定义、Recall@K/MAP 怎么算、第一阶段召回和 rerank 精排各自解决什么问题。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>Reranker のファインチューニングを試みた結果と base モデルへ戻した理由</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>base ruri-v3 R@1=79.6%（bge-v2-m3 の 73.6% を +6pp 上回る off-the-shelf 最強）</li><li>v1（公開データのみ）-13.4pp 劣化</li><li>v2（domain hard negative）ドメインで +2.8pp だが <span class=\"highlight\">JMTEB で -18% catastrophic forgetting</span></li><li>最終判断：base を微調整せずそのまま使用</li><li>教訓：cross-encoder は embedding と異なり少量データで過学習しやすい、必ず公開ベンチで汎化を検証</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">Reranker のファインチューニングを試みた結果と base モデルへ戻した理由</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：base ruri-v3 R@1=79.6%（bge-v2-m3 の 73.6% を +6pp 上回る off-the-shelf 最強）；v1（公開データのみ）-13.4pp 劣化；v2（domain hard negative）ドメインで +2.8pp だが JMTEB で -18% catastrophic forgetting。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>学習系の深掘りでは、データの作り方、誤データの除去、モデル/LoRA 設定の理由、失敗時に data/prompt/sampling/reward のどこを疑ったかを準備する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "r18",
+    "cat": "Agentic RAG",
+    "q": "CRAG（Corrective Retrieval）— 检索不够时怎么补救？",
+    "q_ja": "CRAG（Corrective RAG）の仕組みと検索不十分時の補正方法",
+    "bullets": [
+      "Retrieve 后 generate 前，LLM 评估 chunks 充分性 → verdict: <span class=\"highlight\">sufficient / partial / insufficient</span>",
+      "insufficient → 自动 expand query + re-retrieve",
+      "ReAct 模式：注入 verdict 让 LLM 自主决策；Deterministic 模式：硬编码纠错路径",
+      "论文依据：CRAG (Yan et al., ICLR 2025, arXiv:2401.15884)",
+      "生产 trace 实例：`decompose_query→validate_retrieval(partial)→retrieve→read_chunk→validate_retrieval(partial)→retrieve→generate→judge(5/5)`"
+    ],
+    "bullets_ja": [
+      "retrieve 後 generate 前に LLM が chunks 充分性を判定（<span class=\"highlight\">sufficient / partial / insufficient</span>）",
+      "insufficient → query 拡張 + 再検索を自動実行",
+      "ReAct モード：verdict を inject して LLM 自身が判断、Deterministic モード：補正経路をハードコード",
+      "参照論文：CRAG（Yan et al., ICLR 2025, arXiv:2401.15884）",
+      "実 trace 例：`decompose_query→validate_retrieval(partial)→retrieve→read_chunk→validate_retrieval(partial)→retrieve→generate→judge(5/5)`"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>CRAG（Corrective Retrieval）— 检索不够时怎么补救？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>Retrieve 后 generate 前，LLM 评估 chunks 充分性 → verdict: <span class=\"highlight\">sufficient / partial / insufficient</span></li><li>insufficient → 自动 expand query + re-retrieve</li><li>ReAct 模式：注入 verdict 让 LLM 自主决策；Deterministic 模式：硬编码纠错路径</li><li>论文依据：CRAG (Yan et al., ICLR 2025, arXiv:2401.15884)</li><li>生产 trace 实例：`decompose_query→validate_retrieval(partial)→retrieve→read_chunk→validate_retrieval(partial)→retrieve→generate→judge(5/5)`</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">CRAG（Corrective Retrieval）— 检索不够时怎么补救？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：Retrieve 后 generate 前，LLM 评估 chunks 充分性 → verdict: sufficient / partial / insufficient；insufficient → 自动 expand query + re-retrieve；ReAct 模式：注入 verdict 让 LLM 自主决策；Deterministic 模式：硬编码纠错路径。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>RAG 类追问要准备：gold chunk 怎么定义、Recall@K/MAP 怎么算、第一阶段召回和 rerank 精排各自解决什么问题。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>CRAG（Corrective RAG）の仕組みと検索不十分時の補正方法</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>retrieve 後 generate 前に LLM が chunks 充分性を判定（<span class=\"highlight\">sufficient / partial / insufficient</span>）</li><li>insufficient → query 拡張 + 再検索を自動実行</li><li>ReAct モード：verdict を inject して LLM 自身が判断、Deterministic モード：補正経路をハードコード</li><li>参照論文：CRAG（Yan et al., ICLR 2025, arXiv:2401.15884）</li><li>実 trace 例：`decompose_query→validate_retrieval(partial)→retrieve→read_chunk→validate_retrieval(partial)→retrieve→generate→judge(5/5)`</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">CRAG（Corrective RAG）の仕組みと検索不十分時の補正方法</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：retrieve 後 generate 前に LLM が chunks 充分性を判定（sufficient / partial / insufficient）；insufficient → query 拡張 + 再検索を自動実行；ReAct モード：verdict を inject して LLM 自身が判断、Deterministic モード：補正経路をハードコード。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "r19",
+    "cat": "Agentic RAG",
+    "q": "Adaptive Query Routing — 按复杂度路由省钱不省事",
+    "q_ja": "クエリ複雑度別のルーティング設計",
+    "bullets": [
+      "Query 三级分类 <span class=\"highlight\">simple / standard / complex</span>",
+      "simple → BM25-only 跳过 rerank/CRAG（最快）",
+      "complex → 强制 query expansion",
+      "intent rule-based 分类器；曾把「と」加进 complex keywords，匹配所有日语句子 → <span class=\"highlight\">Codex review 发现并立即移除</span>",
+      "Deterministic 自动路由；ReAct 通过 RetrieveTool 的 method 参数传递路由意图"
+    ],
+    "bullets_ja": [
+      "クエリを <span class=\"highlight\">simple / standard / complex</span> に分類",
+      "simple は BM25 のみで rerank・CRAG をスキップ",
+      "complex は query 拡張を強制",
+      "rule-based 分類器の「と」誤判定（全日本語文にマッチ）を <span class=\"highlight\">Codex review で発見・即修正</span>",
+      "Deterministic は自動ルーティング、ReAct は RetrieveTool の method パラメータで意図伝達"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Adaptive Query Routing — 按复杂度路由省钱不省事</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>Query 三级分类 <span class=\"highlight\">simple / standard / complex</span></li><li>simple → BM25-only 跳过 rerank/CRAG（最快）</li><li>complex → 强制 query expansion</li><li>intent rule-based 分类器；曾把「と」加进 complex keywords，匹配所有日语句子 → <span class=\"highlight\">Codex review 发现并立即移除</span></li><li>Deterministic 自动路由；ReAct 通过 RetrieveTool 的 method 参数传递路由意图</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Adaptive Query Routing — 按复杂度路由省钱不省事</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：Query 三级分类 simple / standard / complex；simple → BM25-only 跳过 rerank/CRAG（最快）；complex → 强制 query expansion。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>RAG 类追问要准备：gold chunk 怎么定义、Recall@K/MAP 怎么算、第一阶段召回和 rerank 精排各自解决什么问题。</li><li>云边类追问要准备：为什么不能全上云、为什么不能全在边缘、路由错误的代价如何分级，以及 SLA 下怎么调阈值。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>クエリ複雑度別のルーティング設計</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>クエリを <span class=\"highlight\">simple / standard / complex</span> に分類</li><li>simple は BM25 のみで rerank・CRAG をスキップ</li><li>complex は query 拡張を強制</li><li>rule-based 分類器の「と」誤判定（全日本語文にマッチ）を <span class=\"highlight\">Codex review で発見・即修正</span></li><li>Deterministic は自動ルーティング、ReAct は RetrieveTool の method パラメータで意図伝達</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">クエリ複雑度別のルーティング設計</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：クエリを simple / standard / complex に分類；simple は BM25 のみで rerank・CRAG をスキップ；complex は query 拡張を強制。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "r20",
+    "cat": "Agentic RAG",
+    "q": "295 条 QA 数据集质量怎么保证？双 Agent 校验流程",
+    "q_ja": "295 件 QA データセットの品質管理 — 二重 Agent 検証フロー",
+    "bullets": [
+      "两种生成策略：<span class=\"highlight\">精确版 216 条</span>（制度名/数值/手续）+ <span class=\"highlight\">自然口语版 118 条</span>（5 种风格 casual/reasoning/practical/vague/comparison）",
+      "<span class=\"highlight\">Agent A（Retrieval Test）</span>：问题能否检索到 gold chunk（精确 91.2% / 自然 79.7%）",
+      "<span class=\"highlight\">Agent B（LLM Verification）</span>：gold chunk 是否真能回答（83.9%）",
+      "自然版 118 条经双校验保留 79 条；不合格直接丢弃，不修补",
+      "规模噪声测算：55 条时单条 miss=1.8% 误差，295 条降到 0.34%"
+    ],
+    "bullets_ja": [
+      "正確版 216 件 + 自然口語版 118 件（5 スタイル）",
+      "<span class=\"highlight\">Agent A（検索テスト）</span>：問題が gold chunk を検索できるか（精確 91.2% / 自然 79.7%）",
+      "<span class=\"highlight\">Agent B（LLM 検証）</span>：gold chunk が回答可能か（83.9%）",
+      "自然版 118 → 79 件保持（不合格は即削除、修正しない）",
+      "規模ノイズ：55 件時の 1.8%/件が 295 件で 0.34% に低下"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>295 条 QA 数据集质量怎么保证？双 Agent 校验流程</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>两种生成策略：<span class=\"highlight\">精确版 216 条</span>（制度名/数值/手续）+ <span class=\"highlight\">自然口语版 118 条</span>（5 种风格 casual/reasoning/practical/vague/comparison）</li><li><span class=\"highlight\">Agent A（Retrieval Test）</span>：问题能否检索到 gold chunk（精确 91.2% / 自然 79.7%）</li><li><span class=\"highlight\">Agent B（LLM Verification）</span>：gold chunk 是否真能回答（83.9%）</li><li>自然版 118 条经双校验保留 79 条；不合格直接丢弃，不修补</li><li>规模噪声测算：55 条时单条 miss=1.8% 误差，295 条降到 0.34%</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">295 条 QA 数据集质量怎么保证？双 Agent 校验流程</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：两种生成策略：精确版 216 条（制度名/数值/手续）+ 自然口语版 118 条（5 种风格 casual/reasoning/practical/vague/comparison）；Agent A（Retrieval Test）：问题能否检索到 gold chunk（精确 91.2% / 自然 79.7%）；Agent B（LLM Verification）：gold chunk 是否真能回答（83.9%）。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>295 件 QA データセットの品質管理 — 二重 Agent 検証フロー</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>正確版 216 件 + 自然口語版 118 件（5 スタイル）</li><li><span class=\"highlight\">Agent A（検索テスト）</span>：問題が gold chunk を検索できるか（精確 91.2% / 自然 79.7%）</li><li><span class=\"highlight\">Agent B（LLM 検証）</span>：gold chunk が回答可能か（83.9%）</li><li>自然版 118 → 79 件保持（不合格は即削除、修正しない）</li><li>規模ノイズ：55 件時の 1.8%/件が 295 件で 0.34% に低下</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">295 件 QA データセットの品質管理 — 二重 Agent 検証フロー</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：正確版 216 件 + 自然口語版 118 件（5 スタイル）；Agent A（検索テスト）：問題が gold chunk を検索できるか（精確 91.2% / 自然 79.7%）；Agent B（LLM 検証）：gold chunk が回答可能か（83.9%）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "r21",
+    "cat": "Agentic RAG",
+    "q": "Context Budgeting — 替代硬截断 8K 字符",
+    "q_ja": "tool 結果の固定 8K 切捨を改善した context budgeting",
+    "bullets": [
+      "旧方案：tool 结果硬截断 8K 字符，<span class=\"highlight\">低分 chunk 和高分 chunk 占用相同 token</span>，浪费",
+      "新方案：按 retrieval score 比例分配 token 预算（context_budget.py）",
+      "高分 chunk 保留完整，低分 chunk 压缩",
+      "只对 retrieve/rerank 类生效，generate/judge 不受影响",
+      "<span class=\"highlight\">Codex 发现 bug</span>：context budget 总量可超限 → 加 final truncation safety net 兜底"
+    ],
+    "bullets_ja": [
+      "旧仕様：固定 8K 切捨で score 無視、低/高 score chunk が同じ token を消費",
+      "新仕様：retrieval score 比例で token 予算配分、高 score chunk は完全保持",
+      "retrieve/rerank 系のみ適用、generate/judge は対象外",
+      "<span class=\"highlight\">Codex review で総量超過 bug 発見</span> → final truncation safety net で下限を保証",
+      "教訓：score-aware budget は単純な truncation より効果的だが overflow safety net が必須"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Context Budgeting — 替代硬截断 8K 字符</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>旧方案：tool 结果硬截断 8K 字符，<span class=\"highlight\">低分 chunk 和高分 chunk 占用相同 token</span>，浪费</li><li>新方案：按 retrieval score 比例分配 token 预算（context_budget.py）</li><li>高分 chunk 保留完整，低分 chunk 压缩</li><li>只对 retrieve/rerank 类生效，generate/judge 不受影响</li><li><span class=\"highlight\">Codex 发现 bug</span>：context budget 总量可超限 → 加 final truncation safety net 兜底</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Context Budgeting — 替代硬截断 8K 字符</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：旧方案：tool 结果硬截断 8K 字符，低分 chunk 和高分 chunk 占用相同 token，浪费；新方案：按 retrieval score 比例分配 token 预算（context_budget.py）；高分 chunk 保留完整，低分 chunk 压缩。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>RAG 类追问要准备：gold chunk 怎么定义、Recall@K/MAP 怎么算、第一阶段召回和 rerank 精排各自解决什么问题。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>tool 結果の固定 8K 切捨を改善した context budgeting</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>旧仕様：固定 8K 切捨で score 無視、低/高 score chunk が同じ token を消費</li><li>新仕様：retrieval score 比例で token 予算配分、高 score chunk は完全保持</li><li>retrieve/rerank 系のみ適用、generate/judge は対象外</li><li><span class=\"highlight\">Codex review で総量超過 bug 発見</span> → final truncation safety net で下限を保証</li><li>教訓：score-aware budget は単純な truncation より効果的だが overflow safety net が必須</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">tool 結果の固定 8K 切捨を改善した context budgeting</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：旧仕様：固定 8K 切捨で score 無視、低/高 score chunk が同じ token を消費；新仕様：retrieval score 比例で token 予算配分、高 score chunk は完全保持；retrieve/rerank 系のみ適用、generate/judge は対象外。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "r22",
+    "cat": "Agentic RAG",
+    "q": "bge-m3 微调首轮 -3.6% vs 完整 +5.5% — 训练必须跑完",
+    "q_ja": "Embedding ファインチューニング中間 checkpoint が base より劣化した教訓",
+    "bullets": [
+      "首轮训练 SSH timeout 在 step 1000/1398（2.15/3 epoch），Recall@5 反降 <span class=\"highlight\">-3.6%</span> → 当时决定保留 base",
+      "完整 3 epoch 训练（27.6 min）后 R@1 +16.4pp、R@5 +5.5pp 全面优于 base，<span class=\"highlight\">反转结论</span>",
+      "教训：<span class=\"highlight\">训练必须跑完</span>，不完整训练（欠拟合）反而不如不训",
+      "评估集 55 条时单 miss 1.8% 影响大，单点结论不可信",
+      "JaGovFaqs 的 FAQ 数据要 cap（60%→15% 否则主导分布）"
+    ],
+    "bullets_ja": [
+      "初回 SSH timeout で 2.15/3 epoch → R@5 <span class=\"highlight\">-3.6%</span>、当時は base 保持を決断",
+      "3 epoch 完走で R@1 +16.4pp、R@5 +5.5pp が base を全面的に上回り <span class=\"highlight\">結論逆転</span>",
+      "教訓：<span class=\"highlight\">不完全学習は base 以下</span>、必ず完走させる",
+      "55 件評価で 1 miss=1.8% のため単点結論を信用してはいけない",
+      "JaGovFaqs を 60%→15% に cap して FAQ bias 回避"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>bge-m3 微调首轮 -3.6% vs 完整 +5.5% — 训练必须跑完</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>首轮训练 SSH timeout 在 step 1000/1398（2.15/3 epoch），Recall@5 反降 <span class=\"highlight\">-3.6%</span> → 当时决定保留 base</li><li>完整 3 epoch 训练（27.6 min）后 R@1 +16.4pp、R@5 +5.5pp 全面优于 base，<span class=\"highlight\">反转结论</span></li><li>教训：<span class=\"highlight\">训练必须跑完</span>，不完整训练（欠拟合）反而不如不训</li><li>评估集 55 条时单 miss 1.8% 影响大，单点结论不可信</li><li>JaGovFaqs 的 FAQ 数据要 cap（60%→15% 否则主导分布）</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">bge-m3 微调首轮 -3.6% vs 完整 +5.5% — 训练必须跑完</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：首轮训练 SSH timeout 在 step 1000/1398（2.15/3 epoch），Recall@5 反降 -3.6% → 当时决定保留 base；完整 3 epoch 训练（27.6 min）后 R@1 +16.4pp、R@5 +5.5pp 全面优于 base，反转结论；教训：训练必须跑完，不完整训练（欠拟合）反而不如不训。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>训练类追问要准备：数据从哪里来、怎么过滤坏样本、为什么这个模型/LoRA 配置、训练失败后如何定位到数据、prompt、采样或 reward。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>Embedding ファインチューニング中間 checkpoint が base より劣化した教訓</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>初回 SSH timeout で 2.15/3 epoch → R@5 <span class=\"highlight\">-3.6%</span>、当時は base 保持を決断</li><li>3 epoch 完走で R@1 +16.4pp、R@5 +5.5pp が base を全面的に上回り <span class=\"highlight\">結論逆転</span></li><li>教訓：<span class=\"highlight\">不完全学習は base 以下</span>、必ず完走させる</li><li>55 件評価で 1 miss=1.8% のため単点結論を信用してはいけない</li><li>JaGovFaqs を 60%→15% に cap して FAQ bias 回避</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">Embedding ファインチューニング中間 checkpoint が base より劣化した教訓</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：初回 SSH timeout で 2.15/3 epoch → R@5 -3.6%、当時は base 保持を決断；3 epoch 完走で R@1 +16.4pp、R@5 +5.5pp が base を全面的に上回り 結論逆転；教訓：不完全学習は base 以下、必ず完走させる。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "r23",
+    "cat": "Agentic RAG",
+    "q": "Tool 强制使用 guardrail — 注册≠调用",
+    "q_ja": "10 ツール登録しても LLM が retrieve+generate 最短経路しか使わない問題",
+    "bullets": [
+      "根本观察：<span class=\"highlight\">注册 tool ≠ LLM 会用 tool</span>，LLM 走最短路径，关键步骤要靠「强制」不是「建议」",
+      "Prompt 层 CRITICAL RULES：「MUST use generate_answer」/「NEVER write the answer as plain text」/「MUST call judge_answer」",
+      "Code guardrail：response.type==\"text\" 但 judge_called=False → 拦截答案 + 注入 force-judge message",
+      "Force retrieve after 3 turns",
+      "验证：从 2 步变 6 步，decompose_query 和 judge_answer 正常触发；OpenAI/Gemini 双协议都做了"
+    ],
+    "bullets_ja": [
+      "本質的観察：<span class=\"highlight\">ツール登録 ≠ LLM が使用</span>、最短経路を取るため「強制」が必要",
+      "prompt の CRITICAL RULES で MUST/NEVER 強制 + code guardrail で text 出力時に judge を強制注入",
+      "3 turn 経過時に retrieve 強制",
+      "結果：2 ステップ → 6 ステップに改善、decompose_query と judge_answer が正常発火",
+      "OpenAI/Gemini 両プロトコルで実装"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Tool 强制使用 guardrail — 注册≠调用</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>日语电力制度文档问答：文档少、术语密、表达变体多，业务上又要求答案可追溯、低幻觉。</li><li><strong>技术选择：</strong>不是“只上向量库”，而是 BM25 Char 3-gram、微调 bge-m3、RRF、Cross-Encoder rerank，再叠加 Agent 工具、judge 和反思重试。</li><li><strong>实现细节：</strong>链路从 chunking 与日语正规化开始，经 retrieve/rerank/generate/judge，到 query decomposition、CRAG、context budgeting 和 tool guardrail。</li><li><strong>实验/指标：</strong>重点看 Recall@1/5、MAP、rerank 前后差异、语料扩充后的结论是否反转，以及每个工具引入的延迟。</li><li><strong>失败模式：</strong>包括 Dense 在小语料拖累 Top-1、reranker 微调灾难遗忘、Agent 不调用 judge、query routing 规则误伤、硬截断浪费上下文。</li><li><strong>面试可讲故事：</strong>我没有迷信某个 RAG 组件，而是逐层定位 retrieval、rerank、generation、evaluation 的瓶颈，用实验把直觉校正成可交付的系统。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>根本观察：<span class=\"highlight\">注册 tool ≠ LLM 会用 tool</span>，LLM 走最短路径，关键步骤要靠「强制」不是「建议」</li><li>Prompt 层 CRITICAL RULES：「MUST use generate_answer」/「NEVER write the answer as plain text」/「MUST call judge_answer」</li><li>Code guardrail：response.type==\"text\" 但 judge_called=False → 拦截答案 + 注入 force-judge message</li><li>Force retrieve after 3 turns</li><li>验证：从 2 步变 6 步，decompose_query 和 judge_answer 正常触发；OpenAI/Gemini 双协议都做了</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡连到 Agentic RAG 的总线：从检索基座、日语处理、reranker、Agent 工具、自动评价到工程 guardrail，最终回答“客户说 RAG 不准时，我如何诊断并改进”。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Tool 强制使用 guardrail — 注册≠调用</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：Agentic RAG 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：根本观察：注册 tool ≠ LLM 会用 tool，LLM 走最短路径，关键步骤要靠「强制」不是「建议」；Prompt 层 CRITICAL RULES：「MUST use generate_answer」/「NEVER write the answer as plain text」/「MUST call judge_answer」；Code guardrail：response.type==\"text\" 但 judge_called=False → 拦截答案 + 注入 force-judge message。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>10 ツール登録しても LLM が retrieve+generate 最短経路しか使わない問題</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>日本語の電力制度文書 QA である。文書数は少なく、専門用語が多く、表記揺れもあり、回答には根拠性と低幻覚が必要だった。</li><li><strong>技術選択：</strong>単純なベクトル検索ではなく、BM25 Char 3-gram、fine-tuned bge-m3、RRF、Cross-Encoder rerank に Agent tool、judge、reflection retry を組み合わせた。</li><li><strong>実装：</strong> chunking と日本語正規化から始まり、retrieve/rerank/generate/judge、query decomposition、CRAG、context budgeting、tool guardrail へつながる。</li><li><strong>実験/指標：</strong>評価では Recall@1/5、MAP、rerank 前後の差分、コーパス拡大後の結論反転、各 tool の遅延を見る。</li><li><strong>失敗モード：</strong>失敗は Dense が小規模コーパスで Top-1 を悪化させる、reranker fine-tuning の catastrophic forgetting、Agent が judge を呼ばない、routing ルールの誤爆、文脈の硬い切り捨てに現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、特定コンポーネントを盲信せず、retrieval、rerank、generation、evaluation を層ごとに測定して、直感を実験で修正した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>本質的観察：<span class=\"highlight\">ツール登録 ≠ LLM が使用</span>、最短経路を取るため「強制」が必要</li><li>prompt の CRITICAL RULES で MUST/NEVER 強制 + code guardrail で text 出力時に judge を強制注入</li><li>3 turn 経過時に retrieve 強制</li><li>結果：2 ステップ → 6 ステップに改善、decompose_query と judge_answer が正常発火</li><li>OpenAI/Gemini 両プロトコルで実装</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは Agentic RAG の全体像に接続する。検索基盤、日本語処理、reranker、Agent tool、自動評価、guardrail を通じて「RAG が不正確と言われた時にどう診断し改善するか」を説明する。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">10 ツール登録しても LLM が retrieve+generate 最短経路しか使わない問題</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：本質的観察：ツール登録 ≠ LLM が使用、最短経路を取るため「強制」が必要；prompt の CRITICAL RULES で MUST/NEVER 強制 + code guardrail で text 出力時に judge を強制注入；3 turn 経過時に retrieve 強制。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   }
 ]

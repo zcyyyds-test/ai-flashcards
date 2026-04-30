@@ -19,7 +19,67 @@
       "自身のプロジェクトは全四要素をカバー：SiLR（LLM+シミュレーションツール+観測メモリ+ReAct計画）、RAG（LLM+10ツール+検索メモリ+意図ルーティング）"
     ],
     "group": "基础",
-    "lv": 1
+    "lv": 1,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>Agent 架构是把 LLM 从文本生成器扩展成可执行任务系统的基础框架。四要素分别对应认知、行动、状态和策略。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>LLM 负责推理与决策，Tools 负责外部操作，Memory 保存短期/长期/工作状态，Planning 决定分解、调用和停止。闭环是 observe → think/plan → act → observe。</p><ul><li>LLM：大脑，负责推理和决策</li><li>Tools：手和脚，执行外部操作（API调用/代码执行/搜索/数据库查询）</li><li>Memory：短期(对话历史) + 长期(向量数据库/文件) + 工作记忆(当前任务状态)</li><li>Planning：任务分解和执行策略（ReAct/Plan-and-Execute/反思）</li><li>你的项目覆盖全部四要素：SiLR(LLM+仿真工具+观测记忆+ReAct规划)，RAG(LLM+10工具+检索记忆+意图路由)</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>误区是把接了工具的 chatbot 都叫 Agent。没有状态管理、规划边界和失败恢复时，它只是 function calling 包装。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>关联 Function Calling、Memory、ReAct、Guardrails。SiLR 和 RAG 项目正好覆盖四要素。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">Agent 是 LLM+工具+记忆+规划的闭环系统。面试中我会强调工具让它能影响外部世界，因此评估和安全比纯文本更重要。</span></p>"
+      },
+      {
+        "term": "知识连接",
+        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+      },
+      {
+        "term": "迁移练习",
+        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>Agentの四要素</strong> は、LLM を単なる文章生成器から、状態を持ち外部操作を行うシステムへ拡張するための設計論点である。安全性、評価、ツール実行と強く結びつく。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、LLM の判断、ツール実行、状態管理、評価・安全制約を一つの閉ループとして設計すること。</p><ul><li>LLM：頭脳、推論と意思決定を担当</li><li>Tools：手足、外部操作を実行（API呼び出し/コード実行/検索/データベースクエリ）</li><li>Memory：短期（対話履歴）+ 長期（ベクトルDB/ファイル）+ ワーキングメモリ（現在のタスク状態）</li><li>Planning：タスク分解と実行戦略（ReAct/Plan-and-Execute/内省）</li><li>自身のプロジェクトは全四要素をカバー：SiLR（LLM+シミュレーションツール+観測メモリ+ReAct計画）、RAG（LLM+10ツール+検索メモリ+意図ルーティング）</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、LLM の推論能力だけに頼ること。ツールの副作用、状態の汚染、終了条件、権限管理を設計しないと、強いモデルでも失敗する。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>Function Calling、Memory、Planning、ReAct、SiLR/RAG のプロジェクト設計と関連する。</p><p>プロジェクト文脈では、<span class=\"key-point\">自身のプロジェクトは全四要素をカバー：SiLR（LLM+シミュレーションツール+観測メモリ+ReAct計画）、RAG（LLM+10ツール+検索メモリ+意図ルーティング）</span></p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Agentの四要素 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ]
   },
   {
     "id": "a02",
@@ -41,7 +101,63 @@
       "<span class=\"highlight\">Structured Output</span>：LLMの出力をSchemaに準拠したJSONに制限し、パースエラーを削減"
     ],
     "group": "基础",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>Function Calling 是工具使用的底层接口，把自然语言意图转换成可执行的结构化调用。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>系统提供 JSON Schema，模型选择 tool name 并填 arguments，宿主程序校验、执行，再把 observation 返回模型。关键是 intent detection、slot filling、schema validation 和 parser fallback。</p><ul><li>原理：System Prompt中定义工具的JSON Schema → LLM输出结构化的工具调用请求 → 系统执行 → 结果返回LLM</li><li>OpenAI格式：tool_calls: [{function: {name, arguments}}]</li><li>关键挑战：①LLM可能生成无效参数 ②可能调用不存在的工具 ③可能不调工具直接回答</li><li>你的解决方案：三层ActionParser（原生/JSON/正则兜底）+ 强制调用guardrails</li><li>Structured Output：限制LLM只能输出符合Schema的JSON，减少解析错误</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>不要相信模型输出一定合法。参数类型、枚举值、工具名都可能错；强制 tool call 也可能让模型在不该调用时硬编参数。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>关联 Structured Output、Agent 四要素、ActionParser、MCP。SiLR 的三层 parser 是典型工程兜底。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">我会说 function calling 的难点不在 API，而在模型何时调用、参数是否可验证、失败后如何恢复。</span></p>"
+      },
+      {
+        "term": "知识连接",
+        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+      },
+      {
+        "term": "迁移练习",
+        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>Function Callingの実装メカニズム</strong> は、LLM を単なる文章生成器から、状態を持ち外部操作を行うシステムへ拡張するための設計論点である。安全性、評価、ツール実行と強く結びつく。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、LLM の判断、ツール実行、状態管理、評価・安全制約を一つの閉ループとして設計すること。</p><ul><li>原理：System PromptでツールのJSON Schemaを定義 → LLMが構造化されたツール呼び出しリクエストを出力 → システムが実行 → 結果をLLMに返却</li><li>OpenAI形式：tool_calls: [{function: {name, arguments}}]</li><li>主な課題：①LLMが無効なパラメータを生成する可能性 ②存在しないツールを呼び出す可能性 ③ツールを呼ばず直接回答する可能性</li><li>自身の解決策：三層ActionParser（ネイティブ/JSON/正規表現フォールバック）+ 強制呼び出しGuardrails</li><li>Structured Output：LLMの出力をSchemaに準拠したJSONに制限し、パースエラーを削減</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、LLM の推論能力だけに頼ること。ツールの副作用、状態の汚染、終了条件、権限管理を設計しないと、強いモデルでも失敗する。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>Structured Output、ActionParser、Tool Selection、MCP と関連する。</p><p>プロジェクト文脈では、<span class=\"key-point\">自身の解決策：三層ActionParser（ネイティブ/JSON/正規表現フォールバック）+ 強制呼び出しGuardrails</span></p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Function Callingの実装メカニズム では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ]
   },
   {
     "id": "a03",
@@ -63,7 +179,67 @@
       "自身の実装：SiLRは観測圧縮でワーキングメモリ；RAGはベクトルDBで長期記憶；EdgeRouterはスライディングウィンドウで時系列記憶"
     ],
     "group": "基础",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>Memory 系统让 Agent 跨轮次、跨任务保持上下文，是从一次性问答走向长期任务的关键。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>短期记忆直接进入 context，长期记忆存向量库/数据库，工作记忆保存当前任务状态，episodic memory 保存完整 episode。检索通常结合相关性、时间和重要性。</p><ul><li>短期记忆：对话历史，直接放在context window中。受限于上下文长度</li><li>长期记忆：向量数据库存储过去的经验，按相似度检索。如MemGPT</li><li>工作记忆：当前任务的中间状态（scratchpad），类似人的\"脑中暂存\"</li><li>情景记忆：记录成功/失败的完整episode，用于未来类似任务参考</li><li>你的实现：SiLR用观测压缩做工作记忆；RAG用向量DB做长期记忆；EdgeRouter用滑动窗口做时序记忆</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>误区是把所有历史都塞进 prompt。过长历史会污染注意力并增加成本；错误记忆如果不衰减会持续误导。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>关联 RAG、Context Engineering、长期记忆设计。SiLR 观测压缩和 RAG 向量库分别对应工作记忆与长期记忆。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">面试中可按短期、工作、长期、情景四类说明，并补充写入、检索、遗忘策略。</span></p>"
+      },
+      {
+        "term": "知识连接",
+        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+      },
+      {
+        "term": "迁移练习",
+        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>Memoryシステムの分類</strong> は、LLM を単なる文章生成器から、状態を持ち外部操作を行うシステムへ拡張するための設計論点である。安全性、評価、ツール実行と強く結びつく。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、LLM の判断、ツール実行、状態管理、評価・安全制約を一つの閉ループとして設計すること。</p><ul><li>短期記憶：対話履歴、context windowに直接配置。コンテキスト長に制約される</li><li>長期記憶：ベクトルDBに過去の経験を保存し、類似度で検索。例：MemGPT</li><li>ワーキングメモリ：現在のタスクの中間状態（scratchpad）、人間の「脳内一時保存」に相当</li><li>エピソード記憶：成功/失敗した完全なエピソードを記録し、将来の類似タスクの参考に</li><li>自身の実装：SiLRは観測圧縮でワーキングメモリ；RAGはベクトルDBで長期記憶；EdgeRouterはスライディングウィンドウで時系列記憶</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、LLM の推論能力だけに頼ること。ツールの副作用、状態の汚染、終了条件、権限管理を設計しないと、強いモデルでも失敗する。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>RAG、Context Engineering、長期記憶、観測圧縮と関連する。</p><p>プロジェクト文脈では、<span class=\"key-point\">自身の実装：SiLRは観測圧縮でワーキングメモリ；RAGはベクトルDBで長期記憶；EdgeRouterはスライディングウィンドウで時系列記憶</span></p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Memoryシステムの分類 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ]
   },
   {
     "id": "a04",
@@ -85,7 +261,63 @@
       "核心理念：<span class=\"highlight\">モデルに「何を見せるか」の制御は「どう質問するか」より重要</span>"
     ],
     "group": "基础",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>Context Engineering 是 Prompt Engineering 的系统化升级，关注模型在每一步“看到什么”。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>它设计信息流：system prompt、用户输入、工具结果、检索片段、记忆、状态压缩在何时以何种格式进入 context。目标是提高信噪比而不是堆更多文本。</p><ul><li>Prompt Engineering：优化单次输入的措辞和格式</li><li>Context Engineering（2025新趋势）：设计整个信息流——什么信息在什么时候以什么形式进入context</li><li>包括：工具结果的格式化 / 记忆检索的时机 / 观测数据的压缩 / 系统提示的动态调整</li><li>你做过的：Observation压缩(2000→300 tokens) / Escalation Hint(只在REJECT时注入) / RRF权重调整</li><li>核心理念：控制模型\"看到什么\"比\"怎么问\"更重要</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>误区是继续把问题归结为一句 prompt。上下文中混入过期、重复或未验证信息时，措辞再好也会失败。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>关联 RAG chunking、Memory、Observation 压缩、System Prompt。Escalation Hint 是动态注入 context 的例子。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">我会说 prompt engineering 调一句话，context engineering 调整个信息供应链。</span></p>"
+      },
+      {
+        "term": "知识连接",
+        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+      },
+      {
+        "term": "迁移练习",
+        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>Context Engineering vs Prompt Engineering</strong> は、LLM を単なる文章生成器から、状態を持ち外部操作を行うシステムへ拡張するための設計論点である。安全性、評価、ツール実行と強く結びつく。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、LLM の判断、ツール実行、状態管理、評価・安全制約を一つの閉ループとして設計すること。</p><ul><li>Prompt Engineering：単一入力の表現やフォーマットを最適化</li><li>Context Engineering（2025年の新トレンド）：情報フロー全体を設計——どの情報を、いつ、どのような形式でcontextに入れるか</li><li>含まれるもの：ツール結果のフォーマット / メモリ検索のタイミング / 観測データの圧縮 / システムプロンプトの動的調整</li><li>自身の実践：Observation圧縮（2000→300トークン）/ Escalation Hint（REJECT時のみ注入）/ RRF重み調整</li><li>核心理念：モデルに「何を見せるか」の制御は「どう質問するか」より重要</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、LLM の推論能力だけに頼ること。ツールの副作用、状態の汚染、終了条件、権限管理を設計しないと、強いモデルでも失敗する。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>Prompt Engineering、RAG、Memory、Observation 圧縮、Escalation Hint と関連する。</p><p>プロジェクト文脈では、<span class=\"key-point\">自身の実践：Observation圧縮（2000→300トークン）/ Escalation Hint（REJECT時のみ注入）/ RRF重み調整</span></p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Context Engineering vs Prompt Engineering では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ]
   },
   {
     "id": "a05",
@@ -107,7 +339,71 @@
       "フレームワーク：AutoGen（対話型）/ CrewAI（役割分担）/ LangGraph（グラフ状態マシン）"
     ],
     "group": "基础",
-    "lv": 3
+    "lv": 3,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>Multi-Agent 解决单个 Agent 能力、角色或权限不足的问题，属于 Agent 系统架构层。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>中心化由 orchestrator 分派任务；层级式适合复杂组织；对等式靠协商；黑板模式共享状态。关键机制是任务分解、消息协议、共享记忆和仲裁。</p><ul><li>①中心化：一个Orchestrator分派任务给Worker Agent → 简单可控，单点瓶颈</li><li>②层级式：Manager→SubManager→Worker → 适合复杂组织结构</li><li>③对等式：Agent之间直接通信协商 → 灵活但难以调试</li><li>④黑板模式：共享状态空间，各Agent读写 → 解耦通信</li><li>框架：AutoGen(对话式) / CrewAI(角色分工) / LangGraph(图状态机)</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>多 Agent 不一定更强。通信成本、角色重叠、状态不一致会让系统更慢更难调试。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>关联 LangGraph、CrewAI、AutoGen、Agent Evaluation。复杂 RAG pipeline 可拆为检索、分析、审核角色。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">面试表达：先说明为什么需要多 Agent，再讲通信拓扑和冲突解决，而不是只列框架名。</span></p>"
+      },
+      {
+        "term": "知识连接",
+        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+      },
+      {
+        "term": "迁移练习",
+        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>Multi-Agentの通信パターン</strong> は、LLM を単なる文章生成器から、状態を持ち外部操作を行うシステムへ拡張するための設計論点である。安全性、評価、ツール実行と強く結びつく。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、LLM の判断、ツール実行、状態管理、評価・安全制約を一つの閉ループとして設計すること。</p><ul><li>①中央集権型：1つのOrchestratorがWorker Agentにタスクを割り当て → シンプルで制御可能、単一障害点がボトルネック</li><li>②階層型：Manager→SubManager→Worker → 複雑な組織構造に適する</li><li>③ピアツーピア型：Agent間で直接通信・交渉 → 柔軟だがデバッグが困難</li><li>④ブラックボードパターン：共有状態空間で各Agentが読み書き → 通信を疎結合化</li><li>フレームワーク：AutoGen（対話型）/ CrewAI（役割分担）/ LangGraph（グラフ状態マシン）</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、LLM の推論能力だけに頼ること。ツールの副作用、状態の汚染、終了条件、権限管理を設計しないと、強いモデルでも失敗する。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>LangGraph、CrewAI、AutoGen、Agent Evaluation、共有状態管理と関連する。</p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Multi-Agentの通信パターン では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      },
+      {
+        "term": "転用練習",
+        "explain": "<p><strong>知識を転用して確認する：</strong>この概念を訓練、推論、評価、顧客導入の四場面に置き、何を改善し、どんなコストとリスクを生むか考える。</p><ul><li>境界を説明できれば暗記ではない。</li><li>プロジェクトに接続できれば実務知識になる。</li><li>検証方法まで言えれば工程判断として使える。</li></ul>"
+      }
+    ]
   },
   {
     "id": "a06",
@@ -131,7 +427,67 @@
       "難点：Agentの挙動は確率的であり、複数回実行して統計量を取る必要がある、1回の実行では不十分"
     ],
     "group": "基础",
-    "lv": 3
+    "lv": 3,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>Agent Evaluation 评估的是完整行为轨迹，不只是最终文本质量。它连接任务成功、成本、安全和稳定性。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>核心指标包括 success rate、步骤数、token/时间成本、违规率、鲁棒性和可复现性。由于 Agent 有随机性，应多次运行并统计置信区间，还要保存 trace 便于归因。</p><ul><li>①任务完成率：最终结果是否正确（SiLR: 97.0%恢复成功率）</li><li>②效率：完成任务所需步骤数/token数/时间（SiLR: 平均3.2步）</li><li>③安全性：是否触发危险动作/违反约束（SiLR: 0%违规率）</li><li>④鲁棒性：输入变化时表现稳定性（PowerTS: 仅+2.2%退化）</li><li>⑤成本：API调用/推理成本（SiLR: 比GPT低100×）</li><li>难点：Agent行为是随机的，需要多次运行取统计量，不能只跑一次</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>误区是只跑一个 demo 或只看最终答案。工具调用过程可能危险、昂贵或不可复现，即使答案偶尔正确也不能上线。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>关联 Guardrails、ReAct 失败模式、SiLR 指标。SiLR 的恢复成功率、平均步数和违规率就是较完整的评估组合。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">我会说 Agent 要按“结果正确、过程安全、成本可控、重复稳定”四个维度评估。</span></p>"
+      },
+      {
+        "term": "知识连接",
+        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+      },
+      {
+        "term": "迁移练习",
+        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>Agentの評価方法</strong> は、LLM を単なる文章生成器から、状態を持ち外部操作を行うシステムへ拡張するための設計論点である。安全性、評価、ツール実行と強く結びつく。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、LLM の判断、ツール実行、状態管理、評価・安全制約を一つの閉ループとして設計すること。</p><ul><li>①タスク完了率：最終結果が正しいか（SiLR: 97.0%の復旧成功率）</li><li>②効率：タスク完了に要するステップ数/トークン数/時間（SiLR: 平均3.2ステップ）</li><li>③安全性：危険なアクション/制約違反を引き起こしたか（SiLR: 違反率0%）</li><li>④ロバスト性：入力変化時の性能安定性（PowerTS: わずか+2.2%の劣化）</li><li>⑤コスト：API呼び出し/推論コスト（SiLR: GPTより100倍低コスト）</li><li>難点：Agentの挙動は確率的であり、複数回実行して統計量を取る必要がある、1回の実行では不十分</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、LLM の推論能力だけに頼ること。ツールの副作用、状態の汚染、終了条件、権限管理を設計しないと、強いモデルでも失敗する。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>Guardrails、ReAct trace、SiLR の成功率・平均ステップ数・違反率と関連する。</p><p>プロジェクト文脈では、<span class=\"key-point\">①タスク完了率：最終結果が正しいか（SiLR: 97.0%の復旧成功率）</span></p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Agentの評価方法 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ]
   },
   {
     "id": "a07",
@@ -153,7 +509,67 @@
       "実装方式：ルール（正規表現/キーワード）/ 分類器（fine-tuned）/ LLM-as-Judge / シミュレータ検証"
     ],
     "group": "基础",
-    "lv": 3
+    "lv": 3,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>Guardrails 是 Agent 安全与可靠性的执行边界，位于输入、模型输出和外部动作之间。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>输入 guardrails 检测注入和越权，输出 guardrails 查格式与内容，动作 guardrails 在执行前做权限/物理/业务校验，回退 guardrails 负责失败后的人工转接或保守策略。</p><ul><li>输入Guardrails：过滤恶意/不安全的用户输入（prompt injection检测）</li><li>输出Guardrails：检查LLM输出的安全性/合规性/格式正确性</li><li>动作Guardrails：在执行前验证动作安全性（SiLR验证器就是这类）</li><li>回退Guardrails：失败时的兜底策略（Failsafe、默认回答、人工转接）</li><li>实现方式：规则(正则/关键词) / 分类器(fine-tuned) / LLM-as-Judge / 仿真器验证</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>误区是以为 system prompt 可以替代 guardrails。prompt 是软约束，执行前校验才是硬边界。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>关联 Prompt Injection、Agent 安全、SiLR 验证器。仿真器验证就是动作级 guardrail。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">面试表达：Guardrails 应该分层设计，越接近真实副作用的地方越需要硬校验和最小权限。</span></p>"
+      },
+      {
+        "term": "知识连接",
+        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+      },
+      {
+        "term": "迁移练习",
+        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>Guardrailsの設計パターン</strong> は、LLM を単なる文章生成器から、状態を持ち外部操作を行うシステムへ拡張するための設計論点である。安全性、評価、ツール実行と強く結びつく。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、LLM の判断、ツール実行、状態管理、評価・安全制約を一つの閉ループとして設計すること。</p><ul><li>入力Guardrails：悪意のある/安全でないユーザー入力をフィルタリング（Prompt Injection検出）</li><li>出力Guardrails：LLM出力の安全性/コンプライアンス/フォーマットの正確性をチェック</li><li>アクションGuardrails：実行前にアクションの安全性を検証（SiLR検証器がこのタイプ）</li><li>フォールバックGuardrails：失敗時のセーフティネット戦略（フェイルセーフ、デフォルト回答、人間への転送）</li><li>実装方式：ルール（正規表現/キーワード）/ 分類器（fine-tuned）/ LLM-as-Judge / シミュレータ検証</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、LLM の推論能力だけに頼ること。ツールの副作用、状態の汚染、終了条件、権限管理を設計しないと、強いモデルでも失敗する。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>Prompt Injection、Agent 安全、SiLR 検証器、実行前チェックと関連する。</p><p>プロジェクト文脈では、<span class=\"key-point\">アクションGuardrails：実行前にアクションの安全性を検証（SiLR検証器がこのタイプ）</span></p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Guardrailsの設計パターン では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ]
   },
   {
     "id": "a08",
@@ -175,7 +591,71 @@
       "⑤<span class=\"highlight\">コンテキスト汚染</span>：誤った情報がcontextに蓄積し後続の判断に影響 → 観測圧縮+状態リセット"
     ],
     "group": "基础",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>Agent 失败模式是设计可靠 Agent 的反面教材，帮助定位规划、工具、记忆和上下文哪里坏了。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>常见链路是循环、重复工具、幻觉动作、跳过必要步骤、上下文污染。工程上用 max_steps、schema validation、重复检测、observation 压缩和状态重置处理。</p><ul><li>①无限循环：没有终止条件或步数上限 → Bounded ReAct解决</li><li>②工具滥用：反复调用同一工具期待不同结果 → 重试上限+失败反馈</li><li>③最短路径：跳过关键步骤直接回答 → 强制调用guardrails</li><li>④幻觉动作：调用不存在的工具或生成无效参数 → Schema验证+解析兜底</li><li>⑤上下文污染：错误信息积累在context中影响后续判断 → 观测压缩+状态重置</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>不要只把失败归因于模型不够强。工具描述重叠、observation 太长、终止条件缺失都能让强模型失败。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>关联 ReAct、Tool Selection、Memory、Guardrails。Bounded ReAct 和 ActionParser 正是针对这些失败。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">面试可以说：我会从 trace 入手，看失败发生在 plan、tool selection、execution 还是 memory，再用对应 guardrail 修。</span></p>"
+      },
+      {
+        "term": "知识连接",
+        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+      },
+      {
+        "term": "迁移练习",
+        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>Agentのよくある失敗パターン</strong> は、LLM を単なる文章生成器から、状態を持ち外部操作を行うシステムへ拡張するための設計論点である。安全性、評価、ツール実行と強く結びつく。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、LLM の判断、ツール実行、状態管理、評価・安全制約を一つの閉ループとして設計すること。</p><ul><li>①無限ループ：終了条件やステップ上限がない → Bounded ReActで解決</li><li>②ツールの乱用：異なる結果を期待して同じツールを繰り返し呼び出す → リトライ上限+失敗フィードバック</li><li>③最短経路：重要なステップを飛ばして直接回答 → 強制呼び出しGuardrails</li><li>④幻覚アクション：存在しないツールの呼び出しや無効なパラメータの生成 → Schema検証+パースのフォールバック</li><li>⑤コンテキスト汚染：誤った情報がcontextに蓄積し後続の判断に影響 → 観測圧縮+状態リセット</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、LLM の推論能力だけに頼ること。ツールの副作用、状態の汚染、終了条件、権限管理を設計しないと、強いモデルでも失敗する。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>ReAct、Tool Selection、Memory 汚染、ActionParser、Bounded ReAct と関連する。</p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Agentのよくある失敗パターン では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      },
+      {
+        "term": "転用練習",
+        "explain": "<p><strong>知識を転用して確認する：</strong>この概念を訓練、推論、評価、顧客導入の四場面に置き、何を改善し、どんなコストとリスクを生むか考える。</p><ul><li>境界を説明できれば暗記ではない。</li><li>プロジェクトに接続できれば実務知識になる。</li><li>検証方法まで言えれば工程判断として使える。</li></ul>"
+      }
+    ]
   },
   {
     "id": "aa09",
@@ -184,20 +664,76 @@
     "q_ja": "MCPプロトコル（Model Context Protocol）",
     "bullets": [
       "<span class=\"highlight\">MCP</span>是Anthropic提出的开放协议，标准化LLM与外部工具/数据源的连接方式",
-      "类比：USB-C统一了充电接口 → MCP统一了<span class=\"highlight\">AI与工具的接口</span>。一次实现，所有模型都能用",
+      "类比：USB-C统一了充电接口 → MCP统一了<span class=\"highlight\">AI应用与工具/数据源的接口</span>。一次实现，可被支持 MCP 的客户端复用",
       "三大能力：①<span class=\"highlight\">Tools</span>（模型调用外部函数） ②<span class=\"highlight\">Resources</span>（模型读取外部数据） ③<span class=\"highlight\">Prompts</span>（预定义的交互模板）",
-      "架构：Client(LLM应用) ↔ MCP Server(工具提供者)。传输层支持stdio/HTTP SSE",
+      "架构：Client(LLM应用) ↔ MCP Server(工具提供者)。传输层常见为 stdio 和 Streamable HTTP（早期实现也常见 SSE）",
       "优势vs自定义Function Calling：标准化(跨模型复用) / 发现机制(动态列出可用工具) / 安全模型(权限控制内置)"
     ],
     "bullets_ja": [
       "<span class=\"highlight\">MCP</span>はAnthropicが提案したオープンプロトコルで、LLMと外部ツール/データソースの接続方式を標準化",
-      "例え：USB-Cが充電端子を統一 → MCPが<span class=\"highlight\">AIとツールのインターフェース</span>を統一。一度実装すれば全モデルで使用可能",
+      "例え：USB-Cが充電端子を統一 → MCPが<span class=\"highlight\">AIアプリとツール/データソースのインターフェース</span>を統一。MCP対応クライアントで再利用可能",
       "3つの主要機能：①<span class=\"highlight\">Tools</span>（モデルが外部関数を呼び出す） ②<span class=\"highlight\">Resources</span>（モデルが外部データを読み取る） ③<span class=\"highlight\">Prompts</span>（事前定義された対話テンプレート）",
-      "アーキテクチャ：Client（LLMアプリ） ↔ MCP Server（ツール提供者）。トランスポート層はstdio/HTTP SSEをサポート",
+      "アーキテクチャ：Client（LLMアプリ） ↔ MCP Server（ツール提供者）。トランスポート層は stdio と Streamable HTTP が中心（初期実装では SSE も使われる）",
       "カスタムFunction Callingに対する優位性：標準化（クロスモデル再利用）/ ディスカバリ機構（利用可能なツールを動的にリスト）/ セキュリティモデル（権限制御が組み込み）"
     ],
     "group": "基础",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>MCP 是连接 LLM 应用与外部工具/数据源的标准化协议，位于 Agent 工具生态层。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>MCP client 与 MCP server 通信，server 暴露 tools、resources、prompts；客户端可发现能力并调用。传输常见 stdio 和 Streamable HTTP。</p><ul><li>MCP是Anthropic提出的开放协议，标准化LLM与外部工具/数据源的连接方式</li><li>类比：USB-C统一了充电接口 → MCP统一了AI应用与工具/数据源的接口。一次实现，可被支持 MCP 的客户端复用</li><li>三大能力：①Tools（模型调用外部函数） ②Resources（模型读取外部数据） ③Prompts（预定义的交互模板）</li><li>架构：Client(LLM应用) ↔ MCP Server(工具提供者)。传输层常见为 stdio 和 Streamable HTTP（早期实现也常见 SSE）</li><li>优势vs自定义Function Calling：标准化(跨模型复用) / 发现机制(动态列出可用工具) / 安全模型(权限控制内置)</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>误区是把 MCP 等同于 function calling。Function calling 是模型输出工具调用的一种格式，MCP 是应用与工具服务器之间的协议和发现机制。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>关联 Function Calling、Tool Selection、MCP vs A2A。一个 MCP server 可被多个支持 MCP 的客户端复用。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">我会说 MCP 像 AI 工具层的 USB-C：标准化连接、发现和权限，降低每个应用重复接工具的成本。</span></p>"
+      },
+      {
+        "term": "知识连接",
+        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+      },
+      {
+        "term": "迁移练习",
+        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>MCPプロトコル（Model Context Protocol）</strong> は、LLM を単なる文章生成器から、状態を持ち外部操作を行うシステムへ拡張するための設計論点である。安全性、評価、ツール実行と強く結びつく。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、LLM の判断、ツール実行、状態管理、評価・安全制約を一つの閉ループとして設計すること。</p><ul><li>MCPはAnthropicが提案したオープンプロトコルで、LLMと外部ツール/データソースの接続方式を標準化</li><li>例え：USB-Cが充電端子を統一 → MCPがAIアプリとツール/データソースのインターフェースを統一。MCP対応クライアントで再利用可能</li><li>3つの主要機能：①Tools（モデルが外部関数を呼び出す） ②Resources（モデルが外部データを読み取る） ③Prompts（事前定義された対話テンプレート）</li><li>アーキテクチャ：Client（LLMアプリ） ↔ MCP Server（ツール提供者）。トランスポート層は stdio と Streamable HTTP が中心（初期実装では SSE も使われる）</li><li>カスタムFunction Callingに対する優位性：標準化（クロスモデル再利用）/ ディスカバリ機構（利用可能なツールを動的にリスト）/ セキュリティモデル（権限制御が組み込み）</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、LLM の推論能力だけに頼ること。ツールの副作用、状態の汚染、終了条件、権限管理を設計しないと、強いモデルでも失敗する。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>Function Calling、MCP Server、Tool/Resource/Prompt、A2A との層の違いと関連する。</p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。MCPプロトコル（Model Context Protocol） では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ]
   },
   {
     "id": "aa10",
@@ -219,7 +755,67 @@
       "自身の実践：SiLRの観測圧縮（2000→300トークン）がワーキングメモリ管理；RAGのベクトル検索が長期記憶の検索"
     ],
     "group": "基础",
-    "lv": 3
+    "lv": 3,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>深入记忆设计关注 memory lifecycle：写入、压缩、检索、更新和遗忘。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>感知层收原始输入，工作记忆保当前任务，长期记忆保持久知识；检索用 embedding 相似度、结构化过滤、时间衰减和重要性评分组合。</p><ul><li>记忆三层架构：感知层(原始输入) → 工作记忆层(当前任务上下文) → 长期记忆层(持久化知识)</li><li>工作记忆管理：context window有限 → 关键技术：①摘要压缩 ②滑动窗口 ③重要性评分后选择性保留</li><li>长期记忆存储：向量数据库(语义检索) + 结构化数据库(精确查询) + 知识图谱(关系推理)</li><li>记忆检索策略：相关性(embedding相似度) + 时效性(时间衰减) + 重要性(访问频率/情感强度)</li><li>你的实践：SiLR观测压缩(2000→300 tokens)就是工作记忆管理；RAG向量检索就是长期记忆检索</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>误区是只做向量库。精确事实、权限、时间版本更适合 SQL/KV；向量检索还会召回相似但错误的旧记忆。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>关联 RAG、Context Engineering、长期/episodic/semantic 混合策略。SiLR 观测压缩是工作记忆管理。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">面试表达：好的记忆系统不是无限存，而是知道何时写、写什么、怎么召回、何时忘。</span></p>"
+      },
+      {
+        "term": "知识连接",
+        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+      },
+      {
+        "term": "迁移练习",
+        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>Agentメモリシステムの設計（詳細）</strong> は、LLM を単なる文章生成器から、状態を持ち外部操作を行うシステムへ拡張するための設計論点である。安全性、評価、ツール実行と強く結びつく。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、LLM の判断、ツール実行、状態管理、評価・安全制約を一つの閉ループとして設計すること。</p><ul><li>メモリの三層アーキテクチャ：知覚層（生の入力）→ ワーキングメモリ層（現在のタスクコンテキスト）→ 長期記憶層（永続化された知識）</li><li>ワーキングメモリ管理：context windowに制限あり → 鍵となる技術：①要約圧縮 ②スライディングウィンドウ ③重要度スコアリングによる選択的保持</li><li>長期記憶の保存：ベクトルDB（意味検索）+ 構造化DB（精密クエリ）+ 知識グラフ（関係推論）</li><li>メモリ検索戦略：関連性（Embedding類似度）+ 時効性（時間減衰）+ 重要性（アクセス頻度/感情の強度）</li><li>自身の実践：SiLRの観測圧縮（2000→300トークン）がワーキングメモリ管理；RAGのベクトル検索が長期記憶の検索</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、LLM の推論能力だけに頼ること。ツールの副作用、状態の汚染、終了条件、権限管理を設計しないと、強いモデルでも失敗する。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>Memory 分類、RAG、Context Engineering、episodic/semantic memory と関連する。</p><p>プロジェクト文脈では、<span class=\"key-point\">自身の実践：SiLRの観測圧縮（2000→300トークン）がワーキングメモリ管理；RAGのベクトル検索が長期記憶の検索</span></p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Agentメモリシステムの設計（詳細） では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ]
   },
   {
     "id": "aa11",
@@ -241,7 +837,67 @@
       "フレームワーク比較：LangGraph（最も柔軟、グラフ定義）/ CrewAI（ロール駆動、シンプル）/ AutoGen（対話駆動、Microsoft）"
     ],
     "group": "基础",
-    "lv": 3
+    "lv": 3,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>Multi-Agent 协作深入讨论任务如何在多个智能体间分工和收敛。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>辩论模式提高推理覆盖，流水线适合固定流程，投票模式提升稳健性，图状态机可显式控制分支和循环。关键是共享状态、角色边界和仲裁规则。</p><ul><li>辩论模式：多个Agent各持观点，通过多轮辩论达成共识 → 提升推理质量（如Society of Mind）</li><li>流水线模式：Agent A的输出作为Agent B的输入 → 适合有明确流程的任务（研究→写作→审查）</li><li>投票模式：多个Agent独立完成任务，多数投票选最佳 → Self-Consistency的Agent版本</li><li>协作挑战：①状态同步（共享记忆的一致性） ②任务分配（避免重复工作） ③冲突解决（Agent意见不一致时的仲裁）</li><li>框架对比：LangGraph(最灵活，图定义) / CrewAI(角色驱动，简单) / AutoGen(对话驱动，微软)</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>误区是让 Agent 自由聊天就等于协作。没有协议和停止条件时，通信会膨胀，责任归因困难。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>关联 Agent Evaluation、LangGraph/CrewAI/AutoGen、Self-Consistency。投票模式可看成 Agent 级 self-consistency。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">我会回答：先看任务是否可分解，再选协作拓扑；复杂度增加必须换来可量化收益。</span></p>"
+      },
+      {
+        "term": "知识连接",
+        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+      },
+      {
+        "term": "迁移练习",
+        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>Multi-Agent協調パターン（詳細）</strong> は、LLM を単なる文章生成器から、状態を持ち外部操作を行うシステムへ拡張するための設計論点である。安全性、評価、ツール実行と強く結びつく。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、LLM の判断、ツール実行、状態管理、評価・安全制約を一つの閉ループとして設計すること。</p><ul><li>ディベートパターン：複数のAgentがそれぞれ見解を持ち、複数ラウンドの議論で合意形成 → 推論品質の向上（例：Society of Mind）</li><li>パイプラインパターン：Agent Aの出力がAgent Bの入力 → 明確なフローのあるタスクに適する（研究→執筆→レビュー）</li><li>投票パターン：複数のAgentが独立にタスクを完了し、多数決で最善を選択 → Self-ConsistencyのAgent版</li><li>協調の課題：①状態同期（共有メモリの一貫性） ②タスク分配（重複作業の回避） ③コンフリクト解決（Agent間で意見が分かれた場合の裁定）</li><li>フレームワーク比較：LangGraph（最も柔軟、グラフ定義）/ CrewAI（ロール駆動、シンプル）/ AutoGen（対話駆動、Microsoft）</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、LLM の推論能力だけに頼ること。ツールの副作用、状態の汚染、終了条件、権限管理を設計しないと、強いモデルでも失敗する。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>Multi-Agent 評価、LangGraph、CrewAI、AutoGen、Self-Consistency と関連する。</p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Multi-Agent協調パターン（詳細） では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ]
   },
   {
     "id": "aa12",
@@ -263,6 +919,358 @@
       "アライメントの難題：Agentがタスク目標を最適化する際に予期しない行動を取る可能性（specification gaming）→ 明確な制約+プロセス監視が必要、最終結果だけを見ない"
     ],
     "group": "基础",
-    "lv": 3
+    "lv": 3,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>Agent 安全与对齐关注“能行动的模型”如何不造成真实损害。它比纯聊天安全更高 stakes。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>核心流程是最小权限、沙箱隔离、工具审批、输入/输出/动作 guardrails、日志审计和 human-in-the-loop。高风险操作必须显式确认。</p><ul><li>核心原则：Agent拥有工具调用能力 → 安全比纯文本生成重要10倍（可以真正造成损害）</li><li>最小权限：每个Agent/工具只授予完成任务所需的最小权限。读写分离，危险操作需人工确认</li><li>沙箱执行：代码执行在隔离环境中运行（Docker/VM），网络访问白名单，文件系统只读挂载</li><li>人类在回路(Human-in-the-Loop)：高风险动作（删除/付款/发布）必须人工审批。SiLR验证器就是自动化版HITL</li><li>对齐难题：Agent优化任务目标时可能产生意外行为（specification gaming）→ 需要明确约束+过程监控，不只看最终结果</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>误区是只做内容安全分类。Agent 可以删文件、花钱、发请求，风险来自工具副作用，不只是文字有害。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>关联 Reward Hacking、Prompt Injection、Guardrails、SiLR 验证器。验证器相当于自动化 HITL。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">面试表达：Agent 安全要把权限和执行层当一等公民，不能只依赖模型自律。</span></p>"
+      },
+      {
+        "term": "知识连接",
+        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+      },
+      {
+        "term": "迁移练习",
+        "explain": "<p><strong>学习时主动做迁移：</strong>把这个知识点分别放到训练、推理、评测、客户交付四个场景里问一遍：它改变了什么，带来了什么成本，又引入了什么新风险。</p><ul><li>能解释边界，说明不是死记硬背。</li><li>能连接项目，说明不是纸面知识。</li><li>能给出验证方案，说明具备工程判断。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>Agentの安全性とアライメント</strong> は、LLM を単なる文章生成器から、状態を持ち外部操作を行うシステムへ拡張するための設計論点である。安全性、評価、ツール実行と強く結びつく。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、LLM の判断、ツール実行、状態管理、評価・安全制約を一つの閉ループとして設計すること。</p><ul><li>核心原則：Agentはツール呼び出し能力を持つ → 安全性はテキスト生成のみの場合より10倍重要（実際に損害を引き起こす可能性がある）</li><li>最小権限：各Agent/ツールにタスク完了に必要な最小限の権限のみ付与。読み書き分離、危険な操作は人間の確認が必要</li><li>サンドボックス実行：コード実行を隔離環境で行う（Docker/VM）、ネットワークアクセスはホワイトリスト、ファイルシステムは読み取り専用マウント</li><li>Human-in-the-Loop：高リスクなアクション（削除/支払い/公開）は人間の承認が必須。SiLR検証器は自動化版HITL</li><li>アライメントの難題：Agentがタスク目標を最適化する際に予期しない行動を取る可能性（specification gaming）→ 明確な制約+プロセス監視が必要、最終結果だけを見ない</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、LLM の推論能力だけに頼ること。ツールの副作用、状態の汚染、終了条件、権限管理を設計しないと、強いモデルでも失敗する。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>Guardrails、Prompt Injection、Reward Hacking、Human-in-the-Loop と関連する。</p><p>プロジェクト文脈では、<span class=\"key-point\">Human-in-the-Loop：高リスクなアクション（削除/支払い/公開）は人間の承認が必須。SiLR検証器は自動化版HITL</span></p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Agentの安全性とアライメント では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "aa13",
+    "cat": "Agent架构",
+    "q": "ReAct 的失败 case — 什么时候陷入无限推理或选错工具？",
+    "q_ja": "ReAct が無限推論や誤ツール選択に陥る代表的な failure mode",
+    "bullets": [
+      "<span class=\"highlight\">无限思考循环</span>：模型陷入「Thought → Thought → Thought」不调工具。诱因：prompt 太开放 / observation 模糊 → 修复 max_thought_steps 强制工具调用",
+      "<span class=\"highlight\">工具重复调用</span>：同一 query 反复 retrieve（前一次结果没满足，但下一次也不会变）→ 检测：last_action == current_action 时 escalate 或 force generate",
+      "<span class=\"highlight\">名字相近误选</span>：tool 名 `search_user` vs `search_users` → LLM 50% 选错。修复：tool 名差异化 + few-shot 示例覆盖",
+      "<span class=\"highlight\">Observation 过长爆 context</span>：retrieve 返 10K tokens 直接塞回，下一轮 OOM。修复：observation 压缩到 200-500 tokens",
+      "<span class=\"highlight\">Final answer 与 Thought 不一致</span>：模型推理「答案是 A」但最终输出「B」。检测：抽样比对 thought.conclusion vs final_answer"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">無限思考ループ</span>：Thought → Thought → ... ツール呼び出しに至らない。max_thought_steps で強制",
+      "<span class=\"highlight\">同一ツール繰り返し</span>：同じ retrieve を反復。last_action == current_action で escalate / force generate",
+      "<span class=\"highlight\">類似名誤選択</span>：search_user vs search_users で 50% 誤選択 → 命名差別化 + few-shot",
+      "<span class=\"highlight\">Observation 過長による OOM</span>：10K tokens 観測を圧縮（200-500 tokens）",
+      "<span class=\"highlight\">Thought と Final Answer の不一致</span>：抽出比較で検知"
+    ],
+    "group": "基础",
+    "lv": 2,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>ReAct 失败 case 帮助理解 thought-action-observation 闭环何时失控。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>失败通常来自 thought 不落地、action 重复、tool 名混淆、observation 过长或 final 与 thought 不一致。修复是 max_thought_steps、重复检测、工具命名去重、压缩 observation 和 trace 检查。</p><ul><li>无限思考循环：模型陷入「Thought → Thought → Thought」不调工具。诱因：prompt 太开放 / observation 模糊 → 修复 max_thought_steps 强制工具调用</li><li>工具重复调用：同一 query 反复 retrieve（前一次结果没满足，但下一次也不会变）→ 检测：last_action == current_action 时 escalate 或 force generate</li><li>名字相近误选：tool 名 `search_user` vs `search_users` → LLM 50% 选错。修复：tool 名差异化 + few-shot 示例覆盖</li><li>Observation 过长爆 context：retrieve 返 10K tokens 直接塞回，下一轮 OOM。修复：observation 压缩到 200-500 tokens</li><li>Final answer 与 Thought 不一致：模型推理「答案是 A」但最终输出「B」。检测：抽样比对 thought.conclusion vs final_answer</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>不要以为增加 CoT 就能解决所有推理问题。开放式 thought 可能让模型更会绕圈，必须有边界和动作要求。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>关联 CoT、Function Calling、Tool Selection、Agent Evaluation。SiLR 的 Bounded ReAct 正是让推理变成有限状态流程。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">面试可说：ReAct 的价值是把推理和外部观察闭环，风险是循环与工具错误；所以必须配步数上限、schema 和 trace 评估。</span></p>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>ReAct が無限推論や誤ツール選択に陥る代表的な failure mode</strong> は、LLM を単なる文章生成器から、状態を持ち外部操作を行うシステムへ拡張するための設計論点である。安全性、評価、ツール実行と強く結びつく。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、LLM の判断、ツール実行、状態管理、評価・安全制約を一つの閉ループとして設計すること。</p><ul><li>無限思考ループ：Thought → Thought → ... ツール呼び出しに至らない。max_thought_steps で強制</li><li>同一ツール繰り返し：同じ retrieve を反復。last_action == current_action で escalate / force generate</li><li>類似名誤選択：search_user vs search_users で 50% 誤選択 → 命名差別化 + few-shot</li><li>Observation 過長による OOM：10K tokens 観測を圧縮（200-500 tokens）</li><li>Thought と Final Answer の不一致：抽出比較で検知</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、LLM の推論能力だけに頼ること。ツールの副作用、状態の汚染、終了条件、権限管理を設計しないと、強いモデルでも失敗する。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>CoT、ReAct、Function Calling、Tool Selection、trace 評価と関連する。</p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。ReAct が無限推論や誤ツール選択に陥る代表的な failure mode では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "aa14",
+    "cat": "Agent架构",
+    "q": "Tool Selection — 工具太多怎么让 Agent 不选错？",
+    "q_ja": "ツールが多数登録されている時、Agent に正しく選ばせる設計",
+    "bullets": [
+      "现象：注册 20+ tool 后，LLM 准确率掉到 60-70%（每多 5 个工具，准确率 ~5pp 下降）",
+      "<span class=\"highlight\">分层注册</span>：按 capability 分组（搜索类 / 写入类 / 计算类），先选 group 再选 tool",
+      "<span class=\"highlight\">Tool Retrieval</span>：把所有 tool description 做 embedding，按 query 检索 top-5 注入 prompt（节省 token + 减选项）",
+      "<span class=\"highlight\">明确职责描述</span>：description 写「<span class=\"highlight\">use this when... NOT use when...</span>」对比说明，避免重叠",
+      "<span class=\"highlight\">few-shot trace</span>：在 system prompt 放 3-5 条「query → 正确 tool」对照例",
+      "<span class=\"highlight\">code-as-tool</span>（Anthropic）：把工具暴露成 Python API 让 LLM 写代码调用，比 JSON function calling 准确率更高"
+    ],
+    "bullets_ja": [
+      "現象：20+ ツール登録で精度が 60-70% に低下（5 ツール毎に 5pp 程度）",
+      "<span class=\"highlight\">階層化</span>：capability 別グループ（検索/書込/計算）→ group 選択 → tool 選択",
+      "<span class=\"highlight\">Tool Retrieval</span>：tool description を embedding 化、query で top-5 検索して prompt に注入",
+      "<span class=\"highlight\">明確な役割記述</span>：「use when... NOT use when...」で重複を排除",
+      "<span class=\"highlight\">few-shot trace</span>：system prompt に「query → 正しい tool」例を 3-5 件",
+      "<span class=\"highlight\">code-as-tool</span>（Anthropic）：JSON function calling より Python API 経由の方が高精度"
+    ],
+    "group": "基础",
+    "lv": 2,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>Tool Selection 解决工具数量增加后模型选择空间过大的问题，是 Agent 可扩展性的关键。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>做法包括能力分组、tool retrieval top-k、职责描述中写 use/NOT use、few-shot trace、参数 schema 收紧，必要时 code-as-tool 降低 JSON 选择负担。</p><ul><li>现象：注册 20+ tool 后，LLM 准确率掉到 60-70%（每多 5 个工具，准确率 ~5pp 下降）</li><li>分层注册：按 capability 分组（搜索类 / 写入类 / 计算类），先选 group 再选 tool</li><li>Tool Retrieval：把所有 tool description 做 embedding，按 query 检索 top-5 注入 prompt（节省 token + 减选项）</li><li>明确职责描述：description 写「use this when... NOT use when...」对比说明，避免重叠</li><li>few-shot trace：在 system prompt 放 3-5 条「query → 正确 tool」对照例</li><li>code-as-tool（Anthropic）：把工具暴露成 Python API 让 LLM 写代码调用，比 JSON function calling 准确率更高</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>误区是把所有工具一次性塞给模型。工具越多、描述越重叠，选择准确率越低，context 也更贵。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>关联 MCP、Function Calling、Prompt 模板和 Agent 失败模式。RAG 的 10 工具系统需要路由和检索式工具注入。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">面试表达：工具太多时先缩小候选集，再让模型选择；工具描述要有边界和反例。</span></p>"
+      },
+      {
+        "term": "知识连接",
+        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>ツールが多数登録されている時、Agent に正しく選ばせる設計</strong> は、LLM を単なる文章生成器から、状態を持ち外部操作を行うシステムへ拡張するための設計論点である。安全性、評価、ツール実行と強く結びつく。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、LLM の判断、ツール実行、状態管理、評価・安全制約を一つの閉ループとして設計すること。</p><ul><li>現象：20+ ツール登録で精度が 60-70% に低下（5 ツール毎に 5pp 程度）</li><li>階層化：capability 別グループ（検索/書込/計算）→ group 選択 → tool 選択</li><li>Tool Retrieval：tool description を embedding 化、query で top-5 検索して prompt に注入</li><li>明確な役割記述：「use when... NOT use when...」で重複を排除</li><li>few-shot trace：system prompt に「query → 正しい tool」例を 3-5 件</li><li>code-as-tool（Anthropic）：JSON function calling より Python API 経由の方が高精度</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、LLM の推論能力だけに頼ること。ツールの副作用、状態の汚染、終了条件、権限管理を設計しないと、強いモデルでも失敗する。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>Function Calling、MCP、tool retrieval、few-shot trace、RAG の tool routing と関連する。</p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。ツールが多数登録されている時、Agent に正しく選ばせる設計 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "aa15",
+    "cat": "Agent架构",
+    "q": "Agent 长期记忆设计 — 短期/长期/episodic/semantic 的混合策略",
+    "q_ja": "Agent の長期記憶設計（短期/長期/episodic/semantic）",
+    "bullets": [
+      "<span class=\"highlight\">短期 (working memory)</span>：当前 session context window，~10 turn 的对话历史。生命周期：session 结束清空",
+      "<span class=\"highlight\">长期 (long-term)</span>：跨 session 持久化。两种存储：① 向量库（语义检索）② 结构化（SQL/KV）",
+      "<span class=\"highlight\">Episodic</span>：具体事件「2025-04-22 用户问了 X，agent 用 Y 工具解决」→ 用于「上次怎么做的」类追问",
+      "<span class=\"highlight\">Semantic</span>：抽象事实「用户偏好简短回答」「项目 A 部署在 GCP」→ 注入 system prompt 影响所有未来交互",
+      "<span class=\"highlight\">写回策略</span>：每 N 轮总结 → reflect agent 提取 episodic + semantic → 写入对应库",
+      "<span class=\"highlight\">遗忘 / 衰减</span>：episodic 加 timestamp，老 memory recall 时给 lower weight；冲突时 newer 优先"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">短期</span>：session 内の context（~10 turn）、終了時に消失",
+      "<span class=\"highlight\">長期</span>：セッションをまたいで永続化。① 埋め込み検索 ② SQL/KV",
+      "<span class=\"highlight\">Episodic</span>：「2025-04-22 にユーザーが X を質問」など具体的事象",
+      "<span class=\"highlight\">Semantic</span>：「ユーザーは簡潔な回答を好む」「プロジェクト A は GCP」など抽象事実 → system prompt 注入",
+      "<span class=\"highlight\">書込戦略</span>：N turn 毎に reflect agent が episodic + semantic を抽出して各 store へ",
+      "<span class=\"highlight\">忘却・減衰</span>：episodic に timestamp、古い memory は recall 時に low weight、競合は newer 優先"
+    ],
+    "group": "基础",
+    "lv": 2,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>长期记忆设计关注跨 session 的个性化和经验复用，是 Agent 从一次性助手走向持续助手的基础。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>Working memory 活在当前 context；long-term memory 跨 session 持久化；episodic 记录具体事件；semantic 抽取稳定事实。写回可由 reflect agent 周期总结，召回时考虑时间衰减和冲突新旧。</p><ul><li>短期 (working memory)：当前 session context window，~10 turn 的对话历史。生命周期：session 结束清空</li><li>长期 (long-term)：跨 session 持久化。两种存储：① 向量库（语义检索）② 结构化（SQL/KV）</li><li>Episodic：具体事件「2025-04-22 用户问了 X，agent 用 Y 工具解决」→ 用于「上次怎么做的」类追问</li><li>Semantic：抽象事实「用户偏好简短回答」「项目 A 部署在 GCP」→ 注入 system prompt 影响所有未来交互</li><li>写回策略：每 N 轮总结 → reflect agent 提取 episodic + semantic → 写入对应库</li><li>遗忘 / 衰减：episodic 加 timestamp，老 memory recall 时给 lower weight；冲突时 newer 优先</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>误区是把用户每句话都长期保存。隐私、噪声、冲突和过期信息都会伤害系统；semantic memory 需要确认和版本。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>关联 Memory 分类、RAG、Context Engineering。用户偏好适合 semantic，历史解决过程适合 episodic。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">面试可以说：长期记忆要分 episodic 和 semantic，分别服务“上次怎么做”和“长期偏好是什么”。</span></p>"
+      },
+      {
+        "term": "知识连接",
+        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>Agent の長期記憶設計（短期/長期/episodic/semantic）</strong> は、LLM を単なる文章生成器から、状態を持ち外部操作を行うシステムへ拡張するための設計論点である。安全性、評価、ツール実行と強く結びつく。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、LLM の判断、ツール実行、状態管理、評価・安全制約を一つの閉ループとして設計すること。</p><ul><li>短期：session 内の context（~10 turn）、終了時に消失</li><li>長期：セッションをまたいで永続化。① 埋め込み検索 ② SQL/KV</li><li>Episodic：「2025-04-22 にユーザーが X を質問」など具体的事象</li><li>Semantic：「ユーザーは簡潔な回答を好む」「プロジェクト A は GCP」など抽象事実 → system prompt 注入</li><li>書込戦略：N turn 毎に reflect agent が episodic + semantic を抽出して各 store へ</li><li>忘却・減衰：episodic に timestamp、古い memory は recall 時に low weight、競合は newer 優先</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、LLM の推論能力だけに頼ること。ツールの副作用、状態の汚染、終了条件、権限管理を設計しないと、強いモデルでも失敗する。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>Memory 分類、RAG、Context Engineering、個人化、episodic/semantic memory と関連する。</p><p>プロジェクト文脈では、<span class=\"key-point\">Semantic：「ユーザーは簡潔な回答を好む」「プロジェクト A は GCP」など抽象事実 → system prompt 注入</span></p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Agent の長期記憶設計（短期/長期/episodic/semantic） では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "aa16",
+    "cat": "Agent架构",
+    "q": "MCP vs A2A vs Function Calling — 三者的层次和差异",
+    "q_ja": "MCP / A2A / Function Calling の役割と階層",
+    "bullets": [
+      "<span class=\"highlight\">Function Calling</span>（OpenAI 2023）：单个 LLM ↔ 单个工具的接口标准（JSON schema）。最底层，per-vendor",
+      "<span class=\"highlight\">MCP (Model Context Protocol)</span>（Anthropic 2024）：标准化 LLM ↔ 数据源/工具的接口，<span class=\"highlight\">客户端-服务器架构</span>。一个 MCP server 暴露 tools/resources/prompts，任何 MCP 客户端都能用",
+      "<span class=\"highlight\">A2A (Agent-to-Agent)</span>（Google 2025）：标准化 Agent ↔ Agent 通信。强调跨厂商 agent 协作（认证/能力发现/任务委派）",
+      "类比：Function Calling = HTTP method，MCP = REST API 标准（统一访问后端），A2A = 微服务间 RPC（跨服务通信）",
+      "实际栈：A2A 协调多 agent → 每个 agent 用 MCP 访问工具/数据 → MCP server 内部用 Function Calling 调 LLM"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">Function Calling</span>（OpenAI 2023）：LLM ↔ ツール 1 対 1 の JSON schema 規約",
+      "<span class=\"highlight\">MCP</span>（Anthropic 2024）：LLM ↔ データ源/ツールを標準化、<span class=\"highlight\">client-server 構成</span>。MCP server が tools/resources/prompts を公開",
+      "<span class=\"highlight\">A2A</span>（Google 2025）：Agent ↔ Agent 通信標準。認証/能力発見/タスク委譲をベンダー横断で",
+      "比喩：Function Calling = HTTP メソッド、MCP = REST API 標準、A2A = マイクロサービス間 RPC",
+      "実スタック：A2A で複数 agent を協調 → 各 agent が MCP でツール接続 → MCP server 内部で Function Calling"
+    ],
+    "group": "基础",
+    "lv": 2,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>MCP、A2A、Function Calling 分别处在不同抽象层：工具调用格式、工具/数据协议、Agent 间协作协议。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>Function Calling 让模型输出 JSON 工具调用；MCP 让应用以 client-server 方式发现和访问 tools/resources/prompts；A2A 关注 Agent 与 Agent 之间的能力发现、认证、任务委派和结果回传。</p><ul><li>Function Calling（OpenAI 2023）：单个 LLM ↔ 单个工具的接口标准（JSON schema）。最底层，per-vendor</li><li>MCP (Model Context Protocol)（Anthropic 2024）：标准化 LLM ↔ 数据源/工具的接口，客户端-服务器架构。一个 MCP server 暴露 tools/resources/prompts，任何 MCP 客户端都能用</li><li>A2A (Agent-to-Agent)（Google 2025）：标准化 Agent ↔ Agent 通信。强调跨厂商 agent 协作（认证/能力发现/任务委派）</li><li>类比：Function Calling = HTTP method，MCP = REST API 标准（统一访问后端），A2A = 微服务间 RPC（跨服务通信）</li><li>实际栈：A2A 协调多 agent → 每个 agent 用 MCP 访问工具/数据 → MCP server 内部用 Function Calling 调 LLM</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>误区是把三者当竞争关系。实际系统可以叠加：A2A 协调多个 Agent，每个 Agent 通过 MCP 用工具，内部再使用 function calling。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>关联 MCP 协议、Multi-Agent、Tool Selection。理解层次有助于设计可复用工具生态，而不是把一切写死在 prompt。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">面试表达：Function Calling 是模型到工具的调用格式，MCP 是应用到工具服务器的协议，A2A 是 Agent 到 Agent 的协作协议。</span></p>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>MCP / A2A / Function Calling の役割と階層</strong> は、LLM を単なる文章生成器から、状態を持ち外部操作を行うシステムへ拡張するための設計論点である。安全性、評価、ツール実行と強く結びつく。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、LLM の判断、ツール実行、状態管理、評価・安全制約を一つの閉ループとして設計すること。</p><ul><li>Function Calling（OpenAI 2023）：LLM ↔ ツール 1 対 1 の JSON schema 規約</li><li>MCP（Anthropic 2024）：LLM ↔ データ源/ツールを標準化、client-server 構成。MCP server が tools/resources/prompts を公開</li><li>A2A（Google 2025）：Agent ↔ Agent 通信標準。認証/能力発見/タスク委譲をベンダー横断で</li><li>比喩：Function Calling = HTTP メソッド、MCP = REST API 標準、A2A = マイクロサービス間 RPC</li><li>実スタック：A2A で複数 agent を協調 → 各 agent が MCP でツール接続 → MCP server 内部で Function Calling</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、LLM の推論能力だけに頼ること。ツールの副作用、状態の汚染、終了条件、権限管理を設計しないと、強いモデルでも失敗する。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>Function Calling、MCP、A2A、Multi-Agent、Tool Selection と関連する。</p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。MCP / A2A / Function Calling の役割と階層 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ]
   }
 ]

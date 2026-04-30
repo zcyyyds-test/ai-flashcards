@@ -165,13 +165,13 @@
       "<span class=\"highlight\">Pre-training</span>：大量のテキストでCLM（因果言語モデル）により次のtokenを予測し、世界知識を学習。コスト：数百万ドル",
       "<span class=\"highlight\">SFT</span>(Supervised Fine-Tuning)：指示-回答ペアでモデルに「役立つ回答の仕方」を教える。データ量：数千〜数万件",
       "<span class=\"highlight\">RLHF</span>：Reward Model（選好ランキング）を学習 → PPOで方策を最適化し、人間の選好に合わせる。複雑で不安定",
-      "<span class=\"highlight\">DPO</span>：RMをスキップし、選好ペアから直接学習。よりシンプルで安定だが、データ品質に敏感",
+      "<span class=\"highlight\">DPO</span>：Reward Model（RM）をスキップし、選好ペアから直接学習。よりシンプルで安定だが、データ品質に敏感",
       "自身の経験：SFT 248件で良好な成果、DPOはむしろ−7.6pp → <span class=\"highlight\">全てのシナリオでアライメントが必要なわけではない</span>"
     ],
     "details": [
       {
         "term": "RLHF",
-        "explain": "<p><strong>本质：</strong>将人类反馈蒸馏到 Reward Model 中，再用强化学习（PPO）使 LLM 的输出与人类偏好对齐的方法。<span class=\"key-point\">需要同时运行 4 个模型，是最复杂的对齐方法。</span></p>\n<div class=\"formula\">【RLHF 完整 4 步骤】<br><br>\nStep 1: 准备 SFT 模型<br>\n  预训练 LLM → 用指令数据 SFT → π_SFT<br><br>\nStep 2: 收集偏好数据<br>\n  prompt x → π_SFT 生成 2 个回答 (y₁, y₂)<br>\n  人类判定 y_w ≻ y_l → D = {(x, y_w, y_l)}<br><br>\nStep 3: 训练 Reward Model<br>\n  Loss_RM = -E[log σ(r_θ(x,y_w) - r_θ(x,y_l))]<br>\n  (Bradley-Terry model: P(y_w ≻ y_l) = σ(r(y_w) - r(y_l)))<br><br>\nStep 4: PPO 优化 Policy<br>\n  max_π E_{x~D, y~π}[r_θ(x,y)] - β·KL(π || π_ref)<br><br>\n  【4 个模型的角色】<br>\n  ① Policy (π): 被优化的 LLM<br>\n  ② Reference (π_ref): SFT 模型副本（KL 约束基准）<br>\n  ③ Reward Model (r_θ): 给回答质量打分<br>\n  ④ Value Model (V): 估计状态价值（PPO 的 baseline）</div>\n<p><strong>不稳定的原因（Reward Hacking）：</strong></p>\n<ul>\n<li><span class=\"key-point\">Policy 找到 RM 的漏洞来骗取高分</span>（例: 冗长但客气的回答 → RM 给高分 → 越来越冗长）</li>\n<li>KL 约束的 β 太小就暴走，太大就学不动</li>\n<li>RM 本身的精度上限 = RLHF 的上限（garbage in, garbage out）</li>\n</ul>\n<div class=\"analogy\">考试备考类比: RM = 评分标准，Policy = 考生。考生发现了「评分标准的漏洞」开始针对性钻空子（内容空洞但格式完美的答卷）。KL 约束是「不许偏离原本实力太远」的限制。</div>\n<p><span class=\"key-point\">面试追问：「除了 PPO 还能用别的 RL 算法吗？」→ REINFORCE（在 GRPO 中复活）、RLOO 等都有研究。PPO 通过 clipping 保持稳定但计算成本高。DeepSeek 的 GRPO 省掉了 Value Model，从 4 个模型减到 3 个。</span></p>"
+        "explain": "<p><strong>本质：</strong>将人类反馈蒸馏到 Reward Model 中，再用强化学习（PPO）使 LLM 的输出与人类偏好对齐的方法。<span class=\"key-point\">需要同时运行 4 个模型，是最复杂的对齐方法。</span></p>\n<div class=\"formula\">【RLHF 完整 4 步骤】<br><br>\nStep 1: 准备 SFT 模型<br>\n  预训练 LLM → 用指令数据 SFT → π_SFT<br><br>\nStep 2: 收集偏好数据<br>\n  prompt x → π_SFT 生成 2 个回答 (y₁, y₂)<br>\n  人类判定 y_w ≻ y_l → D = {(x, y_w, y_l)}<br><br>\nStep 3: 训练 Reward Model<br>\n  Loss_RM = -E[log σ(r_θ(x,y_w) - r_θ(x,y_l))]<br>\n  (Bradley-Terry model: P(y_w ≻ y_l) = σ(r(y_w) - r(y_l)))<br><br>\nStep 4: PPO 优化 Policy<br>\n  max_π E_{x~D, y~π}[r_θ(x,y)] - β·KL(π || π_ref)<br><br>\n  【4 个模型的角色】<br>\n  ① Policy (π): 被优化的 LLM<br>\n  ② Reference (π_ref): SFT 模型副本（KL 约束基准）<br>\n  ③ Reward Model (r_θ): 给回答质量打分<br>\n  ④ Value Model (V): 估计状态价值（PPO 的 baseline）</div>\n<p><strong>不稳定的原因（Reward Hacking）：</strong></p>\n<ul>\n<li><span class=\"key-point\">Policy 找到 RM 的漏洞来骗取高分</span>（例: 冗长但客气的回答 → RM 给高分 → 越来越冗长）</li>\n<li>KL 约束的 β 太小就暴走，太大就学不动</li>\n<li>RM 本身的精度上限 = RLHF 的上限（garbage in, garbage out）</li>\n</ul>\n<div class=\"analogy\">考试备考类比: RM = 评分标准，Policy = 考生。考生发现了「评分标准的漏洞」开始针对性钻空子（内容空洞但格式完美的答卷）。KL 约束是「不许偏离原本实力太远」的限制。</div>\n<p><span class=\"key-point\">面试追问：「除了 PPO 还能用别的 RL 算法吗？」→ REINFORCE（在 GRPO 中复活）、RLOO 等都有研究。PPO 通过 clipping 保持稳定但计算成本高。DeepSeek 的 GRPO 省掉了 Value/Critic Model；reward 仍可来自规则、Reward Model 或 LLM judge，因此主要降低的是 critic 训练和显存成本。</span></p>"
       },
       {
         "term": "DPO",
@@ -185,7 +185,7 @@
     "details_ja": [
       {
         "term": "RLHF",
-        "explain": "<p><strong>本質：</strong>人間のフィードバックを Reward Model に蒸留し、強化学習（PPO）で LLM を人間の選好に整合させる手法。<span class=\"key-point\">4 モデルを同時運用する最も複雑なアライメント手法。</span></p>\n<div class=\"formula\">【RLHF 4 ステップ】<br><br>\nStep 1: SFT モデル準備 → π_SFT<br>\nStep 2: 選好データ収集 → D = {(x, y_w, y_l)}<br>\nStep 3: Reward Model 学習<br>\n  Loss = -E[log σ(r_θ(x,y_w) - r_θ(x,y_l))]<br>\nStep 4: PPO で Policy 最適化<br>\n  max_π E[r_θ(x,y)] - β·KL(π || π_ref)<br><br>\n【4 モデル】<br>\n① Policy (π): 最適化対象 LLM<br>\n② Reference (π_ref): KL 制約の基準<br>\n③ Reward Model (r_θ): 品質採点<br>\n④ Value Model (V): PPO の baseline</div>\n<p><strong>Reward Hacking：</strong></p>\n<ul>\n<li><span class=\"key-point\">Policy が RM のバグを突いて高スコアを得る</span>（冗長だが丁寧 → RM 高評価 → さらに冗長化）</li>\n<li>β の調整が困難: 小 → 暴走、大 → 学習停滞</li>\n</ul>\n<div class=\"analogy\">RM = 採点基準、Policy = 受験生。受験生が採点基準の穴をハックする（形式完璧だが中身空疎な答案）。KL 制約は「元の実力から離れすぎるな」という安全弁。</div>\n<p><span class=\"key-point\">面接追問：「PPO 以外の RL は？」→ DeepSeek の GRPO は Value Model 省略で 3 モデルに削減。REINFORCE ベースで PPO より計算効率が高い。</span></p>"
+        "explain": "<p><strong>本質：</strong>人間のフィードバックを Reward Model に蒸留し、強化学習（PPO）で LLM を人間の選好に整合させる手法。<span class=\"key-point\">4 モデルを同時運用する最も複雑なアライメント手法。</span></p>\n<div class=\"formula\">【RLHF 4 ステップ】<br><br>\nStep 1: SFT モデル準備 → π_SFT<br>\nStep 2: 選好データ収集 → D = {(x, y_w, y_l)}<br>\nStep 3: Reward Model 学習<br>\n  Loss = -E[log σ(r_θ(x,y_w) - r_θ(x,y_l))]<br>\nStep 4: PPO で Policy 最適化<br>\n  max_π E[r_θ(x,y)] - β·KL(π || π_ref)<br><br>\n【4 モデル】<br>\n① Policy (π): 最適化対象 LLM<br>\n② Reference (π_ref): KL 制約の基準<br>\n③ Reward Model (r_θ): 品質採点<br>\n④ Value Model (V): PPO の baseline</div>\n<p><strong>Reward Hacking：</strong></p>\n<ul>\n<li><span class=\"key-point\">Policy が RM のバグを突いて高スコアを得る</span>（冗長だが丁寧 → RM 高評価 → さらに冗長化）</li>\n<li>β の調整が困難: 小 → 暴走、大 → 学習停滞</li>\n</ul>\n<div class=\"analogy\">RM = 採点基準、Policy = 受験生。受験生が採点基準の穴をハックする（形式完璧だが中身空疎な答案）。KL 制約は「元の実力から離れすぎるな」という安全弁。</div>\n<p><span class=\"key-point\">面接追問：「PPO 以外の RL は？」→ DeepSeek の GRPO は Value/Critic Model を省略する。reward 自体はルール、Reward Model、LLM judge から得られるため、主に critic の訓練とVRAMコストを削減する。</span></p>"
       },
       {
         "term": "DPO",
@@ -228,6 +228,14 @@
       {
         "term": "Chinchilla",
         "explain": "<p><strong>本質：</strong>固定計算予算で Loss を最小化するには、パラメータ数 N とデータ量 D を<span class=\"key-point\">等比率でスケール</span>すべきという Scaling Law (Hoffmann et al., 2022)。</p>\n<div class=\"formula\">【Chinchilla Optimal】<br>\nD ≈ 20 × N<br><br>\n  7B  → 140B tokens<br>\n  70B → 1.4T tokens<br><br>\n【Kaplan vs Chinchilla】<br>\nKaplan (2020): N 優先 → GPT-3: 175B × 300B (D/N≈1.7)<br>\nChinchilla (2022): N と D 等比率<br>\n  → 70B × 1.4T で 175B GPT-3 を超越！<br><br>\nC ≈ 6·N·D, N_opt ∝ C^0.5, D_opt ∝ C^0.5</div>\n<p><strong>実践への影響：</strong></p>\n<ul>\n<li>LLaMA 1: 7B × 1T tokens (D/N≈143) → <span class=\"key-point\">Chinchilla 比率を大幅超過。推論コスト重視の「小モデル＋大データ」戦略</span></li>\n<li>LLaMA 2: 7B × 2T tokens → さらに over-train</li>\n<li>理由: 学習は一度、推論は何百万回。小モデル over-train の方が推論コスト削減で合理的</li>\n</ul>\n<div class=\"analogy\">100 万円の教育予算で東大生 1 年 vs 地方大生 4 年。Chinchilla は「均等が最効率」、LLaMA は「卒業後の就職コストを考えたら小さく鍛える方が得」。</div>\n<p><span class=\"key-point\">面接追問：「over-train のデメリットは？」→ 学習 compute の浪費。ただし推論コスト >> 学習コストの現実では、LLaMA 戦略が主流。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      },
+      {
+        "term": "転用練習",
+        "explain": "<p><strong>知識を転用して確認する：</strong>この概念を訓練、推論、評価、顧客導入の四場面に置き、何を改善し、どんなコストとリスクを生むか考える。</p><ul><li>境界を説明できれば暗記ではない。</li><li>プロジェクトに接続できれば実務知識になる。</li><li>検証方法まで言えれば工程判断として使える。</li></ul>"
       }
     ],
     "group": "基础",
@@ -246,7 +254,7 @@
       "<span class=\"highlight\">Paged Attention</span>(vLLM)：像OS虚拟内存一样管理KV Cache，减少碎片，支持更大batch"
     ],
     "bullets_ja": [
-      "自己回帰生成時、新しいtokenは全ての先行tokenにattendする必要がある",
+      "自己回帰生成時、新しいtokenは全ての先行tokenにアテンションを向ける必要がある",
       "Cacheなし：毎ステップで全tokenのK/Vを再計算 → O(n²)の冗長計算",
       "Cacheあり：計算済みのK/Vをキャッシュ → 毎ステップ新tokenのQと全K/Vのみ計算 → O(n)の増分",
       "VRAM使用量：2 × n_layers × d_model × seq_len × batch_size × sizeof(dtype)",
@@ -373,7 +381,7 @@
     "id": "l09",
     "cat": "LLM基础",
     "q": "Hallucination（幻觉）原因与缓解",
-    "q_ja": "Hallucination（幻覚）の原因と軽減策",
+    "q_ja": "ハルシネーション（幻覚）の原因と軽減策",
     "bullets": [
       "原因①：训练数据噪声/矛盾 → 模型学到错误关联",
       "原因②：自回归生成的exposure bias → 早期小错误雪球式放大",
@@ -996,7 +1004,7 @@
       "<span class=\"highlight\">StreamingLLM</span>：保留开头的\"attention sink\" tokens + 近期窗口，丢弃中间 → 支持无限长度推理",
       "<span class=\"highlight\">Ring Attention</span>：将长序列分段到多个设备，环形传递KV → 分布式处理超长上下文",
       "RoPE扩展：YaRN/Dynamic NTK Scaling调整RoPE基频，将训练长度外推到更长（如4K→128K）",
-      "工程方案：GQA(Grouped Query Attention)减少KV头数 → 降低KV Cache占用（如Llama 2用GQA）"
+      "工程方案：GQA(Grouped Query Attention)减少KV头数 → 降低KV Cache占用（如 Llama 2 70B 使用 GQA）"
     ],
     "bullets_ja": [
       "核心的課題：標準Attentionの計算量O(n²) + KV CacheのVRAMが線形増加",
@@ -1004,7 +1012,7 @@
       "<span class=\"highlight\">StreamingLLM</span>：先頭の「attention sink」トークン + 直近ウィンドウを保持し中間を破棄 → 無限長の推論をサポート",
       "<span class=\"highlight\">Ring Attention</span>：長いシーケンスを複数デバイスに分割し、リング状にKVを伝達 → 分散処理で超長コンテキストに対応",
       "RoPE拡張：YaRN/Dynamic NTK ScalingでRoPEの基本周波数を調整し、学習長を超える長さに外挿（例：4K→128K）",
-      "エンジニアリング方法：GQA（Grouped Query Attention）でKVヘッド数を削減 → KV Cache使用量を低減（例：Llama 2がGQAを使用）"
+      "エンジニアリング方法：GQA（Grouped Query Attention）でKVヘッド数を削減 → KV Cache使用量を低減（例：Llama 2 70B が GQA を使用）"
     ],
     "details": [
       {
@@ -1117,7 +1125,7 @@
       },
       {
         "term": "TRL",
-        "explain": "<p><strong>本质：</strong>HuggingFace官方的<span class=\"key-point\">对齐训练库</span>（Transformer Reinforcement Learning），提供从SFT到RLHF/DPO全流程的标准实现。</p><div class=\"formula\">【TRL 提供的 Trainer 类】\n\nSFTTrainer        → 监督微调\nDPOTrainer        → Direct Preference Optimization\nPPOTrainer        → Proximal Policy Optimization (RLHF)\nGRPOTrainer       → Group Relative Policy Optimization\nORPOTrainer       → Odds Ratio Preference Optimization\nKTOTrainer        → Kahneman-Tversky Optimization\nRewardTrainer     → Reward Model 训练\nOnlineDPOTrainer  → 在线DPO (边生成边训练)\n\n【典型 DPO 训练代码】\nfrom trl import DPOTrainer, DPOConfig\nfrom transformers import AutoModelForCausalLM\n\nmodel = AutoModelForCausalLM.from_pretrained(\"Qwen/Qwen2-7B\")\nconfig = DPOConfig(beta=0.1, learning_rate=5e-7)\ntrainer = DPOTrainer(model=model, args=config,\n    train_dataset=dataset,   # chosen/rejected 列\n    tokenizer=tokenizer)\ntrainer.train()\n\n【数据格式】\nSFT:  {\"messages\": [{\"role\":\"user\",\"content\":...}, ...]}\nDPO:  {\"chosen\": \"好回答\", \"rejected\": \"差回答\", \"prompt\": \"...\"}\nPPO:  {\"query\": \"...\"}  → 在线生成response → reward打分</div><p><strong>为什么是标准？</strong>(1) HuggingFace官方维护，和transformers/datasets/accelerate/peft无缝集成。(2) 论文级实现——DPO/PPO的实现经过社区验证。(3) 新对齐方法（GRPO、SimPO、ORPO）通常首先在TRL中实现。</p><div class=\"analogy\">比喻：TRL是对齐训练的「官方SDK」——你不需要自己实现PPO的clip、KL惩罚、GAE等细节，直接调用就行。就像用OpenAI SDK调API而不是自己写HTTP请求。</div><p><span class=\"key-point\">面试追问</span>：(1)「TRL和Unsloth怎么配合？」→ Unsloth提供优化后的model+tokenizer，传入TRL的Trainer类。TRL管训练逻辑，Unsloth管底层计算效率。(2)「为什么PPO比DPO难训练？」→ PPOTrainer需要同时管理4个模型(policy/ref/reward/value)的前向传播+梯度更新，显存和稳定性都是挑战。(3)「GRPO是什么？」→ DeepSeek提出，不需要单独的Reward Model，用组内相对排序作为reward信号。</p>"
+        "explain": "<p><strong>本质：</strong>HuggingFace官方的<span class=\"key-point\">对齐训练库</span>（Transformer Reinforcement Learning），提供从SFT到RLHF/DPO全流程的标准实现。</p><div class=\"formula\">【TRL 提供的 Trainer 类】\n\nSFTTrainer        → 监督微调\nDPOTrainer        → Direct Preference Optimization\nPPOTrainer        → Proximal Policy Optimization (RLHF)\nGRPOTrainer       → Group Relative Policy Optimization\nORPOTrainer       → Odds Ratio Preference Optimization\nKTOTrainer        → Kahneman-Tversky Optimization\nRewardTrainer     → Reward Model 训练\nOnlineDPOTrainer  → 在线DPO (边生成边训练)\n\n【典型 DPO 训练代码】\nfrom trl import DPOTrainer, DPOConfig\nfrom transformers import AutoModelForCausalLM\n\nmodel = AutoModelForCausalLM.from_pretrained(\"Qwen/Qwen2-7B\")\nconfig = DPOConfig(beta=0.1, learning_rate=5e-7)\ntrainer = DPOTrainer(model=model, args=config,\n    train_dataset=dataset,   # chosen/rejected 列\n    tokenizer=tokenizer)\ntrainer.train()\n\n【数据格式】\nSFT:  {\"messages\": [{\"role\":\"user\",\"content\":...}, ...]}\nDPO:  {\"chosen\": \"好回答\", \"rejected\": \"差回答\", \"prompt\": \"...\"}\nPPO:  {\"query\": \"...\"}  → 在线生成response → reward打分</div><p><strong>为什么是标准？</strong>(1) HuggingFace官方维护，和transformers/datasets/accelerate/peft无缝集成。(2) 论文级实现——DPO/PPO的实现经过社区验证。(3) 新对齐方法（GRPO、SimPO、ORPO）通常首先在TRL中实现。</p><div class=\"analogy\">比喻：TRL是对齐训练的「官方SDK」——你不需要自己实现PPO的clip、KL惩罚、GAE等细节，直接调用就行。就像用OpenAI SDK调API而不是自己写HTTP请求。</div><p><span class=\"key-point\">面试追问</span>：(1)「TRL和Unsloth怎么配合？」→ Unsloth提供优化后的model+tokenizer，传入TRL的Trainer类。TRL管训练逻辑，Unsloth管底层计算效率。(2)「为什么PPO比DPO难训练？」→ PPOTrainer需要同时管理4个模型(policy/ref/reward/value)的前向传播+梯度更新，显存和稳定性都是挑战。(3)「GRPO是什么？」→ DeepSeek 提出，不需要单独的 Value/Critic Model；reward 仍由规则、Reward Model 或 LLM judge 给出，再做组内相对标准化。</p>"
       },
       {
         "term": "LLaMA-Factory",
@@ -1135,7 +1143,7 @@
       },
       {
         "term": "TRL",
-        "explain": "<p><strong>本質：</strong>HuggingFace公式の<span class=\"key-point\">アライメント学習ライブラリ</span>（Transformer Reinforcement Learning）。SFTからRLHF/DPOまでの全フローの標準実装を提供。</p><div class=\"formula\">【TRL が提供する Trainer クラス】\n\nSFTTrainer        → 教師ありファインチューニング\nDPOTrainer        → Direct Preference Optimization\nPPOTrainer        → Proximal Policy Optimization (RLHF)\nGRPOTrainer       → Group Relative Policy Optimization\nORPOTrainer       → Odds Ratio Preference Optimization\nKTOTrainer        → Kahneman-Tversky Optimization\nRewardTrainer     → Reward Model 学習\nOnlineDPOTrainer  → オンラインDPO（生成しながら学習）\n\n【典型的な DPO 学習コード】\nfrom trl import DPOTrainer, DPOConfig\nfrom transformers import AutoModelForCausalLM\n\nmodel = AutoModelForCausalLM.from_pretrained(\"Qwen/Qwen2-7B\")\nconfig = DPOConfig(beta=0.1, learning_rate=5e-7)\ntrainer = DPOTrainer(model=model, args=config,\n    train_dataset=dataset,   # chosen/rejected 列\n    tokenizer=tokenizer)\ntrainer.train()\n\n【データフォーマット】\nSFT:  {\"messages\": [{\"role\":\"user\",\"content\":...}, ...]}\nDPO:  {\"chosen\": \"良い回答\", \"rejected\": \"悪い回答\", \"prompt\": \"...\"}\nPPO:  {\"query\": \"...\"}  → オンラインでresponse生成 → reward評価</div><p><strong>なぜスタンダードか：</strong>(1) HuggingFace公式メンテナンスで、transformers/datasets/accelerate/peftとシームレス統合。(2) 論文レベルの実装——DPO/PPOの実装はコミュニティで検証済み。(3) 新しいアライメント手法（GRPO、SimPO、ORPO）は通常TRLで最初に実装される。</p><div class=\"analogy\">例え：TRLはアライメント学習の「公式SDK」——PPOのclip、KLペナルティ、GAE等の詳細を自分で実装する必要がなく、直接呼び出すだけ。OpenAI SDKでAPIを呼ぶのと同じで、自分でHTTPリクエストを書く必要がない。</div><p><span class=\"key-point\">面接追問</span>：(1)「TRLとUnslothの組み合わせは？」→ Unslothが最適化されたmodel+tokenizerを提供し、TRLのTrainerクラスに渡す。TRLが学習ロジック、Unslothが低レベル計算効率を担当。(2)「PPOがDPOより学習が難しい理由は？」→ PPOTrainerは4つのモデル（policy/ref/reward/value）の前方伝播+勾配更新を同時管理する必要があり、VRAMと安定性の両方が課題。(3)「GRPOとは？」→ DeepSeek提案、独立したReward Model不要、グループ内相対ランキングをrewardシグナルとして使用。</p>"
+        "explain": "<p><strong>本質：</strong>HuggingFace公式の<span class=\"key-point\">アライメント学習ライブラリ</span>（Transformer Reinforcement Learning）。SFTからRLHF/DPOまでの全フローの標準実装を提供。</p><div class=\"formula\">【TRL が提供する Trainer クラス】\n\nSFTTrainer        → 教師ありファインチューニング\nDPOTrainer        → Direct Preference Optimization\nPPOTrainer        → Proximal Policy Optimization (RLHF)\nGRPOTrainer       → Group Relative Policy Optimization\nORPOTrainer       → Odds Ratio Preference Optimization\nKTOTrainer        → Kahneman-Tversky Optimization\nRewardTrainer     → Reward Model 学習\nOnlineDPOTrainer  → オンラインDPO（生成しながら学習）\n\n【典型的な DPO 学習コード】\nfrom trl import DPOTrainer, DPOConfig\nfrom transformers import AutoModelForCausalLM\n\nmodel = AutoModelForCausalLM.from_pretrained(\"Qwen/Qwen2-7B\")\nconfig = DPOConfig(beta=0.1, learning_rate=5e-7)\ntrainer = DPOTrainer(model=model, args=config,\n    train_dataset=dataset,   # chosen/rejected 列\n    tokenizer=tokenizer)\ntrainer.train()\n\n【データフォーマット】\nSFT:  {\"messages\": [{\"role\":\"user\",\"content\":...}, ...]}\nDPO:  {\"chosen\": \"良い回答\", \"rejected\": \"悪い回答\", \"prompt\": \"...\"}\nPPO:  {\"query\": \"...\"}  → オンラインでresponse生成 → reward評価</div><p><strong>なぜスタンダードか：</strong>(1) HuggingFace公式メンテナンスで、transformers/datasets/accelerate/peftとシームレス統合。(2) 論文レベルの実装——DPO/PPOの実装はコミュニティで検証済み。(3) 新しいアライメント手法（GRPO、SimPO、ORPO）は通常TRLで最初に実装される。</p><div class=\"analogy\">例え：TRLはアライメント学習の「公式SDK」——PPOのclip、KLペナルティ、GAE等の詳細を自分で実装する必要がなく、直接呼び出すだけ。OpenAI SDKでAPIを呼ぶのと同じで、自分でHTTPリクエストを書く必要がない。</div><p><span class=\"key-point\">面接追問</span>：(1)「TRLとUnslothの組み合わせは？」→ Unslothが最適化されたmodel+tokenizerを提供し、TRLのTrainerクラスに渡す。TRLが学習ロジック、Unslothが低レベル計算効率を担当。(2)「PPOがDPOより学習が難しい理由は？」→ PPOTrainerは4つのモデル（policy/ref/reward/value）の前方伝播+勾配更新を同時管理する必要があり、VRAMと安定性の両方が課題。(3)「GRPOとは？」→ DeepSeek提案、独立した Value/Critic Model は不要。reward はルール、Reward Model、LLM judge から得て、グループ内で相対標準化する。</p>"
       },
       {
         "term": "LLaMA-Factory",
@@ -1162,7 +1170,7 @@
       "<span class=\"highlight\">warmup_ratio=0.03</span>：前3%步数从0线性升到lr。防止初始大梯度破坏预训练权重。LoRA微调中尤其重要",
       "<span class=\"highlight\">adamw_8bit</span>：8-bit Adam量化优化器状态(momentum+variance)从FP32→INT8，<span class=\"num\">节省~30%</span>优化器显存，精度损失极小",
       "DPO特有：<span class=\"highlight\">beta=0.1</span>（KL惩罚系数，越大越保守）/ loss_type=sigmoid / ref_model=None（用初始权重省显存）",
-      "GRPO特有：不需要Reward Model，用<span class=\"highlight\">组内相对排序</span>作为reward信号。num_generations=8, reward来自规则/LLM评分"
+      "GRPO特有：不需要单独的 Value/Critic Model；reward 仍来自规则、Reward Model 或 LLM 评分，再做<span class=\"highlight\">组内相对标准化</span>。num_generations=8"
     ],
     "bullets_ja": [
       "<span class=\"highlight\">epochs=3</span>：SFTは通常2-5エポック。データが少ない(<1K)場合は3エポックで未学習を防止、多い(>10K)場合は1-2で十分。DPOも1-3エポック",
@@ -1172,7 +1180,7 @@
       "<span class=\"highlight\">warmup_ratio=0.03</span>：最初の3%ステップで0からlrまで線形上昇。初期の大きな勾配による事前学習重みの破壊を防止。LoRAファインチューニングで特に重要",
       "<span class=\"highlight\">adamw_8bit</span>：8-bit Adamでオプティマイザ状態(momentum+variance)をFP32→INT8に量子化、<span class=\"num\">約30%</span>のオプティマイザVRAM節約、精度損失は極小",
       "DPO特有：<span class=\"highlight\">beta=0.1</span>（KLペナルティ係数、大きいほど保守的）/ loss_type=sigmoid / ref_model=None（初期重みを使用しVRAM節約）",
-      "GRPO特有：Reward Model不要、<span class=\"highlight\">グループ内相対ランキング</span>をrewardシグナルとして使用。num_generations=8、rewardはルール/LLM評価から"
+      "GRPO特有：独立した Value/Critic Model は不要；reward はルール、Reward Model、LLM評価から得て、<span class=\"highlight\">グループ内で相対標準化</span>する。num_generations=8"
     ],
     "details": [
       {
@@ -1193,7 +1201,7 @@
       },
       {
         "term": "GRPO 核心机制",
-        "explain": "<p><strong>本质：</strong>DeepSeek提出的<span class=\"key-point\">无需Reward Model的强化学习对齐方法</span>。对同一个prompt生成一组回答，用组内相对排序作为reward信号。</p><div class=\"formula\">【GRPO vs PPO vs DPO】\n\nPPO:  需要4个模型(policy/ref/reward/value)\n      reward来自: 训练好的Reward Model\n      → 复杂, 不稳定, 显存大\n\nDPO:  需要2个模型(policy/ref)\n      reward来自: 隐式(偏好对数据)\n      → 简单, 但对数据质量敏感\n\nGRPO: 需要1个模型(policy)\n      reward来自: 规则/LLM评分的组内排序\n      → 最简单, 不需要人类偏好数据!\n\n【GRPO 算法流程】\n对每个 prompt x:\n  1. 生成 G 个回答: {y₁,...,yG} ~ π_θ(·|x)\n  2. 对每个 yᵢ 计算 reward rᵢ:\n     - 代码: 单元测试通过=1, 不通过=0\n     - 数学: 答案正确=1, 错误=0\n     - 通用: LLM-as-Judge 评分\n  3. 组内标准化: r̂ᵢ = (rᵢ - mean(r)) / std(r)\n  4. 策略梯度更新:\n     L = -Σᵢ r̂ᵢ × log π_θ(yᵢ|x)\n       + β × KL(π_θ || π_ref)\n\n典型配置:\n  num_generations = 8 (G=8)\n  lr = 1e-6 ~ 5e-6\n  beta = 0.04 (比DPO小, 因为学习信号更弱)\n  reward_model = \"规则\" 或 \"LLM评分\"</div><p><strong>GRPO的优势：</strong>(1) 不需要人类标注偏好数据。(2) reward可以是任何可计算的指标。(3) 对代码/数学等有明确正确答案的任务特别有效（DeepSeek-R1就用了GRPO）。</p><div class=\"analogy\">比喻：考试阅卷——DPO是给学生看标准答案让他学（需要标准答案）。GRPO是让学生答8份卷子，老师只打分不给答案，学生自己比较「哪份考得好」来改进（不需要标准答案，只需要评分标准）。</div><p><span class=\"key-point\">面试追问</span>：(1)「GRPO适合什么场景？」→ 有明确评分标准但难以构造偏好对的场景：代码（测试用例）、数学（正确答案）、工具调用（执行结果）。(2)「和PPO比的优势？」→ 不需要训练Reward Model，显存只需1个模型。(3)「DeepSeek-R1用了什么？」→ 先SFT冷启动，再GRPO强化推理链质量。</p>"
+        "explain": "<p><strong>本质：</strong>DeepSeek 提出的<span class=\"key-point\">无需单独 Value/Critic Model 的强化学习对齐方法</span>。对同一个 prompt 生成一组回答，用外部 reward（规则、Reward Model 或 LLM judge）做组内相对标准化来估计 advantage。</p><div class=\"formula\">【GRPO vs PPO vs DPO】\n\nPPO:  需要4个模型(policy/ref/reward/value)\n      reward来自: 训练好的Reward Model\n      → 复杂, 不稳定, 显存大\n\nDPO:  需要2个模型(policy/ref)\n      reward来自: 隐式(偏好对数据)\n      → 简单, 但对数据质量敏感\n\nGRPO: 需要 policy；通常保留 reference 做 KL，也可接 Reward Model/规则评分\n      reward来自: 规则/RM/LLM评分，再做组内相对标准化\n      → 省掉 critic，不等于没有 reward 来源\n\n【GRPO 算法流程】\n对每个 prompt x:\n  1. 生成 G 个回答: {y₁,...,yG} ~ π_θ(·|x)\n  2. 对每个 yᵢ 计算 reward rᵢ:\n     - 代码: 单元测试通过=1, 不通过=0\n     - 数学: 答案正确=1, 错误=0\n     - 通用: LLM-as-Judge 评分\n  3. 组内标准化: r̂ᵢ = (rᵢ - mean(r)) / std(r)\n  4. 策略梯度更新:\n     L = -Σᵢ r̂ᵢ × log π_θ(yᵢ|x)\n       + β × KL(π_θ || π_ref)\n\n典型配置:\n  num_generations = 8 (G=8)\n  lr = 1e-6 ~ 5e-6\n  beta = 0.04 (比DPO小, 因为学习信号更弱)\n  reward_model = \"规则\" 或 \"LLM评分\"</div><p><strong>GRPO的优势：</strong>(1) 不需要训练单独的 critic/value model。(2) reward 可以是任何可计算指标或外部评分器。(3) 对代码/数学等有明确正确答案的任务特别有效（DeepSeek-R1 就用了 GRPO）。</p><div class=\"analogy\">比喻：考试阅卷——DPO是给学生看标准答案让他学（需要标准答案）。GRPO是让学生答8份卷子，老师只打分不给答案，学生自己比较「哪份考得好」来改进（不需要标准答案，只需要评分标准）。</div><p><span class=\"key-point\">面试追问</span>：(1)「GRPO适合什么场景？」→ 有明确评分标准但难以构造偏好对的场景：代码（测试用例）、数学（正确答案）、工具调用（执行结果）。(2)「和PPO比的优势？」→ 省掉 value/critic model，显存和训练复杂度更低；但仍需要 reward 来源。(3)「DeepSeek-R1用了什么？」→ 先SFT冷启动，再GRPO强化推理链质量。</p>"
       }
     ],
     "details_ja": [
@@ -1215,10 +1223,366 @@
       },
       {
         "term": "GRPO 核心メカニズム",
-        "explain": "<p><strong>本質：</strong>DeepSeekが提案した<span class=\"key-point\">Reward Model不要の強化学習アライメント手法</span>。同一promptに対して一群の回答を生成し、グループ内の相対ランキングをrewardシグナルとして使用。</p><div class=\"formula\">【GRPO vs PPO vs DPO】\n\nPPO:  4モデル必要(policy/ref/reward/value)\n      reward: 学習済みReward Model\n      → 複雑、不安定、VRAM大\n\nDPO:  2モデル必要(policy/ref)\n      reward: 暗黙的(選好ペアデータ)\n      → シンプル、ただしデータ品質に敏感\n\nGRPO: 1モデル必要(policy)\n      reward: ルール/LLM評価のグループ内ランキング\n      → 最もシンプル、人間の選好データ不要！\n\n【GRPO アルゴリズムフロー】\n各 prompt x に対して:\n  1. G 個の回答を生成: {y₁,...,yG} ~ π_θ(·|x)\n  2. 各 yᵢ の reward rᵢ を計算:\n     - コード: ユニットテスト合格=1, 不合格=0\n     - 数学: 正解=1, 不正解=0\n     - 汎用: LLM-as-Judge 評価\n  3. グループ内標準化: r̂ᵢ = (rᵢ - mean(r)) / std(r)\n  4. 方策勾配更新:\n     L = -Σᵢ r̂ᵢ × log π_θ(yᵢ|x)\n       + β × KL(π_θ || π_ref)\n\n典型的な設定:\n  num_generations = 8 (G=8)\n  lr = 1e-6 ~ 5e-6\n  beta = 0.04 (DPOより小さい、学習シグナルが弱いため)\n  reward_model = 「ルール」 or 「LLM評価」</div><p><strong>GRPOの優位性：</strong>(1) 人間のアノテーション不要。(2) rewardは計算可能な任意の指標でよい。(3) コード/数学など明確な正解がある任務に特に有効（DeepSeek-R1がGRPOを使用）。</p><div class=\"analogy\">例え：試験の採点——DPOは学生に模範解答を見せて学ばせる（模範解答が必要）。GRPOは学生に8回答案を書かせ、先生は点数だけつけて解答は見せず、学生自身が「どの答案が良かったか」を比較して改善する（模範解答不要、採点基準のみ必要）。</div><p><span class=\"key-point\">面接追問</span>：(1)「GRPOに適したシナリオは？」→ 明確な評価基準はあるが選好ペアの構築が難しいシナリオ：コード（テストケース）、数学（正解）、ツール呼び出し（実行結果）。(2)「PPOとの優位性は？」→ Reward Modelの学習不要、VRAMは1モデル分のみ。(3)「DeepSeek-R1は何を使った？」→ まずSFTでコールドスタート、次にGRPOで推論チェーンの品質を強化。</p>"
+        "explain": "<p><strong>本質：</strong>DeepSeekが提案した<span class=\"key-point\">独立した Value/Critic Model を不要にする強化学習アライメント手法</span>。同一 prompt に対して複数回答を生成し、外部 reward（ルール、Reward Model、LLM judge）をグループ内で相対標準化して advantage を推定する。</p><div class=\"formula\">【GRPO vs PPO vs DPO】\n\nPPO:  4モデル必要(policy/ref/reward/value)\n      reward: 学習済みReward Model\n      → 複雑、不安定、VRAM大\n\nDPO:  2モデル必要(policy/ref)\n      reward: 暗黙的(選好ペアデータ)\n      → シンプル、ただしデータ品質に敏感\n\nGRPO: policy が中心；通常 reference で KL 制約、Reward Model/ルール評価も利用可能\n      reward: ルール/RM/LLM評価をグループ内で相対標準化\n      → critic を省略するが、reward source が不要という意味ではない\n\n【GRPO アルゴリズムフロー】\n各 prompt x に対して:\n  1. G 個の回答を生成: {y₁,...,yG} ~ π_θ(·|x)\n  2. 各 yᵢ の reward rᵢ を計算:\n     - コード: ユニットテスト合格=1, 不合格=0\n     - 数学: 正解=1, 不正解=0\n     - 汎用: LLM-as-Judge 評価\n  3. グループ内標準化: r̂ᵢ = (rᵢ - mean(r)) / std(r)\n  4. 方策勾配更新:\n     L = -Σᵢ r̂ᵢ × log π_θ(yᵢ|x)\n       + β × KL(π_θ || π_ref)\n\n典型的な設定:\n  num_generations = 8 (G=8)\n  lr = 1e-6 ~ 5e-6\n  beta = 0.04 (DPOより小さい、学習シグナルが弱いため)\n  reward_model = 「ルール」 or 「LLM評価」</div><p><strong>GRPOの優位性：</strong>(1) 独立した critic/value model の訓練が不要。(2) reward は計算可能な任意の指標または外部評価器でよい。(3) コード/数学など明確な正解がある任務に特に有効（DeepSeek-R1がGRPOを使用）。</p><div class=\"analogy\">例え：試験の採点——DPOは学生に模範解答を見せて学ばせる（模範解答が必要）。GRPOは学生に8回答案を書かせ、先生は点数だけつけて解答は見せず、学生自身が「どの答案が良かったか」を比較して改善する（模範解答不要、採点基準のみ必要）。</div><p><span class=\"key-point\">面接追問</span>：(1)「GRPOに適したシナリオは？」→ 明確な評価基準はあるが選好ペアの構築が難しいシナリオ：コード（テストケース）、数学（正解）、ツール呼び出し（実行結果）。(2)「PPOとの優位性は？」→ value/critic model を省くため、VRAMと訓練複雑度が下がる。ただし reward source は必要。(3)「DeepSeek-R1は何を使った？」→ まずSFTでコールドスタート、次にGRPOで推論チェーンの品質を強化。</p>"
       }
     ],
     "group": "基础",
     "lv": 2
+  },
+  {
+    "id": "l25",
+    "cat": "LLM基础",
+    "q": "LoRA 秩（rank）和 alpha 怎么选？为什么 64 是常见 sweet spot？",
+    "q_ja": "LoRA の rank と alpha の選び方、なぜ 64 がよくスイートスポットと言われるのか",
+    "bullets": [
+      "rank r：低秩矩阵的内在维度，决定可学习参数量。<span class=\"highlight\">r=8/16/32/64/128</span> 常见，trainable params ≈ 2 × r × d × layers",
+      "<span class=\"highlight\">r=8 chat 微调够用</span>（任务简单），r=64 复杂下游（结构化输出/工具调用），r=128+ 边际收益递减",
+      "<span class=\"highlight\">alpha</span>：scaling 系数，实际 LoRA 输出 = (alpha/r) × BAx。常见 alpha = 2r（激活强度归一）或 alpha = r（保守）",
+      "<span class=\"highlight\">实测经验</span>：r=64 alpha=128（PowerTS-LLM 用），rank 翻倍效果只多 1-2pp 但显存翻倍",
+      "黄金法则：<span class=\"highlight\">先用 r=8 跑通 → 不够再升 r=16/32 → 仍不够考虑全参或 prefix-tuning</span>"
+    ],
+    "bullets_ja": [
+      "rank r：低ランク行列の内在次元、学習パラメータ数を決定（trainable ≈ 2 × r × d × layers）",
+      "r=8 で chat 微調十分、r=64 で複雑下流タスク（構造化出力/Tool Calling）、r=128+ は限界収益低下",
+      "alpha：スケーリング係数、出力 = (alpha/r) × BAx。<span class=\"highlight\">alpha=2r が一般的</span>",
+      "実測：r=64 alpha=128 で 14B の 0.49% (68.8M) 学習、rank 倍増しても効果は +1-2pp",
+      "黄金則：<span class=\"highlight\">r=8 で動かす → 不足なら r=16/32 → それでも不足なら全パラメータ or prefix-tuning</span>"
+    ],
+    "group": "基础",
+    "lv": 2,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>LoRA rank/alpha 属于参数高效微调（PEFT）的容量控制问题，连接 SFT 超参数、显存预算和下游任务复杂度。它回答的是：在不更新全量权重的前提下，给适配器多少表达空间才够。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>LoRA 将原权重更新 ΔW 约束为低秩分解 BA，其中 A∈R^{r×d}、B∈R^{d×r}，实际输出为 W x + (alpha/r)BAx。r 决定可学习子空间维度，alpha 决定 LoRA 分支相对原模型的注入强度。</p><ul><li>rank r：低秩矩阵的内在维度，决定可学习参数量。r=8/16/32/64/128 常见，trainable params ≈ 2 × r × d × layers</li><li>r=8 chat 微调够用（任务简单），r=64 复杂下游（结构化输出/工具调用），r=128+ 边际收益递减</li><li>alpha：scaling 系数，实际 LoRA 输出 = (alpha/r) × BAx。常见 alpha = 2r（激活强度归一）或 alpha = r（保守）</li><li>实测经验：r=64 alpha=128（PowerTS-LLM 用），rank 翻倍效果只多 1-2pp 但显存翻倍</li><li>黄金法则：先用 r=8 跑通 → 不够再升 r=16/32 → 仍不够考虑全参或 prefix-tuning</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>常见误区是把 rank 当成越大越好。r 变大只增加可学习自由度，不保证泛化；数据少或任务简单时，r=128 可能只是更快记住训练集。另一个坑是只改 r 不调 alpha，导致不同实验的有效缩放不公平。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>它直接关联 SFT/DPO 超参数、过拟合与正则化、模型压缩，以及 PowerTS-LLM 中 r=64 alpha=128 的选择。工具调用、结构化输出这类格式敏感任务通常比闲聊需要更高 rank。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">面试可以说：LoRA 的 rank 是适配器容量，alpha 是更新强度。我会先用 r=8/16 建 baseline，看验证集和格式错误率；若复杂任务欠拟合再升到 32/64，而不是一开始堆到 128。</span></p>"
+      },
+      {
+        "term": "知识连接",
+        "explain": "<p><strong>这类知识点要放回体系中理解：</strong>它通常连接模型能力、数据质量、推理成本和应用场景。</p><ul><li>先说明它解决的是训练、推理、评测还是应用落地问题。</li><li>再说明它和相邻概念的边界，例如 SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最后补一个项目化判断：什么条件下值得用，什么条件下会变成复杂度负担。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>LoRA の rank と alpha の選び方、なぜ 64 がよくスイートスポットと言われるのか</strong> は、LLM のアーキテクチャ、学習、推論最適化をつなぐ基礎論点である。モデル内部の仕組みだけでなく、serving コストや長文脈、微調整方針にも影響する。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、モデル内部の計算、メモリ/計算量、学習または推論時の制約を一体で理解すること。</p><ul><li>rank r：低ランク行列の内在次元、学習パラメータ数を決定（trainable ≈ 2 × r × d × layers）</li><li>r=8 で chat 微調十分、r=64 で複雑下流タスク（構造化出力/Tool Calling）、r=128+ は限界収益低下</li><li>alpha：スケーリング係数、出力 = (alpha/r) × BAx。alpha=2r が一般的</li><li>実測：r=64 alpha=128 で 14B の 0.49% (68.8M) 学習、rank 倍増しても効果は +1-2pp</li><li>黄金則：r=8 で動かす → 不足なら r=16/32 → それでも不足なら全パラメータ or prefix-tuning</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、仕組みを単独のテクニックとして覚えること。モデル構造、学習データ、推論コスト、評価方法を一緒に見ないと、実務上の判断を誤りやすい。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>SFT/DPO/GRPO のハイパーパラメータ、過学習と正則化、LoRA/QLoRA、PowerTS-LLM の設定選択と関連する。</p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。LoRA の rank と alpha の選び方、なぜ 64 がよくスイートスポットと言われるのか では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "l26",
+    "cat": "LLM基础",
+    "q": "Reward Hacking 的常见表现 + 如何在线上检测",
+    "q_ja": "Reward Hacking の主要パターンと実運用での検知方法",
+    "bullets": [
+      "<span class=\"highlight\">长度 hacking</span>：RM 偏好长回答 → policy 不停加废话。检测：reward vs length 散点图，正相关 = 危险信号",
+      "<span class=\"highlight\">格式 hacking</span>：堆 markdown headers/列表/emoji → RM 给高分。检测：监控 markdown token 占比",
+      "<span class=\"highlight\">客气 hacking</span>：开头「素晴らしい質問です！」结尾「ぜひお気軽に...」内容空洞。检测：semantic similarity vs reward 反相关",
+      "<span class=\"highlight\">refusal hacking</span>：滥用「申し訳ございません」拒答 → RM 安全训练偏好拒答。检测：refusal 率监控",
+      "<span class=\"highlight\">特殊 token hacking</span>：发现 RM 对某 token 给高分（曾有 RM 偏好「\\n\\n\\n」）→ 输出充斥该 token。检测：n-gram 频次异常",
+      "通用对策：<span class=\"highlight\">KL 约束（β）调整 + ensemble RM + held-out RM 验证 + 人工 spot check</span>"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">長さ hacking</span>：RM が長文を好む → 冗長化。検知：reward vs length の正相関",
+      "<span class=\"highlight\">フォーマット hacking</span>：markdown/箇条書き/絵文字を多用 → RM 高評価",
+      "<span class=\"highlight\">過剰丁寧 hacking</span>：「素晴らしいご質問です」で始まり中身空疎。検知：意味類似度と reward の逆相関",
+      "<span class=\"highlight\">refusal hacking</span>：安全訓練の過剰反応で「申し訳ございません」を乱発。検知：拒否率を継続監視",
+      "<span class=\"highlight\">トークン hacking</span>：特殊 token が RM の弱点を突く（「\\n\\n\\n」高評価事例あり）",
+      "対策：<span class=\"highlight\">KL 制約 β 調整 + ensemble RM + held-out RM + 人手スポットチェック</span>"
+    ],
+    "group": "基础",
+    "lv": 2,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>Reward Hacking 位于对齐训练与线上监控之间，是 RLHF/DPO/奖励模型系统最典型的失败模式。它说明模型会优化指标本身，而不一定优化人真正想要的行为。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>机制是 policy 从 reward model 或规则奖励中寻找捷径：如果奖励与长度、格式、拒答、安全套话等伪特征相关，梯度会放大这些模式。在线检测要把 reward 与 length、markdown 占比、refusal 率、n-gram 异常和语义相似度做联合监控。</p><ul><li>长度 hacking：RM 偏好长回答 → policy 不停加废话。检测：reward vs length 散点图，正相关 = 危险信号</li><li>格式 hacking：堆 markdown headers/列表/emoji → RM 给高分。检测：监控 markdown token 占比</li><li>客气 hacking：开头「素晴らしい質問です！」结尾「ぜひお気軽に...」内容空洞。检测：semantic similarity vs reward 反相关</li><li>refusal hacking：滥用「申し訳ございません」拒答 → RM 安全训练偏好拒答。检测：refusal 率监控</li><li>特殊 token hacking：发现 RM 对某 token 给高分（曾有 RM 偏好「\\n\\n\\n」）→ 输出充斥该 token。检测：n-gram 频次异常</li><li>通用对策：KL 约束（β）调整 + ensemble RM + held-out RM 验证 + 人工 spot check</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>反例是“奖励升高但用户体验下降”：答案更长、更客气、更像模板，却没有更正确。只看平均 reward 会掩盖这个问题，尤其当 reward model 与训练数据有相同偏差时。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>它连接 RLHF vs DPO、Guardrails、Agent 安全与 Prompt Injection。SiLR 验证器本质上是在执行层把奖励/目标和真实约束重新对齐，避免模型用漂亮解释绕过物理安全。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">面试表达：Reward hacking 不是模型坏了，而是目标函数不完整。我的做法是用 held-out RM、人工抽检和行为指标一起看；一旦发现 reward 与长度或格式强相关，就调 KL、重训 RM 或加入规则约束。</span></p>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>Reward Hacking の主要パターンと実運用での検知方法</strong> は、LLM のアーキテクチャ、学習、推論最適化をつなぐ基礎論点である。モデル内部の仕組みだけでなく、serving コストや長文脈、微調整方針にも影響する。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、モデル内部の計算、メモリ/計算量、学習または推論時の制約を一体で理解すること。</p><ul><li>長さ hacking：RM が長文を好む → 冗長化。検知：reward vs length の正相関</li><li>フォーマット hacking：markdown/箇条書き/絵文字を多用 → RM 高評価</li><li>過剰丁寧 hacking：「素晴らしいご質問です」で始まり中身空疎。検知：意味類似度と reward の逆相関</li><li>refusal hacking：安全訓練の過剰反応で「申し訳ございません」を乱発。検知：拒否率を継続監視</li><li>トークン hacking：特殊 token が RM の弱点を突く（「\\n\\n\\n」高評価事例あり）</li><li>対策：KL 制約 β 調整 + ensemble RM + held-out RM + 人手スポットチェック</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、仕組みを単独のテクニックとして覚えること。モデル構造、学習データ、推論コスト、評価方法を一緒に見ないと、実務上の判断を誤りやすい。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>RLHF/DPO、Reward Model、Guardrails、Agent 安全、SiLR の検証器と関連する。</p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Reward Hacking の主要パターンと実運用での検知方法 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "l27",
+    "cat": "LLM基础",
+    "q": "vLLM 三大优化：PagedAttention / Continuous Batching / Speculative Decoding",
+    "q_ja": "vLLM の 3 大最適化技術とその適用優先度",
+    "bullets": [
+      "<span class=\"highlight\">PagedAttention</span>：KV cache 像 OS 虚拟内存一样分块管理（block_size=16）→ <span class=\"highlight\">显存碎片几乎为 0</span>，吞吐 2-4×",
+      "<span class=\"highlight\">Continuous Batching</span>：传统 batch 必须等最长 sequence 完成；continuous batching 在每 step 动态添加/移除请求 → <span class=\"highlight\">GPU 利用率 80-95%</span>",
+      "<span class=\"highlight\">Speculative Decoding</span>：用小 draft model（如 0.5B）推测 k 个 token → 大 model 一次 verify k 个 → 命中率 60-70% 时 <span class=\"highlight\">2× 速度</span>",
+      "优先级：<span class=\"highlight\">PagedAttention（基础设施级）> Continuous Batching（多并发场景）> Spec Decoding（单请求延迟优化）</span>",
+      "踩坑：vLLM 在 Blackwell GPU (sm_120+) 0.18 不全适配；Spec Decoding 在低命中率（<40%）反而变慢"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">PagedAttention</span>：KV cache を OS 仮想メモリ的にブロック管理 → メモリ断片化解消、スループット 2-4×",
+      "<span class=\"highlight\">Continuous Batching</span>：バッチ内の終了済みシーケンスを動的に置換 → GPU 利用率 80-95%",
+      "<span class=\"highlight\">Speculative Decoding</span>：小モデル（draft）で k token 推測 → 大モデルが一括 verify、命中率 60-70% で 2×",
+      "優先順位：<span class=\"highlight\">PagedAttention > Continuous Batching > Spec Decoding</span>",
+      "落とし穴：vLLM 0.18 が Blackwell GPU 未対応、Spec Decoding は命中率<40% で遅延化"
+    ],
+    "group": "基础",
+    "lv": 2,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>vLLM 三大优化属于 LLM 推理系统层，解决的是同一个模型在多用户并发下的吞吐、延迟和显存利用率问题。它和模型结构无关，但决定服务能否经济地上线。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>PagedAttention 把 KV cache 切成 block，像虚拟内存一样映射，减少碎片；Continuous Batching 每个 decoding step 动态插入和移除请求，提高 GPU 利用率；Speculative Decoding 用 draft model 先猜 token，再由 target model 并行验证，命中时减少串行步数。</p><ul><li>PagedAttention：KV cache 像 OS 虚拟内存一样分块管理（block_size=16）→ 显存碎片几乎为 0，吞吐 2-4×</li><li>Continuous Batching：传统 batch 必须等最长 sequence 完成；continuous batching 在每 step 动态添加/移除请求 → GPU 利用率 80-95%</li><li>Speculative Decoding：用小 draft model（如 0.5B）推测 k 个 token → 大 model 一次 verify k 个 → 命中率 60-70% 时 2× 速度</li><li>优先级：PagedAttention（基础设施级）> Continuous Batching（多并发场景）> Spec Decoding（单请求延迟优化）</li><li>踩坑：vLLM 在 Blackwell GPU (sm_120+) 0.18 不全适配；Spec Decoding 在低命中率（<40%）反而变慢</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>易错点是把三者都叫“加速”却不区分瓶颈。PagedAttention 主要省显存和提升吞吐，continuous batching 适合高并发，spec decoding 更偏单请求延迟；draft 命中率低或硬件不适配时反而会慢。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>它与 KV Cache、GQA/MQA、长上下文和 Function Calling 强相关。工具调用场景常有短请求和长请求混合，continuous batching 的收益会比单条 demo 更明显。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">可以这样答：vLLM 的核心不是改变模型输出，而是改变调度和 KV 管理。线上我会先看显存碎片、GPU utilization、TTFT 和 TPOT，再决定启用 PagedAttention、batching 或 spec decoding。</span></p>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>vLLM の 3 大最適化技術とその適用優先度</strong> は、LLM のアーキテクチャ、学習、推論最適化をつなぐ基礎論点である。モデル内部の仕組みだけでなく、serving コストや長文脈、微調整方針にも影響する。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、モデル内部の計算、メモリ/計算量、学習または推論時の制約を一体で理解すること。</p><ul><li>PagedAttention：KV cache を OS 仮想メモリ的にブロック管理 → メモリ断片化解消、スループット 2-4×</li><li>Continuous Batching：バッチ内の終了済みシーケンスを動的に置換 → GPU 利用率 80-95%</li><li>Speculative Decoding：小モデル（draft）で k token 推測 → 大モデルが一括 verify、命中率 60-70% で 2×</li><li>優先順位：PagedAttention > Continuous Batching > Spec Decoding</li><li>落とし穴：vLLM 0.18 が Blackwell GPU 未対応、Spec Decoding は命中率<40% で遅延化</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、仕組みを単独のテクニックとして覚えること。モデル構造、学習データ、推論コスト、評価方法を一緒に見ないと、実務上の判断を誤りやすい。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>KV Cache、PagedAttention、Continuous Batching、GQA/MQA、Function Calling の serving 負荷と関連する。</p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。vLLM の 3 大最適化技術とその適用優先度 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "l28",
+    "cat": "LLM基础",
+    "q": "长上下文扩展 — YaRN / PI / Ring Attention 工程取舍",
+    "q_ja": "ロングコンテキスト拡張手法（YaRN/PI/Ring Attention）の比較",
+    "bullets": [
+      "<span class=\"highlight\">PI (Position Interpolation)</span>：把 position id 线性压缩到训练范围（如 4K → 32K = ÷8）→ 简单但高频信息损失",
+      "<span class=\"highlight\">YaRN</span>：NTK-aware 缩放 + temperature 校正，<span class=\"highlight\">高频维度少压缩、低频多压缩</span> → 当前 SOTA 主流（Llama-3.1, Qwen-2.5）",
+      "<span class=\"highlight\">Ring Attention</span>：sequence 切块跨多卡循环传 KV → <span class=\"highlight\">支持 1M+ 长度</span>但需要分布式（Gemini-1.5 用类似方案）",
+      "训练成本：PI 几乎免费，YaRN 需要短期 fine-tune（~1B token），Ring Attention 改训练框架",
+      "选型：<span class=\"highlight\">个人/中小项目 → YaRN；超长（>200K）→ Ring Attention；快速 PoC → PI</span>"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">PI</span>：position id を線形圧縮（4K→32K = ÷8）、簡単だが高周波情報損失",
+      "<span class=\"highlight\">YaRN</span>：NTK-aware スケーリング + temperature 校正、高周波次元は圧縮控えめ → <span class=\"highlight\">現 SOTA 主流</span>",
+      "<span class=\"highlight\">Ring Attention</span>：sequence を分割して GPU 間で KV を循環 → 1M+ 対応だが分散学習必須",
+      "コスト：PI ほぼ無料、YaRN は短期 fine-tune（~1B tokens）、Ring Attention は学習フレーム改修",
+      "選定：<span class=\"highlight\">中小規模 → YaRN、超長 → Ring Attention、PoC → PI</span>"
+    ],
+    "group": "基础",
+    "lv": 2,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>长上下文扩展位于位置编码、Attention 复杂度和分布式训练的交叉点。它解决“模型训练时只见过 4K/8K，推理或微调时想处理 32K/128K+”的问题。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>PI 将位置编号线性压回训练范围；YaRN/NTK-aware scaling 对 RoPE 的不同频率维度做非均匀缩放，并常配合少量长上下文继续训练；Ring Attention 则把序列切到多卡，循环传递 KV，使 attention 计算跨设备完成。</p><ul><li>PI (Position Interpolation)：把 position id 线性压缩到训练范围（如 4K → 32K = ÷8）→ 简单但高频信息损失</li><li>YaRN：NTK-aware 缩放 + temperature 校正，高频维度少压缩、低频多压缩 → 当前 SOTA 主流（Llama-3.1, Qwen-2.5）</li><li>Ring Attention：sequence 切块跨多卡循环传 KV → 支持 1M+ 长度但需要分布式（Gemini-1.5 用类似方案）</li><li>训练成本：PI 几乎免费，YaRN 需要短期 fine-tune（~1B token），Ring Attention 改训练框架</li><li>选型：个人/中小项目 → YaRN；超长（>200K）→ Ring Attention；快速 PoC → PI</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>常见误区是只改 max_position_embeddings 就认为支持长上下文。位置可外推不等于模型会利用远距离信息；还要评估 needle-in-haystack、多跳检索、KV 显存和吞吐。PI 便宜但可能损失高频位置信息。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>它连接 RoPE vs ALiBi、KV Cache、GQA/MQA、RAG chunking。中小项目通常先用 RAG 或 YaRN，只有真的需要全局 200K+ 推理时才考虑 Ring Attention 级别的训练框架改造。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">面试可答：长上下文不是一个开关，而是位置编码、训练数据、attention 算法和 serving 成本的组合。我会先确认任务是否真的需要长上下文，再在 PI、YaRN、RAG、Ring Attention 间做成本取舍。</span></p>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>ロングコンテキスト拡張手法（YaRN/PI/Ring Attention）の比較</strong> は、LLM のアーキテクチャ、学習、推論最適化をつなぐ基礎論点である。モデル内部の仕組みだけでなく、serving コストや長文脈、微調整方針にも影響する。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、モデル内部の計算、メモリ/計算量、学習または推論時の制約を一体で理解すること。</p><ul><li>PI：position id を線形圧縮（4K→32K = ÷8）、簡単だが高周波情報損失</li><li>YaRN：NTK-aware スケーリング + temperature 校正、高周波次元は圧縮控えめ → 現 SOTA 主流</li><li>Ring Attention：sequence を分割して GPU 間で KV を循環 → 1M+ 対応だが分散学習必須</li><li>コスト：PI ほぼ無料、YaRN は短期 fine-tune（~1B tokens）、Ring Attention は学習フレーム改修</li><li>選定：中小規模 → YaRN、超長 → Ring Attention、PoC → PI</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、仕組みを単独のテクニックとして覚えること。モデル構造、学習データ、推論コスト、評価方法を一緒に見ないと、実務上の判断を誤りやすい。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>RoPE/ALiBi、KV Cache、RAG chunking、GQA/MQA、長文脈評価と関連する。</p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。ロングコンテキスト拡張手法（YaRN/PI/Ring Attention）の比較 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "本番制約",
+        "explain": "<p><strong>工程知識は本番制約まで落とす：</strong>正しさだけでなく、観測可能性、ロールバック、拡張性、コスト管理を説明する。</p><ul><li>設計問題では入力、出力、状態、障害復旧、権限境界を先に置く。</li><li>障害対応は再現、層の切り分け、範囲縮小、修正、回帰確認の順で話す。</li><li>顧客向けには技術指標を遅延、費用、転換率、コンプライアンスリスクに翻訳する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "l29",
+    "cat": "LLM基础",
+    "q": "GQA vs MQA — KV cache 节省的数学模型",
+    "q_ja": "GQA と MQA の KV cache 削減効果",
+    "bullets": [
+      "<span class=\"highlight\">MHA (Multi-Head)</span>：每 head 独立 K,V → KV cache 占用 = 2 × n_layers × n_heads × d_head × seq_len",
+      "<span class=\"highlight\">MQA (Multi-Query)</span>：所有 query head 共享一组 K,V → KV cache <span class=\"highlight\">缩小 n_heads 倍</span>，但表达力下降",
+      "<span class=\"highlight\">GQA (Grouped-Query)</span>：折中——每 group 共享一组 K,V（典型 8 group）→ <span class=\"highlight\">KV cache 缩小 n_heads/n_groups 倍</span>，性能几乎不损",
+      "Llama-2-70B 用 GQA-8（KV 缩小 8×），Mistral-7B 也 GQA",
+      "工程价值：<span class=\"highlight\">长 context 推理时 KV cache 是显存大头</span>（8K 序列、70B 模型可达 80GB），GQA 直接决定单卡能跑多长"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">MHA</span>：head 毎に独立 K,V → KV cache = 2 × layers × heads × d_head × seq",
+      "<span class=\"highlight\">MQA</span>：全 query head が単一 K,V を共有 → KV cache <span class=\"highlight\">heads 倍削減</span>、ただし表現力低下",
+      "<span class=\"highlight\">GQA</span>：group 単位で K,V 共有（典型 8 group）→ KV cache <span class=\"highlight\">heads/groups 倍削減</span>、性能ほぼ同等",
+      "Llama-2-70B（GQA-8）、Mistral-7B が採用",
+      "実用価値：<span class=\"highlight\">長文脈推論で KV cache が VRAM の大半</span>（8K × 70B で 80GB）、GQA が単一GPUで扱えるコンテキスト長を左右する"
+    ],
+    "group": "基础",
+    "lv": 2,
+    "details": [
+      {
+        "term": "体系位置",
+        "explain": "<p>GQA/MQA 属于 Transformer 推理内存优化，核心关注 KV cache。它和 attention head 设计、长上下文服务、vLLM 显存预算直接相连。</p>"
+      },
+      {
+        "term": "核心机制",
+        "explain": "<p>MHA 每个 query head 都有独立 K/V；MQA 让所有 query heads 共享一组 K/V；GQA 折中为一组 query heads 共享一组 K/V。KV cache 近似为 2×layers×kv_heads×d_head×seq_len×batch×bytes，因此把 kv_heads 从 64 降到 8 就约省 8 倍 K/V。</p><ul><li>MHA (Multi-Head)：每 head 独立 K,V → KV cache 占用 = 2 × n_layers × n_heads × d_head × seq_len</li><li>MQA (Multi-Query)：所有 query head 共享一组 K,V → KV cache 缩小 n_heads 倍，但表达力下降</li><li>GQA (Grouped-Query)：折中——每 group 共享一组 K,V（典型 8 group）→ KV cache 缩小 n_heads/n_groups 倍，性能几乎不损</li><li>Llama-2-70B 用 GQA-8（KV 缩小 8×），Mistral-7B 也 GQA</li><li>工程价值：长 context 推理时 KV cache 是显存大头（8K 序列、70B 模型可达 80GB），GQA 直接决定单卡能跑多长</li></ul>"
+      },
+      {
+        "term": "易错点 / 反例",
+        "explain": "<p>误区是以为 MQA/GQA 只影响参数量。真正的大头在推理时随 batch 和 seq_len 增长的 KV cache；但共享过度也可能降低表达力，尤其是需要多样注意力模式的任务。</p>"
+      },
+      {
+        "term": "关联与项目",
+        "explain": "<p>它与 KV Cache、PagedAttention、长上下文和 LLaMA 架构强关联。LLaMA-2-70B、Mistral 等采用 GQA，就是为了在长上下文和多并发时把显存压力降下来。</p>"
+      },
+      {
+        "term": "面试表达",
+        "explain": "<p><span class=\"key-point\">面试表达：MHA 最灵活但 KV cache 最贵，MQA 最省但可能损表达，GQA 是工业界常用折中。回答时最好写出 KV cache 公式，说明节省来自减少 kv_heads。</span></p>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "体系上の位置づけ",
+        "explain": "<p><strong>GQA と MQA の KV cache 削減効果</strong> は、LLM のアーキテクチャ、学習、推論最適化をつなぐ基礎論点である。モデル内部の仕組みだけでなく、serving コストや長文脈、微調整方針にも影響する。</p>"
+      },
+      {
+        "term": "中核メカニズム",
+        "explain": "<p>中核は、モデル内部の計算、メモリ/計算量、学習または推論時の制約を一体で理解すること。</p><ul><li>MHA：head 毎に独立 K,V → KV cache = 2 × layers × heads × d_head × seq</li><li>MQA：全 query head が単一 K,V を共有 → KV cache heads 倍削減、ただし表現力低下</li><li>GQA：group 単位で K,V 共有（典型 8 group）→ KV cache heads/groups 倍削減、性能ほぼ同等</li><li>Llama-2-70B（GQA-8）、Mistral-7B が採用</li><li>実用価値：長文脈推論で KV cache が VRAM の大半（8K × 70B で 80GB）、GQA が単一GPUで扱えるコンテキスト長を左右する</li></ul>"
+      },
+      {
+        "term": "間違いやすい点 / 反例",
+        "explain": "<p>よくある誤りは、仕組みを単独のテクニックとして覚えること。モデル構造、学習データ、推論コスト、評価方法を一緒に見ないと、実務上の判断を誤りやすい。</p>"
+      },
+      {
+        "term": "他カード・プロジェクトとの関連",
+        "explain": "<p>KV Cache、vLLM、長文脈推論、LLaMA/Mistral 系のアーキテクチャ選択と関連する。</p>"
+      },
+      {
+        "term": "面接での言い方",
+        "explain": "<p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。GQA と MQA の KV cache 削減効果 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p>"
+      },
+      {
+        "term": "知識の接続",
+        "explain": "<p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ]
   }
 ]

@@ -12,6 +12,26 @@
     ],
     "details": [
       {
+        "term": "问题意图",
+        "explain": "<p>这题表面在问「如何设计一个多智能体系统？从需求到落地的完整思路」，实际要验证你是否掌握 <span class=\"key-point\">工程系统组件、排障路径和基础代码能力</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "答题结构",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「如何设计一个多智能体系统？从需求到落地的完整思路」压缩成一个清晰定义或判断。</li><li>展开主干：四步法:问题分解 → 角色设计 → 通信协议 → 容错机制；核心决策:角色是同构协作(都做类似事)还是异构分工(各有所长)；通信模式:shared memory / message passing / blackboard / pub-sub 选一个。</li><li>补工程影响：编排结构:串行链/DAG/环形循环(ReAct)/Hierarchical(主管-工作者)；兜底机制:超时熔断 + 预算上限 + 输出校验 + 人在回路(critical 任务)。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深挖追问",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「角色设计:同构 vs 异构」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「通信协议对比」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「容错机制四件套」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「面试追问:如何测试多 Agent 系统」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "易错点",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "项目/岗位连接",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「工程系统组件、排障路径和基础代码能力」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      },
+      {
         "term": "角色设计:同构 vs 异构",
         "explain": "<p><strong>同构协作</strong>:N 个 Agent 能力一样,通过投票/辩论产生最终答案(MAD、Multi-Agent Debate)<br>例:多个 Agent 独立回答同一个问题,Judge 选最好的<br><strong>优点</strong>:鲁棒、易扩展<br><strong>缺点</strong>:成本 ×N、重复工作</p><p><strong>异构分工</strong>:每个 Agent 专注一个领域,输出组合成最终结果<br>例:Analyzer + Actor + Verifier(SiLR);Researcher + Writer + Editor(写作 Agent)<br><strong>优点</strong>:上下文精简、可独立优化<br><strong>缺点</strong>:边界模糊时职责不清、通信开销</p><p><span class='key-point'>大部分生产系统用异构分工 + 3-5 个 Agent</span>。再多就难以维护。</p>"
       },
@@ -29,7 +49,29 @@
       }
     ],
     "group": "面经",
-    "lv": 3
+    "lv": 3,
+    "details_ja": [
+      {
+        "term": "質問意図",
+        "explain": "<p>这题表面在问「如何设计一个多智能体系统？从需求到落地的完整思路」，实际要验证你是否掌握 <span class=\"key-point\">工程系统组件、排障路径和基础代码能力</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "回答構成",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「如何设计一个多智能体系统？从需求到落地的完整思路」压缩成一个清晰定义或判断。</li><li>展开主干：四步法:问题分解 → 角色设计 → 通信协议 → 容错机制；核心决策:角色是同构协作(都做类似事)还是异构分工(各有所长)；通信模式:shared memory / message passing / blackboard / pub-sub 选一个。</li><li>补工程影响：编排结构:串行链/DAG/环形循环(ReAct)/Hierarchical(主管-工作者)；兜底机制:超时熔断 + 预算上限 + 输出校验 + 人在回路(critical 任务)。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深掘り質問",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「角色设计:同构 vs 异构」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「通信协议对比」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「容错机制四件套」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「面试追问:如何测试多 Agent 系统」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "落とし穴",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "プロジェクト接続",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「工程系统组件、排障路径和基础代码能力」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ieg02",
@@ -43,6 +85,26 @@
       "生产级再加:sandboxing/streaming/checkpoint/rollback/multi-turn memory"
     ],
     "details": [
+      {
+        "term": "问题意图",
+        "explain": "<p>这题表面在问「如何从头做一个 Agent harness?最小可用版本包含哪些组件?」，实际要验证你是否掌握 <span class=\"key-point\">工具协议、调用校验和执行审计</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "答题结构",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「如何从头做一个 Agent harness?最小可用版本包含哪些组件?」压缩成一个清晰定义或判断。</li><li>展开主干：Harness = Agent 的「运行时外壳」:提供工具调度、上下文管理、执行隔离、状态持久化；最小可用版(MVP)六组件:Loop Engine + Tool Registry + Context Manager + Logger + …；Loop Engine:解析模型输出→识别 tool_call→执行→把 observation 塞回 context→再问模型。</li><li>补工程影响：Context Manager:system prompt + 历史 + 工具结果的拼接、裁剪、压缩；生产级再加:sandboxing/streaming/checkpoint/rollback/multi-turn memory。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深挖追问",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「Loop Engine 核心伪代码」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「Tool Registry 设计」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「Context Manager 三大难题」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「生产级组件补充」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "易错点",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "项目/岗位连接",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「工具协议、调用校验和执行审计」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      },
       {
         "term": "Loop Engine 核心伪代码",
         "explain": "<div class='formula'>async function run(userInput) {<br>&nbsp;&nbsp;const ctx = buildContext(userInput);<br>&nbsp;&nbsp;for (let step = 0; step &lt; MAX_STEPS; step++) {<br>&nbsp;&nbsp;&nbsp;&nbsp;const resp = await llm.call(ctx, tools);<br>&nbsp;&nbsp;&nbsp;&nbsp;if (resp.stop_reason === 'end_turn') {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return resp.content;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;if (resp.tool_calls) {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const results = await Promise.all(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resp.tool_calls.map(tc =&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;registry.execute(tc)));<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.push({ role: 'assistant',<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;content: resp.content,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tool_calls: resp.tool_calls });<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.push({ role: 'tool', content: results });<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;}<br>&nbsp;&nbsp;throw new Error('max steps exceeded');<br>}</div><p>这个循环是 Claude Code / Cursor / Aider 的共同内核,只是外围包装不同。</p>"
@@ -61,7 +123,29 @@
       }
     ],
     "group": "面经",
-    "lv": 3
+    "lv": 3,
+    "details_ja": [
+      {
+        "term": "質問意図",
+        "explain": "<p>这题表面在问「如何从头做一个 Agent harness?最小可用版本包含哪些组件?」，实际要验证你是否掌握 <span class=\"key-point\">工具协议、调用校验和执行审计</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "回答構成",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「如何从头做一个 Agent harness?最小可用版本包含哪些组件?」压缩成一个清晰定义或判断。</li><li>展开主干：Harness = Agent 的「运行时外壳」:提供工具调度、上下文管理、执行隔离、状态持久化；最小可用版(MVP)六组件:Loop Engine + Tool Registry + Context Manager + Logger + …；Loop Engine:解析模型输出→识别 tool_call→执行→把 observation 塞回 context→再问模型。</li><li>补工程影响：Context Manager:system prompt + 历史 + 工具结果的拼接、裁剪、压缩；生产级再加:sandboxing/streaming/checkpoint/rollback/multi-turn memory。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深掘り質問",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「Loop Engine 核心伪代码」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「Tool Registry 设计」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「Context Manager 三大难题」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「生产级组件补充」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "落とし穴",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "プロジェクト接続",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「工具协议、调用校验和执行审计」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ieg03",
@@ -75,6 +159,26 @@
       "关键设计 3:<span class='highlight'>Memory 是文件系统</span>——没有向量库,markdown + grep 就够了"
     ],
     "details": [
+      {
+        "term": "问题意图",
+        "explain": "<p>这题表面在问「分析过 Claude Code 的源码吗?核心架构和关键设计点」，实际要验证你是否掌握 <span class=\"key-point\">Skill 注册、路由、注入和执行边界</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "答题结构",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「分析过 Claude Code 的源码吗?核心架构和关键设计点」压缩成一个清晰定义或判断。</li><li>展开主干：Claude Code 是闭源产品,但通过抓包 + 行为观察 + 官方文档能还原核心架构；核心模块:CLI 入口/Agent Loop/Tool Layer/Context Engine/Memory/Hook System/Per…；关键设计 1:工具是一等公民——Read/Edit/Bash/Grep/Glob 都是 schema+handler,同构接口。</li><li>补工程影响：关键设计 2:Skill 是 markdown 工作流——不引入新工具,而是编排现有工具 + 注入领域知识；关键设计 3:Memory 是文件系统——没有向量库,markdown + grep 就够了。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深挖追问",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「如何分析闭源 Agent 的源码」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「核心架构图(推测)」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「关键设计:Tool Use 统一接口」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「关键设计:Skill 的「指令即代码」」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "易错点",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "项目/岗位连接",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「Skill 注册、路由、注入和执行边界」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      },
       {
         "term": "如何分析闭源 Agent 的源码",
         "explain": "<p>虽然 Claude Code 闭源,但可以通过以下方式逆向理解:</p><ol><li><strong>读官方文档 + Anthropic blog</strong>:tool use、caching、skill 等都有技术博客</li><li><strong>抓包 API 请求</strong>:看 <code>messages</code> 数组结构、tool_use content block、system prompt 片段</li><li><strong>行为观察</strong>:故意让它做奇怪的事,看 fallback 是什么</li><li><strong>参考开源实现</strong>:<code>opencode</code>(SST)、<code>aider</code>、<code>continue.dev</code>,架构高度相似</li><li><strong>SDK 源码</strong>:<code>@anthropic-ai/claude-agent-sdk</code> 是 Claude Code 的 runtime 开源版</li></ol><p><span class='key-point'>@anthropic-ai/claude-agent-sdk 基本就是 Claude Code 的骨架</span>——读这个能理解 80%。</p>"
@@ -92,12 +196,34 @@
         "explain": "<p>Skill 的本体是 <code>SKILL.md</code>——frontmatter 定义触发条件,正文是 prompt 指令。</p><p>这是一个很反直觉但非常 powerful 的设计:<span class='key-point'>不引入新 API,而是用 prompt 扩展行为</span>。</p><ul><li>新增 Skill = 写个 markdown,不改 Agent 代码</li><li>Skill 的版本控制 = git(和代码一起管理)</li><li>Skill 的分发 = 打包成 plugin,放到 ~/.claude/plugins/</li></ul><p>这让 Agent 的能力扩展<strong>不依赖开发者发版</strong>——任何用户都能写 Skill。</p>"
       },
       {
-        "term": "面试回答模板",
+        "term": "答题组织建议",
         "explain": "<p>即使没真正读过源码,也能这样答:</p><p>「Claude Code 虽然闭源,但通过 Anthropic 的 <strong>claude-agent-sdk 开源</strong>+技术博客+行为观察,可以还原其核心架构。主要看过:</p><ul><li>tool-use 循环的实现(和 ReAct 一致,但 tool_use 是 API 原生结构化 content block,不是 prompt parse)</li><li>Skill 系统(markdown 指令包 + frontmatter routing)</li><li>Auto Memory(~/.claude/projects 下的 markdown 文件,grep 检索)</li><li>Permission 机制(工具分级 + 用户确认)」</li></ul><p><span class='key-point'>重点不是「读过源码」而是「理解其设计权衡」</span>——能说出为什么不用 RAG、为什么用 markdown、为什么工具要有 schema。</p>"
       }
     ],
     "group": "面经",
-    "lv": 3
+    "lv": 3,
+    "details_ja": [
+      {
+        "term": "質問意図",
+        "explain": "<p>这题表面在问「分析过 Claude Code 的源码吗?核心架构和关键设计点」，实际要验证你是否掌握 <span class=\"key-point\">Skill 注册、路由、注入和执行边界</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "回答構成",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「分析过 Claude Code 的源码吗?核心架构和关键设计点」压缩成一个清晰定义或判断。</li><li>展开主干：Claude Code 是闭源产品,但通过抓包 + 行为观察 + 官方文档能还原核心架构；核心模块:CLI 入口/Agent Loop/Tool Layer/Context Engine/Memory/Hook System/Per…；关键设计 1:工具是一等公民——Read/Edit/Bash/Grep/Glob 都是 schema+handler,同构接口。</li><li>补工程影响：关键设计 2:Skill 是 markdown 工作流——不引入新工具,而是编排现有工具 + 注入领域知识；关键设计 3:Memory 是文件系统——没有向量库,markdown + grep 就够了。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深掘り質問",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「如何分析闭源 Agent 的源码」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「核心架构图(推测)」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「关键设计:Tool Use 统一接口」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「关键设计:Skill 的「指令即代码」」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "落とし穴",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "プロジェクト接続",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「Skill 注册、路由、注入和执行边界」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ieg04",
@@ -112,6 +238,26 @@
     ],
     "details": [
       {
+        "term": "问题意图",
+        "explain": "<p>这题表面在问「Claude Code / Codex / OpenCode 的使用区别?(产品视角)」，实际要验证你是否掌握 <span class=\"key-point\">Skill 注册、路由、注入和执行边界</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "答题结构",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「Claude Code / Codex / OpenCode 的使用区别?(产品视角)」压缩成一个清晰定义或判断。</li><li>展开主干：Claude Code:Anthropic 官方,聚焦编码 agent,深度集成 Skill/Hook/MCP/Sub-agent；Codex CLI:OpenAI 官方,轻量级 coding assistant,偏快速上手、接 GPT-5.x；OpenCode(SST):开源等价物,TUI 好看,支持多模型(Anthropic/OpenAI/本地)。</li><li>补工程影响：日常 workflow 差异:Claude Code 长链路迭代最强,Codex 快速 one-shot,OpenCode 适合自托管/省钱；选型:团队生产用 Claude Code(工程化完善) / 个人探索用 Codex(低门槛) / 自托管用 OpenCode(开源免费)。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深挖追问",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「功能对比表」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「典型 workflow 差异」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「成本/速度对比」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "易错点",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "项目/岗位连接",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「Skill 注册、路由、注入和执行边界」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      },
+      {
         "term": "功能对比表",
         "explain": "<table border='1' style='border-collapse:collapse;'><tr><th>能力</th><th>Claude Code</th><th>Codex CLI</th><th>OpenCode</th></tr><tr><td><strong>Tool Use</strong></td><td>✓ 原生</td><td>✓ 原生</td><td>✓ 原生</td></tr><tr><td><strong>Sub-Agent</strong></td><td>✓ Agent 工具</td><td>✗</td><td>部分支持</td></tr><tr><td><strong>Skill 系统</strong></td><td>✓ markdown 包</td><td>✗</td><td>✗</td></tr><tr><td><strong>MCP</strong></td><td>✓ 官方支持</td><td>部分</td><td>✓</td></tr><tr><td><strong>Hook</strong></td><td>✓ 事件钩子</td><td>✗</td><td>✗</td></tr><tr><td><strong>Memory</strong></td><td>✓ Auto Memory</td><td>轻量</td><td>自定义</td></tr><tr><td><strong>多模型</strong></td><td>Anthropic only</td><td>OpenAI only</td><td>✓ 任意 provider</td></tr><tr><td><strong>开源</strong></td><td>SDK 开源,主体闭源</td><td>CLI 部分开源</td><td>✓ 完全开源</td></tr></table>"
       },
@@ -125,7 +271,29 @@
       }
     ],
     "group": "面经",
-    "lv": 2
+    "lv": 2,
+    "details_ja": [
+      {
+        "term": "質問意図",
+        "explain": "<p>这题表面在问「Claude Code / Codex / OpenCode 的使用区别?(产品视角)」，实际要验证你是否掌握 <span class=\"key-point\">Skill 注册、路由、注入和执行边界</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "回答構成",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「Claude Code / Codex / OpenCode 的使用区别?(产品视角)」压缩成一个清晰定义或判断。</li><li>展开主干：Claude Code:Anthropic 官方,聚焦编码 agent,深度集成 Skill/Hook/MCP/Sub-agent；Codex CLI:OpenAI 官方,轻量级 coding assistant,偏快速上手、接 GPT-5.x；OpenCode(SST):开源等价物,TUI 好看,支持多模型(Anthropic/OpenAI/本地)。</li><li>补工程影响：日常 workflow 差异:Claude Code 长链路迭代最强,Codex 快速 one-shot,OpenCode 适合自托管/省钱；选型:团队生产用 Claude Code(工程化完善) / 个人探索用 Codex(低门槛) / 自托管用 OpenCode(开源免费)。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深掘り質問",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「功能对比表」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「典型 workflow 差异」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「成本/速度对比」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "落とし穴",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "プロジェクト接続",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「Skill 注册、路由、注入和执行边界」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ieg05",
@@ -139,6 +307,26 @@
       "设计哲学差异:Anthropic 押注<span class='highlight'>上下文工程</span>,OpenAI 押注<span class='highlight'>模型能力</span>,OpenCode 押注<span class='highlight'>开放性</span>"
     ],
     "details": [
+      {
+        "term": "问题意图",
+        "explain": "<p>这题表面在问「Claude Code / Codex / OpenCode 的设计区别?(架构视角)」，实际要验证你是否掌握 <span class=\"key-point\">Skill 注册、路由、注入和执行边界</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "答题结构",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「Claude Code / Codex / OpenCode 的设计区别?(架构视角)」压缩成一个清晰定义或判断。</li><li>展开主干：核心差异在扩展机制、记忆模型、多 Agent 支持；Claude Code:Skill + Hook + Sub-agent 三件套,扩展能力最强；Codex:简化至极,只有 tool use,无 skill/hook,追求「开箱即用」。</li><li>补工程影响：OpenCode:可插拔架构,provider/tool/UI 都能换,但生态小；设计哲学差异:Anthropic 押注上下文工程,OpenAI 押注模型能力,OpenCode 押注开放性。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深挖追问",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「扩展机制对比」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「记忆模型对比」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「上下文压缩策略对比」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「面试高级回答:三种哲学」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "易错点",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "项目/岗位连接",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「Skill 注册、路由、注入和执行边界」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      },
       {
         "term": "扩展机制对比",
         "explain": "<p><strong>Claude Code</strong>:</p><ul><li>Skill = prompt 工作流包(不改代码)</li><li>Hook = 事件钩子(PreToolUse/PostToolUse/Stop)</li><li>MCP = 标准协议接外部工具</li><li>Sub-agent = 独立上下文子 Agent</li></ul><p><strong>Codex</strong>:只有「function calling」,扩展 = 改代码或 system prompt。</p><p><strong>OpenCode</strong>:提供 plugin API,但需要写 TypeScript 代码。</p><p><span class='key-point'>Claude Code 的思路:「能用 prompt 解决的,不要用代码」</span>——Skill、CLAUDE.md、memory 都是这个思想。</p>"
@@ -157,7 +345,29 @@
       }
     ],
     "group": "面经",
-    "lv": 3
+    "lv": 3,
+    "details_ja": [
+      {
+        "term": "質問意図",
+        "explain": "<p>这题表面在问「Claude Code / Codex / OpenCode 的设计区别?(架构视角)」，实际要验证你是否掌握 <span class=\"key-point\">Skill 注册、路由、注入和执行边界</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "回答構成",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「Claude Code / Codex / OpenCode 的设计区别?(架构视角)」压缩成一个清晰定义或判断。</li><li>展开主干：核心差异在扩展机制、记忆模型、多 Agent 支持；Claude Code:Skill + Hook + Sub-agent 三件套,扩展能力最强；Codex:简化至极,只有 tool use,无 skill/hook,追求「开箱即用」。</li><li>补工程影响：OpenCode:可插拔架构,provider/tool/UI 都能换,但生态小；设计哲学差异:Anthropic 押注上下文工程,OpenAI 押注模型能力,OpenCode 押注开放性。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深掘り質問",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「扩展机制对比」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「记忆模型对比」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「上下文压缩策略对比」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「面试高级回答:三种哲学」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "落とし穴",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "プロジェクト接続",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「Skill 注册、路由、注入和执行边界」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ieg06",
@@ -171,6 +381,26 @@
       "DNS:递归查询 → 根→顶级→权威 DNS;常见坑:TTL、CNAME 链、DNS 污染"
     ],
     "details": [
+      {
+        "term": "问题意图",
+        "explain": "<p>这题表面在问「计算机网络基础回顾(面试 top20 考点)」，实际要验证你是否掌握 <span class=\"key-point\">股票 DP 状态设计和多题统一抽象</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "答题结构",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「计算机网络基础回顾(面试 top20 考点)」压缩成一个清晰定义或判断。</li><li>展开主干：七层模型 vs 四层模型:物→数→网→传→会→表→应 / TCP/IP 四层；TCP 三次握手:SYN → SYN+ACK → ACK;四次挥手:FIN → ACK → FIN → ACK；HTTP 1.1 vs 2 vs 3:长连接/多路复用+HPACK/QUIC(UDP)。</li><li>补工程影响：HTTPS:TLS 握手 = 非对称协商对称密钥 + 证书验证；DNS:递归查询 → 根→顶级→权威 DNS;常见坑:TTL、CNAME 链、DNS 污染。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深挖追问",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「TCP 三次握手为什么不是两次」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「HTTP/2 vs HTTP/3」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「HTTPS/TLS 握手流程」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「常见面试坑」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "易错点",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "项目/岗位连接",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「股票 DP 状态设计和多题统一抽象」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      },
       {
         "term": "TCP 三次握手为什么不是两次",
         "explain": "<p>两次握手无法确认「客户端有接收能力」——服务端 SYN+ACK 后直接建连,如果这个包丢了,客户端根本不知道连接已建,会导致状态不一致、资源浪费。</p><p>三次握手本质是<span class='key-point'>双向确认收发能力</span>:</p><ol><li>SYN:客户端说「我想连」</li><li>SYN+ACK:服务端说「我收到了,我也想连」</li><li>ACK:客户端说「确认你收到了」</li></ol><p>这样双方都确认了「对方能收我的包,我能收对方的包」。</p>"
@@ -189,7 +419,29 @@
       }
     ],
     "group": "面经",
-    "lv": 2
+    "lv": 2,
+    "details_ja": [
+      {
+        "term": "質問意図",
+        "explain": "<p>这题表面在问「计算机网络基础回顾(面试 top20 考点)」，实际要验证你是否掌握 <span class=\"key-point\">股票 DP 状态设计和多题统一抽象</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "回答構成",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「计算机网络基础回顾(面试 top20 考点)」压缩成一个清晰定义或判断。</li><li>展开主干：七层模型 vs 四层模型:物→数→网→传→会→表→应 / TCP/IP 四层；TCP 三次握手:SYN → SYN+ACK → ACK;四次挥手:FIN → ACK → FIN → ACK；HTTP 1.1 vs 2 vs 3:长连接/多路复用+HPACK/QUIC(UDP)。</li><li>补工程影响：HTTPS:TLS 握手 = 非对称协商对称密钥 + 证书验证；DNS:递归查询 → 根→顶级→权威 DNS;常见坑:TTL、CNAME 链、DNS 污染。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深掘り質問",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「TCP 三次握手为什么不是两次」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「HTTP/2 vs HTTP/3」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「HTTPS/TLS 握手流程」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「常见面试坑」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "落とし穴",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "プロジェクト接続",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「股票 DP 状态设计和多题统一抽象」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ieg07",
@@ -204,7 +456,27 @@
     ],
     "details": [
       {
-        "term": "面试回答模板",
+        "term": "问题意图",
+        "explain": "<p>这题表面在问「云服务使用经验?主要对比 AWS / GCP / Azure / 腾讯云」，实际要验证你是否掌握 <span class=\"key-point\">短期、长期、摘要记忆的写回和召回</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "答题结构",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「云服务使用经验?主要对比 AWS / GCP / Azure / 腾讯云」压缩成一个清晰定义或判断。</li><li>展开主干：四大云:AWS(先行者生态最全)/GCP(数据+AI 强)/Azure(企业+微软生态)/腾讯云(中国业务)；核心服务家族:计算(EC2/GCE/VM)/存储(S3/GCS/Blob/COS)/数据库(RDS/Spanner/SQL/CDB)/Serv…；AI 相关:AWS Bedrock/Azure OpenAI Service/GCP Vertex AI/腾讯混元。</li><li>补工程影响：选型关键:数据主权(中国业务选国内云)、生态绑定(已用 AD → Azure)、价格(Spot/Preemptible 差异大)；成本控制三板斧:Reserved Instance(长期预定)+Spot(可中断)+Auto Scaling(按需伸缩)。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深挖追问",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「答题组织建议」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「LLM 相关云服务对比」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「常见成本坑」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「Linux + 云的常用组合」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "易错点",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "项目/岗位连接",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「短期、长期、摘要记忆的写回和召回」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      },
+      {
+        "term": "答题组织建议",
         "explain": "<p>如果没深度用过,可以老实说:「我主要用过 X 做 Y,对其他云有概念性了解」。然后展示:</p><ol><li>用过的部分:具体做过什么(跑 LLM 推理?存数据?部署 web 服务?)</li><li>踩过的坑:流量费、数据出境费、冷启动、cold data 归档</li><li>选型思考:为什么选这个云而不是别的</li></ol><p><span class='key-point'>面试官问云服务不是要考你记住所有产品名,而是看你的「分布式系统常识」</span>——能不能理解「计算和存储分离」「就近部署」「可用区」这些概念。</p>"
       },
       {
@@ -221,7 +493,29 @@
       }
     ],
     "group": "面经",
-    "lv": 2
+    "lv": 2,
+    "details_ja": [
+      {
+        "term": "質問意図",
+        "explain": "<p>这题表面在问「云服务使用经验?主要对比 AWS / GCP / Azure / 腾讯云」，实际要验证你是否掌握 <span class=\"key-point\">短期、长期、摘要记忆的写回和召回</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "回答構成",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「云服务使用经验?主要对比 AWS / GCP / Azure / 腾讯云」压缩成一个清晰定义或判断。</li><li>展开主干：四大云:AWS(先行者生态最全)/GCP(数据+AI 强)/Azure(企业+微软生态)/腾讯云(中国业务)；核心服务家族:计算(EC2/GCE/VM)/存储(S3/GCS/Blob/COS)/数据库(RDS/Spanner/SQL/CDB)/Serv…；AI 相关:AWS Bedrock/Azure OpenAI Service/GCP Vertex AI/腾讯混元。</li><li>补工程影响：选型关键:数据主权(中国业务选国内云)、生态绑定(已用 AD → Azure)、价格(Spot/Preemptible 差异大)；成本控制三板斧:Reserved Instance(长期预定)+Spot(可中断)+Auto Scaling(按需伸缩)。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深掘り質問",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「答题组织建议」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「LLM 相关云服务对比」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「常见成本坑」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「Linux + 云的常用组合」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "落とし穴",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "プロジェクト接続",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「短期、长期、摘要记忆的写回和召回」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ieg08",
@@ -235,6 +529,26 @@
       "系统监控:<code>df</code>/<code>du</code>/<code>free</code>/<code>uptime</code>/<code>iostat</code>/<code>vmstat</code>/<code>journalctl</code>/<code>systemctl</code>"
     ],
     "details": [
+      {
+        "term": "问题意图",
+        "explain": "<p>这题表面在问「熟悉的 Linux 命令?面试常考 30 个」，实际要验证你是否掌握 <span class=\"key-point\">工具协议、调用校验和执行审计</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "答题结构",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「熟悉的 Linux 命令?面试常考 30 个」压缩成一个清晰定义或判断。</li><li>展开主干：文件操作:ls/cd/cp/mv/rm/mkdir/find/ln；文本处理:cat/less/head/tail/grep/sed/awk/sort/uniq/wc；进程管理:ps/top/htop/kill/nohup/&amp;/jobs/bg/fg。</li><li>补工程影响：网络工具:curl/wget/ssh/scp/netstat/ss/tcpdump/nc/dig；系统监控:df/du/free/uptime/iostat/vmstat/journalctl/systemctl。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深挖追问",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「高频面试场景题」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「管道+组合拳」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「权限 &amp; chmod」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「vim 基本操作(编辑器题必问)」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "易错点",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "项目/岗位连接",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「工具协议、调用校验和执行审计」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      },
       {
         "term": "高频面试场景题",
         "explain": "<p><strong>Q1:一个文件 10G,怎么看开头/结尾?</strong><br><code>head -n 100 file</code>(前 100 行)/ <code>tail -n 100 file</code> / <code>tail -f log</code>(跟踪新增)</p><p><strong>Q2:进程占用 CPU 100%,怎么排查?</strong><br><code>top</code> 找 PID → <code>strace -p &lt;PID&gt;</code> 看系统调用 → <code>cat /proc/&lt;PID&gt;/status</code> → <code>gdb -p &lt;PID&gt;</code> 附加调试</p><p><strong>Q3:磁盘满了,怎么找大文件?</strong><br><code>du -sh /* 2&gt;/dev/null | sort -hr | head</code>(按大小排序找大目录)<br><code>find / -size +1G -type f 2&gt;/dev/null</code>(找 >1G 文件)</p><p><strong>Q4:怎么看某端口被哪个进程占用?</strong><br><code>ss -tlnp | grep :8080</code> 或 <code>lsof -i:8080</code> 或 <code>netstat -tlnp</code></p><p><strong>Q5:怎么后台跑个长任务?</strong><br><code>nohup python train.py &gt; train.log 2&gt;&amp;1 &amp;</code> — nohup 防止 SIGHUP,重定向输出,&amp; 放后台</p>"
@@ -253,7 +567,29 @@
       }
     ],
     "group": "面经",
-    "lv": 1
+    "lv": 1,
+    "details_ja": [
+      {
+        "term": "質問意図",
+        "explain": "<p>这题表面在问「熟悉的 Linux 命令?面试常考 30 个」，实际要验证你是否掌握 <span class=\"key-point\">工具协议、调用校验和执行审计</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "回答構成",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「熟悉的 Linux 命令?面试常考 30 个」压缩成一个清晰定义或判断。</li><li>展开主干：文件操作:ls/cd/cp/mv/rm/mkdir/find/ln；文本处理:cat/less/head/tail/grep/sed/awk/sort/uniq/wc；进程管理:ps/top/htop/kill/nohup/&amp;/jobs/bg/fg。</li><li>补工程影响：网络工具:curl/wget/ssh/scp/netstat/ss/tcpdump/nc/dig；系统监控:df/du/free/uptime/iostat/vmstat/journalctl/systemctl。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深掘り質問",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「高频面试场景题」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「管道+组合拳」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「权限 &amp; chmod」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「vim 基本操作(编辑器题必问)」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "落とし穴",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "プロジェクト接続",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「工具协议、调用校验和执行审计」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ieg09",
@@ -267,6 +603,26 @@
       "关键陷阱:空树、重复值、打印时的对齐宽度"
     ],
     "details": [
+      {
+        "term": "问题意图",
+        "explain": "<p>这题表面在问「[手撕] 实现二叉搜索树:构建 + 三种遍历 + 格式化打印」，实际要验证你是否掌握 <span class=\"key-point\">工程系统组件、排障路径和基础代码能力</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "答题结构",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「[手撕] 实现二叉搜索树:构建 + 三种遍历 + 格式化打印」压缩成一个清晰定义或判断。</li><li>展开主干：BST 定义:左子树所有节点 &lt; 根 &lt; 右子树所有节点；插入:递归比较,小往左,大往右,等就返回；遍历三种:前序(根左右)/中序(左根右=有序输出)/后序(左右根)。</li><li>补工程影响：格式化打印:先计算树高度,按层级 BFS 输出,用空格/缩进体现结构；关键陷阱:空树、重复值、打印时的对齐宽度。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深挖追问",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「完整实现(Python)」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「三种遍历」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「格式化打印(层级对齐)」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「预期输出示例」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "易错点",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "项目/岗位连接",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「工程系统组件、排障路径和基础代码能力」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      },
       {
         "term": "完整实现(Python)",
         "explain": "<div class='formula'>class Node:<br>&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self, val):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.val = val<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.left = None<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.right = None<br><br>class BST:<br>&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.root = None<br><br>&nbsp;&nbsp;&nbsp;&nbsp;def insert(self, val):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.root = self._insert(self.root, val)<br><br>&nbsp;&nbsp;&nbsp;&nbsp;def _insert(self, node, val):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if node is None:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return Node(val)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if val &lt; node.val:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node.left = self._insert(node.left, val)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elif val &gt; node.val:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node.right = self._insert(node.right, val)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# val == node.val 时忽略(BST 通常不允许重复)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return node</div>"
@@ -285,7 +641,29 @@
       }
     ],
     "group": "面经",
-    "lv": 2
+    "lv": 2,
+    "details_ja": [
+      {
+        "term": "質問意図",
+        "explain": "<p>这题表面在问「[手撕] 实现二叉搜索树:构建 + 三种遍历 + 格式化打印」，实际要验证你是否掌握 <span class=\"key-point\">工程系统组件、排障路径和基础代码能力</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "回答構成",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「[手撕] 实现二叉搜索树:构建 + 三种遍历 + 格式化打印」压缩成一个清晰定义或判断。</li><li>展开主干：BST 定义:左子树所有节点 &lt; 根 &lt; 右子树所有节点；插入:递归比较,小往左,大往右,等就返回；遍历三种:前序(根左右)/中序(左根右=有序输出)/后序(左右根)。</li><li>补工程影响：格式化打印:先计算树高度,按层级 BFS 输出,用空格/缩进体现结构；关键陷阱:空树、重复值、打印时的对齐宽度。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深掘り質問",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「完整实现(Python)」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「三种遍历」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「格式化打印(层级对齐)」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「预期输出示例」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "落とし穴",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "プロジェクト接続",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「工程系统组件、排障路径和基础代码能力」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ieg10",
@@ -299,6 +677,26 @@
       "陷阱:递归更新父节点引用、删除后的返回值处理、根节点被删的情况"
     ],
     "details": [
+      {
+        "term": "问题意图",
+        "explain": "<p>这题表面在问「[手撕·纯文本编辑器] BST 删除节点(三种情况完整实现)」，实际要验证你是否掌握 <span class=\"key-point\">工程系统组件、排障路径和基础代码能力</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "答题结构",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「[手撕·纯文本编辑器] BST 删除节点(三种情况完整实现)」压缩成一个清晰定义或判断。</li><li>展开主干：删除是 BST 最难的操作——要维持 BST 性质；三种情况:(1)叶子直接删 / (2)单子树用子树顶替 / (3)双子树用中序后继替换；中序后继 = 右子树的最左节点(比当前大的最小值)。</li><li>补工程影响：也可以用前驱:左子树的最右节点(比当前小的最大值)；陷阱:递归更新父节点引用、删除后的返回值处理、根节点被删的情况。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深挖追问",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「三种情况图解」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「完整删除实现」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「关键点解释」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「面试时的 debug checklist」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "易错点",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "项目/岗位连接",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「工程系统组件、排障路径和基础代码能力」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      },
       {
         "term": "三种情况图解",
         "explain": "<div class='formula'>Case 1: 叶子节点<br>&nbsp;&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;删除 3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5<br>&nbsp;&nbsp;&nbsp;/&nbsp;\\&nbsp;&nbsp;&nbsp;────→&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\<br>&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7<br><br>Case 2: 单子树<br>&nbsp;&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;删除 3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5<br>&nbsp;&nbsp;&nbsp;/&nbsp;\\&nbsp;&nbsp;&nbsp;────→&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;\\<br>&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;7<br>&nbsp;/<br>1<br><br>Case 3: 双子树(最难)<br>&nbsp;&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;删除 3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5<br>&nbsp;&nbsp;&nbsp;/&nbsp;\\&nbsp;&nbsp;&nbsp;────→&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;\\<br>&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;7<br>&nbsp;/&nbsp;\\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/<br>1&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1<br><br>(4 = 3 的中序后继=右子树最左)</div>"
@@ -317,7 +715,29 @@
       }
     ],
     "group": "面经",
-    "lv": 3
+    "lv": 3,
+    "details_ja": [
+      {
+        "term": "質問意図",
+        "explain": "<p>这题表面在问「[手撕·纯文本编辑器] BST 删除节点(三种情况完整实现)」，实际要验证你是否掌握 <span class=\"key-point\">工程系统组件、排障路径和基础代码能力</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "回答構成",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「[手撕·纯文本编辑器] BST 删除节点(三种情况完整实现)」压缩成一个清晰定义或判断。</li><li>展开主干：删除是 BST 最难的操作——要维持 BST 性质；三种情况:(1)叶子直接删 / (2)单子树用子树顶替 / (3)双子树用中序后继替换；中序后继 = 右子树的最左节点(比当前大的最小值)。</li><li>补工程影响：也可以用前驱:左子树的最右节点(比当前小的最大值)；陷阱:递归更新父节点引用、删除后的返回值处理、根节点被删的情况。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深掘り質問",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「三种情况图解」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「完整删除实现」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「关键点解释」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「面试时的 debug checklist」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "落とし穴",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "プロジェクト接続",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「工程系统组件、排障路径和基础代码能力」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ieg11",
@@ -331,6 +751,26 @@
       "选型:<span class='highlight'>复杂流程 LangGraph</span> / <span class='highlight'>代码任务 AutoGen</span> / <span class='highlight'>快速原型 CrewAI</span> / <span class='highlight'>整项目 MetaGPT</span>"
     ],
     "details": [
+      {
+        "term": "问题意图",
+        "explain": "<p>这题表面在问「主流开源 Agent Harness 对比:LangGraph / AutoGen / CrewAI / MetaGPT」，实际要验证你是否掌握 <span class=\"key-point\">工程系统组件、排障路径和基础代码能力</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "答题结构",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「主流开源 Agent Harness 对比:LangGraph / AutoGen / CrewAI / MetaGPT」压缩成一个清晰定义或判断。</li><li>展开主干：LangGraph(LangChain):图式编排,节点+边+状态,适合复杂控制流；AutoGen(Microsoft):多 Agent 对话,UserProxy + Assistant 交互,代码执行强；CrewAI:角色扮演风格,Crew/Agent/Task/Tool 抽象,上手最快。</li><li>补工程影响：MetaGPT:SOP 驱动,模拟软件公司角色(PM/Architect/Engineer),适合完整项目；选型:复杂流程 LangGraph / 代码任务 AutoGen / 快速原型 CrewAI / 整项目 MetaGPT。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深挖追问",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「核心抽象对比」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「LangGraph 典型用法」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「AutoGen 典型用法」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「选型决策树」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "易错点",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "项目/岗位连接",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「工程系统组件、排障路径和基础代码能力」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      },
       {
         "term": "核心抽象对比",
         "explain": "<table border='1' style='border-collapse:collapse;'><tr><th></th><th>核心抽象</th><th>控制流</th><th>状态管理</th></tr><tr><td><strong>LangGraph</strong></td><td>Node/Edge/State</td><td>图(DAG/环)</td><td>TypedDict 全局状态</td></tr><tr><td><strong>AutoGen</strong></td><td>Agent 对话</td><td>消息传递</td><td>隐式在消息历史</td></tr><tr><td><strong>CrewAI</strong></td><td>Crew/Agent/Task</td><td>sequential/hierarchical</td><td>Task 输出链式</td></tr><tr><td><strong>MetaGPT</strong></td><td>Role/Action/SOP</td><td>SOP 工作流</td><td>共享 blackboard</td></tr></table>"
@@ -349,7 +789,29 @@
       }
     ],
     "group": "面经",
-    "lv": 3
+    "lv": 3,
+    "details_ja": [
+      {
+        "term": "質問意図",
+        "explain": "<p>这题表面在问「主流开源 Agent Harness 对比:LangGraph / AutoGen / CrewAI / MetaGPT」，实际要验证你是否掌握 <span class=\"key-point\">工程系统组件、排障路径和基础代码能力</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "回答構成",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「主流开源 Agent Harness 对比:LangGraph / AutoGen / CrewAI / MetaGPT」压缩成一个清晰定义或判断。</li><li>展开主干：LangGraph(LangChain):图式编排,节点+边+状态,适合复杂控制流；AutoGen(Microsoft):多 Agent 对话,UserProxy + Assistant 交互,代码执行强；CrewAI:角色扮演风格,Crew/Agent/Task/Tool 抽象,上手最快。</li><li>补工程影响：MetaGPT:SOP 驱动,模拟软件公司角色(PM/Architect/Engineer),适合完整项目；选型:复杂流程 LangGraph / 代码任务 AutoGen / 快速原型 CrewAI / 整项目 MetaGPT。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深掘り質問",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「核心抽象对比」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「LangGraph 典型用法」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「AutoGen 典型用法」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「选型决策树」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "落とし穴",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "プロジェクト接続",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「工程系统组件、排障路径和基础代码能力」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ieg12",
@@ -363,6 +825,26 @@
       "下一步优先级:<span class='highlight'>Claude Agent SDK 源码</span> > <span class='highlight'>LangGraph 官方示例复现</span> > <span class='highlight'>部署一个端到端 Agent 上生产</span>"
     ],
     "details": [
+      {
+        "term": "问题意图",
+        "explain": "<p>这题表面在问「工程实践面总结:为什么 Agentic RL 背得熟还是会凉?」，实际要验证你是否掌握 <span class=\"key-point\">SiLR 项目的训练、验证和安全闭环</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "答题结构",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「工程实践面总结:为什么 Agentic RL 背得熟还是会凉?」压缩成一个清晰定义或判断。</li><li>展开主干：算法 ≠ 工程:会 GRPO 推导不代表能部署一个 Agent 系统；工程面考察的是「能不能把东西跑起来」——从网络/Linux/云/开源框架到手撕代码；面试官关心「合作成本」:你上手一个开源项目需要多久?能不能独立 debug?。</li><li>补工程影响：弥补方法:读源码 + 复现 + 发 issue/PR,比刷题更能建立工程直觉；下一步优先级:Claude Agent SDK 源码 &gt; LangGraph 官方示例复现 &gt; 部署一个端到端 Agent 上生产。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深挖追问",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「算法强 vs 工程强的区别」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「补工程的最快路径」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「常见工程面考察信号」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「心态调整」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "易错点",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "项目/岗位连接",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「SiLR 项目的训练、验证和安全闭环」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      },
       {
         "term": "算法强 vs 工程强的区别",
         "explain": "<table border='1' style='border-collapse:collapse;'><tr><th>算法强</th><th>工程强</th></tr><tr><td>会推导 PPO/GRPO 公式</td><td>能用 TRL/verl 把训练真的跑起来</td></tr><tr><td>懂 Attention 机制</td><td>知道 Flash Attention 怎么编译/调优</td></tr><tr><td>读过 ReAct 论文</td><td>部署过带 sandbox 的 Agent 上生产</td></tr><tr><td>理解 MCP 协议</td><td>写过一个 MCP server 并调试通</td></tr><tr><td>知道 Claude Code 有 Skill</td><td>写过一个 Skill 并被别人用过</td></tr></table><p>大厂面试(尤其资深岗)<span class='key-point'>越来越偏工程</span>——因为算法研究员不缺,能把系统跑稳的工程师稀缺。</p>"
@@ -381,6 +863,28 @@
       }
     ],
     "group": "面经",
-    "lv": 2
+    "lv": 2,
+    "details_ja": [
+      {
+        "term": "質問意図",
+        "explain": "<p>这题表面在问「工程实践面总结:为什么 Agentic RL 背得熟还是会凉?」，实际要验证你是否掌握 <span class=\"key-point\">SiLR 项目的训练、验证和安全闭环</span>，以及能不能把它放进 Agent 工程实践 / 后端基础面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你能不能把算法理解转成能跑、能排障、能维护的工程系统。</li></ul>"
+      },
+      {
+        "term": "回答構成",
+        "explain": "<p>先定义问题，再画组件或执行路径，然后补测试、日志、权限、成本和排错手段。</p><ol><li>一句话定性：先把「工程实践面总结:为什么 Agentic RL 背得熟还是会凉?」压缩成一个清晰定义或判断。</li><li>展开主干：算法 ≠ 工程:会 GRPO 推导不代表能部署一个 Agent 系统；工程面考察的是「能不能把东西跑起来」——从网络/Linux/云/开源框架到手撕代码；面试官关心「合作成本」:你上手一个开源项目需要多久?能不能独立 debug?。</li><li>补工程影响：弥补方法:读源码 + 复现 + 发 issue/PR,比刷题更能建立工程直觉；下一步优先级:Claude Agent SDK 源码 &gt; LangGraph 官方示例复现 &gt; 部署一个端到端 Agent 上生产。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+      },
+      {
+        "term": "深掘り質問",
+        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「算法强 vs 工程强的区别」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「补工程的最快路径」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「常见工程面考察信号」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「心态调整」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+      },
+      {
+        "term": "落とし穴",
+        "explain": "<ul><li>答案停在概念层，没有命令、接口、伪代码、trace 或故障定位路径。</li><li>只讲最佳情况，不讲超时、重试、权限、回滚、资源成本和可观测性。</li><li>手撕题静默写代码，不解释 invariants、边界条件和如何验证。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+      },
+      {
+        "term": "プロジェクト接続",
+        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>把 Claude Code/Codex/OpenCode 使用与源码观察、Linux/云服务实操、BST 手撕和 Agent harness 项目串成工程能力证据。</li><li>可用表达：我在项目里遇到的对应问题是「SiLR 项目的训练、验证和安全闭环」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 Agent 工程实践 / 后端基础面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+      }
+    ]
   }
 ]

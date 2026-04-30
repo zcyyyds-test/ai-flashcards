@@ -19,7 +19,35 @@
       "並行推論スループット <span class=\"num\">2.9倍</span> 向上"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>EdgeRouter 核心数字</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>云端成本节省 <span class=\"num\">86%+</span>（即使500ms WAN延迟仍保持）</li><li>异常漏检率 <span class=\"num\">0%</span>（所有错误是严重程度低估，不是漏报）</li><li>级联信号准确率 <span class=\"num\">93.8%</span>（15/16决策正确）</li><li>47%请求边缘直出，53%需要级联</li><li>并发推理吞吐 <span class=\"num\">2.9×</span> 提升</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">EdgeRouter 核心数字</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：云端成本节省 86%+（即使500ms WAN延迟仍保持）；异常漏检率 0%（所有错误是严重程度低估，不是漏报）；级联信号准确率 93.8%（15/16决策正确）。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>云边类追问要准备：为什么不能全上云、为什么不能全在边缘、路由错误的代价如何分级，以及 SLA 下怎么调阈值。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>EdgeRouterの主要指標</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>クラウドコスト <span class=\"num\">86%以上</span> 削減（500ms WAN遅延下でも維持）</li><li>異常見逃し率 <span class=\"num\">0%</span>（全てのエラーは重大度の過小評価であり、見逃しではない）</li><li>カスケード信号精度 <span class=\"num\">93.8%</span>（16件中15件の判断が正確）</li><li>47%のリクエストはエッジで即応、53%がカスケード必要</li><li>並行推論スループット <span class=\"num\">2.9倍</span> 向上</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">EdgeRouterの主要指標</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：クラウドコスト 86%以上 削減（500ms WAN遅延下でも維持）；異常見逃し率 0%（全てのエラーは重大度の過小評価であり、見逃しではない）；カスケード信号精度 93.8%（16件中15件の判断が正確）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>エッジ/クラウド系の深掘りでは、全クラウド・全エッジがなぜ不十分か、routing error の損失をどう分類し、SLA 下で threshold をどう調整するかを準備する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "e02",
@@ -43,7 +71,35 @@
       "設計思想：安全最優先(T0/T1) → 効率最適化(T2/T3) → インテリジェント判断(T4)"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>5层路由设计（T0~T4）</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>T0紧急安全：异常等级>95或变化率>10/s → 跳过分析，直接边缘控制</li><li>T1数据安全：含敏感数据 → 强制边缘，数据不出设备</li><li>T2明确正常：异常分数<0.2且置信度>0.85 → 边缘直出</li><li>T3明确复杂：异常分数>0.8或多指标异常≥2 → 直接云端</li><li>T4灰色地带：其他所有 → 边缘先做，置信度低则升级</li><li>哲学：安全优先(T0/T1) → 效率优化(T2/T3) → 智能决策(T4)</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">5层路由设计（T0~T4）</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：T0紧急安全：异常等级>95或变化率>10/s → 跳过分析，直接边缘控制；T1数据安全：含敏感数据 → 强制边缘，数据不出设备；T2明确正常：异常分数0.85 → 边缘直出。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>云边类追问要准备：为什么不能全上云、为什么不能全在边缘、路由错误的代价如何分级，以及 SLA 下怎么调阈值。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>5層ルーティング設計（T0〜T4）</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>T0緊急安全：異常レベル>95または変化率>10/s → 分析をスキップし、エッジで即制御</li><li>T1データ安全：機密データを含む → エッジ強制、データはデバイス外に出さない</li><li>T2明確に正常：異常スコア<0.2かつ信頼度>0.85 → エッジで即応</li><li>T3明確に複雑：異常スコア>0.8または複数指標異常≧2 → 直接クラウドへ</li><li>T4グレーゾーン：その他全て → エッジで先行処理、信頼度低ければエスカレーション</li><li>設計思想：安全最優先(T0/T1) → 効率最適化(T2/T3) → インテリジェント判断(T4)</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">5層ルーティング設計（T0〜T4）</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：T0緊急安全：異常レベル>95または変化率>10/s → 分析をスキップし、エッジで即制御；T1データ安全：機密データを含む → エッジ強制、データはデバイス外に出さない；T2明確に正常：異常スコア0.85 → エッジで即応。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "e03",
@@ -63,7 +119,35 @@
       "単純な閾値：T0の緊急リクエストが「信頼度が十分」としてエッジ処理され、対応が遅れるリスクがある"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>为什么是5层而不是简单阈值二分？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>T0/T1是硬规则（安全和隐私），不能被置信度覆盖</li><li>T2/T3是高确定性决策，不需要浪费资源做置信度估计</li><li>只有T4才真正需要置信度驱动的动态决策</li><li>简单阈值：T0紧急请求可能因\"置信度还行\"被边缘处理，延误响应</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">为什么是5层而不是简单阈值二分？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：T0/T1是硬规则（安全和隐私），不能被置信度覆盖；T2/T3是高确定性决策，不需要浪费资源做置信度估计；只有T4才真正需要置信度驱动的动态决策。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>なぜ単純な閾値二分ではなく5層なのか？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>T0/T1はハードルール（安全性とプライバシー）であり、信頼度で上書きできない</li><li>T2/T3は確定性の高い判断であり、信頼度推定にリソースを浪費する必要がない</li><li>T4だけが信頼度駆動の動的判断を本当に必要とする</li><li>単純な閾値：T0の緊急リクエストが「信頼度が十分」としてエッジ処理され、対応が遅れるリスクがある</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">なぜ単純な閾値二分ではなく5層なのか？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：T0/T1はハードルール（安全性とプライバシー）であり、信頼度で上書きできない；T2/T3は確定性の高い判断であり、信頼度推定にリソースを浪費する必要がない；T4だけが信頼度駆動の動的判断を本当に必要とする。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "e04",
@@ -83,7 +167,35 @@
       "時系列の重みが最高の理由：本当の異常は通常複数フレームにわたって持続し、単フレームの異常はほぼノイズ"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>3种置信度估计方法</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>① 输出概率(权重0.3)：softmax最大值，零额外成本，但可能过度自信</li><li>② 自验证(权重0.3)：边缘分析+视觉检测交叉验证，+1次推理成本</li><li>③ 时序一致性(权重0.4)：滑动窗口检测稳定性，过滤单帧噪声——权重最高</li><li>时序权重最高原因：真正异常通常持续多帧，单帧异常大概率是噪声</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">3种置信度估计方法</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：① 输出概率(权重0.3)：softmax最大值，零额外成本，但可能过度自信；② 自验证(权重0.3)：边缘分析+视觉检测交叉验证，+1次推理成本；③ 时序一致性(权重0.4)：滑动窗口检测稳定性，过滤单帧噪声——权重最高。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>3つの信頼度推定手法</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>① 出力確率(重み0.3)：softmax最大値、追加コストゼロだが過信の可能性あり</li><li>② 自己検証(重み0.3)：エッジ分析＋視覚検出のクロス検証、+1回の推論コスト</li><li>③ 時系列一貫性(重み0.4)：スライディングウィンドウで安定性を検出、単フレームノイズをフィルタ——最高重み</li><li>時系列の重みが最高の理由：本当の異常は通常複数フレームにわたって持続し、単フレームの異常はほぼノイズ</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">3つの信頼度推定手法</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：① 出力確率(重み0.3)：softmax最大値、追加コストゼロだが過信の可能性あり；② 自己検証(重み0.3)：エッジ分析＋視覚検出のクロス検証、+1回の推論コスト；③ 時系列一貫性(重み0.4)：スライディングウィンドウで安定性を検出、単フレームノイズをフィルタ——最高重み。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "e05",
@@ -103,7 +215,35 @@
       "実質的な効果 = 見逃しゼロ + コスト86%削減"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>0.8B边缘模型只有80%准确率，够用吗？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>80%错误全是<span class=\"highlight\">严重程度低估</span>（alarm判成warning），不是漏报</li><li>异常检测（有无异常二分类）准确率 <span class=\"num\">100%</span></li><li>低估的会因置信度不够高而自动升级到云端</li><li>实际效果 = 0漏検 + 86%成本节省</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">0.8B边缘模型只有80%准确率，够用吗？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：80%错误全是严重程度低估（alarm判成warning），不是漏报；异常检测（有无异常二分类）准确率 100%；低估的会因置信度不够高而自动升级到云端。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>云边类追问要准备：为什么不能全上云、为什么不能全在边缘、路由错误的代价如何分级，以及 SLA 下怎么调阈值。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>0.8Bエッジモデルの精度80%で十分か？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>80%のエラーは全て<span class=\"highlight\">重大度の過小評価</span>（alarmをwarningと判定）であり、見逃しではない</li><li>異常検出（異常の有無の二値分類）精度は <span class=\"num\">100%</span></li><li>過小評価されたケースは信頼度不足で自動的にクラウドへエスカレーション</li><li>実質的な効果 = 見逃しゼロ + コスト86%削減</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">0.8Bエッジモデルの精度80%で十分か？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：80%のエラーは全て重大度の過小評価（alarmをwarningと判定）であり、見逃しではない；異常検出（異常の有無の二値分類）精度は 100%；過小評価されたケースは信頼度不足で自動的にクラウドへエスカレーション。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>エッジ/クラウド系の深掘りでは、全クラウド・全エッジがなぜ不十分か、routing error の損失をどう分類し、SLA 下で threshold をどう調整するかを準備する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "e06",
@@ -123,7 +263,35 @@
       "gRPCはエッジ→クラウドの内部通信（レイテンシ~30%低減）、RESTは外部API向け"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Edge vs Cloud 技术对比</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>Edge：Qwen3.5-0.8B / Q8_0 GGUF / Ollama / CPU可跑(~0.5GB)</li><li>Cloud：Qwen3.5-27B / BF16 / vLLM(TP=2) / 双GPU(~54GB)</li><li>Ollama优势：易用性、本地部署、CPU-only；vLLM优势：高吞吐、Continuous Batching</li><li>gRPC用于边缘→云端内部通信（延迟低~30%），REST用于外部API</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Edge vs Cloud 技术对比</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：Edge：Qwen3.5-0.8B / Q8_0 GGUF / Ollama / CPU可跑(~0.5GB)；Cloud：Qwen3.5-27B / BF16 / vLLM(TP=2) / 双GPU(~54GB)；Ollama优势：易用性、本地部署、CPU-only；vLLM优势：高吞吐、Continuous Batching。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>云边类追问要准备：为什么不能全上云、为什么不能全在边缘、路由错误的代价如何分级，以及 SLA 下怎么调阈值。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>Edge vs Cloudの技術比較</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>Edge：Qwen3.5-0.8B / Q8_0 GGUF / Ollama / CPUで動作可(~0.5GB)</li><li>Cloud：Qwen3.5-27B / BF16 / vLLM(TP=2) / デュアルGPU(~54GB)</li><li>Ollamaの利点：使いやすさ、ローカルデプロイ、CPU-only；vLLMの利点：高スループット、Continuous Batching</li><li>gRPCはエッジ→クラウドの内部通信（レイテンシ~30%低減）、RESTは外部API向け</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">Edge vs Cloudの技術比較</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：Edge：Qwen3.5-0.8B / Q8_0 GGUF / Ollama / CPUで動作可(~0.5GB)；Cloud：Qwen3.5-27B / BF16 / vLLM(TP=2) / デュアルGPU(~54GB)；Ollamaの利点：使いやすさ、ローカルデプロイ、CPU-only；vLLMの利点：高スループット、Continuous Batching。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>エッジ/クラウド系の深掘りでは、全クラウド・全エッジがなぜ不十分か、routing error の損失をどう分類し、SLA 下で threshold をどう調整するかを準備する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "e07",
@@ -143,7 +311,35 @@
       "GGUFはllama.cpp形式でCPU推論に最適化、`ollama pull`1コマンドで完了"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>为什么Edge用量化，Cloud用BF16？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>Edge做<span class=\"highlight\">分类</span>（异常检测），Q8_0量化损失极小</li><li>Cloud做<span class=\"highlight\">详细分析</span>（生成文本报告），需要BF16保证生成质量</li><li>Edge不用更激进INT4：0.8B模型够小，Q8_0在CPU上也能流畅运行</li><li>GGUF是llama.cpp格式，专为CPU推理优化，`ollama pull`一条命令搞定</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">为什么Edge用量化，Cloud用BF16？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：Edge做分类（异常检测），Q8_0量化损失极小；Cloud做详细分析（生成文本报告），需要BF16保证生成质量；Edge不用更激进INT4：0.8B模型够小，Q8_0在CPU上也能流畅运行。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>云边类追问要准备：为什么不能全上云、为什么不能全在边缘、路由错误的代价如何分级，以及 SLA 下怎么调阈值。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>なぜEdgeは量子化、CloudはBF16なのか？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>Edgeは<span class=\"highlight\">分類</span>（異常検出）を行い、Q8_0量子化の損失は極めて小さい</li><li>Cloudは<span class=\"highlight\">詳細分析</span>（テキストレポート生成）を行い、生成品質を保つためBF16が必要</li><li>EdgeでINT4を使わない理由：0.8Bモデルは十分小さく、Q8_0でもCPU上で快適に動作</li><li>GGUFはllama.cpp形式でCPU推論に最適化、`ollama pull`1コマンドで完了</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">なぜEdgeは量子化、CloudはBF16なのか？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：Edgeは分類（異常検出）を行い、Q8_0量子化の損失は極めて小さい；Cloudは詳細分析（テキストレポート生成）を行い、生成品質を保つためBF16が必要；EdgeでINT4を使わない理由：0.8Bモデルは十分小さく、Q8_0でもCPU上で快適に動作。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>エッジ/クラウド系の深掘りでは、全クラウド・全エッジがなぜ不十分か、routing error の損失をどう分類し、SLA 下で threshold をどう調整するかを準備する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "e08",
@@ -165,7 +361,35 @@
       "⑤ 投機的プリフェッチ(カスケードレイテンシ~-12%) — 追加コストあり、場面による"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>性能优化ROI排序</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>① 级联路由(86%成本节省) — 架构级，最大收益</li><li>② 量化(3×压缩) — Edge INT4，几乎免费</li><li>③ Prefix Caching(30%计算节省) — Cloud端，一个参数搞定</li><li>④ 并发推理(2.9×吞吐) — asyncio + Semaphore</li><li>⑤ 推测性预取(~-12%级联延迟) — 有额外成本，看场景</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">性能优化ROI排序</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：① 级联路由(86%成本节省) — 架构级，最大收益；② 量化(3×压缩) — Edge INT4，几乎免费；③ Prefix Caching(30%计算节省) — Cloud端，一个参数搞定。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>パフォーマンス最適化のROI順位</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>① カスケードルーティング(86%コスト削減) — アーキテクチャレベル、最大の効果</li><li>② 量子化(3倍圧縮) — Edge INT4、ほぼゼロコスト</li><li>③ Prefix Caching(30%計算削減) — Cloud側、パラメータ1つで完了</li><li>④ 並行推論(2.9倍スループット) — asyncio + Semaphore</li><li>⑤ 投機的プリフェッチ(カスケードレイテンシ~-12%) — 追加コストあり、場面による</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">パフォーマンス最適化のROI順位</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：① カスケードルーティング(86%コスト削減) — アーキテクチャレベル、最大の効果；② 量子化(3倍圧縮) — Edge INT4、ほぼゼロコスト；③ Prefix Caching(30%計算削減) — Cloud側、パラメータ1つで完了。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "e09",
@@ -187,7 +411,35 @@
       "結論：EdgeRouterの価値は<span class=\"highlight\">ネットワーク環境に依存しない</span>"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>延迟与成本：500ms高延迟时表现如何？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>10ms延迟：P50=628ms，云端成本节省92.9%</li><li>50ms延迟：P50=681ms，云端成本节省86.7%</li><li>200ms延迟：P50=849ms，云端成本节省86.7%</li><li><span class=\"num\">500ms</span>延迟：P50=1124ms，云端成本节省 <span class=\"num\">86.7%</span></li><li>结论：EdgeRouter价值<span class=\"highlight\">不依赖网络条件</span></li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">延迟与成本：500ms高延迟时表现如何？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：10ms延迟：P50=628ms，云端成本节省92.9%；50ms延迟：P50=681ms，云端成本节省86.7%；200ms延迟：P50=849ms，云端成本节省86.7%。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>云边类追问要准备：为什么不能全上云、为什么不能全在边缘、路由错误的代价如何分级，以及 SLA 下怎么调阈值。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>レイテンシとコスト：500ms高遅延時の性能は？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>10ms遅延：P50=628ms、クラウドコスト92.9%削減</li><li>50ms遅延：P50=681ms、クラウドコスト86.7%削減</li><li>200ms遅延：P50=849ms、クラウドコスト86.7%削減</li><li><span class=\"num\">500ms</span>遅延：P50=1124ms、クラウドコスト <span class=\"num\">86.7%</span> 削減</li><li>結論：EdgeRouterの価値は<span class=\"highlight\">ネットワーク環境に依存しない</span></li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">レイテンシとコスト：500ms高遅延時の性能は？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：10ms遅延：P50=628ms、クラウドコスト92.9%削減；50ms遅延：P50=681ms、クラウドコスト86.7%削減；200ms遅延：P50=849ms、クラウドコスト86.7%削減。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>エッジ/クラウド系の深掘りでは、全クラウド・全エッジがなぜ不十分か、routing error の損失をどう分類し、SLA 下で threshold をどう調整するかを準備する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "e10",
@@ -209,7 +461,35 @@
       "比喩：まず応急処置、その後に専門家による精密対応"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>ISE 66%优于理想PI控制器是什么意思？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>ISE(误差平方积分)是控制系统标准性能指标，越低越好</li><li>无控制:22556 / 只用边缘:14500 / 只用云端:1768</li><li><span class=\"highlight\">EdgeRouter级联:612 vs 理想PI控制器:1803</span></li><li>原因：边缘快速粗修正(~2s) + 云端精修正 = 两阶段协作超越单一策略</li><li>类比：先应急处理，再等专家精细处理</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">ISE 66%优于理想PI控制器是什么意思？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：ISE(误差平方积分)是控制系统标准性能指标，越低越好；无控制:22556 / 只用边缘:14500 / 只用云端:1768；EdgeRouter级联:612 vs 理想PI控制器:1803。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>ISEが理想PI制御器より66%優れるとはどういう意味？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>ISE（誤差二乗積分）は制御システムの標準性能指標、低いほど良い</li><li>制御なし:22556 / エッジのみ:14500 / クラウドのみ:1768</li><li><span class=\"highlight\">EdgeRouterカスケード:612 vs 理想PI制御器:1803</span></li><li>理由：エッジの高速粗修正(~2s) + クラウドの精密修正 = 二段階協調が単一戦略を上回る</li><li>比喩：まず応急処置、その後に専門家による精密対応</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">ISEが理想PI制御器より66%優れるとはどういう意味？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：ISE（誤差二乗積分）は制御システムの標準性能指標、低いほど良い；制御なし:22556 / エッジのみ:14500 / クラウドのみ:1768；EdgeRouterカスケード:612 vs 理想PI制御器:1803。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "e11",
@@ -229,7 +509,35 @@
       "効果：デプロイ初期は保守的（クラウド多用）、運用後に自己適応（どのケースがエッジで十分か学習）"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>在线阈值学习怎么工作？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>云端确认了边缘结果 → 降低阈值（减少未来云端调用，边缘够准）</li><li>云端推翻了边缘结果 → 升高阈值（增加未来云端调用，边缘不够准）</li><li>更新方式：threshold += ±learning_rate（EMA平滑）</li><li>效果：部署初期保守（多上云），运行后自适应（学会哪些边缘够了）</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">在线阈值学习怎么工作？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：云端确认了边缘结果 → 降低阈值（减少未来云端调用，边缘够准）；云端推翻了边缘结果 → 升高阈值（增加未来云端调用，边缘不够准）；更新方式：threshold += ±learning_rate（EMA平滑）。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>オンライン閾値学習の仕組みは？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>クラウドがエッジの結果を確認 → 閾値を下げる（将来のクラウド呼び出しを減らす、エッジの精度が十分）</li><li>クラウドがエッジの結果を覆す → 閾値を上げる（将来のクラウド呼び出しを増やす、エッジの精度が不十分）</li><li>更新方法：threshold += ±learning_rate（EMA平滑化）</li><li>効果：デプロイ初期は保守的（クラウド多用）、運用後に自己適応（どのケースがエッジで十分か学習）</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">オンライン閾値学習の仕組みは？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：クラウドがエッジの結果を確認 → 閾値を下げる（将来のクラウド呼び出しを減らす、エッジの精度が十分）；クラウドがエッジの結果を覆す → 閾値を上げる（将来のクラウド呼び出しを増やす、エッジの精度が不十分）；更新方法：threshold += ±learning_rate（EMA平滑化）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>学習系の深掘りでは、データの作り方、誤データの除去、モデル/LoRA 設定の理由、失敗時に data/prompt/sampling/reward のどこを疑ったかを準備する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "e12",
@@ -251,7 +559,35 @@
       "コアパターン：<span class=\"highlight\">シンプルなものは高速処理 + 複雑なものは精密処理 = コストと品質の最適バランス</span>"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>这套云边架构能迁移到什么场景？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>客服chatbot：简单FAQ边缘回答，复杂问题上云</li><li>文档审核：明确合规/不合规边缘判断，灰色地带上云</li><li>医疗初诊：明确正常自动放行，疑似异常转专家</li><li>和BytePlus产品关联：帮客户降低API调用成本 / 保护数据隐私 / 降低延迟</li><li>核心模式：<span class=\"highlight\">简单的快速处理 + 复杂的精确处理 = 成本和质量最优平衡</span></li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">这套云边架构能迁移到什么场景？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：客服chatbot：简单FAQ边缘回答，复杂问题上云；文档审核：明确合规/不合规边缘判断，灰色地带上云；医疗初诊：明确正常自动放行，疑似异常转专家。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>云边类追问要准备：为什么不能全上云、为什么不能全在边缘、路由错误的代价如何分级，以及 SLA 下怎么调阈值。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>このクラウド・エッジ協調アーキテクチャはどの分野に応用できる？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>カスタマーサポートchatbot：シンプルなFAQはエッジで回答、複雑な問題はクラウドへ</li><li>文書審査：明確に適合/不適合はエッジ判定、グレーゾーンはクラウドへ</li><li>医療初期診断：明確に正常は自動パス、異常の疑いは専門家へ転送</li><li>BytePlus製品との関連：顧客のAPI呼び出しコスト削減 / データプライバシー保護 / レイテンシ低減</li><li>コアパターン：<span class=\"highlight\">シンプルなものは高速処理 + 複雑なものは精密処理 = コストと品質の最適バランス</span></li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">このクラウド・エッジ協調アーキテクチャはどの分野に応用できる？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：カスタマーサポートchatbot：シンプルなFAQはエッジで回答、複雑な問題はクラウドへ；文書審査：明確に適合/不適合はエッジ判定、グレーゾーンはクラウドへ；医療初期診断：明確に正常は自動パス、異常の疑いは専門家へ転送。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>エッジ/クラウド系の深掘りでは、全クラウド・全エッジがなぜ不十分か、routing error の損失をどう分類し、SLA 下で threshold をどう調整するかを準備する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "e13",
@@ -273,6 +609,384 @@
       "Prometheus+Grafana監視：6つのパネル（ルーティング分布/カスケード確認率/信頼度分布/クラウドエスカレーション率）"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Docker坑 + 工程取舍教训</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>Docker Hub在中国/WSL2不可访问，docker pull直接挂起</li><li>解决：放弃Docker隔离，改用应用层WAN延迟模拟（asyncio.sleep）</li><li>教训：<span class=\"highlight\">物理资源隔离不如路由逻辑正确性重要</span></li><li>对于架构验证，逻辑正确比部署形式更关键</li><li>Prometheus+Grafana监控：6个面板，包含路由分布/级联确认率/置信度分布/云端升级率</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Docker坑 + 工程取舍教训</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：Docker Hub在中国/WSL2不可访问，docker pull直接挂起；解决：放弃Docker隔离，改用应用层WAN延迟模拟（asyncio.sleep）；教训：物理资源隔离不如路由逻辑正确性重要。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>Dockerの落とし穴 + エンジニアリングのトレードオフ</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>Docker Hubは中国/WSL2からアクセス不可、docker pullがハングアップ</li><li>解決：Docker分離を諦め、アプリケーション層でWAN遅延シミュレーション（asyncio.sleep）に変更</li><li>教訓：<span class=\"highlight\">物理的リソース分離よりルーティングロジックの正しさの方が重要</span></li><li>アーキテクチャ検証ではロジックの正しさがデプロイ形態より重要</li><li>Prometheus+Grafana監視：6つのパネル（ルーティング分布/カスケード確認率/信頼度分布/クラウドエスカレーション率）</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">Dockerの落とし穴 + エンジニアリングのトレードオフ</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：Docker Hubは中国/WSL2からアクセス不可、docker pullがハングアップ；解決：Docker分離を諦め、アプリケーション層でWAN遅延シミュレーション（asyncio.sleep）に変更；教訓：物理的リソース分離よりルーティングロジックの正しさの方が重要。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "e14",
+    "cat": "云边协同",
+    "q": "跨设备真实部署 + SKAB 公开 benchmark 数字",
+    "q_ja": "Mac M2 ↔ Intel のデバイス横断 + SKAB 実機ベンチマーク",
+    "bullets": [
+      "真实部署：Mac M2 (Ollama qwen3.5:0.8b Q8_0) ↔ Intel WSL2 (vLLM Qwen3.5-27B FP16)，Tailscale DERP 中继 RTT 228-401ms",
+      "100 scenarios cascade gate=0.10：accuracy <span class=\"num\">0.940</span> / miss 0.022 / FA 0.073 / cloud savings <span class=\"num\">71%</span>",
+      "<span class=\"highlight\">SKAB 公开 benchmark</span>：cascade 2-class acc 0.84 / balanced 0.82 / 6/100 cloud calls / 94% scenarios edge 直接解决",
+      "同 SKAB：all-cloud 27B 反而 FA=0.75（27B over-flag），<span class=\"highlight\">cascade 把 FA 降到 0.28</span>",
+      "意义：cascade 不只省钱，还纠正大模型 over-confidence"
+    ],
+    "bullets_ja": [
+      "実機：Mac M2 ↔ Intel + Tailscale DERP（RTT 228-401ms）",
+      "100 scenarios cascade gate=0.10：accuracy <span class=\"num\">0.940</span> / cloud 削減 <span class=\"num\">71%</span>",
+      "<span class=\"highlight\">SKAB 公開ベンチ</span>：cascade balanced acc 0.82 / cloud 6%、94% を edge 単独で解決",
+      "all-cloud 27B が FA=0.75 を出すのに対し、<span class=\"highlight\">cascade で FA=0.28 に低減</span>",
+      "cascade は単なるコスト削減ではなく、大モデルの over-confidence 補正にも寄与"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>跨设备真实部署 + SKAB 公开 benchmark 数字</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>真实部署：Mac M2 (Ollama qwen3.5:0.8b Q8_0) ↔ Intel WSL2 (vLLM Qwen3.5-27B FP16)，Tailscale DERP 中继 RTT 228-401ms</li><li>100 scenarios cascade gate=0.10：accuracy <span class=\"num\">0.940</span> / miss 0.022 / FA 0.073 / cloud savings <span class=\"num\">71%</span></li><li><span class=\"highlight\">SKAB 公开 benchmark</span>：cascade 2-class acc 0.84 / balanced 0.82 / 6/100 cloud calls / 94% scenarios edge 直接解决</li><li>同 SKAB：all-cloud 27B 反而 FA=0.75（27B over-flag），<span class=\"highlight\">cascade 把 FA 降到 0.28</span></li><li>意义：cascade 不只省钱，还纠正大模型 over-confidence</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">跨设备真实部署 + SKAB 公开 benchmark 数字</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：真实部署：Mac M2 (Ollama qwen3.5:0.8b Q8_0) ↔ Intel WSL2 (vLLM Qwen3.5-27B FP16)，Tailscale DERP 中继 RTT 228-401ms；100 scenarios cascade gate=0.10：accuracy 0.940 / miss 0.022 / FA 0.073 / cloud savings 71%；SKAB 公开 benchmark：cascade 2-class acc 0.84 / balanced 0.82 / 6/100 cloud calls / 94% scenarios edge 直接解决。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>Mac M2 ↔ Intel のデバイス横断 + SKAB 実機ベンチマーク</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>実機：Mac M2 ↔ Intel + Tailscale DERP（RTT 228-401ms）</li><li>100 scenarios cascade gate=0.10：accuracy <span class=\"num\">0.940</span> / cloud 削減 <span class=\"num\">71%</span></li><li><span class=\"highlight\">SKAB 公開ベンチ</span>：cascade balanced acc 0.82 / cloud 6%、94% を edge 単独で解決</li><li>all-cloud 27B が FA=0.75 を出すのに対し、<span class=\"highlight\">cascade で FA=0.28 に低減</span></li><li>cascade は単なるコスト削減ではなく、大モデルの over-confidence 補正にも寄与</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">Mac M2 ↔ Intel のデバイス横断 + SKAB 実機ベンチマーク</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：実機：Mac M2 ↔ Intel + Tailscale DERP（RTT 228-401ms）；100 scenarios cascade gate=0.10：accuracy 0.940 / cloud 削減 71%；SKAB 公開ベンチ：cascade balanced acc 0.82 / cloud 6%、94% を edge 単独で解決。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "e15",
+    "cat": "云边协同",
+    "q": "threshold + anomaly_gate 联合 sweep — 99% acc + 0 miss + 32% 节省",
+    "q_ja": "confidence 閾値だけでなく anomaly_score gate を加えた最適動作点探索",
+    "bullets": [
+      "旧方案：单 threshold sweep，t=0.96 才 99% acc 但 cloud savings 仅 7%",
+      "新方案：composite_sweep（threshold × anomaly_gate）",
+      "<span class=\"highlight\">recommended: t=0.94, gate=0.10</span>：acc 0.99 / miss 0 / FA 0.018 / 32% cloud savings",
+      "vision-feature gate 抓 edge 自信误判的真异常（这些 anomaly_score≥0.12 而正常都<0.10）",
+      "<span class=\"highlight\">零漏检 + 最高 cloud savings</span>，光调 confidence 做不到"
+    ],
+    "bullets_ja": [
+      "旧：threshold 単独 sweep で 99% 精度時 cloud 削減 7% のみ",
+      "新：threshold × anomaly_gate の複合 sweep",
+      "<span class=\"highlight\">推奨：t=0.94 / gate=0.10</span> で acc 0.99 / miss 0 / cloud 削減 32%",
+      "anomaly_score gate が edge の自信ある誤判定を捕捉（true anomaly は score≥0.12、normal は <0.10）",
+      "confidence 単独では到達不能な「ゼロ漏検 + 最大 cloud 節約」を実現"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>threshold + anomaly_gate 联合 sweep — 99% acc + 0 miss + 32% 节省</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>旧方案：单 threshold sweep，t=0.96 才 99% acc 但 cloud savings 仅 7%</li><li>新方案：composite_sweep（threshold × anomaly_gate）</li><li><span class=\"highlight\">recommended: t=0.94, gate=0.10</span>：acc 0.99 / miss 0 / FA 0.018 / 32% cloud savings</li><li>vision-feature gate 抓 edge 自信误判的真异常（这些 anomaly_score≥0.12 而正常都<0.10）</li><li><span class=\"highlight\">零漏检 + 最高 cloud savings</span>，光调 confidence 做不到</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">threshold + anomaly_gate 联合 sweep — 99% acc + 0 miss + 32% 节省</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：旧方案：单 threshold sweep，t=0.96 才 99% acc 但 cloud savings 仅 7%；新方案：composite_sweep（threshold × anomaly_gate）；recommended: t=0.94, gate=0.10：acc 0.99 / miss 0 / FA 0.018 / 32% cloud savings。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>云边类追问要准备：为什么不能全上云、为什么不能全在边缘、路由错误的代价如何分级，以及 SLA 下怎么调阈值。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>confidence 閾値だけでなく anomaly_score gate を加えた最適動作点探索</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>旧：threshold 単独 sweep で 99% 精度時 cloud 削減 7% のみ</li><li>新：threshold × anomaly_gate の複合 sweep</li><li><span class=\"highlight\">推奨：t=0.94 / gate=0.10</span> で acc 0.99 / miss 0 / cloud 削減 32%</li><li>anomaly_score gate が edge の自信ある誤判定を捕捉（true anomaly は score≥0.12、normal は <0.10）</li><li>confidence 単独では到達不能な「ゼロ漏検 + 最大 cloud 節約」を実現</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">confidence 閾値だけでなく anomaly_score gate を加えた最適動作点探索</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：旧：threshold 単独 sweep で 99% 精度時 cloud 削減 7% のみ；新：threshold × anomaly_gate の複合 sweep；推奨：t=0.94 / gate=0.10 で acc 0.99 / miss 0 / cloud 削減 32%。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>エッジ/クラウド系の深掘りでは、全クラウド・全エッジがなぜ不十分か、routing error の損失をどう分類し、SLA 下で threshold をどう調整するかを準備する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "e16",
+    "cat": "云边协同",
+    "q": "Confidence calibration paradox — 4B 反而最不适合 routing",
+    "q_ja": "0.6B/4B/32B 三モデルの confidence 分布で見つけた反直感的事実",
+    "bullets": [
+      "0.6B confidence std=<span class=\"highlight\">0.195</span>（最高方差，区分度最好）",
+      "4B std=<span class=\"highlight\">0.029</span>（confidence 全挤在 0.92-0.98 完全无法校准）",
+      "32B std=0.093（介于中间）",
+      "<span class=\"highlight\">4B accuracy 比 0.6B 高（63.3% vs 60%）但 routing 上反而更糟</span>",
+      "教训：<span class=\"highlight\">模型选型不能只看 accuracy，要看 confidence 分布对下游路由是否友好</span>"
+    ],
+    "bullets_ja": [
+      "0.6B：confidence std=<span class=\"highlight\">0.195</span>（最高分散・最良の区別度）",
+      "4B：std=<span class=\"highlight\">0.029</span>（confidence が 0.92-0.98 に潰れ、校正不能）",
+      "32B：std=0.093（中間）",
+      "<span class=\"highlight\">accuracy は 4B > 0.6B（63.3% vs 60%）だが routing 適性は逆転</span>",
+      "教訓：<span class=\"highlight\">モデル選定は accuracy だけでなく confidence 分布の routing 適性も評価</span>"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Confidence calibration paradox — 4B 反而最不适合 routing</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>0.6B confidence std=<span class=\"highlight\">0.195</span>（最高方差，区分度最好）</li><li>4B std=<span class=\"highlight\">0.029</span>（confidence 全挤在 0.92-0.98 完全无法校准）</li><li>32B std=0.093（介于中间）</li><li><span class=\"highlight\">4B accuracy 比 0.6B 高（63.3% vs 60%）但 routing 上反而更糟</span></li><li>教训：<span class=\"highlight\">模型选型不能只看 accuracy，要看 confidence 分布对下游路由是否友好</span></li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Confidence calibration paradox — 4B 反而最不适合 routing</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：0.6B confidence std=0.195（最高方差，区分度最好）；4B std=0.029（confidence 全挤在 0.92-0.98 完全无法校准）；32B std=0.093（介于中间）。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>云边类追问要准备：为什么不能全上云、为什么不能全在边缘、路由错误的代价如何分级，以及 SLA 下怎么调阈值。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>0.6B/4B/32B 三モデルの confidence 分布で見つけた反直感的事実</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>0.6B：confidence std=<span class=\"highlight\">0.195</span>（最高分散・最良の区別度）</li><li>4B：std=<span class=\"highlight\">0.029</span>（confidence が 0.92-0.98 に潰れ、校正不能）</li><li>32B：std=0.093（中間）</li><li><span class=\"highlight\">accuracy は 4B > 0.6B（63.3% vs 60%）だが routing 適性は逆転</span></li><li>教訓：<span class=\"highlight\">モデル選定は accuracy だけでなく confidence 分布の routing 適性も評価</span></li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">0.6B/4B/32B 三モデルの confidence 分布で見つけた反直感的事実</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：0.6B：confidence std=0.195（最高分散・最良の区別度）；4B：std=0.029（confidence が 0.92-0.98 に潰れ、校正不能）；32B：std=0.093（中間）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>エッジ/クラウド系の深掘りでは、全クラウド・全エッジがなぜ不十分か、routing error の損失をどう分類し、SLA 下で threshold をどう調整するかを準備する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "e17",
+    "cat": "云边协同",
+    "q": "Speculative cloud prefetch 的真实收益边界",
+    "q_ja": "speculative cloud prefetch の効果限界",
+    "bullets": [
+      "concurrent×4: throughput 2.9× / latency 11740ms",
+      "speculative only: throughput 1.3× / <span class=\"highlight\">latency 7550ms (-12%)</span>",
+      "concurrent + speculative: throughput 2.5× / latency 12059ms",
+      "<span class=\"highlight\">speculative 收益受 edge/cloud 延迟比上限</span>——edge 28s 时 prefetch 节省的 cloud RTT 只占小头",
+      "并发处理才是吞吐主驱动力（2.9×）；架构教训：<span class=\"highlight\">先优化大头（concurrent）再调小头（prefetch）</span>"
+    ],
+    "bullets_ja": [
+      "concurrent×4：throughput 2.9× / latency 11740ms",
+      "speculative 単独：throughput 1.3× / <span class=\"highlight\">latency -12%</span>",
+      "両方併用：throughput 2.5× / latency 12059ms",
+      "<span class=\"highlight\">prefetch 効果は edge/cloud 遅延比に上限</span>",
+      "concurrent が支配項、設計教訓：<span class=\"highlight\">支配的なボトルネック → 小さな改善余地の順で最適化</span>"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Speculative cloud prefetch 的真实收益边界</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>concurrent×4: throughput 2.9× / latency 11740ms</li><li>speculative only: throughput 1.3× / <span class=\"highlight\">latency 7550ms (-12%)</span></li><li>concurrent + speculative: throughput 2.5× / latency 12059ms</li><li><span class=\"highlight\">speculative 收益受 edge/cloud 延迟比上限</span>——edge 28s 时 prefetch 节省的 cloud RTT 只占小头</li><li>并发处理才是吞吐主驱动力（2.9×）；架构教训：<span class=\"highlight\">先优化大头（concurrent）再调小头（prefetch）</span></li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Speculative cloud prefetch 的真实收益边界</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：concurrent×4: throughput 2.9× / latency 11740ms；speculative only: throughput 1.3× / latency 7550ms (-12%)；concurrent + speculative: throughput 2.5× / latency 12059ms。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>云边类追问要准备：为什么不能全上云、为什么不能全在边缘、路由错误的代价如何分级，以及 SLA 下怎么调阈值。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>speculative cloud prefetch の効果限界</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>concurrent×4：throughput 2.9× / latency 11740ms</li><li>speculative 単独：throughput 1.3× / <span class=\"highlight\">latency -12%</span></li><li>両方併用：throughput 2.5× / latency 12059ms</li><li><span class=\"highlight\">prefetch 効果は edge/cloud 遅延比に上限</span></li><li>concurrent が支配項、設計教訓：<span class=\"highlight\">支配的なボトルネック → 小さな改善余地の順で最適化</span></li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">speculative cloud prefetch の効果限界</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：concurrent×4：throughput 2.9× / latency 11740ms；speculative 単独：throughput 1.3× / latency -12%；両方併用：throughput 2.5× / latency 12059ms。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>エッジ/クラウド系の深掘りでは、全クラウド・全エッジがなぜ不十分か、routing error の損失をどう分類し、SLA 下で threshold をどう調整するかを準備する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "e18",
+    "cat": "云边协同",
+    "q": "CASCADE 路径 post-execution check 漏洞 — miss rate 75%→62.5%",
+    "q_ja": "ルーティングロジックの修正で miss rate を 75%→62.5% に削減した bug",
+    "bullets": [
+      "症状：edge confidence=0.40（远低于 threshold 0.7）的场景留在 edge 不上云",
+      "<span class=\"highlight\">根因</span>：RouterEngine 预路由分配 EDGE tier 后，CascadeExecutor 的 EDGE 分支直接采纳 edge 结果不做二次 confidence 检查",
+      "只有 CASCADE tier 有 post-execution check",
+      "修复：EDGE 分支加 `if edge_result.confidence < threshold: escalate_to_cloud()`",
+      "面试金句：<span class=\"highlight\">routing 系统的 bug 不会让程序挂，会让 miss rate 静默上升 12.5pp，必须回归测试每条 tier 路径</span>"
+    ],
+    "bullets_ja": [
+      "症状：edge confidence=0.40 でも EDGE tier に留まる",
+      "<span class=\"highlight\">根因</span>：CascadeExecutor の EDGE 分岐は post-execution check 不足、CASCADE 分岐のみ実装",
+      "修正：EDGE 分岐にも confidence 二次チェックを追加 → miss rate -12.5pp",
+      "<span class=\"highlight\">ルーティング bug は静黙的に precision を蝕む</span>、各 tier 経路を回帰テスト必須",
+      "面接キーフレーズ：「routing バグはプログラムを落とさず、miss rate だけが静かに上がる」"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>CASCADE 路径 post-execution check 漏洞 — miss rate 75%→62.5%</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>症状：edge confidence=0.40（远低于 threshold 0.7）的场景留在 edge 不上云</li><li><span class=\"highlight\">根因</span>：RouterEngine 预路由分配 EDGE tier 后，CascadeExecutor 的 EDGE 分支直接采纳 edge 结果不做二次 confidence 检查</li><li>只有 CASCADE tier 有 post-execution check</li><li>修复：EDGE 分支加 `if edge_result.confidence < threshold: escalate_to_cloud()`</li><li>面试金句：<span class=\"highlight\">routing 系统的 bug 不会让程序挂，会让 miss rate 静默上升 12.5pp，必须回归测试每条 tier 路径</span></li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">CASCADE 路径 post-execution check 漏洞 — miss rate 75%→62.5%</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：症状：edge confidence=0.40（远低于 threshold 0.7）的场景留在 edge 不上云；根因：RouterEngine 预路由分配 EDGE tier 后，CascadeExecutor 的 EDGE 分支直接采纳 edge 结果不做二次 confidence 检查；只有 CASCADE tier 有 post-execution check。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>ルーティングロジックの修正で miss rate を 75%→62.5% に削減した bug</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>症状：edge confidence=0.40 でも EDGE tier に留まる</li><li><span class=\"highlight\">根因</span>：CascadeExecutor の EDGE 分岐は post-execution check 不足、CASCADE 分岐のみ実装</li><li>修正：EDGE 分岐にも confidence 二次チェックを追加 → miss rate -12.5pp</li><li><span class=\"highlight\">ルーティング bug は静黙的に precision を蝕む</span>、各 tier 経路を回帰テスト必須</li><li>面接キーフレーズ：「routing バグはプログラムを落とさず、miss rate だけが静かに上がる」</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">ルーティングロジックの修正で miss rate を 75%→62.5% に削減した bug</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：症状：edge confidence=0.40 でも EDGE tier に留まる；根因：CascadeExecutor の EDGE 分岐は post-execution check 不足、CASCADE 分岐のみ実装；修正：EDGE 分岐にも confidence 二次チェックを追加 → miss rate -12.5pp。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "e19",
+    "cat": "云边协同",
+    "q": "提案目标差距诚实承认 — 没达成怎么解释",
+    "q_ja": "技術提案の目標（miss≤2% / edge p50≤100ms）に届かなかった理由",
+    "bullets": [
+      "诚实差距表：miss 62.5% vs ≤2% / accuracy 66% vs ≥95% / edge p50 606ms vs ≤100ms / cloud p99 19.7s vs ≤600ms",
+      "<span class=\"highlight\">根因 1</span>：提案基于 72B/GPT-4o 设定，实际用 0.6B/14B 能力差距大",
+      "<span class=\"highlight\">根因 2</span>：Ollama Q4_K_M CPU 推理本身慢；transformers 单进程同步无 batching",
+      "架构正确性已证：<span class=\"highlight\">cloud 处理的场景 100% 准确</span>，差距在模型能力和推理加速",
+      "不达标项有意放弃：vLLM 在 Blackwell 不可用 / 72B 单卡装不下 / Docker Hub 中国不可达"
+    ],
+    "bullets_ja": [
+      "誠実な差分表：miss 62.5% vs ≤2% / acc 66% vs ≥95% / edge p50 606ms vs ≤100ms",
+      "<span class=\"highlight\">根因 1</span>：提案は 72B/GPT-4o 想定だが、実装は 0.6B/14B（性能差が大きい）",
+      "<span class=\"highlight\">根因 2</span>：Ollama CPU 推論の遅延 + transformers 同期実行で batching なし",
+      "<span class=\"highlight\">アーキテクチャ正当性は cloud 処理 100% 正確で証明済み</span>",
+      "意図的に放棄：vLLM Blackwell 未対応 / 72B は単一 GPU に搭載不可 / Docker Hub 中国不可達"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>提案目标差距诚实承认 — 没达成怎么解释</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>诚实差距表：miss 62.5% vs ≤2% / accuracy 66% vs ≥95% / edge p50 606ms vs ≤100ms / cloud p99 19.7s vs ≤600ms</li><li><span class=\"highlight\">根因 1</span>：提案基于 72B/GPT-4o 设定，实际用 0.6B/14B 能力差距大</li><li><span class=\"highlight\">根因 2</span>：Ollama Q4_K_M CPU 推理本身慢；transformers 单进程同步无 batching</li><li>架构正确性已证：<span class=\"highlight\">cloud 处理的场景 100% 准确</span>，差距在模型能力和推理加速</li><li>不达标项有意放弃：vLLM 在 Blackwell 不可用 / 72B 单卡装不下 / Docker Hub 中国不可达</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">提案目标差距诚实承认 — 没达成怎么解释</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：诚实差距表：miss 62.5% vs ≤2% / accuracy 66% vs ≥95% / edge p50 606ms vs ≤100ms / cloud p99 19.7s vs ≤600ms；根因 1：提案基于 72B/GPT-4o 设定，实际用 0.6B/14B 能力差距大；根因 2：Ollama Q4_K_M CPU 推理本身慢；transformers 单进程同步无 batching。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>技術提案の目標（miss≤2% / edge p50≤100ms）に届かなかった理由</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>誠実な差分表：miss 62.5% vs ≤2% / acc 66% vs ≥95% / edge p50 606ms vs ≤100ms</li><li><span class=\"highlight\">根因 1</span>：提案は 72B/GPT-4o 想定だが、実装は 0.6B/14B（性能差が大きい）</li><li><span class=\"highlight\">根因 2</span>：Ollama CPU 推論の遅延 + transformers 同期実行で batching なし</li><li><span class=\"highlight\">アーキテクチャ正当性は cloud 処理 100% 正確で証明済み</span></li><li>意図的に放棄：vLLM Blackwell 未対応 / 72B は単一 GPU に搭載不可 / Docker Hub 中国不可達</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">技術提案の目標（miss≤2% / edge p50≤100ms）に届かなかった理由</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：誠実な差分表：miss 62.5% vs ≤2% / acc 66% vs ≥95% / edge p50 606ms vs ≤100ms；根因 1：提案は 72B/GPT-4o 想定だが、実装は 0.6B/14B（性能差が大きい）；根因 2：Ollama CPU 推論の遅延 + transformers 同期実行で batching なし。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>エッジ/クラウド系の深掘りでは、全クラウド・全エッジがなぜ不十分か、routing error の損失をどう分類し、SLA 下で threshold をどう調整するかを準備する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "e20",
+    "cat": "云边协同",
+    "q": "Qwen3 thinking mode 关闭的迭代过程",
+    "q_ja": "Qwen3 デフォルト thinking モードが token を食い潰す問題の解決経緯",
+    "bullets": [
+      "症状：edge analyzer 100% JSON 解析失败，所有响应以「首先，用户要求我...」开头",
+      "<span class=\"highlight\">无效修复</span>：Ollama think=False 参数 / prompt 加 /no_think / 增大 max_tokens 到 1024",
+      "<span class=\"highlight\">有效修复</span>：Ollama `format=\"json\"` 强制 JSON 跳过 CoT；transformers 端 `apply_chat_template(enable_thinking=False)`",
+      "副效果：速度从 3min/instance → 1min/instance（300 instance 15h→5h）",
+      "定位逻辑：<span class=\"highlight\">LLM 响应是自然语言而非预期格式 → 先查是否有 thinking/CoT 被启用</span>"
+    ],
+    "bullets_ja": [
+      "症状：edge analyzer の JSON 解析が 100% 失敗、全応答が「まず、ユーザーは...」で始まる",
+      "<span class=\"highlight\">無効な修正</span>：think=False / /no_think / max_tokens 増加",
+      "<span class=\"highlight\">有効な修正</span>：Ollama `format=\"json\"` 強制 / transformers `enable_thinking=False`",
+      "副次効果：3 min → 1 min/instance（300 instance で 15h → 5h）",
+      "デバッグ原則：<span class=\"highlight\">出力が想定形式と違う → まず thinking/CoT 機能を疑う</span>"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Qwen3 thinking mode 关闭的迭代过程</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>工业/边缘场景里不能把所有请求都送云端：成本、WAN 延迟、隐私和紧急控制会互相冲突。</li><li><strong>技术选择：</strong>分层路由而不是单阈值：硬规则先保护安全和数据边界，置信度只在灰色地带决定是否级联到云端。</li><li><strong>实现细节：</strong>链路包括 T0~T4 RouterEngine、0.8B 边缘模型、27B 云端模型、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、并发和可观测性。</li><li><strong>实验/指标：</strong>同时看云端节省、异常漏检、级联信号、P50/P99 延迟、吞吐、ISE 控制效果和跨设备真实部署。</li><li><strong>失败模式：</strong>包括 post-execution check 漏洞、confidence calibration paradox、Qwen thinking mode 导致 JSON 解析失败、Docker/WSL 部署阻塞以及提案指标与真实硬件差距。</li><li><strong>面试可讲故事：</strong>我把“省钱”问题重构为“安全优先的路由系统”，先保证漏检和隐私边界，再用级联、校准和并发优化成本与延迟。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>症状：edge analyzer 100% JSON 解析失败，所有响应以「首先，用户要求我...」开头</li><li><span class=\"highlight\">无效修复</span>：Ollama think=False 参数 / prompt 加 /no_think / 增大 max_tokens 到 1024</li><li><span class=\"highlight\">有效修复</span>：Ollama `format=\"json\"` 强制 JSON 跳过 CoT；transformers 端 `apply_chat_template(enable_thinking=False)`</li><li>副效果：速度从 3min/instance → 1min/instance（300 instance 15h→5h）</li><li>定位逻辑：<span class=\"highlight\">LLM 响应是自然语言而非预期格式 → 先查是否有 thinking/CoT 被启用</span></li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡对应 EdgeRouter 主线中的一个环节：路由策略、模型部署、置信度、性能优化、真实部署或失败复盘，最终都服务于“边缘快速处理 + 云端精确处理”的架构价值。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Qwen3 thinking mode 关闭的迭代过程</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：云边协同 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：症状：edge analyzer 100% JSON 解析失败，所有响应以「首先，用户要求我...」开头；无效修复：Ollama think=False 参数 / prompt 加 /no_think / 增大 max_tokens 到 1024；有效修复：Ollama `format=\"json\"` 强制 JSON 跳过 CoT；transformers 端 `apply_chat_template(enable_thinking=False)`。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>Qwen3 デフォルト thinking モードが token を食い潰す問題の解決経緯</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>産業・エッジ環境で、全リクエストをクラウドに送れないことにある。コスト、WAN 遅延、プライバシー、緊急制御が衝突する。</li><li><strong>技術選択：</strong>単一 threshold ではなく階層型 routing を採用した。安全とデータ境界は hard rule で守り、confidence はグレーゾーンでのみ cascade 判断に使う。</li><li><strong>実装：</strong> T0〜T4 RouterEngine、0.8B edge model、27B cloud model、confidence ensemble、threshold+anomaly_gate sweep、gRPC/REST、並行処理、監視で構成される。</li><li><strong>実験/指標：</strong>評価では cloud saving、miss rate、cascade signal、P50/P99 latency、throughput、ISE control、実機 cross-device deployment を同時に見る。</li><li><strong>失敗モード：</strong>失敗は post-execution check の漏れ、confidence calibration paradox、Qwen thinking mode による JSON parse failure、Docker/WSL の制約、提案指標と実機性能の差に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、単なるコスト削減ではなく「安全優先の routing system」に再定義し、miss と privacy を守った上で cascade、calibration、concurrency で cost/latency を最適化した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>症状：edge analyzer の JSON 解析が 100% 失敗、全応答が「まず、ユーザーは...」で始まる</li><li><span class=\"highlight\">無効な修正</span>：think=False / /no_think / max_tokens 増加</li><li><span class=\"highlight\">有効な修正</span>：Ollama `format=\"json\"` 強制 / transformers `enable_thinking=False`</li><li>副次効果：3 min → 1 min/instance（300 instance で 15h → 5h）</li><li>デバッグ原則：<span class=\"highlight\">出力が想定形式と違う → まず thinking/CoT 機能を疑う</span></li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは EdgeRouter の主線の一部である。routing strategy、model deployment、confidence、performance optimization、実機検証、失敗分析のいずれかを説明し、「エッジの高速処理 + クラウドの精密処理」という価値につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">Qwen3 デフォルト thinking モードが token を食い潰す問題の解決経緯</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：症状：edge analyzer の JSON 解析が 100% 失敗、全応答が「まず、ユーザーは...」で始まる；無効な修正：think=False / /no_think / max_tokens 増加；有効な修正：Ollama `format=\"json\"` 強制 / transformers `enable_thinking=False`。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   }
 ]

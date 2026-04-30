@@ -19,7 +19,79 @@
       "Python listの内部は<span class=\"highlight\">動的配列</span>（連結リストではない）、appendは償却O(1)"
     ],
     "lv": 1,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>数组 vs 链表 — 核心区别与适用场景 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>需要随机访问和缓存局部性选数组；需要频繁在已知节点处插删选链表。</li><li>题目若只有“插删多”但还要按下标查找，链表未必更优。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>数组不变式是下标到连续内存位置的映射；链表不变式是每个节点通过 next/prev 保持顺序。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>数组：连续内存，随机访问O(1)，插入删除O(n)（需要移动元素）；链表：离散内存，随机访问O(n)，插入删除O(1)（改指针即可）</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>扩容、头尾插删、空结构、迭代时删除当前节点。</li><li>Python list 是动态数组，append 均摊 O(1) 但中间插入 O(n)。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>把链表插入 O(1) 误解为“找到位置也 O(1)”。</li><li>忽略 CPU cache，导致理论复杂度相同但实际表现差。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>动态数组、双向链表、跳表、deque、块状链表。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>配列 vs 連結リスト — 核心的な違いと適用場面 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>random accessとcache localityが必要なら配列。既知nodeで頻繁に挿入削除ならlist。</li><li>「挿入削除が多い」だけで、index検索が必要ならlistが常に良いわけではない。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>配列はindexから連続memory位置への対応、listは各nodeのnext/prevで順序を保つ。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>数组：连续内存，随机访问O(1)，插入删除O(n)（需要移动元素）；链表：离散内存，随机访问O(n)，插入删除O(1)（改指针即可）</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>resize、head/tail操作、空構造、iteration中の削除。</li><li>Python listはdynamic array。appendは償却O(1)、中間insertはO(n)。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>list挿入O(1)を「位置探索もO(1)」と誤解する。</li><li>CPU cacheを無視して実測性能を読み違える。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>dynamic array、doubly linked list、skip list、deque、unrolled linked list。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      },
+      {
+        "term": "自己確認",
+        "explain": "<p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds02",
@@ -39,7 +111,79 @@
       "面接高頻出：有効な括弧(LC20)、最小スタック(LC155)、毎日の気温(LC739)"
     ],
     "lv": 1,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>栈 (Stack) — LIFO 原理与应用 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>最近的未匹配元素、嵌套结构、下一个更大/更小、矩形边界，都是栈信号。</li><li>普通栈处理配对；单调栈处理“某元素作为最值能延伸到哪里”。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>栈内保存尚未被解决的元素；单调栈还要保持值递增/递减，从而在弹出时确定右边界，弹出后的栈顶是左边界。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>后进先出(Last In First Out)，只能操作栈顶：push O(1) / pop O(1) / peek O(1)</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>空串/空数组、只有左括号或右括号、重复高度、严格递增/递减。</li><li>柱状图常加哨兵 0，迫使所有柱子出栈结算。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>括号栈空时还 pop；左右括号映射方向写反。</li><li>单调栈宽度写错：弹出 i 后宽度是 right - stack[-1] - 1。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>最小栈、表达式求值、每日温度、最大矩形、去除重复字母。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>スタック (Stack) — LIFO の原理と応用 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>直近の未対応要素、ネスト、next greater/smaller、矩形境界はstackの合図。</li><li>通常stackは対応付け、monotonic stackは「この要素が最値として伸びる範囲」を求める。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>stackには未解決の要素を置く。単調stackでは値の増減を保ち、pop時に右境界、pop後のtopを左境界にする。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>后进先出(Last In First Out)，只能操作栈顶：push O(1) / pop O(1) / peek O(1)</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>空、左/右括弧だけ、同じ高さ、単調増加/減少。</li><li>histogramでは番兵0を足して全要素を清算する。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>stackが空なのにpopする。括弧mapの向きを間違える。</li><li>幅計算ミス：pop後の幅は right - stack[-1] - 1。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>min stack、式評価、daily temperatures、maximal rectangle、remove duplicate letters。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      },
+      {
+        "term": "自己確認",
+        "explain": "<p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds03",
@@ -59,7 +203,71 @@
       "典型的な応用：BFS / タスクスケジューリング / メッセージキュー / スライディングウィンドウ最大値"
     ],
     "lv": 1,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>队列 (Queue) — FIFO 原理与应用 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>FIFO 顺序用队列；动态最值用堆；区间查询更新用线段树/Fenwick；窗口最大值用单调队列。</li><li>先确认操作集合：push/pop/top、point/range update、range query。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>结构内部维护能支持目标操作的不变式：堆序、Fenwick 的 lowbit 区间、线段树节点区间、单调队列的值和下标顺序。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>先进先出(First In First Out)：enqueue O(1) / dequeue O(1)；双端队列 deque：两端都能O(1)操作，比list.pop(0)快（list是O(n)）</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>空结构取值、重复元素、过期下标、区间端点为 0/1。</li><li>Fenwick 常用 1-index，线段树要统一闭区间或半开区间。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>堆只能快速取堆顶，不能 O(1) 删除任意元素。</li><li>单调队列忘记移除窗口外下标；Fenwick 0-index/1-index 混用。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>双端队列、懒删除堆、懒标记线段树、二维 BIT、RMQ。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>キュー (Queue) — FIFO の原理と応用 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>FIFOはqueue、動的min/maxはheap、range query/updateはsegment tree/Fenwick、window maxはmonotonic queue。</li><li>まず必要操作を確認する：push/pop/top、point/range update、range query。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>内部不変条件を保つ：heap order、Fenwickのlowbit区間、segment tree node区間、monotonic queueの値とindex順。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>先进先出(First In First Out)：enqueue O(1) / dequeue O(1)；双端队列 deque：两端都能O(1)操作，比list.pop(0)快（list是O(n)）</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>空構造から取得、重複、期限切れindex、区間端点0/1。</li><li>Fenwickは1-indexが多い。segment treeは閉区間/半開区間を統一。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>heapで任意要素削除がO(1)だと誤解する。</li><li>monotonic queueでwindow外indexを消し忘れる。Fenwickの0/1-index混用。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>deque、lazy deletion heap、lazy segment tree、2D BIT、RMQ。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds04",
@@ -81,7 +289,79 @@
       "時間O(n)空間O(n)、空間と時間のトレードオフの典型的な考え方"
     ],
     "lv": 1,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>哈希表 (HashMap) — 原理与冲突解决 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>快速查找、计数、去重、值到下标映射，优先哈希表。</li><li>需要保序或按插入顺序淘汰时，选择 OrderedDict/LinkedHashMap 或额外链表。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>key 的 hash 映射到桶；装载因子过高时扩容以保持均摊 O(1)。计数表的不变式是每个 key 的频次准确反映当前窗口/集合。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>核心：key → hash函数 → 数组索引 → 存value。查找/插入/删除均摊 O(1)；时间O(n)空间O(n)，用空间换时间的典型思路</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>重复 key、不可哈希对象、hash 冲突、删除到 0。</li><li>自定义对象要保证 hash 与 equals 一致。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>修改可变对象后继续当 key 使用。</li><li>计数归零不删除，导致 len(map) 或合法性判断错误。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>计数器、集合、LRU、有序映射、开放寻址、链地址法。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>ハッシュテーブル (HashMap) — 原理と衝突解決 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>高速lookup、count、dedup、値からindexへのmapはhash table。</li><li>順序保持や挿入順evictが必要ならOrderedDict/LinkedHashMapやlistを足す。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>keyのhashでbucketへ行く。load factorが高いとresizeして償却O(1)を保つ。count mapは現在window/setの頻度を正確に表す。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>核心：key → hash函数 → 数组索引 → 存value。查找/插入/删除償却 O(1)；時間O(n)空間O(n)，用空間换時間的典型思路</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>重複key、hash不可object、collision、countが0になる削除。</li><li>custom objectはhashとequalsの整合性が必要。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>mutable objectをkeyにした後で変更する。</li><li>countが0になっても消さず、len(map)や合法判定が壊れる。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>Counter、set、LRU、ordered map、open addressing、chaining。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      },
+      {
+        "term": "自己確認",
+        "explain": "<p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds05",
@@ -105,7 +385,79 @@
       "<span class=\"num\">O(2ⁿ)</span>：部分集合の列挙、再帰フィボナッチ | <span class=\"num\">O(n!)</span>：全順列"
     ],
     "lv": 1,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>复杂度分析 — O(1) 到 O(n!) 速查 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>面试中看到约束规模先反推复杂度预算：n=1e5 通常 O(n log n) 或 O(n)，n&lt;=20 可考虑指数/状态压缩。</li><li>区分最坏、平均、均摊，不要只报一个符号。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>复杂度来自“执行次数 × 单次代价”；递归要写状态数/分支数/深度，数据结构要计入操作代价。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>O(1)：哈希表查找、数组索引访问、栈push/pop；O(log n)：二分查找、平衡BST操作、堆操作</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>嵌套循环不一定 O(n²)，如果指针总共只走 n 步就是 O(n)。</li><li>哈希表 O(1) 是均摊/期望，不是严格最坏。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>忽略排序 O(n log n) 或递归栈空间。</li><li>把输入值大小和输入长度混淆，例如金额 amount 参与 DP 复杂度。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>主定理、摊还分析、空间复杂度、伪多项式复杂度、输出敏感复杂度。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>計算量分析 — O(1) から O(n!) 早見表 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>制約から許される計算量を逆算する。n=1e5なら O(n log n)/O(n)、n&lt;=20なら指数やbitmaskも候補。</li><li>worst/average/amortizedを区別する。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>計算量は「実行回数 × 1回のコスト」。再帰は状態数/分岐/深さ、data structureは操作コストを入れる。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>O(1)：哈希表查找、数组索引访问、栈push/pop；O(log n)：二分查找、平衡BST操作、堆操作</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>nested loopでもpointerが合計n歩ならO(n)。</li><li>hash tableのO(1)は償却/期待で、厳密worstではない。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>sort O(n log n) や recursion stack を忘れる。</li><li>入力値の大きさと入力長を混同する。amountがDP計算量に入る例。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>Master theorem、amortized analysis、space complexity、pseudo-polynomial、output-sensitive complexity。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      },
+      {
+        "term": "自己確認",
+        "explain": "<p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds06",
@@ -123,7 +475,79 @@
       "層順 = BFS = キュー"
     ],
     "lv": 2,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>二叉树遍历 — 前序/中序/后序/层序 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>二叉树题先判断递归返回什么：高度、路径贡献、是否对称、序列化 token，还是 LCA 节点。</li><li>层序需要队列；前/中/后序多用递归或显式栈。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>递归函数只负责以当前节点为根的子树；返回值语义必须稳定，不能同时表示多种含义。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>先从状态数、循环次数或结构操作代价推导，再说明辅助空间来自哪些容器/递归栈。</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>空树、单节点、只有左/右子树、重复值、目标节点不存在。</li><li>最大路径和要允许全负数，贡献值可截断为 0，但全局答案不能初始化为 0。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>把经过当前节点的路径贡献直接返回给父节点，导致路径分叉。</li><li>序列化缺少空节点标记，无法唯一反序列化。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>迭代遍历、Z 字层序、BST LCA、树直径、路径总和、Codec。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>二分木の走査 — 前順/中順/後順/層順 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>木問題では再帰の戻り値を先に決める：高さ、path gain、対称性、serialize token、LCA node。</li><li>level orderはqueue、pre/in/postorderは再帰または明示stack。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>再帰関数は現在nodeをrootとするsubtreeだけを扱う。戻り値の意味を一貫させる。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>先从状态数、循环次数或结构操作代价推导，再说明辅助空間来自哪些容器/递归栈。</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>空木、1node、片側だけ、重複値、targetが存在しない。</li><li>max path sumは全負数を許す。gainは0で切れるがglobal ansを0初期化しない。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>currentを通る二股pathを親へ返し、path定義を壊す。</li><li>serializeでnull markerを入れず、一意に復元できない。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>iterative traversal、zigzag level order、BST LCA、tree diameter、path sum、Codec。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      },
+      {
+        "term": "自己確認",
+        "explain": "<p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds07",
@@ -143,7 +567,79 @@
       "典型的な応用：Top-K問題 / K個のソート済みリストのマージ / 中央値ストリーム"
     ],
     "lv": 2,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>堆 / 优先队列 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>FIFO 顺序用队列；动态最值用堆；区间查询更新用线段树/Fenwick；窗口最大值用单调队列。</li><li>先确认操作集合：push/pop/top、point/range update、range query。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>结构内部维护能支持目标操作的不变式：堆序、Fenwick 的 lowbit 区间、线段树节点区间、单调队列的值和下标顺序。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>最小堆：父节点 ≤ 子节点。插入O(log n)，取最小O(1)，删除最小O(log n)</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>空结构取值、重复元素、过期下标、区间端点为 0/1。</li><li>Fenwick 常用 1-index，线段树要统一闭区间或半开区间。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>堆只能快速取堆顶，不能 O(1) 删除任意元素。</li><li>单调队列忘记移除窗口外下标；Fenwick 0-index/1-index 混用。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>双端队列、懒删除堆、懒标记线段树、二维 BIT、RMQ。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>ヒープ / 優先度キュー はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>FIFOはqueue、動的min/maxはheap、range query/updateはsegment tree/Fenwick、window maxはmonotonic queue。</li><li>まず必要操作を確認する：push/pop/top、point/range update、range query。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>内部不変条件を保つ：heap order、Fenwickのlowbit区間、segment tree node区間、monotonic queueの値とindex順。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>最小堆：父节点 ≤ 子节点。插入O(log n)，取最小O(1)，删除最小O(log n)</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>空構造から取得、重複、期限切れindex、区間端点0/1。</li><li>Fenwickは1-indexが多い。segment treeは閉区間/半開区間を統一。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>heapで任意要素削除がO(1)だと誤解する。</li><li>monotonic queueでwindow外indexを消し忘れる。Fenwickの0/1-index混用。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>deque、lazy deletion heap、lazy segment tree、2D BIT、RMQ。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      },
+      {
+        "term": "自己確認",
+        "explain": "<p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds08",
@@ -165,7 +661,75 @@
       "面接では大半のグラフ問題で隣接リストを使用、行列はFloyd最短経路やグラフの連結性など特定の問題で使用"
     ],
     "lv": 2,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>图的表示 — 邻接表 vs 邻接矩阵 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>按操作集合选结构：查找/插入/删除有序性选平衡树或跳表；磁盘页访问选 B/B+ 树；稠密图可用矩阵，稀疏图用邻接表。</li><li>不要只背名字，先说为什么该结构匹配访问模式。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>平衡树维护高度 O(log n)；B+ 树维护多路平衡和叶子有序链；邻接表/矩阵维护边存在性和遍历效率的取舍。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>邻接表：dict of lists，空间O(V+E)，适合稀疏图（大多数面试题用这个）；邻接矩阵：2D数组，空间O(V²)，适合稠密图，O(1)判断边是否存在</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>重复 key、范围查询、磁盘页大小、稠密/稀疏边界。</li><li>红黑树旋转后要同步颜色和父子指针。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>把 B 树和 B+ 树数据存放位置混淆。</li><li>邻接矩阵在 n 大且稀疏时空间 O(n²) 不可接受。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>AVL、红黑树、Treap、Skip List、B+ Tree、CSR 图存储。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>グラフの表現 — 隣接リスト vs 隣接行列 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>操作集合で選ぶ：ordered lookup/insert/deleteはbalanced tree/skip list、disk page accessはB/B+ tree、dense graphはmatrix、sparse graphはadjacency list。</li><li>名前を暗記せず、access patternに合う理由を説明する。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>balanced treeは高さO(log n)、B+ treeは多分岐balanceとleaf linked order、graph表現は辺存在判定と走査効率のtrade-offを保つ。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>邻接表：dict of lists，空間O(V+E)，适合稀疏图（大多数面试题用这个）；邻接矩阵：2D数组，空間O(V²)，适合稠密图，O(1)判断边是否存在</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>重複key、range query、disk page size、dense/sparse境界。</li><li>red-black rotation後は色とparent/child pointerを同期する。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>B treeとB+ treeのデータ格納場所を混同する。</li><li>疎グラフでadjacency matrixを使いO(n²)空間になる。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>AVL、Red-Black Tree、Treap、Skip List、B+ Tree、CSR graph storage。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds09",
@@ -187,7 +751,75 @@
       "Pythonには組み込みの平衡BSTがない；サードパーティライブラリ <span class=\"highlight\">sortedcontainers.SortedList</span> が使用可能、内部はB-tree変種で実測性能が優秀"
     ],
     "lv": 3,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>平衡BST — AVL树 vs 红黑树 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>按操作集合选结构：查找/插入/删除有序性选平衡树或跳表；磁盘页访问选 B/B+ 树；稠密图可用矩阵，稀疏图用邻接表。</li><li>不要只背名字，先说为什么该结构匹配访问模式。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>平衡树维护高度 O(log n)；B+ 树维护多路平衡和叶子有序链；邻接表/矩阵维护边存在性和遍历效率的取舍。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>普通BST在最坏情况下退化为链表，所有操作变为O(n)（如顺序插入1,2,3,4,5）；两者查找/插入/删除均为 O(log n)，区别在于常数因子：AVL查找略快（更矮），红黑树修改略快（旋转少）</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>重复 key、范围查询、磁盘页大小、稠密/稀疏边界。</li><li>红黑树旋转后要同步颜色和父子指针。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>把 B 树和 B+ 树数据存放位置混淆。</li><li>邻接矩阵在 n 大且稀疏时空间 O(n²) 不可接受。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>AVL、红黑树、Treap、Skip List、B+ Tree、CSR 图存储。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>平衡BST — AVL木 vs 赤黒木 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>操作集合で選ぶ：ordered lookup/insert/deleteはbalanced tree/skip list、disk page accessはB/B+ tree、dense graphはmatrix、sparse graphはadjacency list。</li><li>名前を暗記せず、access patternに合う理由を説明する。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>balanced treeは高さO(log n)、B+ treeは多分岐balanceとleaf linked order、graph表現は辺存在判定と走査効率のtrade-offを保つ。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>普通BST在最坏情况下退化为链表，所有操作变为O(n)（如顺序插入1,2,3,4,5）；两者查找/插入/删除均为 O(log n)，区别在于常数因子：AVL查找略快（更矮），红黑树修改略快（旋转少）</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>重複key、range query、disk page size、dense/sparse境界。</li><li>red-black rotation後は色とparent/child pointerを同期する。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>B treeとB+ treeのデータ格納場所を混同する。</li><li>疎グラフでadjacency matrixを使いO(n²)空間になる。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>AVL、Red-Black Tree、Treap、Skip List、B+ Tree、CSR graph storage。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds10",
@@ -209,7 +841,71 @@
       "<span class=\"highlight\">遅延伝搬(Lazy Propagation)</span>：区間一括更新をサポート、更新をクエリ時に下位に伝搬、区間更新もO(log n)"
     ],
     "lv": 3,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>线段树 — 区间查询与更新 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>FIFO 顺序用队列；动态最值用堆；区间查询更新用线段树/Fenwick；窗口最大值用单调队列。</li><li>先确认操作集合：push/pop/top、point/range update、range query。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>结构内部维护能支持目标操作的不变式：堆序、Fenwick 的 lowbit 区间、线段树节点区间、单调队列的值和下标顺序。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>解决问题：区间求和/最值 + 单点更新，每次操作 O(log n)（暴力需要O(n)）；懒传播(Lazy Propagation)：支持区间批量更新，将更新延迟到查询时下推，区间更新也能O(log n)</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>空结构取值、重复元素、过期下标、区间端点为 0/1。</li><li>Fenwick 常用 1-index，线段树要统一闭区间或半开区间。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>堆只能快速取堆顶，不能 O(1) 删除任意元素。</li><li>单调队列忘记移除窗口外下标；Fenwick 0-index/1-index 混用。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>双端队列、懒删除堆、懒标记线段树、二维 BIT、RMQ。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>セグメント木 — 区間クエリと更新 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>FIFOはqueue、動的min/maxはheap、range query/updateはsegment tree/Fenwick、window maxはmonotonic queue。</li><li>まず必要操作を確認する：push/pop/top、point/range update、range query。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>内部不変条件を保つ：heap order、Fenwickのlowbit区間、segment tree node区間、monotonic queueの値とindex順。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>解决问题：区间求和/最值 + 单点更新，每次操作 O(log n)（暴力需要O(n)）；懒传播(Lazy Propagation)：支持区间批量更新，将更新延迟到查询时下推，区间更新也能O(log n)</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>空構造から取得、重複、期限切れindex、区間端点0/1。</li><li>Fenwickは1-indexが多い。segment treeは閉区間/半開区間を統一。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>heapで任意要素削除がO(1)だと誤解する。</li><li>monotonic queueでwindow外indexを消し忘れる。Fenwickの0/1-index混用。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>deque、lazy deletion heap、lazy segment tree、2D BIT、RMQ。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds11",
@@ -231,7 +927,79 @@
       "BIT vs セグメント木：BITは累積系操作（累積和/累積最値）のみ対応、セグメント木は任意の区間操作に対応 → BITが使える場面ではBITを使う（より簡潔で高速）"
     ],
     "lv": 3,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>树状数组 (BIT/Fenwick Tree) 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>FIFO 顺序用队列；动态最值用堆；区间查询更新用线段树/Fenwick；窗口最大值用单调队列。</li><li>先确认操作集合：push/pop/top、point/range update、range query。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>结构内部维护能支持目标操作的不变式：堆序、Fenwick 的 lowbit 区间、线段树节点区间、单调队列的值和下标顺序。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>更新 O(log n)，查询 O(log n)，空间 O(n)</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>空结构取值、重复元素、过期下标、区间端点为 0/1。</li><li>Fenwick 常用 1-index，线段树要统一闭区间或半开区间。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>堆只能快速取堆顶，不能 O(1) 删除任意元素。</li><li>单调队列忘记移除窗口外下标；Fenwick 0-index/1-index 混用。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>双端队列、懒删除堆、懒标记线段树、二维 BIT、RMQ。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>フェニック木 (BIT/Fenwick Tree) はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>FIFOはqueue、動的min/maxはheap、range query/updateはsegment tree/Fenwick、window maxはmonotonic queue。</li><li>まず必要操作を確認する：push/pop/top、point/range update、range query。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>内部不変条件を保つ：heap order、Fenwickのlowbit区間、segment tree node区間、monotonic queueの値とindex順。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>更新 O(log n)，查询 O(log n)，空間 O(n)</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>空構造から取得、重複、期限切れindex、区間端点0/1。</li><li>Fenwickは1-indexが多い。segment treeは閉区間/半開区間を統一。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>heapで任意要素削除がO(1)だと誤解する。</li><li>monotonic queueでwindow外indexを消し忘れる。Fenwickの0/1-index混用。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>deque、lazy deletion heap、lazy segment tree、2D BIT、RMQ。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      },
+      {
+        "term": "自己確認",
+        "explain": "<p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds12",
@@ -253,7 +1021,79 @@
       "面接重点：LRU = HashMapでkey→nodeを格納 + 双方向連結リストでアクセス順序を維持、get/putは共にO(1)"
     ],
     "lv": 2,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>双向链表 — 实现与应用 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>题目要求原地改 next、合并/反转/找环/找交点，优先画指针状态。</li><li>不能随机访问，复杂度通常靠一次或两次线性扫描。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>每一步都保持已处理部分连接正确、未处理部分入口没有丢；快慢指针题要说明二者速度差带来的相遇/中点性质。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>每个节点有 prev 和 next 指针，已知节点引用时插入/删除均为 O(1)（单链表删除需要前驱，O(n)查找）；面试重点：LRU = HashMap存key→node + 双向链表维护访问顺序，get/put 均 O(1)</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>空链表、单节点、两个节点、头节点被删除或反转。</li><li>有环、无环、交点在头部、回文长度奇偶不同。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>改 next 前没有保存 next，导致后半链表丢失。</li><li>dummy/head/tail 更新顺序错，或者反转后忘记断开旧连接。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>k 个一组反转、复制随机链表、链表排序、检测环入口、O(1) 空间回文判断。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>双方向連結リスト — 実装と応用 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>next を直接変える、merge/reverse/cycle/intersection が出たら pointer 状態を図にする。</li><li>ランダムアクセスできないので、多くは1回または2回の線形走査。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>処理済み部分は正しく接続され、未処理部分の入口を失わない。fast/slow では速度差から中点や遭遇を説明する。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>每个节点有 prev 和 next 指针，已知节点引用时插入/删除均为 O(1)（单链表删除需要前驱，O(n)查找）；面试重点：LRU = HashMap存key→node + 双向链表维护访问顺序，get/put 均 O(1)</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>空、1ノード、2ノード、headが変わる場合。</li><li>cycle有無、交点がhead、回文の奇数/偶数長。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>next を保存せずに書き換えて残りを失う。</li><li>dummy/head/tail の更新順序ミス、reverse後に古い接続を切らない。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>k個ごとreverse、random pointer copy、list sort、cycle entry、O(1)空間の回文判定。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      },
+      {
+        "term": "自己確認",
+        "explain": "<p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds13",
@@ -275,7 +1115,79 @@
       "注意：Python 3.7以降は通常のdictも挿入順序を保持するが、OrderedDictは追加でmove_to_endと==での順序比較をサポート"
     ],
     "lv": 1,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>Python collections — Counter/defaultdict/OrderedDict 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>快速查找、计数、去重、值到下标映射，优先哈希表。</li><li>需要保序或按插入顺序淘汰时，选择 OrderedDict/LinkedHashMap 或额外链表。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>key 的 hash 映射到桶；装载因子过高时扩容以保持均摊 O(1)。计数表的不变式是每个 key 的频次准确反映当前窗口/集合。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>先从状态数、循环次数或结构操作代价推导，再说明辅助空间来自哪些容器/递归栈。</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>重复 key、不可哈希对象、hash 冲突、删除到 0。</li><li>自定义对象要保证 hash 与 equals 一致。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>修改可变对象后继续当 key 使用。</li><li>计数归零不删除，导致 len(map) 或合法性判断错误。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>计数器、集合、LRU、有序映射、开放寻址、链地址法。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>Python collections — Counter/defaultdict/OrderedDict はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>高速lookup、count、dedup、値からindexへのmapはhash table。</li><li>順序保持や挿入順evictが必要ならOrderedDict/LinkedHashMapやlistを足す。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>keyのhashでbucketへ行く。load factorが高いとresizeして償却O(1)を保つ。count mapは現在window/setの頻度を正確に表す。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>先从状态数、循环次数或结构操作代价推导，再说明辅助空間来自哪些容器/递归栈。</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>重複key、hash不可object、collision、countが0になる削除。</li><li>custom objectはhashとequalsの整合性が必要。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>mutable objectをkeyにした後で変更する。</li><li>countが0になっても消さず、len(map)や合法判定が壊れる。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>Counter、set、LRU、ordered map、open addressing、chaining。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      },
+      {
+        "term": "自己確認",
+        "explain": "<p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds14",
@@ -297,7 +1209,75 @@
       "面接のポイント：階層化の考え方と確率的平衡を理解すれば十分、手書き実装はほとんど問われない；Redis ZRANGEBYSCOREの内部はスキップリストの範囲走査"
     ],
     "lv": 3,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>跳表 (Skip List) — Redis ZSet 的底层 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>按操作集合选结构：查找/插入/删除有序性选平衡树或跳表；磁盘页访问选 B/B+ 树；稠密图可用矩阵，稀疏图用邻接表。</li><li>不要只背名字，先说为什么该结构匹配访问模式。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>平衡树维护高度 O(log n)；B+ 树维护多路平衡和叶子有序链；邻接表/矩阵维护边存在性和遍历效率的取舍。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>平均时间复杂度：查找/插入/删除均为 O(log n)，期望空间 O(n)</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>重复 key、范围查询、磁盘页大小、稠密/稀疏边界。</li><li>红黑树旋转后要同步颜色和父子指针。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>把 B 树和 B+ 树数据存放位置混淆。</li><li>邻接矩阵在 n 大且稀疏时空间 O(n²) 不可接受。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>AVL、红黑树、Treap、Skip List、B+ Tree、CSR 图存储。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>スキップリスト (Skip List) — Redis ZSetの内部構造 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>操作集合で選ぶ：ordered lookup/insert/deleteはbalanced tree/skip list、disk page accessはB/B+ tree、dense graphはmatrix、sparse graphはadjacency list。</li><li>名前を暗記せず、access patternに合う理由を説明する。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>balanced treeは高さO(log n)、B+ treeは多分岐balanceとleaf linked order、graph表現は辺存在判定と走査効率のtrade-offを保つ。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>平均時間复杂度：查找/插入/删除均为 O(log n)，期望空間 O(n)</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>重複key、range query、disk page size、dense/sparse境界。</li><li>red-black rotation後は色とparent/child pointerを同期する。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>B treeとB+ treeのデータ格納場所を混同する。</li><li>疎グラフでadjacency matrixを使いO(n²)空間になる。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>AVL、Red-Black Tree、Treap、Skip List、B+ Tree、CSR graph storage。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds15",
@@ -319,7 +1299,75 @@
       "選定の口訣：完全一致→Hash | プレフィックス検索→Trie | 部分文字列検索→接尾辞構造 | 大規模存在性判定→Bloom Filter"
     ],
     "lv": 2,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>字符串匹配数据结构对比 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>前缀查询、自动补全、字典匹配用 Trie；单模式匹配用 KMP；字符重排分组用频次数组或排序 key。</li><li>如果重复查询很多，预处理结构比每次线性扫描更划算。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>Trie 节点代表一个前缀；KMP 的 lps/pi 表示当前前缀也是后缀的最长长度，失配时不回退文本指针。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>HashMap：精确匹配 O(1)，不支持前缀/模式匹配 → 适合字典查词、去重；Trie (前缀树)：前缀搜索 O(m)（m=串长），支持自动补全/词频统计，但空间开销大（每个节点最多26个子指针）</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>空串、重复单词、一个词是另一个词前缀、字符集大小不同。</li><li>KMP 要验证模式串长度为 0/1 和完全重复字符。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>Trie 忘记 end 标记会把前缀误当完整单词。</li><li>KMP 失配时把 i 回退，或 lps 构造时 j 更新错误。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>通配符搜索、删除单词、Aho-Corasick 多模式匹配、后缀数组/后缀自动机。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>文字列マッチング データ構造の比較 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>prefix検索/補完/辞書照合はTrie、単一pattern照合はKMP、anagram groupingは頻度配列またはsort key。</li><li>問い合わせが多いなら前処理構造が有利。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>Trie nodeはprefixを表す。KMPのlps/piは「接頭辞でもある最長接尾辞」の長さで、失敗時にtext pointerを戻さない。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>HashMap：精确匹配 O(1)，不支持前缀/模式匹配 → 适合字典查词、去重；Trie (前缀树)：前缀搜索 O(m)（m=串长），支持自动补全/词频统计，但空間开销大（每个节点最多26个子指针）</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>空文字、重複単語、ある単語が別単語のprefix、文字集合の違い。</li><li>KMPはpattern長0/1、同一文字の連続を確認する。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>Trieでend印を忘れ、prefixを単語扱いする。</li><li>KMPで i を戻す、lps構築時の j 更新ミス。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>wildcard search、単語削除、Aho-Corasick、suffix array/automaton。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      },
+      {
+        "term": "自己確認",
+        "explain": "<p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds16",
@@ -341,7 +1389,79 @@
       "拡張：<span class=\"highlight\">重み付きUnion-Find</span>はノード間の相対関係を維持可能（例：LC399 除法の評価）"
     ],
     "lv": 2,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>并查集 (Union-Find) — 结构与优化 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>动态合并集合、判断是否同组、连通分量数量，用并查集。</li><li>最小生成树：Kruskal 按边排序+并查集，Prim 从点扩展+堆。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>parent 指向集合代表，find 后代表相同表示连通；Kruskal 保持已选边无环且连接若干组件。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>两大优化：路径压缩（find时将节点直接指向根）+ 按秩合并（矮树挂高树下）→ 近似 O(α(n))，α为反Ackermann函数，实际可视为O(1)</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>孤立点、重复边、自环、图不连通、边权相同。</li><li>MST 需要 n-1 条边；不足说明无法连通。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>union 时没有按根合并；路径压缩后 rank/size 更新位置错误。</li><li>Kruskal 忘记跳过成环边，Prim 忘记 visited 导致重复选点。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>连通分量计数、冗余连接、账户合并、最小生成森林、离线动态连通性。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>Union-Find — 構造と最適化 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>集合のmerge、同一集合判定、連結成分数ならUnion-Find。</li><li>MSTはKruskal=edge sort+UF、Prim=頂点からheapで拡張。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>parentは集合代表を指す。findの代表が同じなら連結。Kruskalは選んだ辺がcycleを作らない状態を保つ。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>两大优化：路径压缩（find时将节点直接指向根）+ 按秩合并（矮树挂高树下）→ 近似 O(α(n))，α为反Ackermann函数，实际可视为O(1)</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>孤立点、重複辺、self-loop、非連結、同じ重み。</li><li>MSTは n-1 本の辺が必要。不足なら連結できない。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>rootではなく元nodeをunionする。rank/size更新の位置を誤る。</li><li>Kruskalでcycle辺を選ぶ、Primでvisitedを忘れ同じ点を再選択。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>connected components、redundant connection、accounts merge、minimum spanning forest、offline dynamic connectivity。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      },
+      {
+        "term": "自己確認",
+        "explain": "<p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds17",
@@ -363,7 +1483,79 @@
       "典型問題：毎日の気温(LC739)、柱状図の最大矩形(LC84)、雨水を受ける(LC42単調スタック解法)、次のより大きい要素(LC496/503)"
     ],
     "lv": 2,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>单调栈 — 原理与典型应用 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>最近的未匹配元素、嵌套结构、下一个更大/更小、矩形边界，都是栈信号。</li><li>普通栈处理配对；单调栈处理“某元素作为最值能延伸到哪里”。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>栈内保存尚未被解决的元素；单调栈还要保持值递增/递减，从而在弹出时确定右边界，弹出后的栈顶是左边界。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>栈内元素保持单调递增或单调递减，用于在O(n)内求「每个元素左/右边第一个更大/更小的元素」；每个元素最多入栈一次出栈一次 → 时间 O(n)，空间 O(n)</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>空串/空数组、只有左括号或右括号、重复高度、严格递增/递减。</li><li>柱状图常加哨兵 0，迫使所有柱子出栈结算。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>括号栈空时还 pop；左右括号映射方向写反。</li><li>单调栈宽度写错：弹出 i 后宽度是 right - stack[-1] - 1。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>最小栈、表达式求值、每日温度、最大矩形、去除重复字母。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>単調スタック — 原理と典型的な応用 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>直近の未対応要素、ネスト、next greater/smaller、矩形境界はstackの合図。</li><li>通常stackは対応付け、monotonic stackは「この要素が最値として伸びる範囲」を求める。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>stackには未解決の要素を置く。単調stackでは値の増減を保ち、pop時に右境界、pop後のtopを左境界にする。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>栈内元素保持单调递增或单调递减，用于在O(n)内求「每个元素左/右边第一个更大/更小的元素」；每个元素最多入栈一次出栈一次 → 時間 O(n)，空間 O(n)</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>空、左/右括弧だけ、同じ高さ、単調増加/減少。</li><li>histogramでは番兵0を足して全要素を清算する。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>stackが空なのにpopする。括弧mapの向きを間違える。</li><li>幅計算ミス：pop後の幅は right - stack[-1] - 1。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>min stack、式評価、daily temperatures、maximal rectangle、remove duplicate letters。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      },
+      {
+        "term": "自己確認",
+        "explain": "<p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds18",
@@ -383,7 +1575,71 @@
       "LC239 高頻出面接問題。素朴法O(nk)、ヒープO(n log k)、単調キューが最適O(n)"
     ],
     "lv": 2,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>单调队列 — 滑动窗口最大值 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>FIFO 顺序用队列；动态最值用堆；区间查询更新用线段树/Fenwick；窗口最大值用单调队列。</li><li>先确认操作集合：push/pop/top、point/range update、range query。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>结构内部维护能支持目标操作的不变式：堆序、Fenwick 的 lowbit 区间、线段树节点区间、单调队列的值和下标顺序。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>时间 O(n)（每个元素最多入队出队各一次），空间 O(k)；LC239 高频面试题。暴力O(nk)，堆O(n log k)，单调队列最优O(n)</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>空结构取值、重复元素、过期下标、区间端点为 0/1。</li><li>Fenwick 常用 1-index，线段树要统一闭区间或半开区间。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>堆只能快速取堆顶，不能 O(1) 删除任意元素。</li><li>单调队列忘记移除窗口外下标；Fenwick 0-index/1-index 混用。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>双端队列、懒删除堆、懒标记线段树、二维 BIT、RMQ。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>単調キュー — スライディングウィンドウ最大値 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>FIFOはqueue、動的min/maxはheap、range query/updateはsegment tree/Fenwick、window maxはmonotonic queue。</li><li>まず必要操作を確認する：push/pop/top、point/range update、range query。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>内部不変条件を保つ：heap order、Fenwickのlowbit区間、segment tree node区間、monotonic queueの値とindex順。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>時間 O(n)（每个元素最多入队出队各一次），空間 O(k)；LC239 高频面试题。暴力O(nk)，堆O(n log k)，单调队列最优O(n)</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>空構造から取得、重複、期限切れindex、区間端点0/1。</li><li>Fenwickは1-indexが多い。segment treeは閉区間/半開区間を統一。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>heapで任意要素削除がO(1)だと誤解する。</li><li>monotonic queueでwindow外indexを消し忘れる。Fenwickの0/1-index混用。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>deque、lazy deletion heap、lazy segment tree、2D BIT、RMQ。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds19",
@@ -403,7 +1659,79 @@
       "LRU淘汰戦略：最近最も使われていないものを淘汰。get/putは共にノードをリスト先頭に移動、リスト末尾を淘汰"
     ],
     "lv": 3,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>LRU Cache — 手写双向链表实现 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>要求 get/put O(1) 且按最近/频率淘汰，必须组合哈希表和有序结构。</li><li>LRU 用双向链表维护时间顺序；LFU 还要维护频次桶和 minFreq。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>哈希表保证 key 能 O(1) 定位节点；链表/频次桶保证最旧或最低频节点能 O(1) 删除。每次访问都要同步更新结构。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>LC146：设计一个get和put均O(1)的缓存。哈希表定位 + 双向链表维护顺序</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>capacity=0、重复 put、更新已有 key、淘汰后再访问。</li><li>LFU 中同频按 LRU 淘汰，频次桶空了要更新 minFreq。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>只更新 value 不移动节点，导致淘汰顺序错。</li><li>删除节点时 prev/next 没成对更新，或哈希表和链表状态不一致。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>TTL 缓存、线程安全缓存、LFU、MRU、分片缓存、OrderedDict 实现。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>LRU Cache — 手書き双方向連結リスト実装 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>get/put O(1) と最近/頻度でevictするなら、hash + ordered structure が必要。</li><li>LRUは双方向listで時系列、LFUはfrequency bucketとminFreqも持つ。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>hashでkeyからnodeへO(1)到達し、list/bucketで最古または最低頻度をO(1)削除する。アクセスごとに全構造を同期する。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>LC146：设计一个get和put均O(1)的缓存。哈希表定位 + 双向链表维护顺序</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>capacity=0、同じkeyのput、既存key更新、evict後のアクセス。</li><li>LFUでは同頻度はLRUで捨て、bucketが空ならminFreq更新。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>valueだけ更新してnodeを移動しない。</li><li>prev/next更新漏れ、hashとlistの不整合。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>TTL cache、thread-safe cache、LFU、MRU、sharded cache、OrderedDict実装。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      },
+      {
+        "term": "自己確認",
+        "explain": "<p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds20",
@@ -425,7 +1753,75 @@
       "LRU vs LFU：LRUはアクセス時間で淘汰、LFUはアクセス頻度で淘汰。実際のシステムではLRUがより一般的（LFUにはキャッシュ汚染問題がある）"
     ],
     "lv": 3,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>LFU Cache — 最不经常使用缓存 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>要求 get/put O(1) 且按最近/频率淘汰，必须组合哈希表和有序结构。</li><li>LRU 用双向链表维护时间顺序；LFU 还要维护频次桶和 minFreq。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>哈希表保证 key 能 O(1) 定位节点；链表/频次桶保证最旧或最低频节点能 O(1) 删除。每次访问都要同步更新结构。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>get/put 均 O(1)。关键维护 min_freq 以快速定位淘汰层；LRU vs LFU：LRU按访问时间淘汰，LFU按访问频率淘汰。实际系统中LRU更常用（LFU有缓存污染问题）</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>capacity=0、重复 put、更新已有 key、淘汰后再访问。</li><li>LFU 中同频按 LRU 淘汰，频次桶空了要更新 minFreq。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>只更新 value 不移动节点，导致淘汰顺序错。</li><li>删除节点时 prev/next 没成对更新，或哈希表和链表状态不一致。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>TTL 缓存、线程安全缓存、LFU、MRU、分片缓存、OrderedDict 实现。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>LFU Cache — 最低使用頻度キャッシュ はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>get/put O(1) と最近/頻度でevictするなら、hash + ordered structure が必要。</li><li>LRUは双方向listで時系列、LFUはfrequency bucketとminFreqも持つ。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>hashでkeyからnodeへO(1)到達し、list/bucketで最古または最低頻度をO(1)削除する。アクセスごとに全構造を同期する。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>get/put 均 O(1)。关键维护 min_freq 以快速定位淘汰层；LRU vs LFU：LRU按访问時間淘汰，LFU按访问频率淘汰。实际系统中LRU更常用（LFU有缓存污染问题）</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>capacity=0、同じkeyのput、既存key更新、evict後のアクセス。</li><li>LFUでは同頻度はLRUで捨て、bucketが空ならminFreq更新。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>valueだけ更新してnodeを移動しない。</li><li>prev/next更新漏れ、hashとlistの不整合。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>TTL cache、thread-safe cache、LFU、MRU、sharded cache、OrderedDict実装。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      },
+      {
+        "term": "自己確認",
+        "explain": "<p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds21",
@@ -449,7 +1845,75 @@
       "面接重点：なぜB+木でB木/ハッシュ/二分木ではないか → ディスクIOの最小化 + 範囲クエリ + 安定した性能"
     ],
     "lv": 3,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>B树 vs B+树 — 数据库索引核心 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>按操作集合选结构：查找/插入/删除有序性选平衡树或跳表；磁盘页访问选 B/B+ 树；稠密图可用矩阵，稀疏图用邻接表。</li><li>不要只背名字，先说为什么该结构匹配访问模式。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>平衡树维护高度 O(log n)；B+ 树维护多路平衡和叶子有序链；邻接表/矩阵维护边存在性和遍历效率的取舍。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>先从状态数、循环次数或结构操作代价推导，再说明辅助空间来自哪些容器/递归栈。</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>重复 key、范围查询、磁盘页大小、稠密/稀疏边界。</li><li>红黑树旋转后要同步颜色和父子指针。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>把 B 树和 B+ 树数据存放位置混淆。</li><li>邻接矩阵在 n 大且稀疏时空间 O(n²) 不可接受。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>AVL、红黑树、Treap、Skip List、B+ Tree、CSR 图存储。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>B木 vs B+木 — データベースインデックスの核心 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>操作集合で選ぶ：ordered lookup/insert/deleteはbalanced tree/skip list、disk page accessはB/B+ tree、dense graphはmatrix、sparse graphはadjacency list。</li><li>名前を暗記せず、access patternに合う理由を説明する。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>balanced treeは高さO(log n)、B+ treeは多分岐balanceとleaf linked order、graph表現は辺存在判定と走査効率のtrade-offを保つ。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>先从状态数、循环次数或结构操作代价推导，再说明辅助空間来自哪些容器/递归栈。</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>重複key、range query、disk page size、dense/sparse境界。</li><li>red-black rotation後は色とparent/child pointerを同期する。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>B treeとB+ treeのデータ格納場所を混同する。</li><li>疎グラフでadjacency matrixを使いO(n²)空間になる。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>AVL、Red-Black Tree、Treap、Skip List、B+ Tree、CSR graph storage。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds22",
@@ -471,7 +1935,71 @@
       "赤黒木 vs AVL：赤黒木は<span class=\"highlight\">挿入削除が高速</span>（回転回数O(1) vs AVLは最大O(log n)）、AVLは<span class=\"highlight\">検索がやや速い</span>（より厳密な平衡）。実務では赤黒木がより一般的"
     ],
     "lv": 3,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>红黑树 — 性质与旋转 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>按操作集合选结构：查找/插入/删除有序性选平衡树或跳表；磁盘页访问选 B/B+ 树；稠密图可用矩阵，稀疏图用邻接表。</li><li>不要只背名字，先说为什么该结构匹配访问模式。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>平衡树维护高度 O(log n)；B+ 树维护多路平衡和叶子有序链；邻接表/矩阵维护边存在性和遍历效率的取舍。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>这些性质保证了：最长路径不超过最短路径的2倍（最长=红黑交替，最短=全黑），因此查找/插入/删除都是O(log n)；红黑树 vs AVL：红黑树插入删除更快（旋转次数O(1) vs AVL最多O(log n)），AVL查找略快（更严格平衡）。工程中更常用红黑树</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>重复 key、范围查询、磁盘页大小、稠密/稀疏边界。</li><li>红黑树旋转后要同步颜色和父子指针。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>把 B 树和 B+ 树数据存放位置混淆。</li><li>邻接矩阵在 n 大且稀疏时空间 O(n²) 不可接受。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>AVL、红黑树、Treap、Skip List、B+ Tree、CSR 图存储。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>赤黒木 — 性質と回転 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>操作集合で選ぶ：ordered lookup/insert/deleteはbalanced tree/skip list、disk page accessはB/B+ tree、dense graphはmatrix、sparse graphはadjacency list。</li><li>名前を暗記せず、access patternに合う理由を説明する。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>balanced treeは高さO(log n)、B+ treeは多分岐balanceとleaf linked order、graph表現は辺存在判定と走査効率のtrade-offを保つ。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>这些性质保证了：最长路径不超过最短路径的2倍（最长=红黑交替，最短=全黑），因此查找/插入/删除都是O(log n)；红黑树 vs AVL：红黑树插入删除更快（旋转次数O(1) vs AVL最多O(log n)），AVL查找略快（更严格平衡）。工程中更常用红黑树</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>重複key、range query、disk page size、dense/sparse境界。</li><li>red-black rotation後は色とparent/child pointerを同期する。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>B treeとB+ treeのデータ格納場所を混同する。</li><li>疎グラフでadjacency matrixを使いO(n²)空間になる。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>AVL、Red-Black Tree、Treap、Skip List、B+ Tree、CSR graph storage。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds23",
@@ -491,7 +2019,75 @@
       "応用：オートコンプリート(LC208)、検索エンジンの接頭辞提示、スペルチェック、単語検索II(LC212 Trie+バックトラッキング)、IPルーティングの最長接頭辞マッチング"
     ],
     "lv": 2,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>Trie (前缀树) — 实现与应用 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>前缀查询、自动补全、字典匹配用 Trie；单模式匹配用 KMP；字符重排分组用频次数组或排序 key。</li><li>如果重复查询很多，预处理结构比每次线性扫描更划算。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>Trie 节点代表一个前缀；KMP 的 lps/pi 表示当前前缀也是后缀的最长长度，失配时不回退文本指针。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>每个节点代表一个字符前缀，从根到某节点的路径构成一个前缀。支持 O(m) 的插入/查找/前缀搜索（m=字符串长度）；空间优化：Python用dict存子节点（按需创建），比固定26数组更灵活</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>空串、重复单词、一个词是另一个词前缀、字符集大小不同。</li><li>KMP 要验证模式串长度为 0/1 和完全重复字符。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>Trie 忘记 end 标记会把前缀误当完整单词。</li><li>KMP 失配时把 i 回退，或 lps 构造时 j 更新错误。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>通配符搜索、删除单词、Aho-Corasick 多模式匹配、后缀数组/后缀自动机。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>Trie (接頭辞木) — 実装と応用 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>prefix検索/補完/辞書照合はTrie、単一pattern照合はKMP、anagram groupingは頻度配列またはsort key。</li><li>問い合わせが多いなら前処理構造が有利。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>Trie nodeはprefixを表す。KMPのlps/piは「接頭辞でもある最長接尾辞」の長さで、失敗時にtext pointerを戻さない。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>每个节点代表一个字符前缀，从根到某节点的路径构成一个前缀。支持 O(m) 的插入/查找/前缀搜索（m=字符串长度）；空間优化：Python用dict存子节点（按需创建），比固定26数组更灵活</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>空文字、重複単語、ある単語が別単語のprefix、文字集合の違い。</li><li>KMPはpattern長0/1、同一文字の連続を確認する。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>Trieでend印を忘れ、prefixを単語扱いする。</li><li>KMPで i を戻す、lps構築時の j 更新ミス。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>wildcard search、単語削除、Aho-Corasick、suffix array/automaton。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      },
+      {
+        "term": "自己確認",
+        "explain": "<p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds24",
@@ -513,7 +2109,79 @@
       "面接の考査ポイント：HashMap putの流れ（ハッシュ計算→バケット特定→衝突処理→拡張判定）、スレッドセーフ問題（Java ConcurrentHashMap セグメントロック/CAS）"
     ],
     "lv": 2,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>哈希表深入 — 扩容与哈希冲突细节 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>快速查找、计数、去重、值到下标映射，优先哈希表。</li><li>需要保序或按插入顺序淘汰时，选择 OrderedDict/LinkedHashMap 或额外链表。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>key 的 hash 映射到桶；装载因子过高时扩容以保持均摊 O(1)。计数表的不变式是每个 key 的频次准确反映当前窗口/集合。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>链地址法（Java HashMap）：每个桶是链表，冲突时追加。Java 8优化：链表长度&gt;=8时转红黑树（O(n)→O(log n)），&lt;=6时退化回链表</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>重复 key、不可哈希对象、hash 冲突、删除到 0。</li><li>自定义对象要保证 hash 与 equals 一致。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>修改可变对象后继续当 key 使用。</li><li>计数归零不删除，导致 len(map) 或合法性判断错误。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>计数器、集合、LRU、有序映射、开放寻址、链地址法。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>ハッシュテーブル詳細 — 拡張とハッシュ衝突の詳細 はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>高速lookup、count、dedup、値からindexへのmapはhash table。</li><li>順序保持や挿入順evictが必要ならOrderedDict/LinkedHashMapやlistを足す。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>keyのhashでbucketへ行く。load factorが高いとresizeして償却O(1)を保つ。count mapは現在window/setの頻度を正確に表す。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>链地址法（Java HashMap）：每个桶是链表，冲突时追加。Java 8优化：链表长度&gt;=8时转红黑树（O(n)→O(log n)），&lt;=6时退化回链表</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>重複key、hash不可object、collision、countが0になる削除。</li><li>custom objectはhashとequalsの整合性が必要。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>mutable objectをkeyにした後で変更する。</li><li>countが0になっても消さず、len(map)や合法判定が壊れる。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>Counter、set、LRU、ordered map、open addressing、chaining。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      },
+      {
+        "term": "自己確認",
+        "explain": "<p><strong>最後に三つ確認する：</strong>入力規模が10倍ならボトルネックはどこか、個数ではなく全方案を返すなら状態をどう変えるか、前提条件が一つ消えたら解法は成立するか。</p><ul><li>単一問題の暗記を問題パターンの理解に変える。</li><li>実装後は最小ケースと極端ケースを必ず口頭で走らせる。</li><li>不変条件を説明できない場合、テンプレート理解がまだ浅い。</li></ul>"
+      }
+    ]
   },
   {
     "id": "ds25",
@@ -533,6 +2201,74 @@
       "面接ではグラフ問題の80%が<span class=\"highlight\">隣接リスト</span>か<span class=\"highlight\">グリッド暗黙グラフ</span>を使用。グラフ構築テンプレートを覚えることが問題を解く第一歩"
     ],
     "lv": 1,
-    "group": "基础"
+    "group": "基础",
+    "details": [
+      {
+        "term": "题型识别",
+        "explain": "<p><strong>识别信号：</strong>图的高级表示 — 加权图与隐式图 不应只背代码，先把输入、输出和可利用性质说清楚。</p><ul><li>按操作集合选结构：查找/插入/删除有序性选平衡树或跳表；磁盘页访问选 B/B+ 树；稠密图可用矩阵，稀疏图用邻接表。</li><li>不要只背名字，先说为什么该结构匹配访问模式。</li></ul>"
+      },
+      {
+        "term": "不变式/状态定义",
+        "explain": "<p><strong>核心不变式：</strong>平衡树维护高度 O(log n)；B+ 树维护多路平衡和叶子有序链；邻接表/矩阵维护边存在性和遍历效率的取舍。</p><p>面试表达时用“处理到这里时，我保证……”开头，能自然推出下一步更新。</p>"
+      },
+      {
+        "term": "复杂度推导",
+        "explain": "<p><strong>复杂度：</strong>隐式图：不显式存储邻接关系，通过规则动态生成邻居 → 网格BFS/DFS（LC200岛屿数量）、状态空间搜索（LC127单词接龙）</p><p>说明复杂度时同时交代主循环/状态数、辅助结构大小，以及最坏/均摊/期望等前提。</p>"
+      },
+      {
+        "term": "边界用例",
+        "explain": "<p><strong>优先验证：</strong></p><ul><li>重复 key、范围查询、磁盘页大小、稠密/稀疏边界。</li><li>红黑树旋转后要同步颜色和父子指针。</li></ul>"
+      },
+      {
+        "term": "常见 bug",
+        "explain": "<p><strong>高频错误：</strong></p><ul><li>把 B 树和 B+ 树数据存放位置混淆。</li><li>邻接矩阵在 n 大且稀疏时空间 O(n²) 不可接受。</li></ul>"
+      },
+      {
+        "term": "变体迁移",
+        "explain": "<p><strong>可迁移到：</strong></p><ul><li>AVL、红黑树、Treap、Skip List、B+ Tree、CSR 图存储。</li></ul>"
+      },
+      {
+        "term": "复盘路线",
+        "explain": "<p><strong>复习时按三问检查：</strong>第一，这题为什么能用当前范式，而不是暴力或另一种结构；第二，循环/递归中的不变式是什么；第三，哪个边界最容易让代码错一位。</p><ul><li>写代码前先说状态含义和更新条件，再落到模板。</li><li>复杂度要从“每个元素被访问几次”或“状态数量 × 转移代价”推导，不要只背结论。</li><li>面试追问通常来自变体：重复元素、返回所有方案、从一维变二维、从静态数组变在线更新。</li></ul>"
+      },
+      {
+        "term": "自检问题",
+        "explain": "<p><strong>最后用三个自检问题收尾：</strong>如果输入规模扩大 10 倍，瓶颈在哪里；如果题目要求返回方案而不是数量，状态要怎么改；如果面试官删掉一个前提，当前解法是否还成立。</p><ul><li>这能把单题记忆迁移成题型能力。</li><li>代码写完后至少口头跑一遍最小样例和极端样例。</li><li>讲不清不变式时，通常说明模板还没有真正理解。</li></ul>"
+      },
+      {
+        "term": "实战口径",
+        "explain": "<p><strong>真正复习时，用一句判断把知识点收住：</strong>我会在什么场景使用它，先验证什么指标，失败时先怀疑哪一层。</p><ul><li>如果是算法题，先说清约束和不变式，再写代码。</li><li>如果是工程题，先说清边界、监控和回滚，再谈优化。</li><li>如果是面试/项目题，先讲客户或系统痛点，再给证据和取舍。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "型の見分け方",
+        "explain": "<p><strong>見分けるサイン：</strong>グラフの高度な表現 — 重み付きグラフと暗黙グラフ はコード暗記ではなく、入力・出力・使える性質を先に言語化する。</p><ul><li>操作集合で選ぶ：ordered lookup/insert/deleteはbalanced tree/skip list、disk page accessはB/B+ tree、dense graphはmatrix、sparse graphはadjacency list。</li><li>名前を暗記せず、access patternに合う理由を説明する。</li></ul>"
+      },
+      {
+        "term": "不変条件/状態定義",
+        "explain": "<p><strong>中心となる不変条件：</strong>balanced treeは高さO(log n)、B+ treeは多分岐balanceとleaf linked order、graph表現は辺存在判定と走査効率のtrade-offを保つ。</p><p>面接では「ここまで処理した時点で何が保証されるか」から説明すると、更新手順が自然に導ける。</p>"
+      },
+      {
+        "term": "計算量",
+        "explain": "<p><strong>計算量：</strong>隐式图：不显式存储邻接关系，通过规则动态生成邻居 → 网格BFS/DFS（LC200岛屿数量）、状态空間搜索（LC127单词接龙）</p><p>主loop/状態数、補助構造のサイズ、worst・amortized・expected の前提をあわせて述べる。</p>"
+      },
+      {
+        "term": "境界ケース",
+        "explain": "<p><strong>先に確認するケース：</strong></p><ul><li>重複key、range query、disk page size、dense/sparse境界。</li><li>red-black rotation後は色とparent/child pointerを同期する。</li></ul>"
+      },
+      {
+        "term": "よくあるバグ",
+        "explain": "<p><strong>頻出ミス：</strong></p><ul><li>B treeとB+ treeのデータ格納場所を混同する。</li><li>疎グラフでadjacency matrixを使いO(n²)空間になる。</li></ul>"
+      },
+      {
+        "term": "派生問題",
+        "explain": "<p><strong>応用先：</strong></p><ul><li>AVL、Red-Black Tree、Treap、Skip List、B+ Tree、CSR graph storage。</li></ul>"
+      },
+      {
+        "term": "復習ルート",
+        "explain": "<p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      }
+    ]
   }
 ]

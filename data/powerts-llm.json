@@ -17,7 +17,35 @@
       "48.51倍 = LSTM劣化幅107.7% / LLM劣化幅2.2%"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>PowerTS-LLM 核心发现</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>电力负荷预测遇到 LLM 热潮：客户会问能不能用大模型替代传统时序模型，但真实目标是精度、鲁棒性和成本的取舍。</li><li><strong>技术选择：</strong>正面对比而不是宣传 LLM：用 Qwen2.5-14B LoRA 做结构化预测，同时保留 LSTM 基线、噪声实验、RAG ablation 和 horizon 分析。</li><li><strong>实现细节：</strong>链路包括 TEPCO 历史数据转日语结构化 prompt、542K 样本训练、LoRA 配置复盘、token 离散化机制解释、RAG 检索对照和 TwinForge 后续方向。</li><li><strong>实验/指标：</strong>不只看干净 MAE，还看噪声退化倍率、方向准确率、节假日子集、不同 horizon、数据量 ablation 和训练时间。</li><li><strong>失败模式：</strong>包括 LLM 点预测精度不如 LSTM、RAG 反而退化、542K 样本过度收敛、rank 配置记录错误，以及 token 粒度带来的常数地板。</li><li><strong>面试可讲故事：</strong>我没有为了用 LLM 而用 LLM，而是用实验给出边界；结论是 LSTM 做主力，LLM 更适合鲁棒性校验和可解释物理建模。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>LLM精度 <span class=\"num\">不如LSTM</span>（干净数据MAE差13倍：LLM 2968MW vs LSTM 228MW）</li><li>但LLM鲁棒性好 <span class=\"num\">48.51倍</span>（噪声σ=5%：LSTM +107.7% vs LLM +2.2%）</li><li>结论：<span class=\"highlight\">LLM不是时序预测最优解，但在恶劣条件下是最鲁棒的解</span></li><li>48.51× = LSTM退化幅度107.7% / LLM退化幅度2.2%</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡接到 PowerTS-LLM 的完整链条：从“LLM 是否适合时序预测”的问题出发，经机制、训练、消融、失败复盘，最后沉淀成面向客户的技术选型判断。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">PowerTS-LLM 核心发现</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：PowerTS-LLM 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：LLM精度 不如LSTM（干净数据MAE差13倍：LLM 2968MW vs LSTM 228MW）；但LLM鲁棒性好 48.51倍（噪声σ=5%：LSTM +107.7% vs LLM +2.2%）；结论：LLM不是时序预测最优解，但在恶劣条件下是最鲁棒的解。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>时序预测类追问要准备：为什么不推荐直接替代 LSTM、鲁棒性如何量化、token 离散化的优势和精度上限在哪里。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>PowerTS-LLMの主要な発見</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>電力負荷予測に LLM ブームが入ってきたことだ。顧客は大規模モデルで従来時系列モデルを置き換えられるかを聞くが、本質は精度、頑健性、コストの trade-off である。</li><li><strong>技術選択：</strong>LLM を宣伝するのではなく正面から比較した。Qwen2.5-14B LoRA で構造化予測を行い、LSTM baseline、noise test、RAG ablation、horizon analysis を残した。</li><li><strong>実装：</strong> TEPCO 履歴データを日本語 structured prompt に変換し、542K samples で学習し、LoRA 設定、token discretization、RAG 対照、TwinForge への展開を整理した。</li><li><strong>実験/指標：</strong>評価は clean MAE だけでなく、noise degradation、direction accuracy、holiday subset、horizon 別性能、data ablation、training time を見る。</li><li><strong>失敗モード：</strong>失敗は LLM の点予測精度が LSTM に劣ること、RAG が逆効果になること、542K samples の過収束、rank 設定記録ミス、token 粒度による constant floor に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、LLM を使うために使ったのではなく、実験で境界を示した話として語る。結論は LSTM を主力にし、LLM は頑健性チェックや説明可能な物理モデリングに活かすこと。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>LLM精度は <span class=\"num\">LSTMに劣る</span>（クリーンデータのMAE差13倍：LLM 2968MW vs LSTM 228MW）</li><li>しかしLLMの頑健性は <span class=\"num\">48.51倍</span> 優れる（ノイズσ=5%：LSTM +107.7% vs LLM +2.2%）</li><li>結論：<span class=\"highlight\">LLMは時系列予測の最適解ではないが、悪条件下で最も頑健な解である</span></li><li>48.51倍 = LSTM劣化幅107.7% / LLM劣化幅2.2%</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは PowerTS-LLM の流れに接続する。「LLM は時系列予測に適するか」から始まり、メカニズム、学習、ablation、失敗分析を経て、顧客向けの技術選定判断へつながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">PowerTS-LLMの主要な発見</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、PowerTS-LLM は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：LLM精度は LSTMに劣る（クリーンデータのMAE差13倍：LLM 2968MW vs LSTM 228MW）；しかしLLMの頑健性は 48.51倍 優れる（ノイズσ=5%：LSTM +107.7% vs LLM +2.2%）；結論：LLMは時系列予測の最適解ではないが、悪条件下で最も頑健な解である。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>時系列予測系の深掘りでは、なぜ LSTM を直接置き換えないか、頑健性をどう測るか、token discretization の利点と精度上限を説明する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "p02",
@@ -37,7 +65,35 @@
       "LLMのtoken離散化にノイズフィルタリング効果があることを定量的に証明した初の研究"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Token离散化为什么鲁棒（核心机制）</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>电力负荷预测遇到 LLM 热潮：客户会问能不能用大模型替代传统时序模型，但真实目标是精度、鲁棒性和成本的取舍。</li><li><strong>技术选择：</strong>正面对比而不是宣传 LLM：用 Qwen2.5-14B LoRA 做结构化预测，同时保留 LSTM 基线、噪声实验、RAG ablation 和 horizon 分析。</li><li><strong>实现细节：</strong>链路包括 TEPCO 历史数据转日语结构化 prompt、542K 样本训练、LoRA 配置复盘、token 离散化机制解释、RAG 检索对照和 TwinForge 后续方向。</li><li><strong>实验/指标：</strong>不只看干净 MAE，还看噪声退化倍率、方向准确率、节假日子集、不同 horizon、数据量 ablation 和训练时间。</li><li><strong>失败模式：</strong>包括 LLM 点预测精度不如 LSTM、RAG 反而退化、542K 样本过度收敛、rank 配置记录错误，以及 token 粒度带来的常数地板。</li><li><strong>面试可讲故事：</strong>我没有为了用 LLM 而用 LLM，而是用实验给出边界；结论是 LSTM 做主力，LLM 更适合鲁棒性校验和可解释物理建模。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>数值经tokenize→离散token序列，相近数值在embedding空间表示接近，噪声衰减</li><li>数值精度被token粒度截断——LLM内部看到的是\"大约28\"而非精确浮点数</li><li>LSTM直接处理浮点数，噪声通过自回归链<span class=\"highlight\">传播并放大</span>（每步误差是下步输入）</li><li>这是第一个定量证明LLM token离散化具有噪声过滤效果的工作</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡接到 PowerTS-LLM 的完整链条：从“LLM 是否适合时序预测”的问题出发，经机制、训练、消融、失败复盘，最后沉淀成面向客户的技术选型判断。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Token离散化为什么鲁棒（核心机制）</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：PowerTS-LLM 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：数值经tokenize→离散token序列，相近数值在embedding空间表示接近，噪声衰减；数值精度被token粒度截断——LLM内部看到的是\"大约28\"而非精确浮点数；LSTM直接处理浮点数，噪声通过自回归链传播并放大（每步误差是下步输入）。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>时序预测类追问要准备：为什么不推荐直接替代 LSTM、鲁棒性如何量化、token 离散化的优势和精度上限在哪里。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>Token離散化がなぜ頑健なのか（コアメカニズム）</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>電力負荷予測に LLM ブームが入ってきたことだ。顧客は大規模モデルで従来時系列モデルを置き換えられるかを聞くが、本質は精度、頑健性、コストの trade-off である。</li><li><strong>技術選択：</strong>LLM を宣伝するのではなく正面から比較した。Qwen2.5-14B LoRA で構造化予測を行い、LSTM baseline、noise test、RAG ablation、horizon analysis を残した。</li><li><strong>実装：</strong> TEPCO 履歴データを日本語 structured prompt に変換し、542K samples で学習し、LoRA 設定、token discretization、RAG 対照、TwinForge への展開を整理した。</li><li><strong>実験/指標：</strong>評価は clean MAE だけでなく、noise degradation、direction accuracy、holiday subset、horizon 別性能、data ablation、training time を見る。</li><li><strong>失敗モード：</strong>失敗は LLM の点予測精度が LSTM に劣ること、RAG が逆効果になること、542K samples の過収束、rank 設定記録ミス、token 粒度による constant floor に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、LLM を使うために使ったのではなく、実験で境界を示した話として語る。結論は LSTM を主力にし、LLM は頑健性チェックや説明可能な物理モデリングに活かすこと。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>数値をtokenize→離散token列へ変換。近い数値はembedding空間で近接表現となり、ノイズが減衰する</li><li>数値精度がtoken粒度で切り捨てられる——LLM内部では\"約28\"であり正確な浮動小数点数ではない</li><li>LSTMは浮動小数点数を直接処理し、ノイズが自己回帰チェーンで<span class=\"highlight\">伝播・増幅</span>される（各ステップの誤差が次の入力に）</li><li>LLMのtoken離散化にノイズフィルタリング効果があることを定量的に証明した初の研究</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは PowerTS-LLM の流れに接続する。「LLM は時系列予測に適するか」から始まり、メカニズム、学習、ablation、失敗分析を経て、顧客向けの技術選定判断へつながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">Token離散化がなぜ頑健なのか（コアメカニズム）</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、PowerTS-LLM は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：数値をtokenize→離散token列へ変換。近い数値はembedding空間で近接表現となり、ノイズが減衰する；数値精度がtoken粒度で切り捨てられる——LLM内部では\"約28\"であり正確な浮動小数点数ではない；LSTMは浮動小数点数を直接処理し、ノイズが自己回帰チェーンで伝播・増幅される（各ステップの誤差が次の入力に）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>時系列予測系の深掘りでは、なぜ LSTM を直接置き換えないか、頑健性をどう測るか、token discretization の利点と精度上限を説明する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "p03",
@@ -52,12 +108,40 @@
     ],
     "bullets_ja": [
       "類似の天気≠類似の負荷ダイナミクス（3月15日と22日は天気が似ているが、片方に特殊イベントがある）",
-      "追加contextが干渉：ファインチューニング後のLLMは入力から直接予測を学習済みで、「参照日」がノイズになる",
+      "追加のコンテキストが干渉する：ファインチューニング後のLLMは入力から直接予測を学習済みで、「参照日」がノイズになる",
       "<span class=\"highlight\">RAGは「答えがあってそれを見つける」タスクに適し、「計算が必要な」タスクには不向き</span>",
       "SAとしての意義：顧客が「XXXにRAGを追加したい」と言ったら、まずタスク種別を判断してからソリューションを提案する"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>RAG为什么在时序预测上失败？（退化7.3%）</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>电力负荷预测遇到 LLM 热潮：客户会问能不能用大模型替代传统时序模型，但真实目标是精度、鲁棒性和成本的取舍。</li><li><strong>技术选择：</strong>正面对比而不是宣传 LLM：用 Qwen2.5-14B LoRA 做结构化预测，同时保留 LSTM 基线、噪声实验、RAG ablation 和 horizon 分析。</li><li><strong>实现细节：</strong>链路包括 TEPCO 历史数据转日语结构化 prompt、542K 样本训练、LoRA 配置复盘、token 离散化机制解释、RAG 检索对照和 TwinForge 后续方向。</li><li><strong>实验/指标：</strong>不只看干净 MAE，还看噪声退化倍率、方向准确率、节假日子集、不同 horizon、数据量 ablation 和训练时间。</li><li><strong>失败模式：</strong>包括 LLM 点预测精度不如 LSTM、RAG 反而退化、542K 样本过度收敛、rank 配置记录错误，以及 token 粒度带来的常数地板。</li><li><strong>面试可讲故事：</strong>我没有为了用 LLM 而用 LLM，而是用实验给出边界；结论是 LSTM 做主力，LLM 更适合鲁棒性校验和可解释物理建模。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>相似天气≠相似负荷动态（3月15日和22日天气相似，但一个有特殊事件）</li><li>额外context干扰：微调后LLM已学会从输入直接预测，\"参考日\"成为噪声</li><li><span class=\"highlight\">RAG适合\"有答案需要找到\"的任务，不适合\"需要计算\"的任务</span></li><li>SA意义：客户说\"我要做XXX加个RAG\"，要先判断任务类型再推方案</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡接到 PowerTS-LLM 的完整链条：从“LLM 是否适合时序预测”的问题出发，经机制、训练、消融、失败复盘，最后沉淀成面向客户的技术选型判断。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">RAG为什么在时序预测上失败？（退化7.3%）</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：PowerTS-LLM 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：相似天气≠相似负荷动态（3月15日和22日天气相似，但一个有特殊事件）；额外context干扰：微调后LLM已学会从输入直接预测，\"参考日\"成为噪声；RAG适合\"有答案需要找到\"的任务，不适合\"需要计算\"的任务。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>RAG 类追问要准备：gold chunk 怎么定义、Recall@K/MAP 怎么算、第一阶段召回和 rerank 精排各自解决什么问题。</li><li>时序预测类追问要准备：为什么不推荐直接替代 LSTM、鲁棒性如何量化、token 离散化的优势和精度上限在哪里。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>RAGが時系列予測で失敗した理由は？（7.3%劣化）</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>電力負荷予測に LLM ブームが入ってきたことだ。顧客は大規模モデルで従来時系列モデルを置き換えられるかを聞くが、本質は精度、頑健性、コストの trade-off である。</li><li><strong>技術選択：</strong>LLM を宣伝するのではなく正面から比較した。Qwen2.5-14B LoRA で構造化予測を行い、LSTM baseline、noise test、RAG ablation、horizon analysis を残した。</li><li><strong>実装：</strong> TEPCO 履歴データを日本語 structured prompt に変換し、542K samples で学習し、LoRA 設定、token discretization、RAG 対照、TwinForge への展開を整理した。</li><li><strong>実験/指標：</strong>評価は clean MAE だけでなく、noise degradation、direction accuracy、holiday subset、horizon 別性能、data ablation、training time を見る。</li><li><strong>失敗モード：</strong>失敗は LLM の点予測精度が LSTM に劣ること、RAG が逆効果になること、542K samples の過収束、rank 設定記録ミス、token 粒度による constant floor に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、LLM を使うために使ったのではなく、実験で境界を示した話として語る。結論は LSTM を主力にし、LLM は頑健性チェックや説明可能な物理モデリングに活かすこと。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>類似の天気≠類似の負荷ダイナミクス（3月15日と22日は天気が似ているが、片方に特殊イベントがある）</li><li>追加のコンテキストが干渉する：ファインチューニング後のLLMは入力から直接予測を学習済みで、「参照日」がノイズになる</li><li><span class=\"highlight\">RAGは「答えがあってそれを見つける」タスクに適し、「計算が必要な」タスクには不向き</span></li><li>SAとしての意義：顧客が「XXXにRAGを追加したい」と言ったら、まずタスク種別を判断してからソリューションを提案する</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは PowerTS-LLM の流れに接続する。「LLM は時系列予測に適するか」から始まり、メカニズム、学習、ablation、失敗分析を経て、顧客向けの技術選定判断へつながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">RAGが時系列予測で失敗した理由は？（7.3%劣化）</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、PowerTS-LLM は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：類似の天気≠類似の負荷ダイナミクス（3月15日と22日は天気が似ているが、片方に特殊イベントがある）；追加のコンテキストが干渉する：ファインチューニング後のLLMは入力から直接予測を学習済みで、「参照日」がノイズになる；RAGは「答えがあってそれを見つける」タスクに適し、「計算が必要な」タスクには不向き。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li><li>時系列予測系の深掘りでは、なぜ LSTM を直接置き換えないか、頑健性をどう測るか、token discretization の利点と精度上限を説明する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "p04",
@@ -77,7 +161,35 @@
       "推奨：ほとんどの場合LSTMを推奨、LLMでLSTMを直接置き換えるのは非推奨"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>LSTM vs LLM：分别什么场景用？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>电力负荷预测遇到 LLM 热潮：客户会问能不能用大模型替代传统时序模型，但真实目标是精度、鲁棒性和成本的取舍。</li><li><strong>技术选择：</strong>正面对比而不是宣传 LLM：用 Qwen2.5-14B LoRA 做结构化预测，同时保留 LSTM 基线、噪声实验、RAG ablation 和 horizon 分析。</li><li><strong>实现细节：</strong>链路包括 TEPCO 历史数据转日语结构化 prompt、542K 样本训练、LoRA 配置复盘、token 离散化机制解释、RAG 检索对照和 TwinForge 后续方向。</li><li><strong>实验/指标：</strong>不只看干净 MAE，还看噪声退化倍率、方向准确率、节假日子集、不同 horizon、数据量 ablation 和训练时间。</li><li><strong>失败模式：</strong>包括 LLM 点预测精度不如 LSTM、RAG 反而退化、542K 样本过度收敛、rank 配置记录错误，以及 token 粒度带来的常数地板。</li><li><strong>面试可讲故事：</strong>我没有为了用 LLM 而用 LLM，而是用实验给出边界；结论是 LSTM 做主力，LLM 更适合鲁棒性校验和可解释物理建模。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>LSTM：数据质量高、实时性要求高、资源受限 → 传统电力预测（MAE低13倍，推理~1ms）</li><li>LLM：数据质量不稳定、对鲁棒性要求高、可接受较高延迟（需要GPU，~5-10s）</li><li>混合方案：LSTM做主力，LLM做鲁棒性校验——两者预测值差距大说明数据可能有问题</li><li>建议：大多数情况推荐LSTM，不推荐直接用LLM替代LSTM</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡接到 PowerTS-LLM 的完整链条：从“LLM 是否适合时序预测”的问题出发，经机制、训练、消融、失败复盘，最后沉淀成面向客户的技术选型判断。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">LSTM vs LLM：分别什么场景用？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：PowerTS-LLM 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：LSTM：数据质量高、实时性要求高、资源受限 → 传统电力预测（MAE低13倍，推理~1ms）；LLM：数据质量不稳定、对鲁棒性要求高、可接受较高延迟（需要GPU，~5-10s）；混合方案：LSTM做主力，LLM做鲁棒性校验——两者预测值差距大说明数据可能有问题。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>时序预测类追问要准备：为什么不推荐直接替代 LSTM、鲁棒性如何量化、token 离散化的优势和精度上限在哪里。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>LSTM vs LLM：それぞれどの場面で使うか？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>電力負荷予測に LLM ブームが入ってきたことだ。顧客は大規模モデルで従来時系列モデルを置き換えられるかを聞くが、本質は精度、頑健性、コストの trade-off である。</li><li><strong>技術選択：</strong>LLM を宣伝するのではなく正面から比較した。Qwen2.5-14B LoRA で構造化予測を行い、LSTM baseline、noise test、RAG ablation、horizon analysis を残した。</li><li><strong>実装：</strong> TEPCO 履歴データを日本語 structured prompt に変換し、542K samples で学習し、LoRA 設定、token discretization、RAG 対照、TwinForge への展開を整理した。</li><li><strong>実験/指標：</strong>評価は clean MAE だけでなく、noise degradation、direction accuracy、holiday subset、horizon 別性能、data ablation、training time を見る。</li><li><strong>失敗モード：</strong>失敗は LLM の点予測精度が LSTM に劣ること、RAG が逆効果になること、542K samples の過収束、rank 設定記録ミス、token 粒度による constant floor に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、LLM を使うために使ったのではなく、実験で境界を示した話として語る。結論は LSTM を主力にし、LLM は頑健性チェックや説明可能な物理モデリングに活かすこと。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>LSTM：データ品質が高い・リアルタイム性要求が高い・リソース制約あり → 従来の電力予測（MAE13分の1、推論~1ms）</li><li>LLM：データ品質が不安定・頑健性要求が高い・高レイテンシ許容可（GPU必要、~5-10s）</li><li>ハイブリッド方式：LSTMをメインに、LLMを頑健性チェックに——両者の予測値の乖離が大きければデータに問題がある可能性</li><li>推奨：ほとんどの場合LSTMを推奨、LLMでLSTMを直接置き換えるのは非推奨</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは PowerTS-LLM の流れに接続する。「LLM は時系列予測に適するか」から始まり、メカニズム、学習、ablation、失敗分析を経て、顧客向けの技術選定判断へつながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">LSTM vs LLM：それぞれどの場面で使うか？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、PowerTS-LLM は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：LSTM：データ品質が高い・リアルタイム性要求が高い・リソース制約あり → 従来の電力予測（MAE13分の1、推論~1ms）；LLM：データ品質が不安定・頑健性要求が高い・高レイテンシ許容可（GPU必要、~5-10s）；ハイブリッド方式：LSTMをメインに、LLMを頑健性チェックに——両者の予測値の乖離が大きければデータに問題がある可能性。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>時系列予測系の深掘りでは、なぜ LSTM を直接置き換えないか、頑健性をどう測るか、token discretization の利点と精度上限を説明する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "p05",
@@ -101,7 +213,35 @@
       "framework: LLaMA-Factory + DeepSpeed ZeRO-2"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>训练配置</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>电力负荷预测遇到 LLM 热潮：客户会问能不能用大模型替代传统时序模型，但真实目标是精度、鲁棒性和成本的取舍。</li><li><strong>技术选择：</strong>正面对比而不是宣传 LLM：用 Qwen2.5-14B LoRA 做结构化预测，同时保留 LSTM 基线、噪声实验、RAG ablation 和 horizon 分析。</li><li><strong>实现细节：</strong>链路包括 TEPCO 历史数据转日语结构化 prompt、542K 样本训练、LoRA 配置复盘、token 离散化机制解释、RAG 检索对照和 TwinForge 后续方向。</li><li><strong>实验/指标：</strong>不只看干净 MAE，还看噪声退化倍率、方向准确率、节假日子集、不同 horizon、数据量 ablation 和训练时间。</li><li><strong>失败模式：</strong>包括 LLM 点预测精度不如 LSTM、RAG 反而退化、542K 样本过度收敛、rank 配置记录错误，以及 token 粒度带来的常数地板。</li><li><strong>面试可讲故事：</strong>我没有为了用 LLM 而用 LLM，而是用实验给出边界；结论是 LSTM 做主力，LLM 更适合鲁棒性校验和可解释物理建模。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>model: Qwen2.5-14B-Instruct，LoRA rank=64, alpha=128</li><li>trainable_params: 68.8M (0.49%)</li><li>training_data: <span class=\"num\">542K</span> 日语结构化prompt（TEPCO历史数据）</li><li>epochs: 1（loss在0.4 epoch处就收敛了）</li><li>训练时间: <span class=\"num\">~38小时</span>（单卡RTX 6000 96GB）</li><li>framework: LLaMA-Factory + DeepSpeed ZeRO-2</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡接到 PowerTS-LLM 的完整链条：从“LLM 是否适合时序预测”的问题出发，经机制、训练、消融、失败复盘，最后沉淀成面向客户的技术选型判断。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">训练配置</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：PowerTS-LLM 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：model: Qwen2.5-14B-Instruct，LoRA rank=64, alpha=128；trainable_params: 68.8M (0.49%)；training_data: 542K 日语结构化prompt（TEPCO历史数据）。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>训练类追问要准备：数据从哪里来、怎么过滤坏样本、为什么这个模型/LoRA 配置、训练失败后如何定位到数据、prompt、采样或 reward。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>学習設定</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>電力負荷予測に LLM ブームが入ってきたことだ。顧客は大規模モデルで従来時系列モデルを置き換えられるかを聞くが、本質は精度、頑健性、コストの trade-off である。</li><li><strong>技術選択：</strong>LLM を宣伝するのではなく正面から比較した。Qwen2.5-14B LoRA で構造化予測を行い、LSTM baseline、noise test、RAG ablation、horizon analysis を残した。</li><li><strong>実装：</strong> TEPCO 履歴データを日本語 structured prompt に変換し、542K samples で学習し、LoRA 設定、token discretization、RAG 対照、TwinForge への展開を整理した。</li><li><strong>実験/指標：</strong>評価は clean MAE だけでなく、noise degradation、direction accuracy、holiday subset、horizon 別性能、data ablation、training time を見る。</li><li><strong>失敗モード：</strong>失敗は LLM の点予測精度が LSTM に劣ること、RAG が逆効果になること、542K samples の過収束、rank 設定記録ミス、token 粒度による constant floor に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、LLM を使うために使ったのではなく、実験で境界を示した話として語る。結論は LSTM を主力にし、LLM は頑健性チェックや説明可能な物理モデリングに活かすこと。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>model: Qwen2.5-14B-Instruct、LoRA rank=64, alpha=128</li><li>trainable_params: 68.8M (0.49%)</li><li>training_data: <span class=\"num\">542K</span>件の日本語構造化prompt（TEPCOの過去データ）</li><li>epochs: 1（lossは0.4 epoch時点で収束）</li><li>学習時間: <span class=\"num\">~38時間</span>（RTX 6000 96GB単体）</li><li>framework: LLaMA-Factory + DeepSpeed ZeRO-2</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは PowerTS-LLM の流れに接続する。「LLM は時系列予測に適するか」から始まり、メカニズム、学習、ablation、失敗分析を経て、顧客向けの技術選定判断へつながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">学習設定</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、PowerTS-LLM は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：model: Qwen2.5-14B-Instruct、LoRA rank=64, alpha=128；trainable_params: 68.8M (0.49%)；training_data: 542K件の日本語構造化prompt（TEPCOの過去データ）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>学習系の深掘りでは、データの作り方、誤データの除去、モデル/LoRA 設定の理由、失敗時に data/prompt/sampling/reward のどこを疑ったかを準備する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "p06",
@@ -115,13 +255,41 @@
       "这些教训让我在面对客户时做出更准确的技术判断"
     ],
     "bullets_ja": [
-      "① <span class=\"highlight\">新技術≠最適解</span>：LLMは注目度が高いが、時系列予測ではLSTMが精度13倍優れる",
+      "① <span class=\"highlight\">新技術≠最適解</span>：LLMは注目度が高いが、時系列予測ではLSTMが精度で13倍優れる",
       "② <span class=\"highlight\">弱点が利点になり得る</span>：Token離散化は「欠点」と見なされていたが、ノイズフィルターとして機能した",
       "③ <span class=\"highlight\">RAGには適用範囲がある</span>：回帰タスクにRAGを追加するとむしろ有害、技術選定はユースケースを見て判断すべき",
       "これらの教訓が、顧客に対してより的確な技術判断を行う上で活きている"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>三个最重要的教训（最适合SA场景的答案）</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>电力负荷预测遇到 LLM 热潮：客户会问能不能用大模型替代传统时序模型，但真实目标是精度、鲁棒性和成本的取舍。</li><li><strong>技术选择：</strong>正面对比而不是宣传 LLM：用 Qwen2.5-14B LoRA 做结构化预测，同时保留 LSTM 基线、噪声实验、RAG ablation 和 horizon 分析。</li><li><strong>实现细节：</strong>链路包括 TEPCO 历史数据转日语结构化 prompt、542K 样本训练、LoRA 配置复盘、token 离散化机制解释、RAG 检索对照和 TwinForge 后续方向。</li><li><strong>实验/指标：</strong>不只看干净 MAE，还看噪声退化倍率、方向准确率、节假日子集、不同 horizon、数据量 ablation 和训练时间。</li><li><strong>失败模式：</strong>包括 LLM 点预测精度不如 LSTM、RAG 反而退化、542K 样本过度收敛、rank 配置记录错误，以及 token 粒度带来的常数地板。</li><li><strong>面试可讲故事：</strong>我没有为了用 LLM 而用 LLM，而是用实验给出边界；结论是 LSTM 做主力，LLM 更适合鲁棒性校验和可解释物理建模。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>① <span class=\"highlight\">新技术≠最优解</span>：LLM很热门，但时序预测上LSTM精度高13倍</li><li>② <span class=\"highlight\">弱点可以是优点</span>：Token离散化被认为是\"缺陷\"，但恰好成为噪声滤波器</li><li>③ <span class=\"highlight\">RAG有适用边界</span>：回归任务加RAG反而有害，技术选型必须看场景</li><li>这些教训让我在面对客户时做出更准确的技术判断</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡接到 PowerTS-LLM 的完整链条：从“LLM 是否适合时序预测”的问题出发，经机制、训练、消融、失败复盘，最后沉淀成面向客户的技术选型判断。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">三个最重要的教训（最适合SA场景的答案）</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：PowerTS-LLM 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：① 新技术≠最优解：LLM很热门，但时序预测上LSTM精度高13倍；② 弱点可以是优点：Token离散化被认为是\"缺陷\"，但恰好成为噪声滤波器；③ RAG有适用边界：回归任务加RAG反而有害，技术选型必须看场景。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>最も重要な3つの教訓（SA向け回答として最適）</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>電力負荷予測に LLM ブームが入ってきたことだ。顧客は大規模モデルで従来時系列モデルを置き換えられるかを聞くが、本質は精度、頑健性、コストの trade-off である。</li><li><strong>技術選択：</strong>LLM を宣伝するのではなく正面から比較した。Qwen2.5-14B LoRA で構造化予測を行い、LSTM baseline、noise test、RAG ablation、horizon analysis を残した。</li><li><strong>実装：</strong> TEPCO 履歴データを日本語 structured prompt に変換し、542K samples で学習し、LoRA 設定、token discretization、RAG 対照、TwinForge への展開を整理した。</li><li><strong>実験/指標：</strong>評価は clean MAE だけでなく、noise degradation、direction accuracy、holiday subset、horizon 別性能、data ablation、training time を見る。</li><li><strong>失敗モード：</strong>失敗は LLM の点予測精度が LSTM に劣ること、RAG が逆効果になること、542K samples の過収束、rank 設定記録ミス、token 粒度による constant floor に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、LLM を使うために使ったのではなく、実験で境界を示した話として語る。結論は LSTM を主力にし、LLM は頑健性チェックや説明可能な物理モデリングに活かすこと。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>① <span class=\"highlight\">新技術≠最適解</span>：LLMは注目度が高いが、時系列予測ではLSTMが精度で13倍優れる</li><li>② <span class=\"highlight\">弱点が利点になり得る</span>：Token離散化は「欠点」と見なされていたが、ノイズフィルターとして機能した</li><li>③ <span class=\"highlight\">RAGには適用範囲がある</span>：回帰タスクにRAGを追加するとむしろ有害、技術選定はユースケースを見て判断すべき</li><li>これらの教訓が、顧客に対してより的確な技術判断を行う上で活きている</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは PowerTS-LLM の流れに接続する。「LLM は時系列予測に適するか」から始まり、メカニズム、学習、ablation、失敗分析を経て、顧客向けの技術選定判断へつながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">最も重要な3つの教訓（SA向け回答として最適）</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、PowerTS-LLM は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：① 新技術≠最適解：LLMは注目度が高いが、時系列予測ではLSTMが精度で13倍優れる；② 弱点が利点になり得る：Token離散化は「欠点」と見なされていたが、ノイズフィルターとして機能した；③ RAGには適用範囲がある：回帰タスクにRAGを追加するとむしろ有害、技術選定はユースケースを見て判断すべき。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "p07",
@@ -141,7 +309,35 @@
       "提案：LSTMをメインに + LLMを頑健性チェックに、両者の相互補完"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>如何向客户回应\"LLM时序预测精度太差\"？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>电力负荷预测遇到 LLM 热潮：客户会问能不能用大模型替代传统时序模型，但真实目标是精度、鲁棒性和成本的取舍。</li><li><strong>技术选择：</strong>正面对比而不是宣传 LLM：用 Qwen2.5-14B LoRA 做结构化预测，同时保留 LSTM 基线、噪声实验、RAG ablation 和 horizon 分析。</li><li><strong>实现细节：</strong>链路包括 TEPCO 历史数据转日语结构化 prompt、542K 样本训练、LoRA 配置复盘、token 离散化机制解释、RAG 检索对照和 TwinForge 后续方向。</li><li><strong>实验/指标：</strong>不只看干净 MAE，还看噪声退化倍率、方向准确率、节假日子集、不同 horizon、数据量 ablation 和训练时间。</li><li><strong>失败模式：</strong>包括 LLM 点预测精度不如 LSTM、RAG 反而退化、542K 样本过度收敛、rank 配置记录错误，以及 token 粒度带来的常数地板。</li><li><strong>面试可讲故事：</strong>我没有为了用 LLM 而用 LLM，而是用实验给出边界；结论是 LSTM 做主力，LLM 更适合鲁棒性校验和可解释物理建模。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>诚实承认：干净数据上LSTM确实精度高13倍</li><li>\"但请考虑：你的数据质量始终完美吗？传感器故障/通信中断/极端天气都会引入噪声\"</li><li>\"在噪声条件下，LSTM退化108%，LLM只退化2.2%\"</li><li>建议：LSTM做主力 + LLM做鲁棒性校验，两者互补</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡接到 PowerTS-LLM 的完整链条：从“LLM 是否适合时序预测”的问题出发，经机制、训练、消融、失败复盘，最后沉淀成面向客户的技术选型判断。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">如何向客户回应\"LLM时序预测精度太差\"？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：PowerTS-LLM 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：诚实承认：干净数据上LSTM确实精度高13倍；\"但请考虑：你的数据质量始终完美吗？传感器故障/通信中断/极端天气都会引入噪声\"；\"在噪声条件下，LSTM退化108%，LLM只退化2.2%\"。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>时序预测类追问要准备：为什么不推荐直接替代 LSTM、鲁棒性如何量化、token 离散化的优势和精度上限在哪里。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>顧客に「LLMの時系列予測精度が低すぎる」と言われたら？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>電力負荷予測に LLM ブームが入ってきたことだ。顧客は大規模モデルで従来時系列モデルを置き換えられるかを聞くが、本質は精度、頑健性、コストの trade-off である。</li><li><strong>技術選択：</strong>LLM を宣伝するのではなく正面から比較した。Qwen2.5-14B LoRA で構造化予測を行い、LSTM baseline、noise test、RAG ablation、horizon analysis を残した。</li><li><strong>実装：</strong> TEPCO 履歴データを日本語 structured prompt に変換し、542K samples で学習し、LoRA 設定、token discretization、RAG 対照、TwinForge への展開を整理した。</li><li><strong>実験/指標：</strong>評価は clean MAE だけでなく、noise degradation、direction accuracy、holiday subset、horizon 別性能、data ablation、training time を見る。</li><li><strong>失敗モード：</strong>失敗は LLM の点予測精度が LSTM に劣ること、RAG が逆効果になること、542K samples の過収束、rank 設定記録ミス、token 粒度による constant floor に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、LLM を使うために使ったのではなく、実験で境界を示した話として語る。結論は LSTM を主力にし、LLM は頑健性チェックや説明可能な物理モデリングに活かすこと。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>正直に認める：クリーンデータではLSTMが確かに精度13倍高い</li><li>「しかし考えてみてください：御社のデータ品質は常に完璧ですか？センサー故障・通信切断・極端な天候がノイズを引き起こします」</li><li>「ノイズ条件下ではLSTMは108%劣化しますが、LLMはわずか2.2%です」</li><li>提案：LSTMをメインに + LLMを頑健性チェックに、両者の相互補完</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは PowerTS-LLM の流れに接続する。「LLM は時系列予測に適するか」から始まり、メカニズム、学習、ablation、失敗分析を経て、顧客向けの技術選定判断へつながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">顧客に「LLMの時系列予測精度が低すぎる」と言われたら？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、PowerTS-LLM は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：正直に認める：クリーンデータではLSTMが確かに精度13倍高い；「しかし考えてみてください：御社のデータ品質は常に完璧ですか？センサー故障・通信切断・極端な天候がノイズを引き起こします」；「ノイズ条件下ではLSTMは108%劣化しますが、LLMはわずか2.2%です」。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>時系列予測系の深掘りでは、なぜ LSTM を直接置き換えないか、頑健性をどう測るか、token discretization の利点と精度上限を説明する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "p08",
@@ -157,12 +353,390 @@
     ],
     "bullets_ja": [
       "① まず確認：精度優先か頑健性優先か？データ品質は？リアルタイム性の要件は？",
-      "② まずベースライン：LSTMで30分で結果を出し、クリーンデータの精度を確認",
+      "② まずベースラインとして、LSTMで30分で結果を出し、クリーンデータの精度を確認",
       "③ リスク評価：過去データにノイズを加えてテストし、劣化幅を確認",
       "④ 推奨：ほとんどの場合LSTM＋異常検出を推奨；データ品質が低い→LLMをバックアップに追加",
       "⑤ LLMでLSTMを直接置き換えるのは非推奨"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>如何给客户定方案（时序预测场景）</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>电力负荷预测遇到 LLM 热潮：客户会问能不能用大模型替代传统时序模型，但真实目标是精度、鲁棒性和成本的取舍。</li><li><strong>技术选择：</strong>正面对比而不是宣传 LLM：用 Qwen2.5-14B LoRA 做结构化预测，同时保留 LSTM 基线、噪声实验、RAG ablation 和 horizon 分析。</li><li><strong>实现细节：</strong>链路包括 TEPCO 历史数据转日语结构化 prompt、542K 样本训练、LoRA 配置复盘、token 离散化机制解释、RAG 检索对照和 TwinForge 后续方向。</li><li><strong>实验/指标：</strong>不只看干净 MAE，还看噪声退化倍率、方向准确率、节假日子集、不同 horizon、数据量 ablation 和训练时间。</li><li><strong>失败模式：</strong>包括 LLM 点预测精度不如 LSTM、RAG 反而退化、542K 样本过度收敛、rank 配置记录错误，以及 token 粒度带来的常数地板。</li><li><strong>面试可讲故事：</strong>我没有为了用 LLM 而用 LLM，而是用实验给出边界；结论是 LSTM 做主力，LLM 更适合鲁棒性校验和可解释物理建模。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>① 先问清：精度优先还是鲁棒性优先？数据质量？实时性要求？</li><li>② 先跑基线：LSTM 30分钟出结果，先看干净数据精度</li><li>③ 评估风险：对历史数据加噪测试，看退化幅度</li><li>④ 推荐：大多数情况推荐LSTM+异常检测；数据质量差→加LLM备用</li><li>⑤ 不推荐直接用LLM替代LSTM</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡接到 PowerTS-LLM 的完整链条：从“LLM 是否适合时序预测”的问题出发，经机制、训练、消融、失败复盘，最后沉淀成面向客户的技术选型判断。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">如何给客户定方案（时序预测场景）</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：PowerTS-LLM 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：① 先问清：精度优先还是鲁棒性优先？数据质量？实时性要求？；② 先跑基线：LSTM 30分钟出结果，先看干净数据精度；③ 评估风险：对历史数据加噪测试，看退化幅度。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>时序预测类追问要准备：为什么不推荐直接替代 LSTM、鲁棒性如何量化、token 离散化的优势和精度上限在哪里。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>顧客へのソリューション提案方法（時系列予測の場合）</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>電力負荷予測に LLM ブームが入ってきたことだ。顧客は大規模モデルで従来時系列モデルを置き換えられるかを聞くが、本質は精度、頑健性、コストの trade-off である。</li><li><strong>技術選択：</strong>LLM を宣伝するのではなく正面から比較した。Qwen2.5-14B LoRA で構造化予測を行い、LSTM baseline、noise test、RAG ablation、horizon analysis を残した。</li><li><strong>実装：</strong> TEPCO 履歴データを日本語 structured prompt に変換し、542K samples で学習し、LoRA 設定、token discretization、RAG 対照、TwinForge への展開を整理した。</li><li><strong>実験/指標：</strong>評価は clean MAE だけでなく、noise degradation、direction accuracy、holiday subset、horizon 別性能、data ablation、training time を見る。</li><li><strong>失敗モード：</strong>失敗は LLM の点予測精度が LSTM に劣ること、RAG が逆効果になること、542K samples の過収束、rank 設定記録ミス、token 粒度による constant floor に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、LLM を使うために使ったのではなく、実験で境界を示した話として語る。結論は LSTM を主力にし、LLM は頑健性チェックや説明可能な物理モデリングに活かすこと。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>① まず確認：精度優先か頑健性優先か？データ品質は？リアルタイム性の要件は？</li><li>② まずベースラインとして、LSTMで30分で結果を出し、クリーンデータの精度を確認</li><li>③ リスク評価：過去データにノイズを加えてテストし、劣化幅を確認</li><li>④ 推奨：ほとんどの場合LSTM＋異常検出を推奨；データ品質が低い→LLMをバックアップに追加</li><li>⑤ LLMでLSTMを直接置き換えるのは非推奨</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは PowerTS-LLM の流れに接続する。「LLM は時系列予測に適するか」から始まり、メカニズム、学習、ablation、失敗分析を経て、顧客向けの技術選定判断へつながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">顧客へのソリューション提案方法（時系列予測の場合）</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、PowerTS-LLM は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：① まず確認：精度優先か頑健性優先か？データ品質は？リアルタイム性の要件は？；② まずベースラインとして、LSTMで30分で結果を出し、クリーンデータの精度を確認；③ リスク評価：過去データにノイズを加えてテストし、劣化幅を確認。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>時系列予測系の深掘りでは、なぜ LSTM を直接置き換えないか、頑健性をどう測るか、token discretization の利点と精度上限を説明する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "p09",
+    "cat": "PowerTS-LLM",
+    "q": "E7/E8 数据 ablation — 哪个 horizon 是「过渡带」？",
+    "q_ja": "少データ・極端サンプル除去で LSTM が退化する horizon",
+    "bullets": [
+      "<span class=\"highlight\">E7</span>（1yr 最近数据 vs 5yr 完整）：30min +15% / 1h +17% / <span class=\"highlight\">3h +29%（最严重）</span> / 24h +5.5%",
+      "<span class=\"highlight\">E8</span>（剔除 20.6% 极端样本）：30min +16% / 1h +9% / 3h +15% / 24h +3.4%",
+      "<span class=\"highlight\">3h 是「过渡带」</span>——24h 有强日周期先验（1 年数据已够），30min 靠近自回归惯性，3h 既不近也不远，需要大量峰值形态样本",
+      "24h 仅损 3.4% 因为周期结构与极端/正常无关",
+      "意义：<span class=\"highlight\">预测时长不同决定数据需求结构</span>，不能一刀切"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">E7（1yr）</span>：3h で +29%（最大退化）、24h は +5.5%",
+      "<span class=\"highlight\">E8（極端除去）</span>：3h で +15%（最大退化）",
+      "<span class=\"highlight\">3h は「遷移帯」</span>：周期性が効かず自己回帰慣性も使えない",
+      "24h は日周期の事前知識が強く、極端値除去の影響が最小",
+      "示唆：horizon 別にデータ要求が異なる、一律のデータ戦略は不適"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>E7/E8 数据 ablation — 哪个 horizon 是「过渡带」？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>电力负荷预测遇到 LLM 热潮：客户会问能不能用大模型替代传统时序模型，但真实目标是精度、鲁棒性和成本的取舍。</li><li><strong>技术选择：</strong>正面对比而不是宣传 LLM：用 Qwen2.5-14B LoRA 做结构化预测，同时保留 LSTM 基线、噪声实验、RAG ablation 和 horizon 分析。</li><li><strong>实现细节：</strong>链路包括 TEPCO 历史数据转日语结构化 prompt、542K 样本训练、LoRA 配置复盘、token 离散化机制解释、RAG 检索对照和 TwinForge 后续方向。</li><li><strong>实验/指标：</strong>不只看干净 MAE，还看噪声退化倍率、方向准确率、节假日子集、不同 horizon、数据量 ablation 和训练时间。</li><li><strong>失败模式：</strong>包括 LLM 点预测精度不如 LSTM、RAG 反而退化、542K 样本过度收敛、rank 配置记录错误，以及 token 粒度带来的常数地板。</li><li><strong>面试可讲故事：</strong>我没有为了用 LLM 而用 LLM，而是用实验给出边界；结论是 LSTM 做主力，LLM 更适合鲁棒性校验和可解释物理建模。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li><span class=\"highlight\">E7</span>（1yr 最近数据 vs 5yr 完整）：30min +15% / 1h +17% / <span class=\"highlight\">3h +29%（最严重）</span> / 24h +5.5%</li><li><span class=\"highlight\">E8</span>（剔除 20.6% 极端样本）：30min +16% / 1h +9% / 3h +15% / 24h +3.4%</li><li><span class=\"highlight\">3h 是「过渡带」</span>——24h 有强日周期先验（1 年数据已够），30min 靠近自回归惯性，3h 既不近也不远，需要大量峰值形态样本</li><li>24h 仅损 3.4% 因为周期结构与极端/正常无关</li><li>意义：<span class=\"highlight\">预测时长不同决定数据需求结构</span>，不能一刀切</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡接到 PowerTS-LLM 的完整链条：从“LLM 是否适合时序预测”的问题出发，经机制、训练、消融、失败复盘，最后沉淀成面向客户的技术选型判断。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">E7/E8 数据 ablation — 哪个 horizon 是「过渡带」？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：PowerTS-LLM 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：E7（1yr 最近数据 vs 5yr 完整）：30min +15% / 1h +17% / 3h +29%（最严重） / 24h +5.5%；E8（剔除 20.6% 极端样本）：30min +16% / 1h +9% / 3h +15% / 24h +3.4%；3h 是「过渡带」——24h 有强日周期先验（1 年数据已够），30min 靠近自回归惯性，3h 既不近也不远，需要大量峰值形态样本。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>时序预测类追问要准备：为什么不推荐直接替代 LSTM、鲁棒性如何量化、token 离散化的优势和精度上限在哪里。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>少データ・極端サンプル除去で LSTM が退化する horizon</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>電力負荷予測に LLM ブームが入ってきたことだ。顧客は大規模モデルで従来時系列モデルを置き換えられるかを聞くが、本質は精度、頑健性、コストの trade-off である。</li><li><strong>技術選択：</strong>LLM を宣伝するのではなく正面から比較した。Qwen2.5-14B LoRA で構造化予測を行い、LSTM baseline、noise test、RAG ablation、horizon analysis を残した。</li><li><strong>実装：</strong> TEPCO 履歴データを日本語 structured prompt に変換し、542K samples で学習し、LoRA 設定、token discretization、RAG 対照、TwinForge への展開を整理した。</li><li><strong>実験/指標：</strong>評価は clean MAE だけでなく、noise degradation、direction accuracy、holiday subset、horizon 別性能、data ablation、training time を見る。</li><li><strong>失敗モード：</strong>失敗は LLM の点予測精度が LSTM に劣ること、RAG が逆効果になること、542K samples の過収束、rank 設定記録ミス、token 粒度による constant floor に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、LLM を使うために使ったのではなく、実験で境界を示した話として語る。結論は LSTM を主力にし、LLM は頑健性チェックや説明可能な物理モデリングに活かすこと。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li><span class=\"highlight\">E7（1yr）</span>：3h で +29%（最大退化）、24h は +5.5%</li><li><span class=\"highlight\">E8（極端除去）</span>：3h で +15%（最大退化）</li><li><span class=\"highlight\">3h は「遷移帯」</span>：周期性が効かず自己回帰慣性も使えない</li><li>24h は日周期の事前知識が強く、極端値除去の影響が最小</li><li>示唆：horizon 別にデータ要求が異なる、一律のデータ戦略は不適</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは PowerTS-LLM の流れに接続する。「LLM は時系列予測に適するか」から始まり、メカニズム、学習、ablation、失敗分析を経て、顧客向けの技術選定判断へつながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">少データ・極端サンプル除去で LSTM が退化する horizon</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、PowerTS-LLM は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：E7（1yr）：3h で +29%（最大退化）、24h は +5.5%；E8（極端除去）：3h で +15%（最大退化）；3h は「遷移帯」：周期性が効かず自己回帰慣性も使えない。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>時系列予測系の深掘りでは、なぜ LSTM を直接置き換えないか、頑健性をどう測るか、token discretization の利点と精度上限を説明する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "p10",
+    "cat": "PowerTS-LLM",
+    "q": "噪声双梯度 — 高 horizon 反而更鲁棒",
+    "q_ja": "LSTM のノイズ感度に「2 段階勾配」がある現象",
+    "bullets": [
+      "LSTM 噪声敏感度按 horizon 分两组：<span class=\"highlight\">短期（30min/1h）极度敏感</span>——σ=30% 时 MAE×8.6/×6.7（228→1972, 385→2584）",
+      "<span class=\"highlight\">长期（3h/24h）几乎噪声免疫</span>——24h σ=30% 仅 +8.6%",
+      "机制：短期靠数值精度，自回归链放大噪声；长期靠日周期先验，单点噪声被周期模式吸收",
+      "<span class=\"highlight\">关键发现</span>：即使 LSTM σ=30% 退化到 1972 MW，仍优于 LLM 干净输入 2968 MW",
+      "LSTM 至少在精度上仍有上风，问题在<span class=\"highlight\">曲线斜率</span>而非绝对值"
+    ],
+    "bullets_ja": [
+      "短期（30min/1h）は MAE×8.6 と極端に敏感、長期（24h）は +8.6% のみ",
+      "機構：短期は数値精度依存・自己回帰増幅、長期は日周期事前知識でノイズ吸収",
+      "<span class=\"highlight\">σ=30%のノイズ下でも、LSTMのMAEは1,972MWで、LLMのクリーン条件下MAE 2,968MWを下回る</span>",
+      "LLM の優位性は曲線傾きにあり絶対値ではない",
+      "面接で誤解を避ける表現：「LLM が LSTM を超える」のではなく「LLM の劣化曲線がフラット」"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>噪声双梯度 — 高 horizon 反而更鲁棒</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>电力负荷预测遇到 LLM 热潮：客户会问能不能用大模型替代传统时序模型，但真实目标是精度、鲁棒性和成本的取舍。</li><li><strong>技术选择：</strong>正面对比而不是宣传 LLM：用 Qwen2.5-14B LoRA 做结构化预测，同时保留 LSTM 基线、噪声实验、RAG ablation 和 horizon 分析。</li><li><strong>实现细节：</strong>链路包括 TEPCO 历史数据转日语结构化 prompt、542K 样本训练、LoRA 配置复盘、token 离散化机制解释、RAG 检索对照和 TwinForge 后续方向。</li><li><strong>实验/指标：</strong>不只看干净 MAE，还看噪声退化倍率、方向准确率、节假日子集、不同 horizon、数据量 ablation 和训练时间。</li><li><strong>失败模式：</strong>包括 LLM 点预测精度不如 LSTM、RAG 反而退化、542K 样本过度收敛、rank 配置记录错误，以及 token 粒度带来的常数地板。</li><li><strong>面试可讲故事：</strong>我没有为了用 LLM 而用 LLM，而是用实验给出边界；结论是 LSTM 做主力，LLM 更适合鲁棒性校验和可解释物理建模。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>LSTM 噪声敏感度按 horizon 分两组：<span class=\"highlight\">短期（30min/1h）极度敏感</span>——σ=30% 时 MAE×8.6/×6.7（228→1972, 385→2584）</li><li><span class=\"highlight\">长期（3h/24h）几乎噪声免疫</span>——24h σ=30% 仅 +8.6%</li><li>机制：短期靠数值精度，自回归链放大噪声；长期靠日周期先验，单点噪声被周期模式吸收</li><li><span class=\"highlight\">关键发现</span>：即使 LSTM σ=30% 退化到 1972 MW，仍优于 LLM 干净输入 2968 MW</li><li>LSTM 至少在精度上仍有上风，问题在<span class=\"highlight\">曲线斜率</span>而非绝对值</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡接到 PowerTS-LLM 的完整链条：从“LLM 是否适合时序预测”的问题出发，经机制、训练、消融、失败复盘，最后沉淀成面向客户的技术选型判断。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">噪声双梯度 — 高 horizon 反而更鲁棒</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：PowerTS-LLM 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：LSTM 噪声敏感度按 horizon 分两组：短期（30min/1h）极度敏感——σ=30% 时 MAE×8.6/×6.7（228→1972, 385→2584）；长期（3h/24h）几乎噪声免疫——24h σ=30% 仅 +8.6%；机制：短期靠数值精度，自回归链放大噪声；长期靠日周期先验，单点噪声被周期模式吸收。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>时序预测类追问要准备：为什么不推荐直接替代 LSTM、鲁棒性如何量化、token 离散化的优势和精度上限在哪里。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>LSTM のノイズ感度に「2 段階勾配」がある現象</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>電力負荷予測に LLM ブームが入ってきたことだ。顧客は大規模モデルで従来時系列モデルを置き換えられるかを聞くが、本質は精度、頑健性、コストの trade-off である。</li><li><strong>技術選択：</strong>LLM を宣伝するのではなく正面から比較した。Qwen2.5-14B LoRA で構造化予測を行い、LSTM baseline、noise test、RAG ablation、horizon analysis を残した。</li><li><strong>実装：</strong> TEPCO 履歴データを日本語 structured prompt に変換し、542K samples で学習し、LoRA 設定、token discretization、RAG 対照、TwinForge への展開を整理した。</li><li><strong>実験/指標：</strong>評価は clean MAE だけでなく、noise degradation、direction accuracy、holiday subset、horizon 別性能、data ablation、training time を見る。</li><li><strong>失敗モード：</strong>失敗は LLM の点予測精度が LSTM に劣ること、RAG が逆効果になること、542K samples の過収束、rank 設定記録ミス、token 粒度による constant floor に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、LLM を使うために使ったのではなく、実験で境界を示した話として語る。結論は LSTM を主力にし、LLM は頑健性チェックや説明可能な物理モデリングに活かすこと。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>短期（30min/1h）は MAE×8.6 と極端に敏感、長期（24h）は +8.6% のみ</li><li>機構：短期は数値精度依存・自己回帰増幅、長期は日周期事前知識でノイズ吸収</li><li><span class=\"highlight\">σ=30%のノイズ下でも、LSTMのMAEは1,972MWで、LLMのクリーン条件下MAE 2,968MWを下回る</span></li><li>LLM の優位性は曲線傾きにあり絶対値ではない</li><li>面接で誤解を避ける表現：「LLM が LSTM を超える」のではなく「LLM の劣化曲線がフラット」</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは PowerTS-LLM の流れに接続する。「LLM は時系列予測に適するか」から始まり、メカニズム、学習、ablation、失敗分析を経て、顧客向けの技術選定判断へつながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">LSTM のノイズ感度に「2 段階勾配」がある現象</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、PowerTS-LLM は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：短期（30min/1h）は MAE×8.6 と極端に敏感、長期（24h）は +8.6% のみ；機構：短期は数値精度依存・自己回帰増幅、長期は日周期事前知識でノイズ吸収；σ=30%のノイズ下でも、LSTMのMAEは1,972MWで、LLMのクリーン条件下MAE 2,968MWを下回る。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>時系列予測系の深掘りでは、なぜ LSTM を直接置き換えないか、頑健性をどう測るか、token discretization の利点と精度上限を説明する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "p11",
+    "cat": "PowerTS-LLM",
+    "q": "rank=16 vs rank=64 配置错误教训",
+    "q_ja": "decisions.md 初期記録 rank=16 と実際 rank=64 の食い違い",
+    "bullets": [
+      "2026-03-11 STATUS.md 写 rank=16 alpha=32（笔记错误）",
+      "2026-03-12 后期复盘读训练日志发现实际跑 <span class=\"highlight\">rank=64 alpha=128</span>（68.8M 参数 = 14B 的 0.49%）",
+      "yaml 写 epochs=3 grad_accum=4，实际跑 1 epoch grad_accum=2（effective batch 16→8）",
+      "可能 Task Scheduler 启动命令带 override 或 yaml 启动后被改",
+      "教训：<span class=\"highlight\">论文写之前必须 post-hoc 读真实日志校验配置</span>，不能靠记忆或 yaml；下次训练前确认 yaml 快照"
+    ],
+    "bullets_ja": [
+      "STATUS.md は rank=16 と記録したが実際は rank=64 alpha=128（68.8M params）",
+      "epochs/grad_accum も yaml とログがズレ",
+      "原因：Task Scheduler 起動コマンドの override か yaml の事後変更",
+      "教訓：<span class=\"highlight\">論文執筆前に実ログでの post-hoc 検証必須</span>",
+      "次回：yaml の snapshot を学習開始前に固定"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>rank=16 vs rank=64 配置错误教训</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>电力负荷预测遇到 LLM 热潮：客户会问能不能用大模型替代传统时序模型，但真实目标是精度、鲁棒性和成本的取舍。</li><li><strong>技术选择：</strong>正面对比而不是宣传 LLM：用 Qwen2.5-14B LoRA 做结构化预测，同时保留 LSTM 基线、噪声实验、RAG ablation 和 horizon 分析。</li><li><strong>实现细节：</strong>链路包括 TEPCO 历史数据转日语结构化 prompt、542K 样本训练、LoRA 配置复盘、token 离散化机制解释、RAG 检索对照和 TwinForge 后续方向。</li><li><strong>实验/指标：</strong>不只看干净 MAE，还看噪声退化倍率、方向准确率、节假日子集、不同 horizon、数据量 ablation 和训练时间。</li><li><strong>失败模式：</strong>包括 LLM 点预测精度不如 LSTM、RAG 反而退化、542K 样本过度收敛、rank 配置记录错误，以及 token 粒度带来的常数地板。</li><li><strong>面试可讲故事：</strong>我没有为了用 LLM 而用 LLM，而是用实验给出边界；结论是 LSTM 做主力，LLM 更适合鲁棒性校验和可解释物理建模。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>2026-03-11 STATUS.md 写 rank=16 alpha=32（笔记错误）</li><li>2026-03-12 后期复盘读训练日志发现实际跑 <span class=\"highlight\">rank=64 alpha=128</span>（68.8M 参数 = 14B 的 0.49%）</li><li>yaml 写 epochs=3 grad_accum=4，实际跑 1 epoch grad_accum=2（effective batch 16→8）</li><li>可能 Task Scheduler 启动命令带 override 或 yaml 启动后被改</li><li>教训：<span class=\"highlight\">论文写之前必须 post-hoc 读真实日志校验配置</span>，不能靠记忆或 yaml；下次训练前确认 yaml 快照</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡接到 PowerTS-LLM 的完整链条：从“LLM 是否适合时序预测”的问题出发，经机制、训练、消融、失败复盘，最后沉淀成面向客户的技术选型判断。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">rank=16 vs rank=64 配置错误教训</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：PowerTS-LLM 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：2026-03-11 STATUS.md 写 rank=16 alpha=32（笔记错误）；2026-03-12 后期复盘读训练日志发现实际跑 rank=64 alpha=128（68.8M 参数 = 14B 的 0.49%）；yaml 写 epochs=3 grad_accum=4，实际跑 1 epoch grad_accum=2（effective batch 16→8）。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>训练类追问要准备：数据从哪里来、怎么过滤坏样本、为什么这个模型/LoRA 配置、训练失败后如何定位到数据、prompt、采样或 reward。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>decisions.md 初期記録 rank=16 と実際 rank=64 の食い違い</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>電力負荷予測に LLM ブームが入ってきたことだ。顧客は大規模モデルで従来時系列モデルを置き換えられるかを聞くが、本質は精度、頑健性、コストの trade-off である。</li><li><strong>技術選択：</strong>LLM を宣伝するのではなく正面から比較した。Qwen2.5-14B LoRA で構造化予測を行い、LSTM baseline、noise test、RAG ablation、horizon analysis を残した。</li><li><strong>実装：</strong> TEPCO 履歴データを日本語 structured prompt に変換し、542K samples で学習し、LoRA 設定、token discretization、RAG 対照、TwinForge への展開を整理した。</li><li><strong>実験/指標：</strong>評価は clean MAE だけでなく、noise degradation、direction accuracy、holiday subset、horizon 別性能、data ablation、training time を見る。</li><li><strong>失敗モード：</strong>失敗は LLM の点予測精度が LSTM に劣ること、RAG が逆効果になること、542K samples の過収束、rank 設定記録ミス、token 粒度による constant floor に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、LLM を使うために使ったのではなく、実験で境界を示した話として語る。結論は LSTM を主力にし、LLM は頑健性チェックや説明可能な物理モデリングに活かすこと。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>STATUS.md は rank=16 と記録したが実際は rank=64 alpha=128（68.8M params）</li><li>epochs/grad_accum も yaml とログがズレ</li><li>原因：Task Scheduler 起動コマンドの override か yaml の事後変更</li><li>教訓：<span class=\"highlight\">論文執筆前に実ログでの post-hoc 検証必須</span></li><li>次回：yaml の snapshot を学習開始前に固定</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは PowerTS-LLM の流れに接続する。「LLM は時系列予測に適するか」から始まり、メカニズム、学習、ablation、失敗分析を経て、顧客向けの技術選定判断へつながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">decisions.md 初期記録 rank=16 と実際 rank=64 の食い違い</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、PowerTS-LLM は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：STATUS.md は rank=16 と記録したが実際は rank=64 alpha=128（68.8M params）；epochs/grad_accum も yaml とログがズレ；原因：Task Scheduler 起動コマンドの override か yaml の事後変更。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>学習系の深掘りでは、データの作り方、誤データの除去、モデル/LoRA 設定の理由、失敗時に data/prompt/sampling/reward のどこを疑ったかを準備する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "p12",
+    "cat": "PowerTS-LLM",
+    "q": "542k 样本过度收敛 — loss 在 epoch 0.4 已平台",
+    "q_ja": "542k サンプル × 38h 学習の loss 曲線から得た教訓",
+    "bullets": [
+      "loss 在 <span class=\"highlight\">epoch 0.4-0.5（约 27k steps）</span>已收敛到 ~0.575 平台，后 30k+ steps 边际收益有限",
+      "根因：<span class=\"highlight\">任务输出极简（单数字），模型学会格式只需几千到几万多样化样本</span>",
+      "542k 覆盖 10 年×多 horizon，存在大量相似重复",
+      "下次：分层采样 50k（季节×日类型×时段×极端天气），3 epoch 多次过；预计 38h→3.5h（<span class=\"highlight\">9.3× 加速</span>）泛化可能更好",
+      "面试 hook：<span class=\"highlight\">「数据量不是越多越好，看 loss 曲线收敛点决定数据规模」</span>"
+    ],
+    "bullets_ja": [
+      "loss は <span class=\"highlight\">epoch 0.4 で plateau</span>（~0.575）、542k のうち 27k steps で十分",
+      "単値回帰は数千〜数万の多様サンプルで学習可能、542k は冗長",
+      "改善案：分層サンプリング 50k × 3 epoch で 38h → 3.5h（<span class=\"highlight\">9.3×</span>）",
+      "汎化も向上見込み（多様性増加）",
+      "面接キーフレーズ：「データ量より loss の収束点でデータ規模を決める」"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>542k 样本过度收敛 — loss 在 epoch 0.4 已平台</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>电力负荷预测遇到 LLM 热潮：客户会问能不能用大模型替代传统时序模型，但真实目标是精度、鲁棒性和成本的取舍。</li><li><strong>技术选择：</strong>正面对比而不是宣传 LLM：用 Qwen2.5-14B LoRA 做结构化预测，同时保留 LSTM 基线、噪声实验、RAG ablation 和 horizon 分析。</li><li><strong>实现细节：</strong>链路包括 TEPCO 历史数据转日语结构化 prompt、542K 样本训练、LoRA 配置复盘、token 离散化机制解释、RAG 检索对照和 TwinForge 后续方向。</li><li><strong>实验/指标：</strong>不只看干净 MAE，还看噪声退化倍率、方向准确率、节假日子集、不同 horizon、数据量 ablation 和训练时间。</li><li><strong>失败模式：</strong>包括 LLM 点预测精度不如 LSTM、RAG 反而退化、542K 样本过度收敛、rank 配置记录错误，以及 token 粒度带来的常数地板。</li><li><strong>面试可讲故事：</strong>我没有为了用 LLM 而用 LLM，而是用实验给出边界；结论是 LSTM 做主力，LLM 更适合鲁棒性校验和可解释物理建模。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>loss 在 <span class=\"highlight\">epoch 0.4-0.5（约 27k steps）</span>已收敛到 ~0.575 平台，后 30k+ steps 边际收益有限</li><li>根因：<span class=\"highlight\">任务输出极简（单数字），模型学会格式只需几千到几万多样化样本</span></li><li>542k 覆盖 10 年×多 horizon，存在大量相似重复</li><li>下次：分层采样 50k（季节×日类型×时段×极端天气），3 epoch 多次过；预计 38h→3.5h（<span class=\"highlight\">9.3× 加速</span>）泛化可能更好</li><li>面试 hook：<span class=\"highlight\">「数据量不是越多越好，看 loss 曲线收敛点决定数据规模」</span></li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡接到 PowerTS-LLM 的完整链条：从“LLM 是否适合时序预测”的问题出发，经机制、训练、消融、失败复盘，最后沉淀成面向客户的技术选型判断。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">542k 样本过度收敛 — loss 在 epoch 0.4 已平台</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：PowerTS-LLM 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：loss 在 epoch 0.4-0.5（约 27k steps）已收敛到 ~0.575 平台，后 30k+ steps 边际收益有限；根因：任务输出极简（单数字），模型学会格式只需几千到几万多样化样本；542k 覆盖 10 年×多 horizon，存在大量相似重复。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>542k サンプル × 38h 学習の loss 曲線から得た教訓</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>電力負荷予測に LLM ブームが入ってきたことだ。顧客は大規模モデルで従来時系列モデルを置き換えられるかを聞くが、本質は精度、頑健性、コストの trade-off である。</li><li><strong>技術選択：</strong>LLM を宣伝するのではなく正面から比較した。Qwen2.5-14B LoRA で構造化予測を行い、LSTM baseline、noise test、RAG ablation、horizon analysis を残した。</li><li><strong>実装：</strong> TEPCO 履歴データを日本語 structured prompt に変換し、542K samples で学習し、LoRA 設定、token discretization、RAG 対照、TwinForge への展開を整理した。</li><li><strong>実験/指標：</strong>評価は clean MAE だけでなく、noise degradation、direction accuracy、holiday subset、horizon 別性能、data ablation、training time を見る。</li><li><strong>失敗モード：</strong>失敗は LLM の点予測精度が LSTM に劣ること、RAG が逆効果になること、542K samples の過収束、rank 設定記録ミス、token 粒度による constant floor に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、LLM を使うために使ったのではなく、実験で境界を示した話として語る。結論は LSTM を主力にし、LLM は頑健性チェックや説明可能な物理モデリングに活かすこと。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>loss は <span class=\"highlight\">epoch 0.4 で plateau</span>（~0.575）、542k のうち 27k steps で十分</li><li>単値回帰は数千〜数万の多様サンプルで学習可能、542k は冗長</li><li>改善案：分層サンプリング 50k × 3 epoch で 38h → 3.5h（<span class=\"highlight\">9.3×</span>）</li><li>汎化も向上見込み（多様性増加）</li><li>面接キーフレーズ：「データ量より loss の収束点でデータ規模を決める」</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは PowerTS-LLM の流れに接続する。「LLM は時系列予測に適するか」から始まり、メカニズム、学習、ablation、失敗分析を経て、顧客向けの技術選定判断へつながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">542k サンプル × 38h 学習の loss 曲線から得た教訓</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、PowerTS-LLM は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：loss は epoch 0.4 で plateau（~0.575）、542k のうち 27k steps で十分；単値回帰は数千〜数万の多様サンプルで学習可能、542k は冗長；改善案：分層サンプリング 50k × 3 epoch で 38h → 3.5h（9.3×）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>学習系の深掘りでは、データの作り方、誤データの除去、モデル/LoRA 設定の理由、失敗時に data/prompt/sampling/reward のどこを疑ったかを準備する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "p13",
+    "cat": "PowerTS-LLM",
+    "q": "方向准确率 vs 点 MAE — LLM 真正的优势在哪",
+    "q_ja": "MAE が LSTM 比 13× 劣勢でも LLM が競争力を保つ指標",
+    "bullets": [
+      "<span class=\"highlight\">方向准确率（涨/跌）</span>：LSTM 84-87% vs FT-14B 70-77%（差距不悬殊）",
+      "24h 节假日子集 MAE 差距进一步缩小（LSTM 反而变差到 3019 MW vs FT-14B 3926 MW）",
+      "FT-14B 各 horizon MAE 波动 2800-3500MW（<span class=\"highlight\">常数地板</span>），证实误差主要来自精度上限（token 离散化）非方向错误",
+      "LLM 真正优势场景：<span class=\"highlight\">噪声鲁棒（48.51×）+ 极端子集 + 跨区域 zero-shot + 粗粒度范围预测</span>",
+      "<span class=\"highlight\">评估框架决定结论</span>——只看 MAE 会得出错误结论"
+    ],
+    "bullets_ja": [
+      "方向精度：LSTM 84-87% vs LLM 70-77%（僅差）",
+      "24h 祝日では LSTM が 3019 MW に劣化し差が縮小",
+      "FT-14B の MAE は token 離散化由来の<span class=\"highlight\">定数フロア（下限値）</span>（2800-3500MW）",
+      "LLM 優位：ノイズ・極端値・zero-shot 転移・粗粒度予測",
+      "<span class=\"highlight\">評価軸が結論を決める</span> — MAE 単独では誤った結論"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>方向准确率 vs 点 MAE — LLM 真正的优势在哪</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>电力负荷预测遇到 LLM 热潮：客户会问能不能用大模型替代传统时序模型，但真实目标是精度、鲁棒性和成本的取舍。</li><li><strong>技术选择：</strong>正面对比而不是宣传 LLM：用 Qwen2.5-14B LoRA 做结构化预测，同时保留 LSTM 基线、噪声实验、RAG ablation 和 horizon 分析。</li><li><strong>实现细节：</strong>链路包括 TEPCO 历史数据转日语结构化 prompt、542K 样本训练、LoRA 配置复盘、token 离散化机制解释、RAG 检索对照和 TwinForge 后续方向。</li><li><strong>实验/指标：</strong>不只看干净 MAE，还看噪声退化倍率、方向准确率、节假日子集、不同 horizon、数据量 ablation 和训练时间。</li><li><strong>失败模式：</strong>包括 LLM 点预测精度不如 LSTM、RAG 反而退化、542K 样本过度收敛、rank 配置记录错误，以及 token 粒度带来的常数地板。</li><li><strong>面试可讲故事：</strong>我没有为了用 LLM 而用 LLM，而是用实验给出边界；结论是 LSTM 做主力，LLM 更适合鲁棒性校验和可解释物理建模。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li><span class=\"highlight\">方向准确率（涨/跌）</span>：LSTM 84-87% vs FT-14B 70-77%（差距不悬殊）</li><li>24h 节假日子集 MAE 差距进一步缩小（LSTM 反而变差到 3019 MW vs FT-14B 3926 MW）</li><li>FT-14B 各 horizon MAE 波动 2800-3500MW（<span class=\"highlight\">常数地板</span>），证实误差主要来自精度上限（token 离散化）非方向错误</li><li>LLM 真正优势场景：<span class=\"highlight\">噪声鲁棒（48.51×）+ 极端子集 + 跨区域 zero-shot + 粗粒度范围预测</span></li><li><span class=\"highlight\">评估框架决定结论</span>——只看 MAE 会得出错误结论</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡接到 PowerTS-LLM 的完整链条：从“LLM 是否适合时序预测”的问题出发，经机制、训练、消融、失败复盘，最后沉淀成面向客户的技术选型判断。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">方向准确率 vs 点 MAE — LLM 真正的优势在哪</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：PowerTS-LLM 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：方向准确率（涨/跌）：LSTM 84-87% vs FT-14B 70-77%（差距不悬殊）；24h 节假日子集 MAE 差距进一步缩小（LSTM 反而变差到 3019 MW vs FT-14B 3926 MW）；FT-14B 各 horizon MAE 波动 2800-3500MW（常数地板），证实误差主要来自精度上限（token 离散化）非方向错误。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>时序预测类追问要准备：为什么不推荐直接替代 LSTM、鲁棒性如何量化、token 离散化的优势和精度上限在哪里。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>MAE が LSTM 比 13× 劣勢でも LLM が競争力を保つ指標</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>電力負荷予測に LLM ブームが入ってきたことだ。顧客は大規模モデルで従来時系列モデルを置き換えられるかを聞くが、本質は精度、頑健性、コストの trade-off である。</li><li><strong>技術選択：</strong>LLM を宣伝するのではなく正面から比較した。Qwen2.5-14B LoRA で構造化予測を行い、LSTM baseline、noise test、RAG ablation、horizon analysis を残した。</li><li><strong>実装：</strong> TEPCO 履歴データを日本語 structured prompt に変換し、542K samples で学習し、LoRA 設定、token discretization、RAG 対照、TwinForge への展開を整理した。</li><li><strong>実験/指標：</strong>評価は clean MAE だけでなく、noise degradation、direction accuracy、holiday subset、horizon 別性能、data ablation、training time を見る。</li><li><strong>失敗モード：</strong>失敗は LLM の点予測精度が LSTM に劣ること、RAG が逆効果になること、542K samples の過収束、rank 設定記録ミス、token 粒度による constant floor に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、LLM を使うために使ったのではなく、実験で境界を示した話として語る。結論は LSTM を主力にし、LLM は頑健性チェックや説明可能な物理モデリングに活かすこと。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>方向精度：LSTM 84-87% vs LLM 70-77%（僅差）</li><li>24h 祝日では LSTM が 3019 MW に劣化し差が縮小</li><li>FT-14B の MAE は token 離散化由来の<span class=\"highlight\">定数フロア（下限値）</span>（2800-3500MW）</li><li>LLM 優位：ノイズ・極端値・zero-shot 転移・粗粒度予測</li><li><span class=\"highlight\">評価軸が結論を決める</span> — MAE 単独では誤った結論</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは PowerTS-LLM の流れに接続する。「LLM は時系列予測に適するか」から始まり、メカニズム、学習、ablation、失敗分析を経て、顧客向けの技術選定判断へつながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">MAE が LSTM 比 13× 劣勢でも LLM が競争力を保つ指標</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、PowerTS-LLM は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：方向精度：LSTM 84-87% vs LLM 70-77%（僅差）；24h 祝日では LSTM が 3019 MW に劣化し差が縮小；FT-14B の MAE は token 離散化由来の定数フロア（下限値）（2800-3500MW）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>時系列予測系の深掘りでは、なぜ LSTM を直接置き換えないか、頑健性をどう測るか、token discretization の利点と精度上限を説明する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "p14",
+    "cat": "PowerTS-LLM",
+    "q": "TwinForge — 从 LLM 时序预测扩展到 LLM 物理建模",
+    "q_ja": "llm-power-equivalence プロジェクト（TwinForge）の位置付け",
+    "bullets": [
+      "项目代号 <span class=\"highlight\">TwinForge</span> — LLM-Assembled Digital Twin for Power System Port Equivalents",
+      "目标：从配电网端口 V/I 波形 → LLM 推理端口下负荷组成（电机+静态+其他）→ 输出可解释等效模型",
+      "对标 MMOE-ODE 黑盒；<span class=\"highlight\">白盒 vs 黑盒</span>叙事——LLM 输出参数 + 自然语言物理描述（「像工厂负荷，80% 电机」）",
+      "架构：12 模板库（T1-T7 负荷 / T8-T10 发电 / T11-T12 混合）+ 两阶段 LLM（结构选择 + 参数装配）",
+      "和 PowerTS 区别：<span class=\"highlight\">从「时序回归」转向「物理结构识别 + 参数推理」</span>，更适合 LLM 强项（分类+解释）"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">TwinForge</span>：配電網の端子 V/I 波形から負荷構成を LLM が推論し可解釈等価モデルを出力",
+      "MMOE-ODE のブラックボックスに対し<span class=\"highlight\">ホワイトボックス + 物理説明</span>（「工場負荷、80% 電動機」と自然言語で説明）",
+      "12テンプレート（T1-T7 負荷 / T8-T10 発電 / T11-T12 混合）+ 2段階のLLM（構造選択 + パラメータ推定）",
+      "PowerTS との差：<span class=\"highlight\">時系列回帰から構造識別 + パラメータ推論へ</span>",
+      "LLM の強み（分類・解釈）に合致したタスク設計"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>TwinForge — 从 LLM 时序预测扩展到 LLM 物理建模</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>电力负荷预测遇到 LLM 热潮：客户会问能不能用大模型替代传统时序模型，但真实目标是精度、鲁棒性和成本的取舍。</li><li><strong>技术选择：</strong>正面对比而不是宣传 LLM：用 Qwen2.5-14B LoRA 做结构化预测，同时保留 LSTM 基线、噪声实验、RAG ablation 和 horizon 分析。</li><li><strong>实现细节：</strong>链路包括 TEPCO 历史数据转日语结构化 prompt、542K 样本训练、LoRA 配置复盘、token 离散化机制解释、RAG 检索对照和 TwinForge 后续方向。</li><li><strong>实验/指标：</strong>不只看干净 MAE，还看噪声退化倍率、方向准确率、节假日子集、不同 horizon、数据量 ablation 和训练时间。</li><li><strong>失败模式：</strong>包括 LLM 点预测精度不如 LSTM、RAG 反而退化、542K 样本过度收敛、rank 配置记录错误，以及 token 粒度带来的常数地板。</li><li><strong>面试可讲故事：</strong>我没有为了用 LLM 而用 LLM，而是用实验给出边界；结论是 LSTM 做主力，LLM 更适合鲁棒性校验和可解释物理建模。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>项目代号 <span class=\"highlight\">TwinForge</span> — LLM-Assembled Digital Twin for Power System Port Equivalents</li><li>目标：从配电网端口 V/I 波形 → LLM 推理端口下负荷组成（电机+静态+其他）→ 输出可解释等效模型</li><li>对标 MMOE-ODE 黑盒；<span class=\"highlight\">白盒 vs 黑盒</span>叙事——LLM 输出参数 + 自然语言物理描述（「像工厂负荷，80% 电机」）</li><li>架构：12 模板库（T1-T7 负荷 / T8-T10 发电 / T11-T12 混合）+ 两阶段 LLM（结构选择 + 参数装配）</li><li>和 PowerTS 区别：<span class=\"highlight\">从「时序回归」转向「物理结构识别 + 参数推理」</span>，更适合 LLM 强项（分类+解释）</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡接到 PowerTS-LLM 的完整链条：从“LLM 是否适合时序预测”的问题出发，经机制、训练、消融、失败复盘，最后沉淀成面向客户的技术选型判断。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">TwinForge — 从 LLM 时序预测扩展到 LLM 物理建模</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：PowerTS-LLM 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：项目代号 TwinForge — LLM-Assembled Digital Twin for Power System Port Equivalents；目标：从配电网端口 V/I 波形 → LLM 推理端口下负荷组成（电机+静态+其他）→ 输出可解释等效模型；对标 MMOE-ODE 黑盒；白盒 vs 黑盒叙事——LLM 输出参数 + 自然语言物理描述（「像工厂负荷，80% 电机」）。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>时序预测类追问要准备：为什么不推荐直接替代 LSTM、鲁棒性如何量化、token 离散化的优势和精度上限在哪里。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>llm-power-equivalence プロジェクト（TwinForge）の位置付け</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>電力負荷予測に LLM ブームが入ってきたことだ。顧客は大規模モデルで従来時系列モデルを置き換えられるかを聞くが、本質は精度、頑健性、コストの trade-off である。</li><li><strong>技術選択：</strong>LLM を宣伝するのではなく正面から比較した。Qwen2.5-14B LoRA で構造化予測を行い、LSTM baseline、noise test、RAG ablation、horizon analysis を残した。</li><li><strong>実装：</strong> TEPCO 履歴データを日本語 structured prompt に変換し、542K samples で学習し、LoRA 設定、token discretization、RAG 対照、TwinForge への展開を整理した。</li><li><strong>実験/指標：</strong>評価は clean MAE だけでなく、noise degradation、direction accuracy、holiday subset、horizon 別性能、data ablation、training time を見る。</li><li><strong>失敗モード：</strong>失敗は LLM の点予測精度が LSTM に劣ること、RAG が逆効果になること、542K samples の過収束、rank 設定記録ミス、token 粒度による constant floor に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、LLM を使うために使ったのではなく、実験で境界を示した話として語る。結論は LSTM を主力にし、LLM は頑健性チェックや説明可能な物理モデリングに活かすこと。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li><span class=\"highlight\">TwinForge</span>：配電網の端子 V/I 波形から負荷構成を LLM が推論し可解釈等価モデルを出力</li><li>MMOE-ODE のブラックボックスに対し<span class=\"highlight\">ホワイトボックス + 物理説明</span>（「工場負荷、80% 電動機」と自然言語で説明）</li><li>12テンプレート（T1-T7 負荷 / T8-T10 発電 / T11-T12 混合）+ 2段階のLLM（構造選択 + パラメータ推定）</li><li>PowerTS との差：<span class=\"highlight\">時系列回帰から構造識別 + パラメータ推論へ</span></li><li>LLM の強み（分類・解釈）に合致したタスク設計</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは PowerTS-LLM の流れに接続する。「LLM は時系列予測に適するか」から始まり、メカニズム、学習、ablation、失敗分析を経て、顧客向けの技術選定判断へつながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">llm-power-equivalence プロジェクト（TwinForge）の位置付け</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、PowerTS-LLM は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：TwinForge：配電網の端子 V/I 波形から負荷構成を LLM が推論し可解釈等価モデルを出力；MMOE-ODE のブラックボックスに対しホワイトボックス + 物理説明（「工場負荷、80% 電動機」と自然言語で説明）；12テンプレート（T1-T7 負荷 / T8-T10 発電 / T11-T12 混合）+ 2段階のLLM（構造選択 + パラメータ推定）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>時系列予測系の深掘りでは、なぜ LSTM を直接置き換えないか、頑健性をどう測るか、token discretization の利点と精度上限を説明する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "p15",
+    "cat": "PowerTS-LLM",
+    "q": "TwinForge：稳态不可分→分类有效的 pivot",
+    "q_ja": "TwinForge で「定常で識別不可」から POSITIVE へ転換した経緯",
+    "bullets": [
+      "第一步特征提取：同一节点跨 4 个 Pper 的 P/Q 仅变 -0.7%~+2.8%，THD<0.001%，DPF 完全一致 → <span class=\"highlight\">写 NEGATIVE</span> 准备重采故障数据",
+      "第二步 baseline 分类器尝试：LogReg/RF random 5-fold ~0.275（≈chance）",
+      "<span class=\"highlight\">关键转折</span>：换 per-node GroupKFold（防止同 node 不同 Pper 互相 leak）→ RF acc <span class=\"highlight\">0.625（+150% vs chance）</span>",
+      "机制：单节点跨 Pper 变 ~1%，但跨 20 节点的<span class=\"highlight\">特征组合</span>有学习信号（pq_ratio 跨 Pper 从 1340→251）",
+      "教训：<span class=\"highlight\">评估方案错误（CV split 错）会得出反向结论</span>，必须配合数据结构选 CV"
+    ],
+    "bullets_ja": [
+      "定常では P/Q 変動 ~1% で識別不可と判定（NEGATIVE 結論）",
+      "baseline 分類器も random 5-fold で ~0.275（chance レベル）",
+      "<span class=\"highlight\">転換点</span>：per-node GroupKFold + RF で acc 0.625（+150%）",
+      "機構：単 node では弱信号でも 20 node の特徴の組み合わせに学習信号",
+      "教訓：<span class=\"highlight\">CV split を data structure に合わせないと結果が逆転し誤判定を招く</span>"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>TwinForge：稳态不可分→分类有效的 pivot</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>电力负荷预测遇到 LLM 热潮：客户会问能不能用大模型替代传统时序模型，但真实目标是精度、鲁棒性和成本的取舍。</li><li><strong>技术选择：</strong>正面对比而不是宣传 LLM：用 Qwen2.5-14B LoRA 做结构化预测，同时保留 LSTM 基线、噪声实验、RAG ablation 和 horizon 分析。</li><li><strong>实现细节：</strong>链路包括 TEPCO 历史数据转日语结构化 prompt、542K 样本训练、LoRA 配置复盘、token 离散化机制解释、RAG 检索对照和 TwinForge 后续方向。</li><li><strong>实验/指标：</strong>不只看干净 MAE，还看噪声退化倍率、方向准确率、节假日子集、不同 horizon、数据量 ablation 和训练时间。</li><li><strong>失败模式：</strong>包括 LLM 点预测精度不如 LSTM、RAG 反而退化、542K 样本过度收敛、rank 配置记录错误，以及 token 粒度带来的常数地板。</li><li><strong>面试可讲故事：</strong>我没有为了用 LLM 而用 LLM，而是用实验给出边界；结论是 LSTM 做主力，LLM 更适合鲁棒性校验和可解释物理建模。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>第一步特征提取：同一节点跨 4 个 Pper 的 P/Q 仅变 -0.7%~+2.8%，THD<0.001%，DPF 完全一致 → <span class=\"highlight\">写 NEGATIVE</span> 准备重采故障数据</li><li>第二步 baseline 分类器尝试：LogReg/RF random 5-fold ~0.275（≈chance）</li><li><span class=\"highlight\">关键转折</span>：换 per-node GroupKFold（防止同 node 不同 Pper 互相 leak）→ RF acc <span class=\"highlight\">0.625（+150% vs chance）</span></li><li>机制：单节点跨 Pper 变 ~1%，但跨 20 节点的<span class=\"highlight\">特征组合</span>有学习信号（pq_ratio 跨 Pper 从 1340→251）</li><li>教训：<span class=\"highlight\">评估方案错误（CV split 错）会得出反向结论</span>，必须配合数据结构选 CV</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡接到 PowerTS-LLM 的完整链条：从“LLM 是否适合时序预测”的问题出发，经机制、训练、消融、失败复盘，最后沉淀成面向客户的技术选型判断。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">TwinForge：稳态不可分→分类有效的 pivot</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：PowerTS-LLM 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：第一步特征提取：同一节点跨 4 个 Pper 的 P/Q 仅变 -0.7%~+2.8%，THD写 NEGATIVE 准备重采故障数据；第二步 baseline 分类器尝试：LogReg/RF random 5-fold ~0.275（≈chance）；关键转折：换 per-node GroupKFold（防止同 node 不同 Pper 互相 leak）→ RF acc 0.625（+150% vs chance）。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>时序预测类追问要准备：为什么不推荐直接替代 LSTM、鲁棒性如何量化、token 离散化的优势和精度上限在哪里。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>TwinForge で「定常で識別不可」から POSITIVE へ転換した経緯</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>電力負荷予測に LLM ブームが入ってきたことだ。顧客は大規模モデルで従来時系列モデルを置き換えられるかを聞くが、本質は精度、頑健性、コストの trade-off である。</li><li><strong>技術選択：</strong>LLM を宣伝するのではなく正面から比較した。Qwen2.5-14B LoRA で構造化予測を行い、LSTM baseline、noise test、RAG ablation、horizon analysis を残した。</li><li><strong>実装：</strong> TEPCO 履歴データを日本語 structured prompt に変換し、542K samples で学習し、LoRA 設定、token discretization、RAG 対照、TwinForge への展開を整理した。</li><li><strong>実験/指標：</strong>評価は clean MAE だけでなく、noise degradation、direction accuracy、holiday subset、horizon 別性能、data ablation、training time を見る。</li><li><strong>失敗モード：</strong>失敗は LLM の点予測精度が LSTM に劣ること、RAG が逆効果になること、542K samples の過収束、rank 設定記録ミス、token 粒度による constant floor に現れた。</li><li><strong>面接で話せるストーリー：</strong>面接では、LLM を使うために使ったのではなく、実験で境界を示した話として語る。結論は LSTM を主力にし、LLM は頑健性チェックや説明可能な物理モデリングに活かすこと。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>定常では P/Q 変動 ~1% で識別不可と判定（NEGATIVE 結論）</li><li>baseline 分類器も random 5-fold で ~0.275（chance レベル）</li><li><span class=\"highlight\">転換点</span>：per-node GroupKFold + RF で acc 0.625（+150%）</li><li>機構：単 node では弱信号でも 20 node の特徴の組み合わせに学習信号</li><li>教訓：<span class=\"highlight\">CV split を data structure に合わせないと結果が逆転し誤判定を招く</span></li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは PowerTS-LLM の流れに接続する。「LLM は時系列予測に適するか」から始まり、メカニズム、学習、ablation、失敗分析を経て、顧客向けの技術選定判断へつながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">TwinForge で「定常で識別不可」から POSITIVE へ転換した経緯</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、PowerTS-LLM は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：定常では P/Q 変動 ~1% で識別不可と判定（NEGATIVE 結論）；baseline 分類器も random 5-fold で ~0.275（chance レベル）；転換点：per-node GroupKFold + RF で acc 0.625（+150%）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>時系列予測系の深掘りでは、なぜ LSTM を直接置き換えないか、頑健性をどう測るか、token discretization の利点と精度上限を説明する。</li></ul>"
+      }
+    ]
   }
 ]

@@ -19,7 +19,35 @@
       "推論コスト <span class=\"num\">100倍</span> 削減（ローカル14B vs GPT API）"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>SiLR-Agent 核心数字</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>恢复成功率 <span class=\"num\">97.0%</span>（64/66 IEEE 39-bus场景）</li><li>安全违规率 <span class=\"num\">0%</span>（所有危险动作被SiLR拦截）</li><li>平均 <span class=\"num\">3.2</span> 步完成恢复，max_steps=8</li><li>超过GPT-5.4 zero-shot(82.1%) / few-shot-3(94.2%) / 1-shot(96.7%)</li><li>推理成本低 <span class=\"num\">100倍</span>（本地14B vs GPT API）</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">SiLR-Agent 核心数字</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：恢复成功率 97.0%（64/66 IEEE 39-bus场景）；安全违规率 0%（所有危险动作被SiLR拦截）；平均 3.2 步完成恢复，max_steps=8。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>安全 Agent 类追问要准备：仿真器覆盖不了的约束怎么办、验证器错了怎么办、failsafe 的最坏结果是什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>SiLR-Agentの主要指標</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>復旧成功率 <span class=\"num\">97.0%</span>（IEEE 39-busシナリオ64/66件）</li><li>安全違反率 <span class=\"num\">0%</span>（危険な操作はすべてSiLRが遮断）</li><li>平均 <span class=\"num\">3.2</span> ステップで復旧完了、max_steps=8</li><li>GPT-5.4を上回る：zero-shot(82.1%) / few-shot-3(94.2%) / 1-shot(96.7%)</li><li>推論コスト <span class=\"num\">100倍</span> 削減（ローカル14B vs GPT API）</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">SiLR-Agentの主要指標</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：復旧成功率 97.0%（IEEE 39-busシナリオ64/66件）；安全違反率 0%（危険な操作はすべてSiLRが遮断）；平均 3.2 ステップで復旧完了、max_steps=8。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>安全 Agent 系の深掘りでは、シミュレータが覆えない制約、verifier 自体の誤り、failsafe の最悪ケースを説明できるようにする。</li></ul>"
+      }
+    ]
   },
   {
     "id": "g02",
@@ -39,7 +67,35 @@
       "汎用性：シミュレータ／ルールエンジンがある領域なら適用可能（金融コンプライアンス、医療投薬、コードサンドボックス）"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>SiLR = Simulation-in-the-Loop Reasoning，解决什么问题？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>核心痛点：LLM能推理但会\"幻觉动作\"——在安全关键领域（电网、金融、医疗）不可接受</li><li>现有方案：要么盲目信任LLM，要么静态规则（漏检动态违规）</li><li>SiLR：每步先在仿真器中验证安全性再执行，把安全保障从\"信任模型\"变成\"验证模型\"</li><li>可迁移：任何有仿真器/规则引擎的场景（金融合规、医疗用药、代码沙箱）</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">SiLR = Simulation-in-the-Loop Reasoning，解决什么问题？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：核心痛点：LLM能推理但会\"幻觉动作\"——在安全关键领域（电网、金融、医疗）不可接受；现有方案：要么盲目信任LLM，要么静态规则（漏检动态违规）；SiLR：每步先在仿真器中验证安全性再执行，把安全保障从\"信任模型\"变成\"验证模型\"。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>安全 Agent 类追问要准备：仿真器覆盖不了的约束怎么办、验证器错了怎么办、failsafe 的最坏结果是什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>SiLR = Simulation-in-the-Loop Reasoningが解決する課題とは？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>核心課題：LLMは推論できるがハルシネーションによる誤操作を起こす——電力網・金融・医療などの安全重要領域では許容できない</li><li>既存手法：LLMを盲目的に信頼するか、静的ルール（動的違反を見逃す）のどちらか</li><li>SiLR：毎ステップ、シミュレータで安全性を検証してから実行する。安全保証を「モデルを信頼」から「モデルを検証」に変える</li><li>汎用性：シミュレータ／ルールエンジンがある領域なら適用可能（金融コンプライアンス、医療投薬、コードサンドボックス）</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">SiLR = Simulation-in-the-Loop Reasoningが解決する課題とは？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：核心課題：LLMは推論できるがハルシネーションによる誤操作を起こす——電力網・金融・医療などの安全重要領域では許容できない；既存手法：LLMを盲目的に信頼するか、静的ルール（動的違反を見逃す）のどちらか；SiLR：毎ステップ、シミュレータで安全性を検証してから実行する。安全保証を「モデルを信頼」から「モデルを検証」に変える。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>安全 Agent 系の深掘りでは、シミュレータが覆えない制約、verifier 自体の誤り、failsafe の最悪ケースを説明できるようにする。</li></ul>"
+      }
+    ]
   },
   {
     "id": "g03",
@@ -61,7 +117,35 @@
       "⑤ CHECK：check_stability() → 未復旧ならStep 1に戻る"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Bounded ReAct 的5步执行循环</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>① OBSERVE：観測工具获取系统状态，压缩到~200-300 tokens</li><li>② REASON+ACT：LLM推理 + 三层ActionParser解析输出</li><li>③ VERIFY：SiLR验证器在影子仿真中执行，检查4类约束</li><li>④ PASS→执行 / FAIL→Escalation Hint+重试（每步最多3次）/ 3次失败→failsafe</li><li>⑤ CHECK：check_stability() → 未恢复则回到Step 1</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Bounded ReAct 的5步执行循环</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：① OBSERVE：観測工具获取系统状态，压缩到~200-300 tokens；② REASON+ACT：LLM推理 + 三层ActionParser解析输出；③ VERIFY：SiLR验证器在影子仿真中执行，检查4类约束。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>安全 Agent 类追问要准备：仿真器覆盖不了的约束怎么办、验证器错了怎么办、failsafe 的最坏结果是什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>Bounded ReActの5ステップ実行ループ</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>① OBSERVE：観測ツールでシステム状態を取得し、~200-300 tokensに圧縮</li><li>② REASON+ACT：LLMが推論 + 三層ActionParserで出力を解析</li><li>③ VERIFY：SiLR検証器がシャドウシミュレーション上で実行し、4種類の制約をチェック</li><li>④ PASS→実行 / FAIL→Escalation Hint＋リトライ（1ステップ最大3回）/ 3回失敗→failsafe</li><li>⑤ CHECK：check_stability() → 未復旧ならStep 1に戻る</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">Bounded ReActの5ステップ実行ループ</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：① OBSERVE：観測ツールでシステム状態を取得し、~200-300 tokensに圧縮；② REASON+ACT：LLMが推論 + 三層ActionParserで出力を解析；③ VERIFY：SiLR検証器がシャドウシミュレーション上で実行し、4種類の制約をチェック。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>安全 Agent 系の深掘りでは、シミュレータが覆えない制約、verifier 自体の誤り、failsafe の最悪ケースを説明できるようにする。</li></ul>"
+      }
+    ]
   },
   {
     "id": "g04",
@@ -81,7 +165,35 @@
       "Plan-and-ExecuteではなくReActを選んだ理由：電力復旧は動的で、操作ごとにシステム状態が変わるため、全ステップの事前計画は不可能"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Bounded ReAct vs 标准 ReAct</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>标准ReAct：没有明确终止条件，可能无限循环</li><li>三层边界：步数上限(max_steps=8) / 重试上限(每步max 3次) / Failsafe兜底</li><li>保证系统永远有兜底，不会陷入无限循环或做出危险决策</li><li>为什么选ReAct不选Plan-and-Execute：电力恢复是动态的，每次操作后系统状态变化，不能提前规划所有步骤</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Bounded ReAct vs 标准 ReAct</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：标准ReAct：没有明确终止条件，可能无限循环；三层边界：步数上限(max_steps=8) / 重试上限(每步max 3次) / Failsafe兜底；保证系统永远有兜底，不会陷入无限循环或做出危险决策。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>安全 Agent 类追问要准备：仿真器覆盖不了的约束怎么办、验证器错了怎么办、failsafe 的最坏结果是什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>Bounded ReAct vs 標準ReAct</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>標準ReAct：明確な終了条件がなく、無限ループの可能性がある</li><li>三層の境界：ステップ上限(max_steps=8) / リトライ上限(各ステップ最大3回) / Failsafeによるフォールバック</li><li>システムに常にフォールバックがあることを保証し、無限ループや危険な判断に陥らない</li><li>Plan-and-ExecuteではなくReActを選んだ理由：電力復旧は動的で、操作ごとにシステム状態が変わるため、全ステップの事前計画は不可能</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">Bounded ReAct vs 標準ReAct</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：標準ReAct：明確な終了条件がなく、無限ループの可能性がある；三層の境界：ステップ上限(max_steps=8) / リトライ上限(各ステップ最大3回) / Failsafeによるフォールバック；システムに常にフォールバックがあることを保証し、無限ループや危険な判断に陥らない。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>安全 Agent 系の深掘りでは、シミュレータが覆えない制約、verifier 自体の誤り、failsafe の最悪ケースを説明できるようにする。</li></ul>"
+      }
+    ]
   },
   {
     "id": "g05",
@@ -101,7 +213,35 @@
       "目的：モデル間の互換性を確保し、パースエラーでリトライ回数を浪費しない。モデル切り替えによるablationも容易に"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>三层 ActionParser 是什么？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>Layer 1：原生tool_calls解析（GPT格式）</li><li>Layer 2：JSON block解析（Qwen3格式：```json {...} ```）</li><li>Layer 3：正则匹配（兜底）</li><li>目的：跨模型兼容性，避免浪费重试次数在解析错误上，能快速切换模型做消融</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">三层 ActionParser 是什么？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：Layer 1：原生tool_calls解析（GPT格式）；Layer 2：JSON block解析（Qwen3格式：```json {...} ```）；Layer 3：正则匹配（兜底）。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>安全 Agent 类追问要准备：仿真器覆盖不了的约束怎么办、验证器错了怎么办、failsafe 的最坏结果是什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>三層ActionParserとは？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>Layer 1：ネイティブtool_calls解析（GPT形式）</li><li>Layer 2：JSON block解析（Qwen3形式：```json {...} ```）</li><li>Layer 3：正規表現マッチング（フォールバック）</li><li>目的：モデル間の互換性を確保し、パースエラーでリトライ回数を浪費しない。モデル切り替えによるablationも容易に</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">三層ActionParserとは？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：Layer 1：ネイティブtool_calls解析（GPT形式）；Layer 2：JSON block解析（Qwen3形式：```json {...} ```）；Layer 3：正規表現マッチング（フォールバック）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>安全 Agent 系の深掘りでは、シミュレータが覆えない制約、verifier 自体の誤り、failsafe の最悪ケースを説明できるようにする。</li></ul>"
+      }
+    ]
   },
   {
     "id": "g06",
@@ -121,7 +261,35 @@
       "全てPASS → 本番システムで実行；いずれかFAIL → 構造化された違反レポート（偏差量・調整提案）"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>SiLR 验证机制的完整流程</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>① 克隆当前状态 → Shadow Copy（DAE数组快照，非deepcopy因PyCapsule不可序列化）</li><li>② 在影子系统执行动作 → 运行潮流计算(~100ms)</li><li>③ 4个约束检查：电压(0.90-1.10pu) / 频率(±0.5Hz) / 线路負荷(<100%) / 転子角(<180°)</li><li>全部PASS → 主系统执行；任一FAIL → 结构化违规报告（偏离多少、调整建议）</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">SiLR 验证机制的完整流程</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：① 克隆当前状态 → Shadow Copy（DAE数组快照，非deepcopy因PyCapsule不可序列化）；② 在影子系统执行动作 → 运行潮流计算(~100ms)；③ 4个约束检查：电压(0.90-1.10pu) / 频率(±0.5Hz) / 线路負荷(<100%) / 転子角(<180°)。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>安全 Agent 类追问要准备：仿真器覆盖不了的约束怎么办、验证器错了怎么办、failsafe 的最坏结果是什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>SiLR検証メカニズムの全体フロー</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>① 現在の状態をクローン → Shadow Copy（DAE配列のスナップショット、PyCapsuleがシリアライズ不可のためdeepcopyではない）</li><li>② シャドウシステム上でアクションを実行 → 潮流計算を実行(~100ms)</li><li>③ 4つの制約チェック：電圧(0.90-1.10pu) / 周波数(±0.5Hz) / 線路負荷(<100%) / 回転子角(<180°)</li><li>全てPASS → 本番システムで実行；いずれかFAIL → 構造化された違反レポート（偏差量・調整提案）</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">SiLR検証メカニズムの全体フロー</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：① 現在の状態をクローン → Shadow Copy（DAE配列のスナップショット、PyCapsuleがシリアライズ不可のためdeepcopyではない）；② シャドウシステム上でアクションを実行 → 潮流計算を実行(~100ms)；③ 4つの制約チェック：電圧(0.90-1.10pu) / 周波数(±0.5Hz) / 線路負荷(<100%) / 回転子角(<180°)。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>安全 Agent 系の深掘りでは、シミュレータが覆えない制約、verifier 自体の誤り、failsafe の最悪ケースを説明できるようにする。</li></ul>"
+      }
+    ]
   },
   {
     "id": "g07",
@@ -141,7 +309,35 @@
       "ablation：progress feedback(PASS時にも提示)はむしろ性能低下——REJECTの時だけ介入すべき"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Escalation Hint 机制 — 如何从92.4%→97.0%</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>发现：5个失败场景全是同一问题——magnitude不够被拒绝后，模型不会自主加码</li><li>三层机制（零重训）：引导层(具体提示\"100MW不够，至少150MW\") / 系统层(提示層) / 兜底层(强制2×或min 100MW)</li><li>关键洞察：12轮SFT无法教会\"被拒→加码\"的多步行为，系统层引导比重训更有效</li><li>消融：progress feedback(PASS时也提示)反而退步——只在REJECT时介入</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Escalation Hint 机制 — 如何从92.4%→97.0%</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：发现：5个失败场景全是同一问题——magnitude不够被拒绝后，模型不会自主加码；三层机制（零重训）：引导层(具体提示\"100MW不够，至少150MW\") / 系统层(提示層) / 兜底层(强制2×或min 100MW)；关键洞察：12轮SFT无法教会\"被拒→加码\"的多步行为，系统层引导比重训更有效。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>Escalation Hintメカニズム — 92.4%から97.0%への改善方法</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>発見：失敗5件は全て同じ問題——magnitudeが不足して拒否された後、モデルが自発的に増量しない</li><li>三層メカニズム（再学習ゼロ）：ガイド層(具体的に\"100MWでは不足、最低150MW\"と提示) / システム層(プロンプト層) / フォールバック層(強制2×またはmin 100MW)</li><li>重要な洞察：12ラウンドのSFTでは「拒否→増量」という多段階行動を学習できない。システム層のガイドが再学習より効果的</li><li>ablation：progress feedback(PASS時にも提示)はむしろ性能低下——REJECTの時だけ介入すべき</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">Escalation Hintメカニズム — 92.4%から97.0%への改善方法</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：発見：失敗5件は全て同じ問題——magnitudeが不足して拒否された後、モデルが自発的に増量しない；三層メカニズム（再学習ゼロ）：ガイド層(具体的に\"100MWでは不足、最低150MW\"と提示) / システム層(プロンプト層) / フォールバック層(強制2×またはmin 100MW)；重要な洞察：12ラウンドのSFTでは「拒否→増量」という多段階行動を学習できない。システム層のガイドが再学習より効果的。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "g08",
@@ -156,12 +352,40 @@
     ],
     "bullets_ja": [
       "Gemini-3-FlashをTeacher Modelとして使用（Kimiは不採用：復旧率38%＋トポロジ幻覚56%）",
-      "14基本シナリオ×SiLRループ→56-68件 + 52パラメータ変体→179-181件 + 専門家データ15件 + 修正2件",
+      "14基本シナリオ×SiLRループ→56-68件 + 52件のパラメータバリエーション→179-181件 + 専門家データ15件 + 修正2件",
       "合計 <span class=\"num\">248件</span> のSFTデータ",
       "まずTeacherで生成、SiLRで検証・フィルタリング、少量の重要サンプルを手動修正（蒸留＋能動学習）"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>训练数据：怎么来的？规模多大？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>用Gemini-3-Flash作为Teacher Model（Kimi被淘汰：38%恢复率+56%拓扑幻觉）</li><li>14个基础场景×SiLR循环→56-68条 + 52个参数化变体→179-181条 + 专家数据15条 + 修复2条</li><li>总计 <span class=\"num\">248条</span> SFT数据</li><li>先用Teacher生成，再SiLR验证过滤，再人工修正少量关键样本（蒸馏+主動学習）</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">训练数据：怎么来的？规模多大？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：用Gemini-3-Flash作为Teacher Model（Kimi被淘汰：38%恢复率+56%拓扑幻觉）；14个基础场景×SiLR循环→56-68条 + 52个参数化变体→179-181条 + 专家数据15条 + 修复2条；总计 248条 SFT数据。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>训练类追问要准备：数据从哪里来、怎么过滤坏样本、为什么这个模型/LoRA 配置、训练失败后如何定位到数据、prompt、采样或 reward。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>学習データ：どう作成したか？規模は？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>Gemini-3-FlashをTeacher Modelとして使用（Kimiは不採用：復旧率38%＋トポロジ幻覚56%）</li><li>14基本シナリオ×SiLRループ→56-68件 + 52件のパラメータバリエーション→179-181件 + 専門家データ15件 + 修正2件</li><li>合計 <span class=\"num\">248件</span> のSFTデータ</li><li>まずTeacherで生成、SiLRで検証・フィルタリング、少量の重要サンプルを手動修正（蒸留＋能動学習）</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">学習データ：どう作成したか？規模は？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：Gemini-3-FlashをTeacher Modelとして使用（Kimiは不採用：復旧率38%＋トポロジ幻覚56%）；14基本シナリオ×SiLRループ→56-68件 + 52件のパラメータバリエーション→179-181件 + 専門家データ15件 + 修正2件；合計 248件 のSFTデータ。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>学習系の深掘りでは、データの作り方、誤データの除去、モデル/LoRA 設定の理由、失敗時に data/prompt/sampling/reward のどこを疑ったかを準備する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "g09",
@@ -181,7 +405,35 @@
       "顧客への示唆：500件の丁寧にアノテーションした業界QAが、5000件のノイズデータを上回る可能性がある"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>数据质量的实验证据</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>删除7条错误标注(−7条) → 恢复率 <span class=\"num\">+6pp</span></li><li>添加2条s01修复数据 → 修复了一个一直失败的场景</li><li>结论：<span class=\"highlight\">7条坏数据的伤害 > 100条好数据的贡献</span></li><li>对客户的意义：500条精心标注的行业QA，效果可能超过5000条噪音数据</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">数据质量的实验证据</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：删除7条错误标注(−7条) → 恢复率 +6pp；添加2条s01修复数据 → 修复了一个一直失败的场景；结论：7条坏数据的伤害 > 100条好数据的贡献。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>データ品質の実験的エビデンス</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>誤ラベル7件を削除(−7件) → 復旧率 <span class=\"num\">+6pp</span></li><li>s01修正データ2件を追加 → 常に失敗していたシナリオが復旧可能に</li><li>結論：<span class=\"highlight\">7件の不良データの害 > 100件の良質データの貢献</span></li><li>顧客への示唆：500件の丁寧にアノテーションした業界QAが、5000件のノイズデータを上回る可能性がある</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">データ品質の実験的エビデンス</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：誤ラベル7件を削除(−7件) → 復旧率 +6pp；s01修正データ2件を追加 → 常に失敗していたシナリオが復旧可能に；結論：7件の不良データの害 > 100件の良質データの貢献。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "g10",
@@ -201,7 +453,35 @@
       "9B(視覚言語モデル)=87.9%、テキスト推論は純言語14Bに劣る"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>为什么14B比32B效果好？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>248条数据下：14B SFT=92.4%，32B只有87.9%（3种配置结论一致）</li><li>原因①：同一LoRA rank对更大模型的表达比例更低(r=64: 14B≈0.5% vs 32B≈0.3%)</li><li>原因②：32B预训练知识更强，可能与SFT数据的领域策略存在冲突</li><li>9B(视觉语言模型)=87.9%，文本推理弱于纯语言14B</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">为什么14B比32B效果好？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：248条数据下：14B SFT=92.4%，32B只有87.9%（3种配置结论一致）；原因①：同一LoRA rank对更大模型的表达比例更低(r=64: 14B≈0.5% vs 32B≈0.3%)；原因②：32B预训练知识更强，可能与SFT数据的领域策略存在冲突。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>なぜ14Bが32Bより性能が良いのか？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>248件のデータで：14B SFT=92.4%、32Bは87.9%のみ（3つの設定で一貫した結論）</li><li>理由①：同じLoRA rankでも大きいモデルほど表現割合が低い(r=64: 14B≈0.5% vs 32B≈0.3%)</li><li>理由②：32Bは事前学習知識が強く、SFTデータのドメイン戦略と衝突する可能性がある</li><li>9B(視覚言語モデル)=87.9%、テキスト推論は純言語14Bに劣る</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">なぜ14Bが32Bより性能が良いのか？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：248件のデータで：14B SFT=92.4%、32Bは87.9%のみ（3つの設定で一貫した結論）；理由①：同じLoRA rankでも大きいモデルほど表現割合が低い(r=64: 14B≈0.5% vs 32B≈0.3%)；理由②：32Bは事前学習知識が強く、SFTデータのドメイン戦略と衝突する可能性がある。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "g11",
@@ -221,7 +501,35 @@
       "最終結論：全ての落とし穴を修正後、DPOの純貢献は+0.6ppのみ。投資対効果が低い。全てのケースでDPOが必要なわけではない"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>DPO 三个坑</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>坑①：shed_load回避(−7.6pp)：63%偏好对惩罚了切负荷 → 模型学会\"永远不切负荷\"</li><li>坑②：Qwen3 <think>模式激活：DPO后每个输出前加think标签 → 302次解析错误，修复：enable_thinking=False</li><li>坑③：动作幅度分布偏移：close_line专家数据中adjust_gen都~20MW → 模型学到\"所有调整都是20MW\"</li><li>最终结论：修复所有坑后DPO净贡献仅+0.6pp，投入产出比不高。不是所有场景都需要DPO</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">DPO 三个坑</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：坑①：shed_load回避(−7.6pp)：63%偏好对惩罚了切负荷 → 模型学会\"永远不切负荷\"；坑②：Qwen3 模式激活：DPO后每个输出前加think标签 → 302次解析错误，修复：enable_thinking=False；坑③：动作幅度分布偏移：close_line专家数据中adjust_gen都~20MW → 模型学到\"所有调整都是20MW\"。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>训练类追问要准备：数据从哪里来、怎么过滤坏样本、为什么这个模型/LoRA 配置、训练失败后如何定位到数据、prompt、采样或 reward。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>DPOの3つの落とし穴</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>落とし穴①：shed_load回避(−7.6pp)：63%のペアがshed_loadを罰則化 → モデルが「絶対に負荷遮断しない」と学習</li><li>落とし穴②：Qwen3の<think>モード起動：DPO後に全出力にthinkタグが付く → 302回のパースエラー、修正：enable_thinking=False</li><li>落とし穴③：アクション幅の分布シフト：close_lineの専門家データでadjust_genが全て~20MW → モデルが「調整は全部20MW」と学習</li><li>最終結論：全ての落とし穴を修正後、DPOの純貢献は+0.6ppのみ。投資対効果が低い。全てのケースでDPOが必要なわけではない</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">DPOの3つの落とし穴</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：落とし穴①：shed_load回避(−7.6pp)：63%のペアがshed_loadを罰則化 → モデルが「絶対に負荷遮断しない」と学習；落とし穴②：Qwen3のモード起動：DPO後に全出力にthinkタグが付く → 302回のパースエラー、修正：enable_thinking=False；落とし穴③：アクション幅の分布シフト：close_lineの専門家データでadjust_genが全て~20MW → モデルが「調整は全部20MW」と学習。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>学習系の深掘りでは、データの作り方、誤データの除去、モデル/LoRA 設定の理由、失敗時に data/prompt/sampling/reward のどこを疑ったかを準備する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "g12",
@@ -243,7 +551,35 @@
       "r=64の理由：タスク複雑度が高い（マルチツール選択＋数値パラメータ生成）"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>LoRA 配置</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>model: Qwen3-14B，quantization: NF4(QLoRA)</li><li>lora_r=64, lora_alpha=128(scaling=2)，7个target_modules</li><li>trainable params: ~100M / 14B = <1%</li><li>训练时间: ~70-100 min on RTX PRO Blackwell 96GB</li><li>r=64因为任务复杂度高（多工具选择+数值参数生成）</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">LoRA 配置</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：model: Qwen3-14B，quantization: NF4(QLoRA)；lora_r=64, lora_alpha=128(scaling=2)，7个target_modules；trainable params: ~100M / 14B = <1%。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>训练类追问要准备：数据从哪里来、怎么过滤坏样本、为什么这个模型/LoRA 配置、训练失败后如何定位到数据、prompt、采样或 reward。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>LoRAの設定</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>model: Qwen3-14B、quantization: NF4(QLoRA)</li><li>lora_r=64, lora_alpha=128(scaling=2)、7つのtarget_modules</li><li>trainable params: ~100M / 14B = <1%</li><li>学習時間: ~70-100分（RTX PRO Blackwell 96GB上）</li><li>r=64の理由：タスク複雑度が高い（マルチツール選択＋数値パラメータ生成）</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">LoRAの設定</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：model: Qwen3-14B、quantization: NF4(QLoRA)；lora_r=64, lora_alpha=128(scaling=2)、7つのtarget_modules；trainable params: ~100M / 14B = <1%。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>学習系の深掘りでは、データの作り方、誤データの除去、モデル/LoRA 設定の理由、失敗時に data/prompt/sampling/reward のどこを疑ったかを準備する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "g13",
@@ -265,7 +601,35 @@
       "核心：モデルに<span class=\"highlight\">注目すべき情報</span>だけを見せる。全情報ではない"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Observation压缩策略</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>电力系统全状态~2000 tokens，直接塞入context太浪费</li><li>正常设备只报数量：\"32/39 buses normal\"</li><li>违规设备报详细数值+动作提示：\"Bus 9: 0.87 p.u. < 0.90, consider adjust_gen nearby\"</li><li>压缩后~200-300 tokens，信息保留率90%+</li><li>核心：给模型看<span class=\"highlight\">需要关注的信息</span>，不是所有信息</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Observation压缩策略</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：电力系统全状态~2000 tokens，直接塞入context太浪费；正常设备只报数量：\"32/39 buses normal\"；违规设备报详细数值+动作提示：\"Bus 9: 0.87 p.u. < 0.90, consider adjust_gen nearby\"。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>Observation圧縮戦略</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>電力系統の全状態は~2000 tokens、そのままcontextに入れるのは非効率</li><li>正常な機器は数量のみ報告：\"32/39 buses normal\"</li><li>違反機器は詳細値＋アクション提案：\"Bus 9: 0.87 p.u. < 0.90, consider adjust_gen nearby\"</li><li>圧縮後~200-300 tokens、情報保持率90%以上</li><li>核心：モデルに<span class=\"highlight\">注目すべき情報</span>だけを見せる。全情報ではない</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">Observation圧縮戦略</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：電力系統の全状態は~2000 tokens、そのままcontextに入れるのは非効率；正常な機器は数量のみ報告：\"32/39 buses normal\"；違反機器は詳細値＋アクション提案：\"Bus 9: 0.87 p.u. < 0.90, consider adjust_gen nearby\"。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "g14",
@@ -283,7 +647,35 @@
       "教訓：few-shotは多ければ良いわけではない。実験による検証が必要"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Few-shot 实验发现</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>GPT-5.4实验：<span class=\"num\">1個示例(96.7%) > 3個示例(94.2%)</span></li><li>原因：多示例稀释context，示例占用更多token，压缩了对当前问题的注意力</li><li>教训：few-shot不是越多越好，需要实验验证</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Few-shot 实验发现</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：GPT-5.4实验：1個示例(96.7%) > 3個示例(94.2%)；原因：多示例稀释context，示例占用更多token，压缩了对当前问题的注意力；教训：few-shot不是越多越好，需要实验验证。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>Few-shot実験の発見</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>GPT-5.4での実験：<span class=\"num\">1例(96.7%) > 3例(94.2%)</span></li><li>原因：例が多いとcontextが薄まり、tokenを消費して現在の問題への注意力が低下する</li><li>教訓：few-shotは多ければ良いわけではない。実験による検証が必要</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">Few-shot実験の発見</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：GPT-5.4での実験：1例(96.7%) > 3例(94.2%)；原因：例が多いとcontextが薄まり、tokenを消費して現在の問題への注意力が低下する；教訓：few-shotは多ければ良いわけではない。実験による検証が必要。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "g15",
@@ -307,7 +699,35 @@
       "検証済み：電力系統（物理シミュレーション）+ ネットワークルーティング（離散イベントシミュレーション）"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>SiLR框架可迁移到哪些场景？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>核心抽象：<span class=\"highlight\">LLM负责推理 + 仿真器负责验证 = 可信AI决策</span></li><li>金融：Agent生成交易策略 → 合规引擎验证 → 通过才执行</li><li>医疗：LLM给出用药建议 → 药物冲突检查系统验证</li><li>自动驾驶：规划路径 → 碰撞预測仿真验证</li><li>代码执行：LLM生成代码 → 沙箱验证 → 通过才运行</li><li>已验证：电力系统（物理仿真）+ 网络路由（离散事件仿真）</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">SiLR框架可迁移到哪些场景？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：核心抽象：LLM负责推理 + 仿真器负责验证 = 可信AI决策；金融：Agent生成交易策略 → 合规引擎验证 → 通过才执行；医疗：LLM给出用药建议 → 药物冲突检查系统验证。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>安全 Agent 类追问要准备：仿真器覆盖不了的约束怎么办、验证器错了怎么办、failsafe 的最坏结果是什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>SiLRフレームワークはどの分野に応用できるか？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>コア抽象：<span class=\"highlight\">LLMが推論 + シミュレータが検証 = 信頼できるAI意思決定</span></li><li>金融：Agentが取引戦略を生成 → コンプライアンスエンジンで検証 → 通過後に実行</li><li>医療：LLMが投薬提案 → 薬物相互作用チェックシステムで検証</li><li>自動運転：経路計画 → 衝突予測シミュレーションで検証</li><li>コード実行：LLMがコードを生成 → サンドボックスで検証 → 通過後に実行</li><li>検証済み：電力系統（物理シミュレーション）+ ネットワークルーティング（離散イベントシミュレーション）</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">SiLRフレームワークはどの分野に応用できるか？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：コア抽象：LLMが推論 + シミュレータが検証 = 信頼できるAI意思決定；金融：Agentが取引戦略を生成 → コンプライアンスエンジンで検証 → 通過後に実行；医療：LLMが投薬提案 → 薬物相互作用チェックシステムで検証。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>安全 Agent 系の深掘りでは、シミュレータが覆えない制約、verifier 自体の誤り、failsafe の最悪ケースを説明できるようにする。</li></ul>"
+      }
+    ]
   },
   {
     "id": "g16",
@@ -329,7 +749,35 @@
       "性能：ローカル14B+Escalation <span class=\"num\">97.0%</span> > GPT-5.4 1-shot <span class=\"num\">96.7%</span>、コスト100分の1"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>为什么不直接用GPT-5.4调API？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>成本：API按token计费，每个场景多轮交互，成本不可控</li><li>延迟：API网络延迟，电力系统需要实时决策</li><li>确定性：GPT每次输出不同(±2.6pp)，关键系统需要确定性行为</li><li>隐私：电力系统=关键基础设施信息，不能上传第三方</li><li>数据：本地14B+Escalation <span class=\"num\">97.0%</span> > GPT-5.4 1-shot <span class=\"num\">96.7%</span>，成本低100倍</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">为什么不直接用GPT-5.4调API？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：成本：API按token计费，每个场景多轮交互，成本不可控；延迟：API网络延迟，电力系统需要实时决策；确定性：GPT每次输出不同(±2.6pp)，关键系统需要确定性行为。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>なぜGPT-5.4のAPIを直接使わないのか？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>コスト：APIはトークン課金で、各シナリオで複数ラウンドの対話があり、コストが予測不能</li><li>レイテンシ：APIのネットワーク遅延があり、電力系統はリアルタイム判断が必要</li><li>確定性：GPTは毎回出力が異なる(±2.6pp)、重要システムには確定的な動作が必要</li><li>プライバシー：電力系統＝重要インフラ情報であり、第三者にアップロードできない</li><li>性能：ローカル14B+Escalation <span class=\"num\">97.0%</span> > GPT-5.4 1-shot <span class=\"num\">96.7%</span>、コスト100分の1</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">なぜGPT-5.4のAPIを直接使わないのか？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：コスト：APIはトークン課金で、各シナリオで複数ラウンドの対話があり、コストが予測不能；レイテンシ：APIのネットワーク遅延があり、電力系統はリアルタイム判断が必要；確定性：GPTは毎回出力が異なる(±2.6pp)、重要システムには確定的な動作が必要。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "g17",
@@ -349,7 +797,35 @@
       "顧客に検証レポートのサンプルを提示——透明で説明可能"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>如果客户说\"我不信AI能做关键决策\"，你怎么回？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>AI不是替代人做决策，而是<span class=\"highlight\">辅助</span>人做决策，每个建议都有验证报告</li><li>安全违规率0%——不是因为AI完美，而是不完美的动作会被拦截</li><li>有failsafe兜底——最坏情况执行保守规则化策略</li><li>给客户看验证报告样例——透明可解释</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">如果客户说\"我不信AI能做关键决策\"，你怎么回？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：AI不是替代人做决策，而是辅助人做决策，每个建议都有验证报告；安全违规率0%——不是因为AI完美，而是不完美的动作会被拦截；有failsafe兜底——最坏情况执行保守规则化策略。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>顧客が「AIに重要な判断を任せられない」と言ったら、どう答える？</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>AIが人間に代わって判断するのではなく、<span class=\"highlight\">補助</span>として判断を支援する。すべての提案に検証レポートが付く</li><li>安全違反率0%——AIが完璧だからではなく、不完全なアクションは遮断されるから</li><li>failsafeによるフォールバック——最悪の場合でも保守的なルールベース戦略を実行</li><li>顧客に検証レポートのサンプルを提示——透明で説明可能</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">顧客が「AIに重要な判断を任せられない」と言ったら、どう答える？</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：AIが人間に代わって判断するのではなく、補助として判断を支援する。すべての提案に検証レポートが付く；安全違反率0%——AIが完璧だからではなく、不完全なアクションは遮断されるから；failsafeによるフォールバック——最悪の場合でも保守的なルールベース戦略を実行。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
   },
   {
     "id": "g18",
@@ -369,6 +845,534 @@
       "システムには常にフォールバックがあり、最悪の場合でもfailsafe実行であり、危険な判断ではない"
     ],
     "group": "项目",
-    "lv": 2
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Failsafe三层保护</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>① SiLR拦截：危险动作不会执行</li><li>② 3次重试：每步最多3次LLM尝试，基于结构化反馈调整策略</li><li>③ DefaultFailsafe：全部失败后切换到规则化策略（基于最严重违规类型，执行保守恢复动作）</li><li>系统永远有兜底方案，最坏情况也是走failsafe，不是做出危险决策</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Failsafe三层保护</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：① SiLR拦截：危险动作不会执行；② 3次重试：每步最多3次LLM尝试，基于结构化反馈调整策略；③ DefaultFailsafe：全部失败后切换到规则化策略（基于最严重违规类型，执行保守恢复动作）。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>安全 Agent 类追问要准备：仿真器覆盖不了的约束怎么办、验证器错了怎么办、failsafe 的最坏结果是什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>Failsafeの三層保護</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>① SiLR遮断：危険なアクションは実行されない</li><li>② 3回リトライ：各ステップ最大3回のLLM試行、構造化フィードバックに基づいて戦略を調整</li><li>③ DefaultFailsafe：全て失敗後、ルールベース戦略に切り替え（最も深刻な違反種別に基づき、保守的な復旧アクションを実行）</li><li>システムには常にフォールバックがあり、最悪の場合でもfailsafe実行であり、危険な判断ではない</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">Failsafeの三層保護</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：① SiLR遮断：危険なアクションは実行されない；② 3回リトライ：各ステップ最大3回のLLM試行、構造化フィードバックに基づいて戦略を調整；③ DefaultFailsafe：全て失敗後、ルールベース戦略に切り替え（最も深刻な違反種別に基づき、保守的な復旧アクションを実行）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>安全 Agent 系の深掘りでは、シミュレータが覆えない制約、verifier 自体の誤り、failsafe の最悪ケースを説明できるようにする。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "g19",
+    "cat": "SiLR-Agent",
+    "q": "跨4领域统一架构：grid/cluster/finance/SWE一套配方",
+    "q_ja": "SiLRフレームワークを4つの異種ドメインに統一適用する設計",
+    "bullets": [
+      "grid 97% (IEEE 39-bus, 66场景) / cluster GRPO 94.1% (51 ep, vs SFT 88.2%) / finance 92.5% + held-out 100% (120 ep) / SWE 14B-sft-grpo 对标 32B-zs",
+      "<span class=\"highlight\">同一架构</span>：BaseSystemManager + ConstraintChecker + DomainConfig + Tool 抽象，4 个 domain 共享",
+      "Reward shaping 跨 sparse(grid) / observer-only(cluster) / dense(finance,SWE) 三种范式 generalize",
+      "面试金句：「verifier-gated GRPO 范式跨 4 个 domain 同一套配方零调参」",
+      "证明 SiLR 不是「电网项目」而是<span class=\"highlight\">通用安全 Agent 训练框架</span>"
+    ],
+    "bullets_ja": [
+      "grid 97% / cluster GRPO 94.1% / finance 92.5% / SWE は 14B-sft-grpo を 32B-zero-shot と比較",
+      "<span class=\"highlight\">同一アーキテクチャ</span>：BaseSystemManager + ConstraintChecker + DomainConfig + Tool 抽象を 4 ドメインで共有",
+      "Reward shaping は sparse(grid) / observer-only(cluster) / dense(finance,SWE) の 3 パラダイムに汎化",
+      "面接キーフレーズ：「verifier-gated GRPO レシピを 4 ドメインで追加チューニングなしに適用可能」",
+      "SiLR は単なる電力網プロジェクトではなく<span class=\"highlight\">汎用的な安全 Agent 学習フレームワーク</span>であることを実証"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>跨4领域统一架构：grid/cluster/finance/SWE一套配方</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>grid 97% (IEEE 39-bus, 66场景) / cluster GRPO 94.1% (51 ep, vs SFT 88.2%) / finance 92.5% + held-out 100% (120 ep) / SWE 14B-sft-grpo 对标 32B-zs</li><li><span class=\"highlight\">同一架构</span>：BaseSystemManager + ConstraintChecker + DomainConfig + Tool 抽象，4 个 domain 共享</li><li>Reward shaping 跨 sparse(grid) / observer-only(cluster) / dense(finance,SWE) 三种范式 generalize</li><li>面试金句：「verifier-gated GRPO 范式跨 4 个 domain 同一套配方零调参」</li><li>证明 SiLR 不是「电网项目」而是<span class=\"highlight\">通用安全 Agent 训练框架</span></li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">跨4领域统一架构：grid/cluster/finance/SWE一套配方</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：grid 97% (IEEE 39-bus, 66场景) / cluster GRPO 94.1% (51 ep, vs SFT 88.2%) / finance 92.5% + held-out 100% (120 ep) / SWE 14B-sft-grpo 对标 32B-zs；同一架构：BaseSystemManager + ConstraintChecker + DomainConfig + Tool 抽象，4 个 domain 共享；Reward shaping 跨 sparse(grid) / observer-only(cluster) / dense(finance,SWE) 三种范式 generalize。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>SiLRフレームワークを4つの異種ドメインに統一適用する設計</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>grid 97% / cluster GRPO 94.1% / finance 92.5% / SWE は 14B-sft-grpo を 32B-zero-shot と比較</li><li><span class=\"highlight\">同一アーキテクチャ</span>：BaseSystemManager + ConstraintChecker + DomainConfig + Tool 抽象を 4 ドメインで共有</li><li>Reward shaping は sparse(grid) / observer-only(cluster) / dense(finance,SWE) の 3 パラダイムに汎化</li><li>面接キーフレーズ：「verifier-gated GRPO レシピを 4 ドメインで追加チューニングなしに適用可能」</li><li>SiLR は単なる電力網プロジェクトではなく<span class=\"highlight\">汎用的な安全 Agent 学習フレームワーク</span>であることを実証</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">SiLRフレームワークを4つの異種ドメインに統一適用する設計</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：grid 97% / cluster GRPO 94.1% / finance 92.5% / SWE は 14B-sft-grpo を 32B-zero-shot と比較；同一アーキテクチャ：BaseSystemManager + ConstraintChecker + DomainConfig + Tool 抽象を 4 ドメインで共有；Reward shaping は sparse(grid) / observer-only(cluster) / dense(finance,SWE) の 3 パラダイムに汎化。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>安全 Agent 系の深掘りでは、シミュレータが覆えない制約、verifier 自体の誤り、failsafe の最悪ケースを説明できるようにする。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "g20",
+    "cat": "SiLR-Agent",
+    "q": "GRPO 一轮训练把 SFT 88.2% 打到 0% — root cause 是什么？",
+    "q_ja": "GRPO 1ラウンドで SFT モデルが崩壊した原因と修正方法",
+    "bullets": [
+      "症状：SFT 88.2% → Iter1 58.8% → Iter2 0%（输出大段自然语言而非 JSON action）",
+      "<span class=\"highlight\">root cause #1</span>：log_prob 计算包含 prompt tokens（user observation 占序列 60-80%），梯度训练模型「预测 observation」而非「选择 action」",
+      "<span class=\"highlight\">root cause #2</span>：用 per-token 平均 → PPO ratio 永远 ≈ 1，clipping 形同虚设",
+      "修复：`_find_action_start()` 把 prompt tokens labels 设 -100 / sum log prob 而非 mean / lr 1e-5→1e-6 / kl 0.1→0.02 / gradient accumulation 替代 batch",
+      "log_ratio mean 从 -0.733 → 0.025 → -0.066（教科书级 PPO ratio 收敛）"
+    ],
+    "bullets_ja": [
+      "症状：SFT 88.2% → Iter1 58.8% → Iter2 0%（JSON action ではなく自然言語を出力）",
+      "<span class=\"highlight\">root cause #1</span>：log_prob が prompt tokens を含む（observation が系列の 60-80%）→ モデルが action 選択ではなく observation 予測を学習してしまう",
+      "<span class=\"highlight\">root cause #2</span>：per-token 平均で PPO ratio が常に ≈ 1、clipping が機能せず",
+      "修正：assistant トークンのみ cross-entropy / sum log prob / lr 1e-6 / kl 0.02 / grad accumulation により OOM を回避",
+      "log_ratio mean -0.733 → 0.025 → -0.066（教科書通りの収束）"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>GRPO 一轮训练把 SFT 88.2% 打到 0% — root cause 是什么？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>症状：SFT 88.2% → Iter1 58.8% → Iter2 0%（输出大段自然语言而非 JSON action）</li><li><span class=\"highlight\">root cause #1</span>：log_prob 计算包含 prompt tokens（user observation 占序列 60-80%），梯度训练模型「预测 observation」而非「选择 action」</li><li><span class=\"highlight\">root cause #2</span>：用 per-token 平均 → PPO ratio 永远 ≈ 1，clipping 形同虚设</li><li>修复：`_find_action_start()` 把 prompt tokens labels 设 -100 / sum log prob 而非 mean / lr 1e-5→1e-6 / kl 0.1→0.02 / gradient accumulation 替代 batch</li><li>log_ratio mean 从 -0.733 → 0.025 → -0.066（教科书级 PPO ratio 收敛）</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">GRPO 一轮训练把 SFT 88.2% 打到 0% — root cause 是什么？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：症状：SFT 88.2% → Iter1 58.8% → Iter2 0%（输出大段自然语言而非 JSON action）；root cause #1：log_prob 计算包含 prompt tokens（user observation 占序列 60-80%），梯度训练模型「预测 observation」而非「选择 action」；root cause #2：用 per-token 平均 → PPO ratio 永远 ≈ 1，clipping 形同虚设。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>训练类追问要准备：数据从哪里来、怎么过滤坏样本、为什么这个模型/LoRA 配置、训练失败后如何定位到数据、prompt、采样或 reward。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>GRPO 1ラウンドで SFT モデルが崩壊した原因と修正方法</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>症状：SFT 88.2% → Iter1 58.8% → Iter2 0%（JSON action ではなく自然言語を出力）</li><li><span class=\"highlight\">root cause #1</span>：log_prob が prompt tokens を含む（observation が系列の 60-80%）→ モデルが action 選択ではなく observation 予測を学習してしまう</li><li><span class=\"highlight\">root cause #2</span>：per-token 平均で PPO ratio が常に ≈ 1、clipping が機能せず</li><li>修正：assistant トークンのみ cross-entropy / sum log prob / lr 1e-6 / kl 0.02 / grad accumulation により OOM を回避</li><li>log_ratio mean -0.733 → 0.025 → -0.066（教科書通りの収束）</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">GRPO 1ラウンドで SFT モデルが崩壊した原因と修正方法</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：症状：SFT 88.2% → Iter1 58.8% → Iter2 0%（JSON action ではなく自然言語を出力）；root cause #1：log_prob が prompt tokens を含む（observation が系列の 60-80%）→ モデルが action 選択ではなく observation 予測を学習してしまう；root cause #2：per-token 平均で PPO ratio が常に ≈ 1、clipping が機能せず。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>学習系の深掘りでは、データの作り方、誤データの除去、モデル/LoRA 設定の理由、失敗時に data/prompt/sampling/reward のどこを疑ったかを準備する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "g21",
+    "cat": "SiLR-Agent",
+    "q": "rollout 看不到提升但 eval 翻盘 — temperature 决定测量灵敏度",
+    "q_ja": "GRPO の rollout で改善が見えなかったのに最終評価で SFT を超えた理由",
+    "bullets": [
+      "rollout 用 <span class=\"highlight\">temperature=0.7</span>（exploration），eval 用 <span class=\"highlight\">temperature=0</span>（greedy）",
+      "sampling 模式下 5% 概率改善被随机性淹没；greedy 模式下概率小幅变化直接翻转 argmax",
+      "compound_failure_surge 子集：SFT 0/3 → GRPO 3/3，eval 大翻盘",
+      "教训：<span class=\"highlight\">rollout success rate ≠ deployment success rate</span>",
+      "RL 后训练评估必须用 deployment inference 模式（greedy）才能看到真实改进"
+    ],
+    "bullets_ja": [
+      "rollout は <span class=\"highlight\">temperature=0.7</span>、eval は <span class=\"highlight\">temperature=0</span>（greedy）",
+      "sampling は確率変動を吸収して signal が見えない、greedy は argmax 反転で改善が顕在化",
+      "compound_failure_surge では SFT 0/3 → GRPO 3/3 と eval で逆転",
+      "教訓：<span class=\"highlight\">rollout success rate ≠ deployment success rate</span>",
+      "RL 後の評価は必ず deployment inference モード（greedy）で実施しないと真の改善が見えない"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>rollout 看不到提升但 eval 翻盘 — temperature 决定测量灵敏度</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>rollout 用 <span class=\"highlight\">temperature=0.7</span>（exploration），eval 用 <span class=\"highlight\">temperature=0</span>（greedy）</li><li>sampling 模式下 5% 概率改善被随机性淹没；greedy 模式下概率小幅变化直接翻转 argmax</li><li>compound_failure_surge 子集：SFT 0/3 → GRPO 3/3，eval 大翻盘</li><li>教训：<span class=\"highlight\">rollout success rate ≠ deployment success rate</span></li><li>RL 后训练评估必须用 deployment inference 模式（greedy）才能看到真实改进</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">rollout 看不到提升但 eval 翻盘 — temperature 决定测量灵敏度</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：rollout 用 temperature=0.7（exploration），eval 用 temperature=0（greedy）；sampling 模式下 5% 概率改善被随机性淹没；greedy 模式下概率小幅变化直接翻转 argmax；compound_failure_surge 子集：SFT 0/3 → GRPO 3/3，eval 大翻盘。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>GRPO の rollout で改善が見えなかったのに最終評価で SFT を超えた理由</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>rollout は <span class=\"highlight\">temperature=0.7</span>、eval は <span class=\"highlight\">temperature=0</span>（greedy）</li><li>sampling は確率変動を吸収して signal が見えない、greedy は argmax 反転で改善が顕在化</li><li>compound_failure_surge では SFT 0/3 → GRPO 3/3 と eval で逆転</li><li>教訓：<span class=\"highlight\">rollout success rate ≠ deployment success rate</span></li><li>RL 後の評価は必ず deployment inference モード（greedy）で実施しないと真の改善が見えない</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">GRPO の rollout で改善が見えなかったのに最終評価で SFT を超えた理由</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：rollout は temperature=0.7、eval は temperature=0（greedy）；sampling は確率変動を吸収して signal が見えない、greedy は argmax 反転で改善が顕在化；compound_failure_surge では SFT 0/3 → GRPO 3/3 と eval で逆転。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>学習系の深掘りでは、データの作り方、誤データの除去、モデル/LoRA 設定の理由、失敗時に data/prompt/sampling/reward のどこを疑ったかを準備する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "g22",
+    "cat": "SiLR-Agent",
+    "q": "Dense reward 4 级分段为何要和架构组件一一对应？",
+    "q_ja": "SWE と finance ドメインで dense reward が同一構造で機能する理由",
+    "bullets": [
+      "Reward 分段必须映射到架构组件，不是拍脑袋拆 [0.1, 0.2, 0.3, 1.0]",
+      "<span class=\"highlight\">SWE</span>：0.10×ast_ok + 0.15×imports_ok + 0.25×regression_pass + 1.00×target_pass，对应 solve() 子状态 + 2 个 checker",
+      "<span class=\"highlight\">finance</span>：violation-count progress per step 替代 sparse accept/reject",
+      "<span class=\"highlight\">cluster</span>：sparse reward + observer-only 监督",
+      "调试时能定位「这个 rollout 卡在哪一层」，三种 reward 共用同一 GRPO pipeline"
+    ],
+    "bullets_ja": [
+      "Reward の各段が独立アーキテクチャコンポーネントに対応し、安易な [0.1,0.2,0.3,1.0] 分割ではない",
+      "<span class=\"highlight\">SWE</span>：0.10×ast_ok + 0.15×imports_ok + 0.25×regression_pass + 1.00×target_pass — solve() の子状態と 2 つの checker に対応",
+      "<span class=\"highlight\">finance</span>：violation 進捗 per step を sparse accept/reject の代わりに使用",
+      "<span class=\"highlight\">cluster</span>：sparse reward + observer-only 監督",
+      "rollout がどの段階で詰まったか追跡可能、3 種の reward が同一 GRPO pipeline を共有"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Dense reward 4 级分段为何要和架构组件一一对应？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>Reward 分段必须映射到架构组件，不是拍脑袋拆 [0.1, 0.2, 0.3, 1.0]</li><li><span class=\"highlight\">SWE</span>：0.10×ast_ok + 0.15×imports_ok + 0.25×regression_pass + 1.00×target_pass，对应 solve() 子状态 + 2 个 checker</li><li><span class=\"highlight\">finance</span>：violation-count progress per step 替代 sparse accept/reject</li><li><span class=\"highlight\">cluster</span>：sparse reward + observer-only 监督</li><li>调试时能定位「这个 rollout 卡在哪一层」，三种 reward 共用同一 GRPO pipeline</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Dense reward 4 级分段为何要和架构组件一一对应？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：Reward 分段必须映射到架构组件，不是拍脑袋拆 [0.1, 0.2, 0.3, 1.0]；SWE：0.10×ast_ok + 0.15×imports_ok + 0.25×regression_pass + 1.00×target_pass，对应 solve() 子状态 + 2 个 checker；finance：violation-count progress per step 替代 sparse accept/reject。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>RAG 类追问要准备：gold chunk 怎么定义、Recall@K/MAP 怎么算、第一阶段召回和 rerank 精排各自解决什么问题。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>SWE と finance ドメインで dense reward が同一構造で機能する理由</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>Reward の各段が独立アーキテクチャコンポーネントに対応し、安易な [0.1,0.2,0.3,1.0] 分割ではない</li><li><span class=\"highlight\">SWE</span>：0.10×ast_ok + 0.15×imports_ok + 0.25×regression_pass + 1.00×target_pass — solve() の子状態と 2 つの checker に対応</li><li><span class=\"highlight\">finance</span>：violation 進捗 per step を sparse accept/reject の代わりに使用</li><li><span class=\"highlight\">cluster</span>：sparse reward + observer-only 監督</li><li>rollout がどの段階で詰まったか追跡可能、3 種の reward が同一 GRPO pipeline を共有</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">SWE と finance ドメインで dense reward が同一構造で機能する理由</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：Reward の各段が独立アーキテクチャコンポーネントに対応し、安易な [0.1,0.2,0.3,1.0] 分割ではない；SWE：0.10×ast_ok + 0.15×imports_ok + 0.25×regression_pass + 1.00×target_pass — solve() の子状態と 2 つの checker に対応；finance：violation 進捗 per step を sparse accept/reject の代わりに使用。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "g23",
+    "cat": "SiLR-Agent",
+    "q": "silent corruption 比 crash 贵 10 倍 — FAIL_TO_PASS 是 JSON 字符串",
+    "q_ja": "「silent corruption は crash より 10 倍高くつく」と判断した実例",
+    "bullets": [
+      "SWE-bench Lite manifest 的 FAIL_TO_PASS 是 <span class=\"highlight\">JSON 编码字符串</span>而非 list",
+      "`list(rec[\"FAIL_TO_PASS\"])` 把字符串拆成单字符列表 `['[', \"'\", 't', 'e', ...]`",
+      "下游 pytest 拿单字符当 test name → 全部不存在 → reward 永远 0 → GRPO 学不到任何东西却看起来「能跑」",
+      "定位：head -1 + `type()` 肉眼看；修复：`_parse_test_list()` 处理 str/list 双格式 + 回归测试",
+      "教训：<span class=\"highlight\">Codex/Kimi 双 adversarial review</span> 平均每个 task 找出 2-3 个 silent reward bug"
+    ],
+    "bullets_ja": [
+      "FAIL_TO_PASS が JSON エンコード文字列で、`list()` が 1 文字ずつに分解 → 全テスト存在せず → reward が常に 0 だが学習は進行",
+      "`head -1 + type()` で発見、`_parse_test_list()` で str/list 双方対応 + 回帰テスト追加",
+      "教訓：<span class=\"highlight\">Codex+Kimi の adversarial review</span> が task ごとに 2-3 件の silent corruption を捕捉",
+      "RL pipeline では crash よりも silent corruption の方が高くつく",
+      "対策：データ仕様確認 → サンプル type() → reward 計算箇所での回帰テスト"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>silent corruption 比 crash 贵 10 倍 — FAIL_TO_PASS 是 JSON 字符串</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>SWE-bench Lite manifest 的 FAIL_TO_PASS 是 <span class=\"highlight\">JSON 编码字符串</span>而非 list</li><li>`list(rec[\"FAIL_TO_PASS\"])` 把字符串拆成单字符列表 `['[', \"'\", 't', 'e', ...]`</li><li>下游 pytest 拿单字符当 test name → 全部不存在 → reward 永远 0 → GRPO 学不到任何东西却看起来「能跑」</li><li>定位：head -1 + `type()` 肉眼看；修复：`_parse_test_list()` 处理 str/list 双格式 + 回归测试</li><li>教训：<span class=\"highlight\">Codex/Kimi 双 adversarial review</span> 平均每个 task 找出 2-3 个 silent reward bug</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">silent corruption 比 crash 贵 10 倍 — FAIL_TO_PASS 是 JSON 字符串</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：SWE-bench Lite manifest 的 FAIL_TO_PASS 是 JSON 编码字符串而非 list；`list(rec[\"FAIL_TO_PASS\"])` 把字符串拆成单字符列表 `['[', \"'\", 't', 'e', ...]`；下游 pytest 拿单字符当 test name → 全部不存在 → reward 永远 0 → GRPO 学不到任何东西却看起来「能跑」。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>「silent corruption は crash より 10 倍高くつく」と判断した実例</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>FAIL_TO_PASS が JSON エンコード文字列で、`list()` が 1 文字ずつに分解 → 全テスト存在せず → reward が常に 0 だが学習は進行</li><li>`head -1 + type()` で発見、`_parse_test_list()` で str/list 双方対応 + 回帰テスト追加</li><li>教訓：<span class=\"highlight\">Codex+Kimi の adversarial review</span> が task ごとに 2-3 件の silent corruption を捕捉</li><li>RL pipeline では crash よりも silent corruption の方が高くつく</li><li>対策：データ仕様確認 → サンプル type() → reward 計算箇所での回帰テスト</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">「silent corruption は crash より 10 倍高くつく」と判断した実例</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：FAIL_TO_PASS が JSON エンコード文字列で、`list()` が 1 文字ずつに分解 → 全テスト存在せず → reward が常に 0 だが学習は進行；`head -1 + type()` で発見、`_parse_test_list()` で str/list 双方対応 + 回帰テスト追加；教訓：Codex+Kimi の adversarial review が task ごとに 2-3 件の silent corruption を捕捉。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "g24",
+    "cat": "SiLR-Agent",
+    "q": "Teacher 模型选型：为什么淘汰 Kimi？",
+    "q_ja": "SFT データの教師モデル選定で Kimi を採用しなかった理由",
+    "bullets": [
+      "测了 3 个 teacher：GPT-5.4 / Gemini-3-Flash / Kimi-Coder",
+      "<span class=\"highlight\">Kimi 恢复率 38%</span>，56% 場景出现拓扑幻觉（编造不存在的 bus/line）→ 淘汰",
+      "<span class=\"highlight\">Gemini-3-Flash 84%</span> 恢复率，幻觉<5% → grid + cluster 的 teacher",
+      "GPT-5.4 用于 enrichment（补 chain-of-thought）",
+      "Teacher 数据先用 SiLR verifier 过滤再人工修正——蒸馏 + 主动学习的混合范式"
+    ],
+    "bullets_ja": [
+      "3 教師モデル（GPT-5.4 / Gemini-3-Flash / Kimi-Coder）を比較",
+      "<span class=\"highlight\">Kimi は復旧率 38%</span>、56% でトポロジ幻覚（存在しない bus/line を捏造）→ 不採用",
+      "<span class=\"highlight\">Gemini-3-Flash を 84% で採用</span>、幻覚<5% → grid と cluster の teacher",
+      "GPT-5.4 は enrichment（CoT 補強）に使用",
+      "Teacher データは SiLR verifier で先にフィルタしてから人手修正：蒸留 + 能動学習のハイブリッド"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Teacher 模型选型：为什么淘汰 Kimi？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>测了 3 个 teacher：GPT-5.4 / Gemini-3-Flash / Kimi-Coder</li><li><span class=\"highlight\">Kimi 恢复率 38%</span>，56% 場景出现拓扑幻觉（编造不存在的 bus/line）→ 淘汰</li><li><span class=\"highlight\">Gemini-3-Flash 84%</span> 恢复率，幻觉<5% → grid + cluster 的 teacher</li><li>GPT-5.4 用于 enrichment（补 chain-of-thought）</li><li>Teacher 数据先用 SiLR verifier 过滤再人工修正——蒸馏 + 主动学习的混合范式</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Teacher 模型选型：为什么淘汰 Kimi？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：测了 3 个 teacher：GPT-5.4 / Gemini-3-Flash / Kimi-Coder；Kimi 恢复率 38%，56% 場景出现拓扑幻觉（编造不存在的 bus/line）→ 淘汰；Gemini-3-Flash 84% 恢复率，幻觉<5% → grid + cluster 的 teacher。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>训练类追问要准备：数据从哪里来、怎么过滤坏样本、为什么这个模型/LoRA 配置、训练失败后如何定位到数据、prompt、采样或 reward。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>SFT データの教師モデル選定で Kimi を採用しなかった理由</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>3 教師モデル（GPT-5.4 / Gemini-3-Flash / Kimi-Coder）を比較</li><li><span class=\"highlight\">Kimi は復旧率 38%</span>、56% でトポロジ幻覚（存在しない bus/line を捏造）→ 不採用</li><li><span class=\"highlight\">Gemini-3-Flash を 84% で採用</span>、幻覚<5% → grid と cluster の teacher</li><li>GPT-5.4 は enrichment（CoT 補強）に使用</li><li>Teacher データは SiLR verifier で先にフィルタしてから人手修正：蒸留 + 能動学習のハイブリッド</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">SFT データの教師モデル選定で Kimi を採用しなかった理由</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：3 教師モデル（GPT-5.4 / Gemini-3-Flash / Kimi-Coder）を比較；Kimi は復旧率 38%、56% でトポロジ幻覚（存在しない bus/line を捏造）→ 不採用；Gemini-3-Flash を 84% で採用、幻覚<5% → grid と cluster の teacher。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>学習系の深掘りでは、データの作り方、誤データの除去、モデル/LoRA 設定の理由、失敗時に data/prompt/sampling/reward のどこを疑ったかを準備する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "g25",
+    "cat": "SiLR-Agent",
+    "q": "Blackwell GPU 适配踩过的坑（bnb 4-bit 静默崩 + nvlddmkm TDR）",
+    "q_ja": "RTX PRO 6000 Blackwell で踏んだ GPU 層の落とし穴",
+    "bullets": [
+      "<span class=\"highlight\">bnb 4-bit nf4 kernel 没适配 sm_120+</span> → 长时间生成静默 exit -1（驱动层杀进程，无 Python traceback）",
+      "解：14B 直接 BF16（28GB），96GB 卡装得下",
+      "<span class=\"highlight\">32B BF16 触发 nvlddmkm Event 153</span>（TDR：GPU kernel >2s 被强杀）→ retry-loop bat（30s 等驱动 recover + resume 跳过已完成 instance）",
+      "vLLM 0.18 在 Blackwell 不全适配；WSL2 不支持 NCCL P2P → 只能 TP=1",
+      "教训：新硬件刚出时 ML 软件栈普遍滞后 1-2 个版本，要做好 fallback 计划"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">bnb 4-bit が sm_120+ 未対応</span>でサイレントクラッシュ（ドライバー層が exit -1、Python traceback なし）→ BF16 へ",
+      "<span class=\"highlight\">32B BF16 で nvlddmkm Event 153 (TDR)</span> → retry-loop + resume スクリプトで対応",
+      "vLLM は Blackwell に完全には対応していない、WSL2 NCCL 不可 → TP=1 制約",
+      "教訓：新ハード直後は ML スタックが 1-2 バージョン遅れる、fallback 計画必須",
+      "実用：BF16 で動かす + サイレントクラッシュ前提の resume 機構"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>Blackwell GPU 适配踩过的坑（bnb 4-bit 静默崩 + nvlddmkm TDR）</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li><span class=\"highlight\">bnb 4-bit nf4 kernel 没适配 sm_120+</span> → 长时间生成静默 exit -1（驱动层杀进程，无 Python traceback）</li><li>解：14B 直接 BF16（28GB），96GB 卡装得下</li><li><span class=\"highlight\">32B BF16 触发 nvlddmkm Event 153</span>（TDR：GPU kernel >2s 被强杀）→ retry-loop bat（30s 等驱动 recover + resume 跳过已完成 instance）</li><li>vLLM 0.18 在 Blackwell 不全适配；WSL2 不支持 NCCL P2P → 只能 TP=1</li><li>教训：新硬件刚出时 ML 软件栈普遍滞后 1-2 个版本，要做好 fallback 计划</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">Blackwell GPU 适配踩过的坑（bnb 4-bit 静默崩 + nvlddmkm TDR）</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：bnb 4-bit nf4 kernel 没适配 sm_120+ → 长时间生成静默 exit -1（驱动层杀进程，无 Python traceback）；解：14B 直接 BF16（28GB），96GB 卡装得下；32B BF16 触发 nvlddmkm Event 153（TDR：GPU kernel >2s 被强杀）→ retry-loop bat（30s 等驱动 recover + resume 跳过已完成 instance）。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>RTX PRO 6000 Blackwell で踏んだ GPU 層の落とし穴</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li><span class=\"highlight\">bnb 4-bit が sm_120+ 未対応</span>でサイレントクラッシュ（ドライバー層が exit -1、Python traceback なし）→ BF16 へ</li><li><span class=\"highlight\">32B BF16 で nvlddmkm Event 153 (TDR)</span> → retry-loop + resume スクリプトで対応</li><li>vLLM は Blackwell に完全には対応していない、WSL2 NCCL 不可 → TP=1 制約</li><li>教訓：新ハード直後は ML スタックが 1-2 バージョン遅れる、fallback 計画必須</li><li>実用：BF16 で動かす + サイレントクラッシュ前提の resume 機構</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">RTX PRO 6000 Blackwell で踏んだ GPU 層の落とし穴</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：bnb 4-bit が sm_120+ 未対応でサイレントクラッシュ（ドライバー層が exit -1、Python traceback なし）→ BF16 へ；32B BF16 で nvlddmkm Event 153 (TDR) → retry-loop + resume スクリプトで対応；vLLM は Blackwell に完全には対応していない、WSL2 NCCL 不可 → TP=1 制約。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "g26",
+    "cat": "SiLR-Agent",
+    "q": "SWE domain 为什么弃 ReAct 改 Agentless 两阶段？",
+    "q_ja": "SWE ドメインで ReAct を捨て Agentless 二段階アーキテクチャを採用した理由",
+    "bullets": [
+      "Cluster domain 踩过多轮 ReAct trajectory 训练不稳的坑（10+ turn 的 view_file/edit_file/run_test 序列收敛极难）",
+      "<span class=\"highlight\">Agentless = localize</span>（找出 buggy file:line）+ <span class=\"highlight\">patch</span>（直接出 diff）两阶段",
+      "每步 few-turn，SFT/GRPO 都好训",
+      "和 SWE-Gym 开源 trajectory 格式兼容",
+      "Rollout 时 verifier 调用次数从 ~10×/episode 降到 1-2 次（成本/速度大幅改善）"
+    ],
+    "bullets_ja": [
+      "Cluster ドメインで 10+ turn ReAct 軌跡の SFT/GRPO 収束困難を経験",
+      "<span class=\"highlight\">Agentless = localize</span>（バグ箇所特定）+ <span class=\"highlight\">patch</span>（diff 直接生成）の 2 段",
+      "各段が few-turn で SFT/GRPO ともに学習しやすい",
+      "SWE-Gym の公開 trajectory フォーマットと互換",
+      "verifier 呼び出し回数も ~10×/episode → 1-2 回に削減（コスト・速度ともに改善）"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>SWE domain 为什么弃 ReAct 改 Agentless 两阶段？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>Cluster domain 踩过多轮 ReAct trajectory 训练不稳的坑（10+ turn 的 view_file/edit_file/run_test 序列收敛极难）</li><li><span class=\"highlight\">Agentless = localize</span>（找出 buggy file:line）+ <span class=\"highlight\">patch</span>（直接出 diff）两阶段</li><li>每步 few-turn，SFT/GRPO 都好训</li><li>和 SWE-Gym 开源 trajectory 格式兼容</li><li>Rollout 时 verifier 调用次数从 ~10×/episode 降到 1-2 次（成本/速度大幅改善）</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">SWE domain 为什么弃 ReAct 改 Agentless 两阶段？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：Cluster domain 踩过多轮 ReAct trajectory 训练不稳的坑（10+ turn 的 view_file/edit_file/run_test 序列收敛极难）；Agentless = localize（找出 buggy file:line）+ patch（直接出 diff）两阶段；每步 few-turn，SFT/GRPO 都好训。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>安全 Agent 类追问要准备：仿真器覆盖不了的约束怎么办、验证器错了怎么办、failsafe 的最坏结果是什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>SWE ドメインで ReAct を捨て Agentless 二段階アーキテクチャを採用した理由</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>Cluster ドメインで 10+ turn ReAct 軌跡の SFT/GRPO 収束困難を経験</li><li><span class=\"highlight\">Agentless = localize</span>（バグ箇所特定）+ <span class=\"highlight\">patch</span>（diff 直接生成）の 2 段</li><li>各段が few-turn で SFT/GRPO ともに学習しやすい</li><li>SWE-Gym の公開 trajectory フォーマットと互換</li><li>verifier 呼び出し回数も ~10×/episode → 1-2 回に削減（コスト・速度ともに改善）</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">SWE ドメインで ReAct を捨て Agentless 二段階アーキテクチャを採用した理由</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：Cluster ドメインで 10+ turn ReAct 軌跡の SFT/GRPO 収束困難を経験；Agentless = localize（バグ箇所特定）+ patch（diff 直接生成）の 2 段；各段が few-turn で SFT/GRPO ともに学習しやすい。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>安全 Agent 系の深掘りでは、シミュレータが覆えない制約、verifier 自体の誤り、failsafe の最悪ケースを説明できるようにする。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "g27",
+    "cat": "SiLR-Agent",
+    "q": "SWE-Gym vs SWE-bench Lite 零交集 — 强制跨 repo 泛化",
+    "q_ja": "SWE-Gym（学習）と SWE-bench Lite（評価）が repo 完全分離である意味",
+    "bullets": [
+      "<span class=\"highlight\">零交集</span>：SWE-Gym (pandas/moto/mypy/dvc/dask/modin/pydantic/conan/hydra/bokeh/MONAI) vs Lite (django/sympy/astropy/sklearn/matplotlib/sphinx/pytest/requests/xarray/pylint/flask/seaborn)",
+      "designed behavior，强制模型<span class=\"highlight\">跨 repo 泛化</span>而不是 memorize",
+      "我最初按 plan 想 filter SWE-Gym 到 Lite 12 repo，跑完发现 0 match 才意识到",
+      "教训：<span class=\"highlight\">读训练集 README 必须读「design philosophy」段</span>，不要只看 schema",
+      "SWE 任务真正难点不是单 repo 内修 bug，而是新 codebase 上能否快速理解结构"
+    ],
+    "bullets_ja": [
+      "<span class=\"highlight\">完全分離</span>：SWE-Gym と Lite に共通 repo なし（Gym 11 repo / Lite 12 repo）",
+      "モデルに <span class=\"highlight\">リポジトリ間での汎化</span> を強制する設計、暗記を不可能にする",
+      "filter 計画 → 0 match で気付き、データセット philosophy 読解の重要性を学習",
+      "教訓：<span class=\"highlight\">データセット README の設計思想（design philosophy）の章を必読</span>、schema だけでは判断不能",
+      "SWE 課題の本質的な難しさは単一 repo 内のバグ修正ではなく、新規 codebase の構造理解力"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>SWE-Gym vs SWE-bench Lite 零交集 — 强制跨 repo 泛化</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li><span class=\"highlight\">零交集</span>：SWE-Gym (pandas/moto/mypy/dvc/dask/modin/pydantic/conan/hydra/bokeh/MONAI) vs Lite (django/sympy/astropy/sklearn/matplotlib/sphinx/pytest/requests/xarray/pylint/flask/seaborn)</li><li>designed behavior，强制模型<span class=\"highlight\">跨 repo 泛化</span>而不是 memorize</li><li>我最初按 plan 想 filter SWE-Gym 到 Lite 12 repo，跑完发现 0 match 才意识到</li><li>教训：<span class=\"highlight\">读训练集 README 必须读「design philosophy」段</span>，不要只看 schema</li><li>SWE 任务真正难点不是单 repo 内修 bug，而是新 codebase 上能否快速理解结构</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">SWE-Gym vs SWE-bench Lite 零交集 — 强制跨 repo 泛化</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：零交集：SWE-Gym (pandas/moto/mypy/dvc/dask/modin/pydantic/conan/hydra/bokeh/MONAI) vs Lite (django/sympy/astropy/sklearn/matplotlib/sphinx/pytest/requests/xarray/pylint/flask/seaborn)；designed behavior，强制模型跨 repo 泛化而不是 memorize；我最初按 plan 想 filter SWE-Gym 到 Lite 12 repo，跑完发现 0 match 才意识到。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>SWE-Gym（学習）と SWE-bench Lite（評価）が repo 完全分離である意味</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li><span class=\"highlight\">完全分離</span>：SWE-Gym と Lite に共通 repo なし（Gym 11 repo / Lite 12 repo）</li><li>モデルに <span class=\"highlight\">リポジトリ間での汎化</span> を強制する設計、暗記を不可能にする</li><li>filter 計画 → 0 match で気付き、データセット philosophy 読解の重要性を学習</li><li>教訓：<span class=\"highlight\">データセット README の設計思想（design philosophy）の章を必読</span>、schema だけでは判断不能</li><li>SWE 課題の本質的な難しさは単一 repo 内のバグ修正ではなく、新規 codebase の構造理解力</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">SWE-Gym（学習）と SWE-bench Lite（評価）が repo 完全分離である意味</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：完全分離：SWE-Gym と Lite に共通 repo なし（Gym 11 repo / Lite 12 repo）；モデルに リポジトリ間での汎化 を強制する設計、暗記を不可能にする；filter 計画 → 0 match で気付き、データセット philosophy 読解の重要性を学習。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>学習系の深掘りでは、データの作り方、誤データの除去、モデル/LoRA 設定の理由、失敗時に data/prompt/sampling/reward のどこを疑ったかを準備する。</li></ul>"
+      }
+    ]
+  },
+  {
+    "id": "g28",
+    "cat": "SiLR-Agent",
+    "q": "SFT eval 超越 teacher（67% → 88.2%）— 学生为什么能超老师？",
+    "q_ja": "SFT 後の 14B が教師の GPT-5.4 を超えたメカニズム（67% → 88.2%）",
+    "bullets": [
+      "Teacher（GPT-5.4）在 v5 中 77% 用 assign_job、0% 用 migrate_job（即使 prompt 说 preempt 实际不执行）",
+      "<span class=\"highlight\">clean_sft_data.py 的 replay 机制</span>：对每条 sample 用当前 observer 重放 + action 序列，重建所有 observation（v3/v4 老 schema 全部刷新到 v5）",
+      "只保留 verifier 通过的轨迹（SiLR 当 filter）",
+      "rack_failure_a 0%→100% / resource_fragmentation 0%→100% / job_surge 60%→100%",
+      "本质：<span class=\"highlight\">学生学的是「verifier 过滤后」的 teacher 行为</span>，而不是 raw teacher 行为"
+    ],
+    "bullets_ja": [
+      "教師（GPT-5.4）は assign_job 77%・migrate_job 0% で preempt が実行されない弱点",
+      "<span class=\"highlight\">replay 機構</span>で全 sample を最新 observer schema に再生成（v3/v4 → v5 への refresh）",
+      "SiLR verifier を通過した軌跡のみ保持（SiLR が filter として機能）",
+      "rack_failure_a 0→100% / resource_fragmentation 0→100% / job_surge 60→100% に改善",
+      "本質：<span class=\"highlight\">学生が学ぶのは「フィルタ後の教師」</span>であり、raw teacher ではない"
+    ],
+    "group": "项目",
+    "lv": 2,
+    "details": [
+      {
+        "term": "项目叙事链",
+        "explain": "<p><strong>SFT eval 超越 teacher（67% → 88.2%）— 学生为什么能超老师？</strong> 要放进一条完整故事里讲，而不是孤立背 bullet。</p><ol><li><strong>问题背景：</strong>安全关键的电网恢复不能盲信 LLM：模型能给出动作，但一次拓扑幻觉、幅度错误或无限循环都可能造成真实风险。</li><li><strong>技术选择：</strong>所以项目把 LLM 放在 Bounded ReAct 循环里，只负责提出候选动作；SiLR 影子仿真、约束检查、重试和 failsafe 负责把动作变成可执行决策。</li><li><strong>实现细节：</strong>核心链路是 observation 压缩、三层 ActionParser、shadow simulation、结构化违规反馈、Escalation Hint、本地 Qwen LoRA/SFT 与后续 GRPO/DPO 诊断。</li><li><strong>实验/指标：</strong>主线指标看恢复成功率、安全违规率、平均步数、成本和跨场景泛化，而不是只看单次回答是否像专家。</li><li><strong>失败模式：</strong>典型失败来自动作幅度不够、坏标注、DPO 偏好泄漏、GRPO log_prob 算错、teacher 拓扑幻觉和硬件适配问题；这些失败共同说明关键步骤要可验证、可回放。</li><li><strong>面试可讲故事：</strong>我先证明 LLM 有能力但不可靠，再把安全性从“模型承诺”转移到“仿真验证”，最后用失败案例推动 guardrail、数据清洗和训练策略迭代。</li></ol><p><strong>这张卡的证据：</strong></p><ul><li>Teacher（GPT-5.4）在 v5 中 77% 用 assign_job、0% 用 migrate_job（即使 prompt 说 preempt 实际不执行）</li><li><span class=\"highlight\">clean_sft_data.py 的 replay 机制</span>：对每条 sample 用当前 observer 重放 + action 序列，重建所有 observation（v3/v4 老 schema 全部刷新到 v5）</li><li>只保留 verifier 通过的轨迹（SiLR 当 filter）</li><li>rack_failure_a 0%→100% / resource_fragmentation 0%→100% / job_surge 60%→100%</li><li>本质：<span class=\"highlight\">学生学的是「verifier 过滤后」的 teacher 行为</span>，而不是 raw teacher 行为</li></ul>"
+      },
+      {
+        "term": "与整体项目的关联",
+        "explain": "<p>这张卡是 SiLR-Agent 叙事链中的一个节点：它要么解释为什么需要可信 Agent，要么解释 Bounded ReAct/Verifier/Data/RL 中的一个工程关节，最终都服务于“本地小模型在安全约束下超过闭源 API”的主线。</p><ul><li>前置问题：先说明业务约束和为什么不能用更简单方案。</li><li>本卡作用：回答 <span class=\"key-point\">SFT eval 超越 teacher（67% → 88.2%）— 学生为什么能超老师？</span> 这个局部决策如何支撑项目主线。</li><li>后续衔接：自然过渡到实验指标、失败复盘，以及你如何把经验迁移到客户/业务场景。</li></ul>"
+      },
+      {
+        "term": "追问准备",
+        "explain": "<ul><li>如果面试官追问“为什么这张卡重要”，先把它接回项目主问题：SiLR-Agent 不是单点技巧，而是在约束下做可靠系统。</li><li>如果追问“怎么证明”，用这张卡的证据开头：Teacher（GPT-5.4）在 v5 中 77% 用 assign_job、0% 用 migrate_job（即使 prompt 说 preempt 实际不执行）；clean_sft_data.py 的 replay 机制：对每条 sample 用当前 observer 重放 + action 序列，重建所有 observation（v3/v4 老 schema 全部刷新到 v5）；只保留 verifier 通过的轨迹（SiLR 当 filter）。</li><li>如果追问“什么时候会失效”，回答数据分布变化、约束/评估器不完整、延迟成本超过业务 SLA，或关键假设不成立时要降级到保守方案。</li><li>如果追问“你个人贡献”，讲清你做了哪一层：问题定义、技术选型、实现、实验设计、失败定位或复盘沉淀，不要只说团队做了什么。</li><li>训练类追问要准备：数据从哪里来、怎么过滤坏样本、为什么这个模型/LoRA 配置、训练失败后如何定位到数据、prompt、采样或 reward。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "プロジェクトの物語",
+        "explain": "<p><strong>SFT 後の 14B が教師の GPT-5.4 を超えたメカニズム（67% → 88.2%）</strong> は単独の bullet ではなく、背景から失敗までの流れで話す。</p><ol><li><strong>背景：</strong>安全重要な電力復旧では LLM をそのまま信頼できない。操作の幻覚、数値の過小設定、無限ループはいずれも実システムのリスクになる。</li><li><strong>技術選択：</strong>そこで LLM は Bounded ReAct の中で候補操作を提案する役に限定し、SiLR の影シミュレーション、制約チェック、リトライ、failsafe で実行可能性を担保した。</li><li><strong>実装：</strong>実装の軸は observation 圧縮、3層 ActionParser、shadow simulation、構造化された違反フィードバック、Escalation Hint、ローカル Qwen の LoRA/SFT と GRPO/DPO の検証である。</li><li><strong>実験/指標：</strong>評価は復旧成功率、安全違反率、平均ステップ数、コスト、汎化性能をセットで見る。単発回答が専門家らしいかだけでは判断しない。</li><li><strong>失敗モード：</strong>失敗は操作量不足、誤ラベル、DPO の嗜好漏れ、GRPO の log_prob 計算ミス、teacher のトポロジー幻覚、GPU 適配に集中した。重要ステップは検証可能かつ再現可能にする必要がある。</li><li><strong>面接で話せるストーリー：</strong>面接では、まず LLM は有用だが信頼し切れないことを示し、安全性を「モデルの約束」から「シミュレーション検証」へ移した話として語る。</li></ol><p><strong>このカードの根拠：</strong></p><ul><li>教師（GPT-5.4）は assign_job 77%・migrate_job 0% で preempt が実行されない弱点</li><li><span class=\"highlight\">replay 機構</span>で全 sample を最新 observer schema に再生成（v3/v4 → v5 への refresh）</li><li>SiLR verifier を通過した軌跡のみ保持（SiLR が filter として機能）</li><li>rack_failure_a 0→100% / resource_fragmentation 0→100% / job_surge 60→100% に改善</li><li>本質：<span class=\"highlight\">学生が学ぶのは「フィルタ後の教師」</span>であり、raw teacher ではない</li></ul>"
+      },
+      {
+        "term": "全体プロジェクトとの関係",
+        "explain": "<p>このカードは SiLR-Agent 全体の一部であり、信頼できる Agent、Bounded ReAct、Verifier、Data、RL のどこかを説明して、最終的に「ローカル小型モデルが安全制約下で閉源 API を上回る」という主線につながる。</p><ul><li>前提：まず業務制約と、より単純な方法がなぜ足りないかを述べる。</li><li>このカードの役割：<span class=\"key-point\">SFT 後の 14B が教師の GPT-5.4 を超えたメカニズム（67% → 88.2%）</span> がプロジェクト主線のどの判断を支えるかを説明する。</li><li>次の接続：実験指標、失敗分析、顧客・業務シナリオへの転用へ自然につなげる。</li></ul>"
+      },
+      {
+        "term": "深掘り質問への準備",
+        "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、SiLR-Agent は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：教師（GPT-5.4）は assign_job 77%・migrate_job 0% で preempt が実行されない弱点；replay 機構で全 sample を最新 observer schema に再生成（v3/v4 → v5 への refresh）；SiLR verifier を通過した軌跡のみ保持（SiLR が filter として機能）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>学習系の深掘りでは、データの作り方、誤データの除去、モデル/LoRA 設定の理由、失敗時に data/prompt/sampling/reward のどこを疑ったかを準備する。</li></ul>"
+      }
+    ]
   }
 ]
