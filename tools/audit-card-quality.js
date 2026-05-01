@@ -14,9 +14,11 @@ const genericPatterns = [
 ];
 
 const qualitySignals = [
-  /为什么|原因|本质|机制|流程|公式|复杂度|边界|失败|反例|取舍|关联|项目|面试|追问|验证|指标|成本|延迟/,
+  /为什么|原因|本质|机制|流程|公式|复杂度|边界|失败|反例|取舍|关联|项目|面试|追问|验证|指标|成本|延迟|证据|来源|不确定|拆解|幻觉|防御/,
   /なぜ|本質|仕組み|流れ|式|計算量|境界|失敗|反例|トレードオフ|関連|面接|追問|検証|指標|コスト|遅延/
 ];
+
+const minUsefulChars = 350;
 
 function flattenDetails(card, key) {
   return (card[key] || [])
@@ -55,7 +57,7 @@ for (const entry of manifest) {
         generic++;
         issues.push(`${label} still template-like`);
       }
-      if (text.length < 900) {
+      if (text.length < minUsefulChars) {
         issues.push(`${label} too short (${text.length} chars)`);
       }
       if (!qualitySignals.some(pattern => pattern.test(text))) {

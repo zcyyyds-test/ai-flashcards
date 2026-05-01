@@ -12,48 +12,48 @@
     ],
     "details": [
       {
-        "term": "问题意图",
-        "explain": "<p>这题表面在问「了解 DeepSeek-R1 吗？介绍一下」，实际要验证你是否掌握 <span class=\"key-point\">R1 的训练路线、架构亮点和蒸馏关系</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "一句话定位",
+        "explain": "<p>DeepSeek-R1 可以概括成：<span class=\"key-point\">在 DeepSeek-V3 这个 MoE 基座上，用强化学习把长链路推理能力“训出来”的开源 reasoning model</span>。它不是单纯参数更大的聊天模型，重点在于通过可验证奖励让模型学会更长的思考、反思和自检。</p>"
       },
       {
-        "term": "答题结构",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「了解 DeepSeek-R1 吗？介绍一下」压缩成一个清晰定义或判断。</li><li>展开主干：深度求索开源的推理增强型 LLM，以 DeepSeek-V3 为基座 + 大规模 RL pipeline 训出；主力 671B 总参数 / 37B 激活（MoE），另开源 1.5B~70B 系列蒸馏小模型；基座架构：Decoder-only Transformer + MLA（Multi-head Latent Attention）+ DeepS…。</li><li>补工程影响：训练路线：R1-Zero 走纯 RL 验证可行性；R1 正式版用 SFT 冷启动 → RL → SFT → RL 的多阶段管线；定位对标 OpenAI o1，数学/代码/逻辑推理 benchmark 接近 o1。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "R1-Zero 到 R1",
+        "explain": "<p><strong>R1-Zero</strong> 直接从 base model 做 RL，展示了一个重要现象：即使没有人工 CoT SFT，模型也可能在数学、代码等可验证任务上涌现长推理行为。</p><p><strong>R1</strong> 在此基础上加入冷启动 SFT、多阶段 RL 和再对齐数据，解决 R1-Zero 的可读性差、语言混杂、格式不稳等问题。可以把 R1-Zero 看成证明“RL 能催生推理”的实验版，把 R1 看成面向使用的正式版。</p>"
       },
       {
-        "term": "深挖追问",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「R1-Zero vs R1」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「GRPO」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「R1 与 V3 的关系」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「蒸馏小模型为何有效」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "架构关键词",
+        "explain": "<p>R1 继承 V3 的 Decoder-only Transformer 和 DeepSeekMoE：总参数很大，但每个 token 只激活部分专家，所以推理时的有效计算量低于总参数规模。</p><p>另一个关键词是 <strong>MLA</strong>：它把 KV cache 压到低维 latent 表示，长上下文推理时显著省显存。MoE 解决“参数容量和计算量”的矛盾，MLA 解决“上下文长度和缓存显存”的矛盾。</p>"
       },
       {
-        "term": "易错点",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "蒸馏模型",
+        "explain": "<p>R1 还开源了多个小尺寸蒸馏模型。蒸馏的核心不是把 671B 参数搬到小模型里，而是把大模型生成的高质量推理轨迹变成监督数据，让 Qwen/Llama 等小模型模仿 reasoning style。</p><p>这说明推理能力有一部分可以通过 <span class=\"key-point\">“过程数据 + SFT”</span> 迁移，而不一定要求每个小模型都重新跑昂贵的 RL。</p>"
       },
       {
-        "term": "补充与实战整理",
-        "explain": "<p><strong>项目/岗位连接</strong></p><p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「R1 的训练路线、架构亮点和蒸馏关系」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul><p><strong>R1-Zero vs R1</strong></p><p><strong>R1-Zero</strong>：跳过 SFT 直接用 GRPO 做 RL，证明了「RL 能让模型自发涌现反思/自检行为」，但输出混乱、中英夹杂、语言切换严重。</p><p><strong>R1</strong>：加了冷启动 SFT 数据修复可读性和格式问题，然后走「SFT → RL → SFT 再对齐 → RL」的多阶段管线。R1-Zero 是学术 demo，R1 是可用产品。</p><p><strong>GRPO</strong></p><p>DeepSeek 为 R1 设计的策略优化算法，相比 PPO <span class=\"key-point\">省掉 critic 网络</span>——直接用一组 rollout 的 reward 做标准化当 advantage。</p><div class=\"formula\">advantage_i = (R_i - mean(R)) / std(R)</div><p>好处：显存减半（没有 critic），训练稳定，特别适合 reasoning 任务这种 reward 信号稀疏的场景。</p><p><strong>R1 与 V3 的关系</strong></p><p>R1 的基座就是 V3——可以看作「V3 + RL-for-reasoning」。V3 提供基础的语言能力和知识，R1 在上面叠加长推理链的能力。两者是递进关系，不是替代关系。</p><p><strong>蒸馏小模型为何有效</strong></p><p>把 R1 生成的长 CoT 当作 SFT 数据喂给 Qwen/Llama 小模型，推理能力<span class=\"key-point\">直接继承</span>，不需要小模型自己再做 RL。实验证明 1.5B 的蒸馏模型在 AIME 上能超过 GPT-4o，说明「推理能力可以用 SFT 传递」。</p>"
+        "term": "容易混淆的边界",
+        "explain": "<ul><li><strong>R1 和 V3</strong>：V3 是基座，R1 是在 V3 上强化推理后的模型。</li><li><strong>RL 和 SFT</strong>：冷启动 SFT 主要修格式和起点，推理能力的增强主要来自后续 RL。</li><li><strong>MoE 总参数和激活参数</strong>：总参数代表容量，激活参数更接近单 token 的计算开销。</li><li><strong>开源蒸馏模型</strong>：小模型不是 R1 本体，而是用 R1 数据训出的学生模型。</li></ul>"
       }
     ],
     "group": "面经",
     "lv": 2,
     "details_ja": [
       {
-        "term": "質問意図",
-        "explain": "<p>这题表面在问「了解 DeepSeek-R1 吗？介绍一下」，实际要验证你是否掌握 <span class=\"key-point\">R1 的训练路线、架构亮点和蒸馏关系</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "一句话定位",
+        "explain": "<p>DeepSeek-R1 可以概括成：<span class=\"key-point\">在 DeepSeek-V3 这个 MoE 基座上，用强化学习把长链路推理能力“训出来”的开源 reasoning model</span>。它不是单纯参数更大的聊天模型，重点在于通过可验证奖励让模型学会更长的思考、反思和自检。</p>"
       },
       {
-        "term": "回答構成",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「了解 DeepSeek-R1 吗？介绍一下」压缩成一个清晰定义或判断。</li><li>展开主干：深度求索开源的推理增强型 LLM，以 DeepSeek-V3 为基座 + 大规模 RL pipeline 训出；主力 671B 总参数 / 37B 激活（MoE），另开源 1.5B~70B 系列蒸馏小模型；基座架构：Decoder-only Transformer + MLA（Multi-head Latent Attention）+ DeepS…。</li><li>补工程影响：训练路线：R1-Zero 走纯 RL 验证可行性；R1 正式版用 SFT 冷启动 → RL → SFT → RL 的多阶段管线；定位对标 OpenAI o1，数学/代码/逻辑推理 benchmark 接近 o1。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "R1-Zero 到 R1",
+        "explain": "<p><strong>R1-Zero</strong> 直接从 base model 做 RL，展示了一个重要现象：即使没有人工 CoT SFT，模型也可能在数学、代码等可验证任务上涌现长推理行为。</p><p><strong>R1</strong> 在此基础上加入冷启动 SFT、多阶段 RL 和再对齐数据，解决 R1-Zero 的可读性差、语言混杂、格式不稳等问题。可以把 R1-Zero 看成证明“RL 能催生推理”的实验版，把 R1 看成面向使用的正式版。</p>"
       },
       {
-        "term": "深掘り質問",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「R1-Zero vs R1」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「GRPO」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「R1 与 V3 的关系」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「蒸馏小模型为何有效」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "架构关键词",
+        "explain": "<p>R1 继承 V3 的 Decoder-only Transformer 和 DeepSeekMoE：总参数很大，但每个 token 只激活部分专家，所以推理时的有效计算量低于总参数规模。</p><p>另一个关键词是 <strong>MLA</strong>：它把 KV cache 压到低维 latent 表示，长上下文推理时显著省显存。MoE 解决“参数容量和计算量”的矛盾，MLA 解决“上下文长度和缓存显存”的矛盾。</p>"
       },
       {
-        "term": "落とし穴",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "蒸馏模型",
+        "explain": "<p>R1 还开源了多个小尺寸蒸馏模型。蒸馏的核心不是把 671B 参数搬到小模型里，而是把大模型生成的高质量推理轨迹变成监督数据，让 Qwen/Llama 等小模型模仿 reasoning style。</p><p>这说明推理能力有一部分可以通过 <span class=\"key-point\">“过程数据 + SFT”</span> 迁移，而不一定要求每个小模型都重新跑昂贵的 RL。</p>"
       },
       {
-        "term": "プロジェクト接続",
-        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「R1 的训练路线、架构亮点和蒸馏关系」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+        "term": "容易混淆的边界",
+        "explain": "<ul><li><strong>R1 和 V3</strong>：V3 是基座，R1 是在 V3 上强化推理后的模型。</li><li><strong>RL 和 SFT</strong>：冷启动 SFT 主要修格式和起点，推理能力的增强主要来自后续 RL。</li><li><strong>MoE 总参数和激活参数</strong>：总参数代表容量，激活参数更接近单 token 的计算开销。</li><li><strong>开源蒸馏模型</strong>：小模型不是 R1 本体，而是用 R1 数据训出的学生模型。</li></ul>"
       }
     ]
   },
@@ -70,48 +70,73 @@
     ],
     "details": [
       {
-        "term": "问题意图",
-        "explain": "<p>这题表面在问「R1 的 MLA 如何实现 KV-Cache 节约？」，实际要验证你是否掌握 <span class=\"key-point\">R1 的训练路线、架构亮点和蒸馏关系</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "一句话直觉",
+        "explain": "<p>MLA 的直觉是：<span class=\"key-point\">不要给每个 head 都存一份完整 K/V，而是先把当前 token 的 K/V 信息压成一个小“压缩包”缓存起来，需要算注意力时再用投影矩阵解释这个压缩包</span>。长上下文下，KV cache 是按 token 一路增长的账单，MLA 省的是这张账单里最大、最线性的那一项。</p>"
       },
       {
-        "term": "答题结构",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「R1 的 MLA 如何实现 KV-Cache 节约？」压缩成一个清晰定义或判断。</li><li>展开主干：核心思想：把 K 和 V 压到一个低维 latent 空间再缓存，只缓存 latent 向量；压缩：共享的 down-projection 把 hidden state 投到 latent c_KV（d_c &lt;&lt; h·d_k）；解压：每个 head 用独立 up-projection 从 c_KV 还原 K、V。</li><li>补工程影响：关键优化：up-projection 可以吸收进 Q 的投影，数学上等价于直接在 latent 空间算 attention；RoPE 单独走一条「解耦通路」，避免破坏投影吸收技巧。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "KV Cache 账本",
+        "explain": "<p>自回归推理每生成一个新 token，都要回看前面所有 token。为了不重复算历史 token 的 K/V，模型会把每层历史 K/V 存起来，这就是 KV cache。</p><div class=\"formula\">MHA KV cache / token / layer ≈ 2 · h · d_head · bytes<br>整段缓存 ≈ batch · seq · layers · 2 · h · d_head · bytes</div><p>其中 2 代表 K 和 V，h 是 attention head 数。seq 越长，这项线性增长；batch、层数、精度也都会乘上去。MLA 把 <code>2 · h · d_head</code> 这块换成低维的 <code>d_c + d_rope</code>，所以长上下文收益非常明显。</p>"
       },
       {
-        "term": "深挖追问",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「MHA / MQA / GQA / MLA 对比」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「为什么 up-projection 能被吸收」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「MLA 对 RoPE 的特殊处理」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「长上下文下的增益」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "MLA 压缩/解压流程",
+        "explain": "<p>对每个 token 的 hidden state <code>h_t</code>，MLA 先做共享 down-projection：</p><div class=\"formula\">c_t^KV = W_DKV · h_t, 其中 d_c &lt;&lt; h · d_head</div><p>推理时缓存的主要就是 <code>c_t^KV</code>，而不是每个 head 的完整 K/V。概念上，每个 head 可以再用自己的 up-projection 从 latent 里取出需要的 K 和 V：</p><div class=\"formula\">k_{t,i} = W_UK,i · c_t^KV<br>v_{t,i} = W_UV,i · c_t^KV</div><p>这像把多份散装 K/V 合并成一个共享底稿：每个 head 仍然有自己的读取方式，但缓存不再按 head 成倍复制。</p>"
       },
       {
-        "term": "易错点",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "为什么 up-projection 可吸收",
+        "explain": "<p>注意力分数里真正出现的是 query 和 key 的内积。若某个 head 的 key 写成 <code>k = W_UK · c</code>，那么：</p><div class=\"formula\">q^T k = q^T W_UK c = (W_UK^T q)^T c</div><p>也就是说，原本“先把 latent 解压成 K，再和 Q 点乘”，可以等价改成“先把 Q 投到 latent 对应的空间，再直接和 latent 点乘”。<span class=\"key-point\">矩阵乘法的结合律让 K 的 up-projection 被吸收到 Q 侧投影里</span>，推理时不必真的展开每个 head 的完整 K。</p><p>V 侧也有类似的线性合并空间：attention 权重先作用在 latent 值上，再通过输出侧线性变换合并。关键前提是这些投影是线性的；一旦中间插入位置旋转这类依赖 token 位置的操作，吸收就不再直接成立。</p>"
       },
       {
-        "term": "补充与实战整理",
-        "explain": "<p><strong>项目/岗位连接</strong></p><p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「R1 的训练路线、架构亮点和蒸馏关系」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul><p><strong>MHA / MQA / GQA / MLA 对比</strong></p><div class=\"formula\">MHA: 缓存 h · n · d_k<br>MQA: 缓存 1 · n · d_k  （所有 head 共享一组 KV）<br>GQA: 缓存 g · n · d_k  （分组共享，Llama2/3 采用）<br>MLA: 缓存 n · d_c      （低秩压缩到 latent）</div><p>MQA 压得狠但效果掉；GQA 是 MHA/MQA 的折中；<span class=\"key-point\">MLA 在压缩率和效果之间更优</span>——DeepSeek 实测 MLA 比 GQA 显存省得多、效果还更好。</p><p><strong>为什么 up-projection 能被吸收</strong></p><p>数学上 <code>attention_score = Q · W_UK · c_KV</code>，可以改写成 <code>(Q · W_UK) · c_KV</code>。W_UK 在推理时可以<span class=\"key-point\">预先合并到 Q 的投影矩阵里</span>，这样推理时根本不需要真的还原出 K、V，直接在 latent 空间算 attention 就行。V 侧同理。</p><p><strong>MLA 对 RoPE 的特殊处理</strong></p><p>RoPE 作用在 Q、K 上会破坏前面的「投影吸收」技巧（因为 RoPE 是非线性的旋转）。MLA 的解决方案是<span class=\"key-point\">把少量维度拆出来专门走 RoPE 通路</span>——这部分维度正常缓存 K 的旋转结果，其余大部分维度走 latent 压缩通路。两路拼起来当最终的 K。</p><p><strong>长上下文下的增益</strong></p><p>上下文越长，KV-Cache 占总显存的比例越高。n=128K 时传统 MHA 的 KV-Cache 会爆炸，而 MLA 压缩后显存可能只有 MHA 的 1/10 以下。这是 DeepSeek 敢做 128K context window 的底气。</p>"
+        "term": "RoPE 为什么要解耦",
+        "explain": "<p>RoPE 作用在 Q/K 上，会按位置对向量的二维分量做旋转。这个旋转依赖 token 位置，不是一个可以在所有历史 token 上预先合并进固定权重的普通线性矩阵。</p><p>如果把带 RoPE 的 K 也塞进 latent 压缩并尝试吸收 up-projection，位置相关旋转会破坏上面的等价变形。DeepSeek 的做法是把 K 拆成两路：大部分维度走 <strong>NoPE latent 通路</strong> 来省 cache，少量维度走 <strong>RoPE 解耦通路</strong> 单独保留位置信息。</p><div class=\"formula\">最终 K ≈ concat(K_nope_from_latent, K_rope)</div><p>这样既保住 MLA 的缓存压缩，又让 attention 仍然能感知相对位置。</p>"
+      },
+      {
+        "term": "追问与边界",
+        "explain": "<p><strong>问：MLA 和 MQA/GQA 的区别？</strong><br>答：MQA/GQA 是减少 KV head 数，让多个 query head 共享 K/V；MLA 是把 K/V 信息低秩压到 latent 里。前者是“少存几组完整 K/V”，后者是“存一份更小的表达”。</p><p><strong>问：MLA 会不会损失表达能力？</strong><br>答：会有低秩瓶颈风险，所以 latent 维度不能无限小。它的取舍是用合适的 <code>d_c</code> 换大幅 cache 节省，同时让每个 head 通过不同 up-projection 保留差异性。</p><p><strong>问：节省的是训练显存还是推理显存？</strong><br>答：最直接节省的是推理时的 KV cache，尤其是长上下文和大 batch serving。训练也会受 attention 激活、重计算策略影响，但 MLA 最典型的卖点是 inference cache。</p><p><strong>问：为什么长上下文收益更大？</strong><br>答：权重显存基本固定，KV cache 随 <code>seq · layers · batch</code> 线性增长；seq 越长，cache 越接近总显存瓶颈。</p><p><strong>问：RoPE 解耦是不是意味着不用位置编码？</strong><br>答：不是。它是把位置相关的小部分 K 单独处理，避免破坏 latent 通路的投影吸收；位置信息仍然存在。</p>"
       }
     ],
     "group": "面经",
     "lv": 3,
     "details_ja": [
       {
-        "term": "質問意図",
-        "explain": "<p>这题表面在问「R1 的 MLA 如何实现 KV-Cache 节约？」，实际要验证你是否掌握 <span class=\"key-point\">R1 的训练路线、架构亮点和蒸馏关系</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "一句话直觉",
+        "explain": "<p>MLA 的直觉是：<span class=\"key-point\">不要给每个 head 都存一份完整 K/V，而是先把当前 token 的 K/V 信息压成一个小“压缩包”缓存起来，需要算注意力时再用投影矩阵解释这个压缩包</span>。长上下文下，KV cache 是按 token 一路增长的账单，MLA 省的是这张账单里最大、最线性的那一项。</p>"
       },
       {
-        "term": "回答構成",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「R1 的 MLA 如何实现 KV-Cache 节约？」压缩成一个清晰定义或判断。</li><li>展开主干：核心思想：把 K 和 V 压到一个低维 latent 空间再缓存，只缓存 latent 向量；压缩：共享的 down-projection 把 hidden state 投到 latent c_KV（d_c &lt;&lt; h·d_k）；解压：每个 head 用独立 up-projection 从 c_KV 还原 K、V。</li><li>补工程影响：关键优化：up-projection 可以吸收进 Q 的投影，数学上等价于直接在 latent 空间算 attention；RoPE 单独走一条「解耦通路」，避免破坏投影吸收技巧。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "KV Cache 账本",
+        "explain": "<p>自回归推理每生成一个新 token，都要回看前面所有 token。为了不重复算历史 token 的 K/V，模型会把每层历史 K/V 存起来，这就是 KV cache。</p><div class=\"formula\">MHA KV cache / token / layer ≈ 2 · h · d_head · bytes<br>整段缓存 ≈ batch · seq · layers · 2 · h · d_head · bytes</div><p>其中 2 代表 K 和 V，h 是 attention head 数。seq 越长，这项线性增长；batch、层数、精度也都会乘上去。MLA 把 <code>2 · h · d_head</code> 这块换成低维的 <code>d_c + d_rope</code>，所以长上下文收益非常明显。</p>"
       },
       {
-        "term": "深掘り質問",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「MHA / MQA / GQA / MLA 对比」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「为什么 up-projection 能被吸收」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「MLA 对 RoPE 的特殊处理」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「长上下文下的增益」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "MLA 压缩/解压流程",
+        "explain": "<p>对每个 token 的 hidden state <code>h_t</code>，MLA 先做共享 down-projection：</p><div class=\"formula\">c_t^KV = W_DKV · h_t, 其中 d_c &lt;&lt; h · d_head</div><p>推理时缓存的主要就是 <code>c_t^KV</code>，而不是每个 head 的完整 K/V。概念上，每个 head 可以再用自己的 up-projection 从 latent 里取出需要的 K 和 V：</p><div class=\"formula\">k_{t,i} = W_UK,i · c_t^KV<br>v_{t,i} = W_UV,i · c_t^KV</div><p>这像把多份散装 K/V 合并成一个共享底稿：每个 head 仍然有自己的读取方式，但缓存不再按 head 成倍复制。</p>"
       },
       {
-        "term": "落とし穴",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "为什么 up-projection 可吸收",
+        "explain": "<p>注意力分数里真正出现的是 query 和 key 的内积。若某个 head 的 key 写成 <code>k = W_UK · c</code>，那么：</p><div class=\"formula\">q^T k = q^T W_UK c = (W_UK^T q)^T c</div><p>也就是说，原本“先把 latent 解压成 K，再和 Q 点乘”，可以等价改成“先把 Q 投到 latent 对应的空间，再直接和 latent 点乘”。<span class=\"key-point\">矩阵乘法的结合律让 K 的 up-projection 被吸收到 Q 侧投影里</span>，推理时不必真的展开每个 head 的完整 K。</p><p>V 侧也有类似的线性合并空间：attention 权重先作用在 latent 值上，再通过输出侧线性变换合并。关键前提是这些投影是线性的；一旦中间插入位置旋转这类依赖 token 位置的操作，吸收就不再直接成立。</p>"
       },
       {
-        "term": "プロジェクト接続",
-        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「R1 的训练路线、架构亮点和蒸馏关系」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+        "term": "RoPE 为什么要解耦",
+        "explain": "<p>RoPE 作用在 Q/K 上，会按位置对向量的二维分量做旋转。这个旋转依赖 token 位置，不是一个可以在所有历史 token 上预先合并进固定权重的普通线性矩阵。</p><p>如果把带 RoPE 的 K 也塞进 latent 压缩并尝试吸收 up-projection，位置相关旋转会破坏上面的等价变形。DeepSeek 的做法是把 K 拆成两路：大部分维度走 <strong>NoPE latent 通路</strong> 来省 cache，少量维度走 <strong>RoPE 解耦通路</strong> 单独保留位置信息。</p><div class=\"formula\">最终 K ≈ concat(K_nope_from_latent, K_rope)</div><p>这样既保住 MLA 的缓存压缩，又让 attention 仍然能感知相对位置。</p>"
+      },
+      {
+        "term": "追问与边界",
+        "explain": "<p><strong>问：MLA 和 MQA/GQA 的区别？</strong><br>答：MQA/GQA 是减少 KV head 数，让多个 query head 共享 K/V；MLA 是把 K/V 信息低秩压到 latent 里。前者是“少存几组完整 K/V”，后者是“存一份更小的表达”。</p><p><strong>问：MLA 会不会损失表达能力？</strong><br>答：会有低秩瓶颈风险，所以 latent 维度不能无限小。它的取舍是用合适的 <code>d_c</code> 换大幅 cache 节省，同时让每个 head 通过不同 up-projection 保留差异性。</p><p><strong>问：节省的是训练显存还是推理显存？</strong><br>答：最直接节省的是推理时的 KV cache，尤其是长上下文和大 batch serving。训练也会受 attention 激活、重计算策略影响，但 MLA 最典型的卖点是 inference cache。</p><p><strong>问：为什么长上下文收益更大？</strong><br>答：权重显存基本固定，KV cache 随 <code>seq · layers · batch</code> 线性增长；seq 越长，cache 越接近总显存瓶颈。</p><p><strong>问：RoPE 解耦是不是意味着不用位置编码？</strong><br>答：不是。它是把位置相关的小部分 K 单独处理，避免破坏 latent 通路的投影吸收；位置信息仍然存在。</p>"
+      }
+    ],
+    "related": [
+      {
+        "id": "l30",
+        "type": "基础概念",
+        "note": "Attention heads / MHA 基础，补齐 MLA 里的 head 与 QKV 前置知识。"
+      },
+      {
+        "id": "l31",
+        "type": "基础概念",
+        "note": "MQA/GQA/MLA 对比，横向理解 KV cache 压缩路线。"
+      },
+      {
+        "id": "l32",
+        "type": "基础概念",
+        "note": "KV Cache 显存账本，解释长上下文为什么先卡缓存。"
       }
     ]
   },
@@ -128,48 +153,48 @@
     ],
     "details": [
       {
-        "term": "问题意图",
-        "explain": "<p>这题表面在问「R1 在 SFT 时冷启动的目的？」，实际要验证你是否掌握 <span class=\"key-point\">R1 的训练路线、架构亮点和蒸馏关系</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "冷启动是什么",
+        "explain": "<p>R1 的冷启动 SFT 是在大规模 RL 之前，先用少量高质量推理样本把模型带到一个“能读、会按格式思考、能跟随指令”的起点。它不是最终能力来源，更像给 RL 铺一条可走的路。</p>"
       },
       {
-        "term": "答题结构",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「R1 在 SFT 时冷启动的目的？」压缩成一个清晰定义或判断。</li><li>展开主干：冷启动 = RL 之前先用少量高质量 CoT 数据做一轮轻量 SFT；目的一：修复 R1-Zero 的可读性问题（输出混乱、中英夹杂、格式乱）；目的二：给 RL 一个好起点，让模型先学会「think step by step」基本范式。</li><li>补工程影响：目的三：稳定训练，降低 RL 阶段方差，避免 reward hacking 和崩溃；数据来源：人工整理几千条高质量 CoT + R1-Zero 生成后人工筛选。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "为什么 R1-Zero 还不够",
+        "explain": "<p>R1-Zero 证明了纯 RL 可以让模型出现长推理、自检、反思等行为，但它的回答常见问题是可读性差、语言混杂、格式不稳定。面向真实使用时，答案不仅要算对，还要能被人理解和被评测系统稳定解析。</p>"
       },
       {
-        "term": "深挖追问",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「为什么叫「冷」启动」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「和 InstructGPT 的 SFT 区别」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「不冷启动行不行」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "冷启动解决什么",
+        "explain": "<ul><li><strong>格式</strong>：让模型学会清晰的推理输出和最终答案边界。</li><li><strong>指令跟随</strong>：避免只顾推理奖励而忽略用户要求。</li><li><strong>训练稳定</strong>：给 RL 一个更高质量的初始策略，减少低质量探索。</li><li><strong>可读性</strong>：把“会想”变成“能把想法组织出来”。</li></ul>"
       },
       {
-        "term": "易错点",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "和普通 SFT 的区别",
+        "explain": "<p>普通指令 SFT 通常追求广泛对齐和任务覆盖；R1 冷启动 SFT 更聚焦推理任务的过程格式和基本行为。数据量可以小得多，因为它不是把所有能力都监督出来，而是让后续 RL 更容易优化。</p>"
       },
       {
-        "term": "补充与实战整理",
-        "explain": "<p><strong>项目/岗位连接</strong></p><p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「R1 的训练路线、架构亮点和蒸馏关系」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul><p><strong>为什么叫「冷」启动</strong></p><p>对应 RL 的「热」训练——先用监督信号把模型调到一个合理状态，再上 RL 这个高方差优化器。如果模型一开始就是随机的，RL 探索长 CoT 的效率极低，而且容易学偏。</p><p><strong>和 InstructGPT 的 SFT 区别</strong></p><p><strong>InstructGPT</strong> 的 SFT 是主力对齐手段，数据量大（万到十万级），目标是全面对齐人类偏好。</p><p><strong>R1 的冷启动 SFT</strong> 只是 RL 前的热身，数据量小（几千条），目标只是<span class=\"key-point\">注入「CoT 格式」和「基本指令能力」</span>，真正的推理能力还是靠后续的 RL 涌现出来。</p><p><strong>不冷启动行不行</strong></p><p>行——就是 R1-Zero。能用但不好用：推理能力在，但输出不是人类能舒服阅读的格式。学术上证明了 RL 的潜力，产品上必须加冷启动。</p>"
+        "term": "常见追问",
+        "explain": "<p><strong>不冷启动行不行？</strong> 行，就是 R1-Zero 路线；能展示能力，但答案质量和可控性不够好。</p><p><strong>冷启动会不会限制 RL 的探索？</strong> 会带来一定先验，但高质量起点通常比从混乱输出里探索更划算；后续 RL 仍然可以扩展推理策略。</p><p><strong>冷启动数据从哪来？</strong> 可以来自人工整理的高质量 CoT、已有强模型生成后筛选的数据，以及 R1-Zero 轨迹的人工清洗。</p>"
       }
     ],
     "group": "面经",
     "lv": 2,
     "details_ja": [
       {
-        "term": "質問意図",
-        "explain": "<p>这题表面在问「R1 在 SFT 时冷启动的目的？」，实际要验证你是否掌握 <span class=\"key-point\">R1 的训练路线、架构亮点和蒸馏关系</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "冷启动是什么",
+        "explain": "<p>R1 的冷启动 SFT 是在大规模 RL 之前，先用少量高质量推理样本把模型带到一个“能读、会按格式思考、能跟随指令”的起点。它不是最终能力来源，更像给 RL 铺一条可走的路。</p>"
       },
       {
-        "term": "回答構成",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「R1 在 SFT 时冷启动的目的？」压缩成一个清晰定义或判断。</li><li>展开主干：冷启动 = RL 之前先用少量高质量 CoT 数据做一轮轻量 SFT；目的一：修复 R1-Zero 的可读性问题（输出混乱、中英夹杂、格式乱）；目的二：给 RL 一个好起点，让模型先学会「think step by step」基本范式。</li><li>补工程影响：目的三：稳定训练，降低 RL 阶段方差，避免 reward hacking 和崩溃；数据来源：人工整理几千条高质量 CoT + R1-Zero 生成后人工筛选。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "为什么 R1-Zero 还不够",
+        "explain": "<p>R1-Zero 证明了纯 RL 可以让模型出现长推理、自检、反思等行为，但它的回答常见问题是可读性差、语言混杂、格式不稳定。面向真实使用时，答案不仅要算对，还要能被人理解和被评测系统稳定解析。</p>"
       },
       {
-        "term": "深掘り質問",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「为什么叫「冷」启动」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「和 InstructGPT 的 SFT 区别」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「不冷启动行不行」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "冷启动解决什么",
+        "explain": "<ul><li><strong>格式</strong>：让模型学会清晰的推理输出和最终答案边界。</li><li><strong>指令跟随</strong>：避免只顾推理奖励而忽略用户要求。</li><li><strong>训练稳定</strong>：给 RL 一个更高质量的初始策略，减少低质量探索。</li><li><strong>可读性</strong>：把“会想”变成“能把想法组织出来”。</li></ul>"
       },
       {
-        "term": "落とし穴",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "和普通 SFT 的区别",
+        "explain": "<p>普通指令 SFT 通常追求广泛对齐和任务覆盖；R1 冷启动 SFT 更聚焦推理任务的过程格式和基本行为。数据量可以小得多，因为它不是把所有能力都监督出来，而是让后续 RL 更容易优化。</p>"
       },
       {
-        "term": "プロジェクト接続",
-        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「R1 的训练路线、架构亮点和蒸馏关系」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+        "term": "常见追问",
+        "explain": "<p><strong>不冷启动行不行？</strong> 行，就是 R1-Zero 路线；能展示能力，但答案质量和可控性不够好。</p><p><strong>冷启动会不会限制 RL 的探索？</strong> 会带来一定先验，但高质量起点通常比从混乱输出里探索更划算；后续 RL 仍然可以扩展推理策略。</p><p><strong>冷启动数据从哪来？</strong> 可以来自人工整理的高质量 CoT、已有强模型生成后筛选的数据，以及 R1-Zero 轨迹的人工清洗。</p>"
       }
     ]
   },
@@ -186,48 +211,48 @@
     ],
     "details": [
       {
-        "term": "问题意图",
-        "explain": "<p>这题表面在问「位置编码是什么？解释 RoPE」，实际要验证你是否掌握 <span class=\"key-point\">R1 的训练路线、架构亮点和蒸馏关系</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "为什么需要位置编码",
+        "explain": "<p>Self-attention 本身只看 token 之间的内容相关性，不天然知道顺序。如果没有位置编码，“我爱你”和“你爱我”包含相同 token 集合，模型很难区分谁在前谁在后。位置编码就是把序列顺序注入到表示里。</p>"
       },
       {
-        "term": "答题结构",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「位置编码是什么？解释 RoPE」压缩成一个清晰定义或判断。</li><li>展开主干：位置编码给 token 注入序列位置信息——self-attention 本身置换不变，不加位置编码「我爱你」和「你爱我」对模型完全一样；RoPE = Rotary Position Embedding：把位置信息编码成复平面上的旋转，作用在 Q、K 上；对位置 m 的 Q 向量，旋转角度 m·θ_i；内积只依赖相对位置 (m-n)。</li><li>补工程影响：天然具备相对位置感知，且有一定外推能力（配合 YaRN 可扩展 4-32 倍训练长度）；现已成为主流：Llama、Qwen、DeepSeek 全部采用。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "RoPE 的核心做法",
+        "explain": "<p>RoPE 把向量两两配对，看成复平面上的点；位置 m 对应一个旋转角度 <code>m · θ_i</code>。模型不是把位置向量加到 token embedding 上，而是在 attention 里对 Q/K 做旋转。</p><div class=\"formula\">q_m = R_m q<br>k_n = R_n k</div><p>旋转后再做点积，分数自然带上位置信息。</p>"
       },
       {
-        "term": "深挖追问",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「RoPE 的数学本质」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「RoPE 为什么能外推」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「和其他位置编码对比」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「MLA 和 RoPE 的冲突」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "为什么能表达相对位置",
+        "explain": "<p>旋转矩阵有一个漂亮性质：<code>R_m^T R_n = R_{n-m}</code>。所以 <code>q_m^T k_n</code> 里的位置项只依赖 <code>n-m</code>，也就是相对距离，而不是孤立的绝对位置。</p><div class=\"formula\">(R_m q)^T (R_n k) = q^T R_{n-m} k</div><p>这就是 RoPE 在长文本建模里常用的原因：attention 分数直接知道两个 token 隔了多远。</p>"
       },
       {
-        "term": "易错点",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "和其他位置编码对比",
+        "explain": "<ul><li><strong>绝对位置 embedding</strong>：实现简单，但训练长度外的位置不一定有表示。</li><li><strong>正弦位置编码</strong>：可外推一些，但和现代 LLM 的 attention 设计结合不如 RoPE 主流。</li><li><strong>ALiBi</strong>：直接给 attention score 加距离偏置，外推友好，但表达方式更受限。</li><li><strong>RoPE</strong>：通过旋转进入 Q/K，天然形成相对位置依赖，成为 Llama、Qwen、DeepSeek 等模型的常见选择。</li></ul>"
       },
       {
-        "term": "补充与实战整理",
-        "explain": "<p><strong>项目/岗位连接</strong></p><p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「R1 的训练路线、架构亮点和蒸馏关系」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul><p><strong>RoPE 的数学本质</strong></p><div class=\"formula\">把 Q/K 两两配对看作复数: q_2i + i·q_2i+1<br>旋转角度 θ_i = 10000^(-2i/d)<br>位置 m 旋转后: q_m = q · e^(i·m·θ)<br>内积: &lt;q_m, k_n&gt; = Re(q·k* · e^(i·(m-n)·θ))</div><p><span class=\"key-point\">两个 token 的 attention score 只依赖相对位置 (m-n)</span>——即使绝对位置不同，相对距离相同的 token 对 attention 模式一致。这就是 RoPE 的核心魅力。</p><p><strong>RoPE 为什么能外推</strong></p><p>旋转的周期性+远距离衰减特性让模型对「没见过的相对位置」有一定泛化。但纯 RoPE 的外推能力其实有限——超出训练长度 2 倍左右就开始掉点。真正的长度外推靠 <strong>YaRN</strong>（对 RoPE 的频率做 NTK-aware 缩放）+ 少量长文本微调实现。</p><p><strong>和其他位置编码对比</strong></p><p><strong>Sinusoidal</strong>（原版 Transformer）：绝对位置正弦编码加到 embedding 上，外推差</p><p><strong>Learned</strong>（BERT/GPT-2）：每个位置学一个 embedding，无外推能力</p><p><strong>ALiBi</strong>（BLOOM/MPT）：attention bias 线性衰减，外推好但没有显式方向感</p><p><strong>RoPE</strong>（Llama/Qwen/DeepSeek）：旋转形式，相对位置天然，外推好，<span class=\"key-point\">目前最流行</span></p><p><strong>MLA 和 RoPE 的冲突</strong></p><p>RoPE 是非线性操作，会破坏 MLA 的「up-projection 吸收到 Q」这个数学技巧。DeepSeek 的解决方案是<span class=\"key-point\">拆出少量维度单独走 RoPE 通路</span>，其余大部分维度走 latent 压缩通路。</p>"
+        "term": "和 MLA 的关系",
+        "explain": "<p>MLA 希望把 K/V 的 up-projection 吸收到 Q 或输出投影里，但 RoPE 是位置相关旋转，会干扰这种吸收。因此 DeepSeek 把 RoPE 相关的 K 维度单独拆出来处理，让大部分 K/V 信息继续走 latent 压缩通路。</p>"
       }
     ],
     "group": "面经",
     "lv": 3,
     "details_ja": [
       {
-        "term": "質問意図",
-        "explain": "<p>这题表面在问「位置编码是什么？解释 RoPE」，实际要验证你是否掌握 <span class=\"key-point\">R1 的训练路线、架构亮点和蒸馏关系</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "为什么需要位置编码",
+        "explain": "<p>Self-attention 本身只看 token 之间的内容相关性，不天然知道顺序。如果没有位置编码，“我爱你”和“你爱我”包含相同 token 集合，模型很难区分谁在前谁在后。位置编码就是把序列顺序注入到表示里。</p>"
       },
       {
-        "term": "回答構成",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「位置编码是什么？解释 RoPE」压缩成一个清晰定义或判断。</li><li>展开主干：位置编码给 token 注入序列位置信息——self-attention 本身置换不变，不加位置编码「我爱你」和「你爱我」对模型完全一样；RoPE = Rotary Position Embedding：把位置信息编码成复平面上的旋转，作用在 Q、K 上；对位置 m 的 Q 向量，旋转角度 m·θ_i；内积只依赖相对位置 (m-n)。</li><li>补工程影响：天然具备相对位置感知，且有一定外推能力（配合 YaRN 可扩展 4-32 倍训练长度）；现已成为主流：Llama、Qwen、DeepSeek 全部采用。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "RoPE 的核心做法",
+        "explain": "<p>RoPE 把向量两两配对，看成复平面上的点；位置 m 对应一个旋转角度 <code>m · θ_i</code>。模型不是把位置向量加到 token embedding 上，而是在 attention 里对 Q/K 做旋转。</p><div class=\"formula\">q_m = R_m q<br>k_n = R_n k</div><p>旋转后再做点积，分数自然带上位置信息。</p>"
       },
       {
-        "term": "深掘り質問",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「RoPE 的数学本质」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「RoPE 为什么能外推」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「和其他位置编码对比」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「MLA 和 RoPE 的冲突」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "为什么能表达相对位置",
+        "explain": "<p>旋转矩阵有一个漂亮性质：<code>R_m^T R_n = R_{n-m}</code>。所以 <code>q_m^T k_n</code> 里的位置项只依赖 <code>n-m</code>，也就是相对距离，而不是孤立的绝对位置。</p><div class=\"formula\">(R_m q)^T (R_n k) = q^T R_{n-m} k</div><p>这就是 RoPE 在长文本建模里常用的原因：attention 分数直接知道两个 token 隔了多远。</p>"
       },
       {
-        "term": "落とし穴",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "和其他位置编码对比",
+        "explain": "<ul><li><strong>绝对位置 embedding</strong>：实现简单，但训练长度外的位置不一定有表示。</li><li><strong>正弦位置编码</strong>：可外推一些，但和现代 LLM 的 attention 设计结合不如 RoPE 主流。</li><li><strong>ALiBi</strong>：直接给 attention score 加距离偏置，外推友好，但表达方式更受限。</li><li><strong>RoPE</strong>：通过旋转进入 Q/K，天然形成相对位置依赖，成为 Llama、Qwen、DeepSeek 等模型的常见选择。</li></ul>"
       },
       {
-        "term": "プロジェクト接続",
-        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「R1 的训练路线、架构亮点和蒸馏关系」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+        "term": "和 MLA 的关系",
+        "explain": "<p>MLA 希望把 K/V 的 up-projection 吸收到 Q 或输出投影里，但 RoPE 是位置相关旋转，会干扰这种吸收。因此 DeepSeek 把 RoPE 相关的 K 维度单独拆出来处理，让大部分 K/V 信息继续走 latent 压缩通路。</p>"
       }
     ]
   },
@@ -244,48 +269,55 @@
     ],
     "details": [
       {
-        "term": "问题意图",
-        "explain": "<p>这题表面在问「14B 模型的推理和训练显存估算」，实际要验证你是否掌握 <span class=\"key-point\">MLA 如何把 KV-Cache 从多头维度压到 latent 维度</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "先分清四类显存",
+        "explain": "<p>估算大模型显存时，先把账拆开：<strong>权重、梯度、优化器状态、激活/KV cache</strong>。推理主要看权重和 KV cache；训练还要加梯度、Adam 的一二阶矩、master weights 和激活。</p>"
       },
       {
-        "term": "答题结构",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「14B 模型的推理和训练显存估算」压缩成一个清晰定义或判断。</li><li>展开主干：核心公式：参数显存 + 梯度显存 + 优化器状态 + 激活显存；14B FP16/BF16 推理：权重 28GB + KV-Cache + overhead ≈ 30-35GB（单 A100 80G 能塞）；14B 全参训练（Adam+BF16）：约 250-300GB ≈ 参数量 × 16-20 字节。</li><li>补工程影响：14B INT4 推理仅需 7GB → 消费级 3090/4090 能跑；LoRA 微调显存 ≈ 推理 + 小梯度 ≈ 40-50GB，单卡 A100 可行。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "14B 推理估算",
+        "explain": "<p>BF16/FP16 每个参数 2 字节，所以 14B 权重约：</p><div class=\"formula\">14B · 2 bytes ≈ 28GB</div><p>再加 CUDA kernel、临时 buffer、KV cache 等开销，短上下文单 batch 通常可以粗估为 30-35GB。上下文拉长后，KV cache 会继续按序列长度增长，所以“权重能放下”不等于“长上下文一定能跑稳”。</p>"
       },
       {
-        "term": "深挖追问",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「训练显存明细（Adam+BF16 混合精度）」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「为什么训练显存是推理的 10 倍」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「怎么压到单卡」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "14B 全参训练估算",
+        "explain": "<p>AdamW + BF16 训练的粗略账本常用 16-20 bytes/param：</p><div class=\"formula\">权重 2B + 梯度 2B + Adam m/v 8B + master/副本与碎片 ≈ 16-20B / param</div><p>所以 14B 全参训练大约是 224-280GB 量级，还没算大 batch/长序列激活峰值。实际工程里通常需要多卡并行、ZeRO/FSDP、gradient checkpointing 等技巧。</p>"
       },
       {
-        "term": "易错点",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "量化和 LoRA",
+        "explain": "<p>INT4 推理把权重压到约 0.5 字节/参数，14B 权重大约 7GB，再加量化 scale、KV cache 和运行时开销，消费级显卡也可能跑起来。</p><p>LoRA 微调冻结基座，只训练低秩适配器，所以不用存全量梯度和全量 Adam 状态；显存主要接近“推理权重 + 激活 + LoRA 小参数优化器”。这就是 LoRA 能把训练门槛从多卡大幅降到单卡/少卡的原因。</p>"
       },
       {
-        "term": "补充与实战整理",
-        "explain": "<p><strong>项目/岗位连接</strong></p><p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「MLA 如何把 KV-Cache 从多头维度压到 latent 维度」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul><p><strong>训练显存明细（Adam+BF16 混合精度）</strong></p><div class=\"formula\">权重 (BF16):   14B × 2 = 28 GB<br>梯度 (BF16):   14B × 2 = 28 GB<br>Adam m (FP32): 14B × 4 = 56 GB<br>Adam v (FP32): 14B × 4 = 56 GB<br>主权重 (FP32): 14B × 4 = 56 GB<br>────────────────────────<br>小计:                   224 GB (不含激活)<br>激活 (batch=1,seq=2K):  +20~50 GB<br>总计:                 ≈ 250-300 GB</div><p>这就是为什么 14B 全参训练需要 <span class=\"key-point\">4×A100 80G 以上 + ZeRO</span>。</p><p><strong>为什么训练显存是推理的 10 倍</strong></p><ul><li><strong>梯度</strong>：推理没有</li><li><strong>优化器状态（Adam m/v）</strong>：推理没有，且需要 FP32 高精度</li><li><strong>FP32 主权重副本</strong>：混合精度训练必备</li><li><strong>激活</strong>：反向传播需要，推理不需要</li></ul><p>这四项加起来远超参数本身。<span class=\"key-point\">Adam 优化器的内存开销是大头</span>——这也是为什么 SGD / Lion / 8bit Adam 等优化器受关注。</p><p><strong>怎么压到单卡</strong></p><ul><li><strong>LoRA / QLoRA</strong>：冻结基座，只训小矩阵</li><li><strong>Gradient Checkpointing</strong>：不存激活，反向时重算</li><li><strong>ZeRO-3 / FSDP</strong>：参数、梯度、优化器状态切分到多卡</li><li><strong>CPU Offload</strong>：把不活跃的状态搬到 CPU</li><li><strong>8bit Adam</strong>：bitsandbytes，把 m/v 量化到 8bit</li></ul>"
+        "term": "估算时最容易漏的项",
+        "explain": "<ul><li><strong>KV cache</strong>：推理长上下文时常常比想象中大。</li><li><strong>激活</strong>：训练时随 batch、seq、layers 增长，attention 部分还受实现影响。</li><li><strong>优化器状态</strong>：AdamW 的 m/v 通常比权重本身还占空间。</li><li><strong>碎片和临时 buffer</strong>：实际可用显存要留余量，不能按理论值塞满。</li></ul>"
       }
     ],
     "group": "面经",
     "lv": 3,
     "details_ja": [
       {
-        "term": "質問意図",
-        "explain": "<p>这题表面在问「14B 模型的推理和训练显存估算」，实际要验证你是否掌握 <span class=\"key-point\">MLA 如何把 KV-Cache 从多头维度压到 latent 维度</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "先分清四类显存",
+        "explain": "<p>估算大模型显存时，先把账拆开：<strong>权重、梯度、优化器状态、激活/KV cache</strong>。推理主要看权重和 KV cache；训练还要加梯度、Adam 的一二阶矩、master weights 和激活。</p>"
       },
       {
-        "term": "回答構成",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「14B 模型的推理和训练显存估算」压缩成一个清晰定义或判断。</li><li>展开主干：核心公式：参数显存 + 梯度显存 + 优化器状态 + 激活显存；14B FP16/BF16 推理：权重 28GB + KV-Cache + overhead ≈ 30-35GB（单 A100 80G 能塞）；14B 全参训练（Adam+BF16）：约 250-300GB ≈ 参数量 × 16-20 字节。</li><li>补工程影响：14B INT4 推理仅需 7GB → 消费级 3090/4090 能跑；LoRA 微调显存 ≈ 推理 + 小梯度 ≈ 40-50GB，单卡 A100 可行。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "14B 推理估算",
+        "explain": "<p>BF16/FP16 每个参数 2 字节，所以 14B 权重约：</p><div class=\"formula\">14B · 2 bytes ≈ 28GB</div><p>再加 CUDA kernel、临时 buffer、KV cache 等开销，短上下文单 batch 通常可以粗估为 30-35GB。上下文拉长后，KV cache 会继续按序列长度增长，所以“权重能放下”不等于“长上下文一定能跑稳”。</p>"
       },
       {
-        "term": "深掘り質問",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「训练显存明细（Adam+BF16 混合精度）」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「为什么训练显存是推理的 10 倍」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「怎么压到单卡」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "14B 全参训练估算",
+        "explain": "<p>AdamW + BF16 训练的粗略账本常用 16-20 bytes/param：</p><div class=\"formula\">权重 2B + 梯度 2B + Adam m/v 8B + master/副本与碎片 ≈ 16-20B / param</div><p>所以 14B 全参训练大约是 224-280GB 量级，还没算大 batch/长序列激活峰值。实际工程里通常需要多卡并行、ZeRO/FSDP、gradient checkpointing 等技巧。</p>"
       },
       {
-        "term": "落とし穴",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "量化和 LoRA",
+        "explain": "<p>INT4 推理把权重压到约 0.5 字节/参数，14B 权重大约 7GB，再加量化 scale、KV cache 和运行时开销，消费级显卡也可能跑起来。</p><p>LoRA 微调冻结基座，只训练低秩适配器，所以不用存全量梯度和全量 Adam 状态；显存主要接近“推理权重 + 激活 + LoRA 小参数优化器”。这就是 LoRA 能把训练门槛从多卡大幅降到单卡/少卡的原因。</p>"
       },
       {
-        "term": "プロジェクト接続",
-        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「MLA 如何把 KV-Cache 从多头维度压到 latent 维度」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+        "term": "估算时最容易漏的项",
+        "explain": "<ul><li><strong>KV cache</strong>：推理长上下文时常常比想象中大。</li><li><strong>激活</strong>：训练时随 batch、seq、layers 增长，attention 部分还受实现影响。</li><li><strong>优化器状态</strong>：AdamW 的 m/v 通常比权重本身还占空间。</li><li><strong>碎片和临时 buffer</strong>：实际可用显存要留余量，不能按理论值塞满。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "l32",
+        "type": "基础概念",
+        "note": "KV Cache 显存账本，推理估算时补上长上下文缓存项。"
       }
     ]
   },
@@ -302,48 +334,55 @@
     ],
     "details": [
       {
-        "term": "问题意图",
-        "explain": "<p>这题表面在问「显存占用和哪些因素相关？」，实际要验证你是否掌握 <span class=\"key-point\">MLA 如何把 KV-Cache 从多头维度压到 latent 维度</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "显存拆账",
+        "explain": "<p>显存占用可以拆成五块：<strong>参数权重、梯度、优化器状态、前向激活、推理 KV cache</strong>。不同阶段主导项不同：推理常由权重和 KV cache 主导，训练常由优化器状态和激活主导。</p>"
       },
       {
-        "term": "答题结构",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「显存占用和哪些因素相关？」压缩成一个清晰定义或判断。</li><li>展开主干：参数量（线性）、精度（FP32/BF16/FP16/INT8/INT4）、优化器（SGD&lt;Adam）；batch size（激活 ∝ batch）、序列长度（激活 ∝ seq，attention 还有 O(n²)）；模型深度（激活 ∝ layers）。</li><li>补工程影响：训练技巧：梯度累积（时间换空间）、gradient checkpointing（不存激活）；推理时 KV-Cache ∝ batch × seq × layers × hidden，长上下文是显存杀手。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "模型和精度因素",
+        "explain": "<p>参数显存基本按 <code>参数量 × 每参数字节数</code> 线性增长。FP32 是 4 字节，BF16/FP16 是 2 字节，INT8 约 1 字节，INT4 约 0.5 字节。优化器也很关键：SGD 状态少，AdamW 需要一阶/二阶矩，训练显存会明显放大。</p>"
       },
       {
-        "term": "深挖追问",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「FSDP / ZeRO 原理」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「Flash Attention 省显存吗」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「为什么 Adam 优化器状态要 FP32」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "batch、序列长度和层数",
+        "explain": "<p>训练激活大致随 <code>batch · seq · layers · hidden</code> 增长；普通 attention 的中间分数还可能出现 <code>seq²</code> 相关开销，FlashAttention 这类实现会降低峰值显存。</p><p>推理时 KV cache 约随 <code>batch · seq · layers · hidden</code> 线性增长，所以长上下文 serving 的瓶颈经常不是权重，而是历史 token 越存越多。</p>"
       },
       {
-        "term": "易错点",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "常见省显存手段",
+        "explain": "<ul><li><strong>gradient checkpointing</strong>：少存激活，反向时重算，省显存但耗时增加。</li><li><strong>梯度累积</strong>：用多个 micro-batch 模拟大 batch，降低单步峰值。</li><li><strong>ZeRO/FSDP</strong>：把参数、梯度、优化器状态切到多张卡上。</li><li><strong>量化</strong>：降低权重或 KV cache 的字节数。</li><li><strong>MQA/GQA/MLA</strong>：减少推理时 KV cache。</li></ul>"
       },
       {
-        "term": "补充与实战整理",
-        "explain": "<p><strong>项目/岗位连接</strong></p><p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「MLA 如何把 KV-Cache 从多头维度压到 latent 维度」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul><p><strong>FSDP / ZeRO 原理</strong></p><p>把参数、梯度、优化器状态<span class=\"key-point\">切分到多张卡上</span>，用的时候再 all-gather。</p><ul><li><strong>ZeRO-1</strong>：只切优化器状态（省 4×）</li><li><strong>ZeRO-2</strong>：切优化器 + 梯度（省 8×）</li><li><strong>ZeRO-3 / FSDP</strong>：切优化器 + 梯度 + 参数（省 N×，N=GPU 数）</li></ul><p>代价是通信开销——ZeRO-3 的通信成本最高，但在 NVLink 互联下可以接受。</p><p><strong>Flash Attention 省显存吗</strong></p><p>省——而且省得非常狠。核心是把 attention 计算 fuse 成 tiled kernel，<span class=\"key-point\">不再显式存 n×n 的 attention 矩阵</span>，反向时用 recomputation 重新算。从 O(n²) 内存降到 O(n)，同时因为更好的 GPU 内存访问模式反而更快。</p><p><strong>为什么 Adam 优化器状态要 FP32</strong></p><p>低精度累加误差大，尤其是二阶矩 v_t 这种需要长期累积的状态。BF16 的精度（7 位尾数）不足以准确维护 β₂=0.999 的指数移动平均——累积误差会让优化器跑偏。所以即使参数和梯度用 BF16，优化器状态必须 FP32。</p>"
+        "term": "判断题里的边界",
+        "explain": "<p>看到“显存和哪些因素相关”，不要只答参数量。短 prompt、小 batch 推理时权重占主导；长上下文、多并发时 KV cache 可能占主导；全参训练时 AdamW 状态和激活很重；LoRA/QLoRA 则把训练账本改成“冻结基座 + 小量可训练参数”。</p>"
       }
     ],
     "group": "面经",
     "lv": 2,
     "details_ja": [
       {
-        "term": "質問意図",
-        "explain": "<p>这题表面在问「显存占用和哪些因素相关？」，实际要验证你是否掌握 <span class=\"key-point\">MLA 如何把 KV-Cache 从多头维度压到 latent 维度</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "显存拆账",
+        "explain": "<p>显存占用可以拆成五块：<strong>参数权重、梯度、优化器状态、前向激活、推理 KV cache</strong>。不同阶段主导项不同：推理常由权重和 KV cache 主导，训练常由优化器状态和激活主导。</p>"
       },
       {
-        "term": "回答構成",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「显存占用和哪些因素相关？」压缩成一个清晰定义或判断。</li><li>展开主干：参数量（线性）、精度（FP32/BF16/FP16/INT8/INT4）、优化器（SGD&lt;Adam）；batch size（激活 ∝ batch）、序列长度（激活 ∝ seq，attention 还有 O(n²)）；模型深度（激活 ∝ layers）。</li><li>补工程影响：训练技巧：梯度累积（时间换空间）、gradient checkpointing（不存激活）；推理时 KV-Cache ∝ batch × seq × layers × hidden，长上下文是显存杀手。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "模型和精度因素",
+        "explain": "<p>参数显存基本按 <code>参数量 × 每参数字节数</code> 线性增长。FP32 是 4 字节，BF16/FP16 是 2 字节，INT8 约 1 字节，INT4 约 0.5 字节。优化器也很关键：SGD 状态少，AdamW 需要一阶/二阶矩，训练显存会明显放大。</p>"
       },
       {
-        "term": "深掘り質問",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「FSDP / ZeRO 原理」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「Flash Attention 省显存吗」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「为什么 Adam 优化器状态要 FP32」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "batch、序列长度和层数",
+        "explain": "<p>训练激活大致随 <code>batch · seq · layers · hidden</code> 增长；普通 attention 的中间分数还可能出现 <code>seq²</code> 相关开销，FlashAttention 这类实现会降低峰值显存。</p><p>推理时 KV cache 约随 <code>batch · seq · layers · hidden</code> 线性增长，所以长上下文 serving 的瓶颈经常不是权重，而是历史 token 越存越多。</p>"
       },
       {
-        "term": "落とし穴",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "常见省显存手段",
+        "explain": "<ul><li><strong>gradient checkpointing</strong>：少存激活，反向时重算，省显存但耗时增加。</li><li><strong>梯度累积</strong>：用多个 micro-batch 模拟大 batch，降低单步峰值。</li><li><strong>ZeRO/FSDP</strong>：把参数、梯度、优化器状态切到多张卡上。</li><li><strong>量化</strong>：降低权重或 KV cache 的字节数。</li><li><strong>MQA/GQA/MLA</strong>：减少推理时 KV cache。</li></ul>"
       },
       {
-        "term": "プロジェクト接続",
-        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「MLA 如何把 KV-Cache 从多头维度压到 latent 维度」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+        "term": "判断题里的边界",
+        "explain": "<p>看到“显存和哪些因素相关”，不要只答参数量。短 prompt、小 batch 推理时权重占主导；长上下文、多并发时 KV cache 可能占主导；全参训练时 AdamW 状态和激活很重；LoRA/QLoRA 则把训练账本改成“冻结基座 + 小量可训练参数”。</p>"
+      }
+    ],
+    "related": [
+      {
+        "id": "l32",
+        "type": "基础概念",
+        "note": "KV Cache 显存账本，对应推理显存随 batch/seq/layers 增长。"
       }
     ]
   },
@@ -360,48 +399,48 @@
     ],
     "details": [
       {
-        "term": "问题意图",
-        "explain": "<p>这题表面在问「大模型灾难性遗忘是什么？如何解决？」，实际要验证你是否掌握 <span class=\"key-point\">微调覆盖旧能力的原因和缓解组合</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "现象",
+        "explain": "<p>灾难性遗忘指模型在新任务或新领域上继续训练后，旧任务能力明显下降。大模型里常见表现是：领域微调后通用问答变差，风格微调后事实性下降，或者代码能力被纯对话数据冲淡。</p>"
       },
       {
-        "term": "答题结构",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「大模型灾难性遗忘是什么？如何解决？」压缩成一个清晰定义或判断。</li><li>展开主干：现象：在新任务上微调后，旧任务（包括基座能力）性能显著下降；本质：参数更新时旧任务相关的权重被覆盖；参数层面：LoRA/Adapter 冻结基座只训小矩阵，部分层冻结。</li><li>补工程影响：数据层面：混合训练（新+少量旧）、知识蒸馏、经验回放；正则化 + 小学习率 + 少 epoch 是训练技巧组合拳。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "为什么会发生",
+        "explain": "<p>神经网络的很多能力共享同一批参数。新任务梯度会推动参数朝新数据分布移动，如果没有旧任务约束，原先对旧任务重要的参数区域就会被覆盖。学习率越大、epoch 越多、数据分布越窄，遗忘风险越高。</p>"
       },
       {
-        "term": "深挖追问",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「LoRA 为什么能缓解遗忘」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「多阶段 SFT 的顺序影响」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「EWC（Elastic Weight Consolidation）」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「RLHF 会不会遗忘」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "参数层面的缓解",
+        "explain": "<ul><li><strong>LoRA/Adapter</strong>：冻结基座，只训练小模块，旧能力大多保留在原参数里。</li><li><strong>部分层冻结</strong>：保留下层通用表示，只调整上层或少数模块。</li><li><strong>正则约束</strong>：限制参数偏离原模型，例如对重要参数加更强惩罚。</li></ul>"
       },
       {
-        "term": "易错点",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "数据层面的缓解",
+        "explain": "<ul><li><strong>混合训练</strong>：新数据中混入通用指令、旧领域样本或能力保持集。</li><li><strong>知识蒸馏</strong>：让新模型在旧任务上贴近原模型输出。</li><li><strong>经验回放</strong>：训练过程中周期性重放代表性旧样本，提醒模型不要偏离。</li></ul>"
       },
       {
-        "term": "补充与实战整理",
-        "explain": "<p><strong>项目/岗位连接</strong></p><p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「微调覆盖旧能力的原因和缓解组合」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul><p><strong>LoRA 为什么能缓解遗忘</strong></p><p>基座权重<span class=\"key-point\">完全冻结</span>，新知识都进 LoRA 的 B·A 矩阵。极端情况下想回到基座，只要把 LoRA 去掉就行——完全无损。对比全参微调，LoRA 的遗忘风险几乎可控为零。</p><p>但 LoRA 的容量有限，学不下太多新知识。在遗忘和容量之间权衡时，rank 越大容量越大、遗忘风险越高。</p><p><strong>多阶段 SFT 的顺序影响</strong></p><p>有影响——<span class=\"key-point\">后训的任务留下的印记最深</span>，所以重要任务放后面。常见的经验法则：通用对话 → 领域知识 → 指令对齐 → 风格微调。工业界更激进的做法是用 rehearsal（每个阶段都混入前一阶段的数据）。</p><p><strong>EWC（Elastic Weight Consolidation）</strong></p><p>在新任务 loss 上加一个正则项：<code>λ · Σ F_i · (θ_i - θ*_i)²</code>，其中 F_i 是 Fisher 信息矩阵（衡量参数 i 对旧任务的重要性）。</p><p>直觉：<span class=\"key-point\">对旧任务重要的参数更新要付出更大代价</span>。但计算 Fisher 矩阵贵，实际落地不多。</p><p><strong>RLHF 会不会遗忘</strong></p><p>会——RLHF 在对齐人类偏好的同时会削弱 base model 的一些能力（所谓「alignment tax」）。这也是现在流行 DPO、IPO 等相对温和的偏好优化方法的原因之一——它们更接近 SFT，偏离 base 的程度更小。</p>"
+        "term": "取舍",
+        "explain": "<p>完全不遗忘通常意味着新任务学得慢；新任务学得太猛又容易损伤旧能力。实际会用小学习率、少 epoch、早停、LoRA rank 控制、混合数据比例和保留集评测一起调。判断是否遗忘，不能只看新任务分数，还要看旧能力回归集。</p>"
       }
     ],
     "group": "面经",
     "lv": 2,
     "details_ja": [
       {
-        "term": "質問意図",
-        "explain": "<p>这题表面在问「大模型灾难性遗忘是什么？如何解决？」，实际要验证你是否掌握 <span class=\"key-point\">微调覆盖旧能力的原因和缓解组合</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "现象",
+        "explain": "<p>灾难性遗忘指模型在新任务或新领域上继续训练后，旧任务能力明显下降。大模型里常见表现是：领域微调后通用问答变差，风格微调后事实性下降，或者代码能力被纯对话数据冲淡。</p>"
       },
       {
-        "term": "回答構成",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「大模型灾难性遗忘是什么？如何解决？」压缩成一个清晰定义或判断。</li><li>展开主干：现象：在新任务上微调后，旧任务（包括基座能力）性能显著下降；本质：参数更新时旧任务相关的权重被覆盖；参数层面：LoRA/Adapter 冻结基座只训小矩阵，部分层冻结。</li><li>补工程影响：数据层面：混合训练（新+少量旧）、知识蒸馏、经验回放；正则化 + 小学习率 + 少 epoch 是训练技巧组合拳。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "为什么会发生",
+        "explain": "<p>神经网络的很多能力共享同一批参数。新任务梯度会推动参数朝新数据分布移动，如果没有旧任务约束，原先对旧任务重要的参数区域就会被覆盖。学习率越大、epoch 越多、数据分布越窄，遗忘风险越高。</p>"
       },
       {
-        "term": "深掘り質問",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「LoRA 为什么能缓解遗忘」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「多阶段 SFT 的顺序影响」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「EWC（Elastic Weight Consolidation）」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「RLHF 会不会遗忘」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "参数层面的缓解",
+        "explain": "<ul><li><strong>LoRA/Adapter</strong>：冻结基座，只训练小模块，旧能力大多保留在原参数里。</li><li><strong>部分层冻结</strong>：保留下层通用表示，只调整上层或少数模块。</li><li><strong>正则约束</strong>：限制参数偏离原模型，例如对重要参数加更强惩罚。</li></ul>"
       },
       {
-        "term": "落とし穴",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "数据层面的缓解",
+        "explain": "<ul><li><strong>混合训练</strong>：新数据中混入通用指令、旧领域样本或能力保持集。</li><li><strong>知识蒸馏</strong>：让新模型在旧任务上贴近原模型输出。</li><li><strong>经验回放</strong>：训练过程中周期性重放代表性旧样本，提醒模型不要偏离。</li></ul>"
       },
       {
-        "term": "プロジェクト接続",
-        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「微调覆盖旧能力的原因和缓解组合」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+        "term": "取舍",
+        "explain": "<p>完全不遗忘通常意味着新任务学得慢；新任务学得太猛又容易损伤旧能力。实际会用小学习率、少 epoch、早停、LoRA rank 控制、混合数据比例和保留集评测一起调。判断是否遗忘，不能只看新任务分数，还要看旧能力回归集。</p>"
       }
     ]
   },
@@ -418,48 +457,48 @@
     ],
     "details": [
       {
-        "term": "问题意图",
-        "explain": "<p>这题表面在问「BF16、FP16、FP32 对比」，实际要验证你是否掌握 <span class=\"key-point\">数值格式的动态范围、精度和训练稳定性</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "三种格式的位数",
+        "explain": "<p>FP32、FP16、BF16 都由符号位、指数位、尾数位组成。指数位决定动态范围，尾数位决定有效精度。</p><div class=\"formula\">FP32 = 1 sign + 8 exponent + 23 mantissa<br>FP16 = 1 sign + 5 exponent + 10 mantissa<br>BF16 = 1 sign + 8 exponent + 7 mantissa</div>"
       },
       {
-        "term": "答题结构",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「BF16、FP16、FP32 对比」压缩成一个清晰定义或判断。</li><li>展开主干：FP32：1+8+23，动态范围大精度高，4 字节；FP16：1+5+10，精度高但范围小（容易溢出），2 字节，Pascal+ 支持；BF16：1+8+7，动态范围=FP32，精度低，2 字节，Ampere+ 支持。</li><li>补工程影响：FP16 必须用 loss scaling 防溢出；BF16 开箱即用更稳定；现代大模型都用 BF16——A100/H100 原生支持，稳定性 &gt;&gt; FP16。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "动态范围和精度",
+        "explain": "<p>FP16 的尾数比 BF16 多，所以局部精度更高；但它只有 5 位指数，动态范围小，训练中容易 overflow/underflow。BF16 保留了 FP32 的 8 位指数，动态范围几乎和 FP32 一样，代价是尾数少、相对精度更粗。</p>"
       },
       {
-        "term": "深挖追问",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「为什么 FP16 需要 loss scaling」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「BF16 为什么更稳定」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「FP8 是什么」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「混合精度中哪些要 FP32」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "为什么 FP16 需要 loss scaling",
+        "explain": "<p>反向传播里的梯度可能很小，FP16 容易把小梯度下溢成 0；也可能遇到大值溢出成 inf。loss scaling 的做法是先把 loss 放大，反向得到放大的梯度，再在 optimizer step 前缩回去。动态 loss scaling 会根据是否出现 inf/NaN 调整倍率。</p>"
       },
       {
-        "term": "易错点",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "为什么大模型偏爱 BF16",
+        "explain": "<p>大模型训练更怕数值范围不够导致不稳定。BF16 虽然尾数少，但矩阵乘和归一化配合现代硬件通常足够；它不太需要 loss scaling，训练调参更省心。A100/H100 等硬件对 BF16 支持成熟后，BF16 成了训练默认选择之一。</p>"
       },
       {
-        "term": "补充与实战整理",
-        "explain": "<p><strong>项目/岗位连接</strong></p><p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「数值格式的动态范围、精度和训练稳定性」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul><p><strong>为什么 FP16 需要 loss scaling</strong></p><p>FP16 动态范围只有 6e-5 ~ 6.5e4，梯度很容易：</p><ul><li><strong>大梯度溢出</strong>：变成 inf，参数被破坏</li><li><strong>小梯度下溢</strong>：变成 0，更新消失</li></ul><p>解决方案：<span class=\"key-point\">把 loss 乘以 2^16 再反向</span>，梯度会被同步放大 2^16 倍，下溢风险消失；优化器更新时除回去。动态 loss scaling 会根据是否出现 inf 自动调整 scale 因子。</p><p><strong>BF16 为什么更稳定</strong></p><p>BF16 有 8 位指数（和 FP32 一样），动态范围覆盖 1e-38 ~ 1e38，<span class=\"key-point\">和 FP32 完全一致</span>——所以溢出和下溢几乎不会发生，完全不需要 loss scaling。</p><p>代价是只有 7 位尾数，相对误差约 7.8e-3——比 FP16 的 9.8e-4 大一个数量级，但大模型训练对这个精度不敏感。</p><p><strong>FP8 是什么</strong></p><p>H100 引入的更低精度浮点，两种格式：</p><ul><li><strong>E4M3</strong>：1+4+3，精度优先（用于前向 activation）</li><li><strong>E5M2</strong>：1+5+2，范围优先（用于反向 gradient）</li></ul><p>需要 per-tensor scaling 配合才能稳定训练。Transformer Engine 库在 H100 上能做到 FP8 训练 + BF16 精度。</p><p><strong>混合精度中哪些要 FP32</strong></p><p>即使用 BF16 训练，这些地方仍然用 FP32：</p><ul><li>Loss 计算（数值稳定）</li><li>Softmax（容易溢出）</li><li>LayerNorm 的统计量</li><li>Optimizer states（m, v）</li><li>Master weights（主权重副本）</li></ul>"
+        "term": "哪些地方仍常用 FP32",
+        "explain": "<ul><li>optimizer states 或 master weights：减少长期累积误差。</li><li>softmax、loss、归一化统计：避免极值导致不稳定。</li><li>评估或敏感数值计算：需要更高精度时回到 FP32。</li></ul><p>混合精度不是所有张量都降精度，而是把吞吐敏感的大矩阵计算降到 BF16/FP16，把稳定性敏感的部分留在 FP32。</p>"
       }
     ],
     "group": "面经",
     "lv": 2,
     "details_ja": [
       {
-        "term": "質問意図",
-        "explain": "<p>这题表面在问「BF16、FP16、FP32 对比」，实际要验证你是否掌握 <span class=\"key-point\">数值格式的动态范围、精度和训练稳定性</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "三种格式的位数",
+        "explain": "<p>FP32、FP16、BF16 都由符号位、指数位、尾数位组成。指数位决定动态范围，尾数位决定有效精度。</p><div class=\"formula\">FP32 = 1 sign + 8 exponent + 23 mantissa<br>FP16 = 1 sign + 5 exponent + 10 mantissa<br>BF16 = 1 sign + 8 exponent + 7 mantissa</div>"
       },
       {
-        "term": "回答構成",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「BF16、FP16、FP32 对比」压缩成一个清晰定义或判断。</li><li>展开主干：FP32：1+8+23，动态范围大精度高，4 字节；FP16：1+5+10，精度高但范围小（容易溢出），2 字节，Pascal+ 支持；BF16：1+8+7，动态范围=FP32，精度低，2 字节，Ampere+ 支持。</li><li>补工程影响：FP16 必须用 loss scaling 防溢出；BF16 开箱即用更稳定；现代大模型都用 BF16——A100/H100 原生支持，稳定性 &gt;&gt; FP16。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "动态范围和精度",
+        "explain": "<p>FP16 的尾数比 BF16 多，所以局部精度更高；但它只有 5 位指数，动态范围小，训练中容易 overflow/underflow。BF16 保留了 FP32 的 8 位指数，动态范围几乎和 FP32 一样，代价是尾数少、相对精度更粗。</p>"
       },
       {
-        "term": "深掘り質問",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「为什么 FP16 需要 loss scaling」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「BF16 为什么更稳定」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「FP8 是什么」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「混合精度中哪些要 FP32」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "为什么 FP16 需要 loss scaling",
+        "explain": "<p>反向传播里的梯度可能很小，FP16 容易把小梯度下溢成 0；也可能遇到大值溢出成 inf。loss scaling 的做法是先把 loss 放大，反向得到放大的梯度，再在 optimizer step 前缩回去。动态 loss scaling 会根据是否出现 inf/NaN 调整倍率。</p>"
       },
       {
-        "term": "落とし穴",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "为什么大模型偏爱 BF16",
+        "explain": "<p>大模型训练更怕数值范围不够导致不稳定。BF16 虽然尾数少，但矩阵乘和归一化配合现代硬件通常足够；它不太需要 loss scaling，训练调参更省心。A100/H100 等硬件对 BF16 支持成熟后，BF16 成了训练默认选择之一。</p>"
       },
       {
-        "term": "プロジェクト接続",
-        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「数值格式的动态范围、精度和训练稳定性」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+        "term": "哪些地方仍常用 FP32",
+        "explain": "<ul><li>optimizer states 或 master weights：减少长期累积误差。</li><li>softmax、loss、归一化统计：避免极值导致不稳定。</li><li>评估或敏感数值计算：需要更高精度时回到 FP32。</li></ul><p>混合精度不是所有张量都降精度，而是把吞吐敏感的大矩阵计算降到 BF16/FP16，把稳定性敏感的部分留在 FP32。</p>"
       }
     ]
   },
@@ -476,48 +515,48 @@
     ],
     "details": [
       {
-        "term": "问题意图",
-        "explain": "<p>这题表面在问「Adam 和 AdamW 的原理」，实际要验证你是否掌握 <span class=\"key-point\">自适应优化器和解耦 weight decay</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "Adam 的直觉",
+        "explain": "<p>Adam 可以看成 Momentum + RMSProp：一阶矩 <code>m</code> 记住梯度方向的惯性，二阶矩 <code>v</code> 估计梯度平方的大小，从而给不同参数自适应调学习率。</p>"
       },
       {
-        "term": "答题结构",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「Adam 和 AdamW 的原理」压缩成一个清晰定义或判断。</li><li>展开主干：Adam = Momentum（一阶动量）+ RMSProp（二阶动量自适应学习率）；m_t = β₁m + (1-β₁)g；v_t = β₂v + (1-β₂)g²；偏差修正后更新；AdamW 改动：解耦 weight decay，直接在更新步骤减 η·λ·θ。</li><li>补工程影响：AdamW 的 weight decay 不会被二阶矩缩放削弱，正则效果正确；现代大模型全部用 AdamW——泛化更好、超参更稳定。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "Adam 更新公式",
+        "explain": "<div class=\"formula\">m_t = β₁ m_{t-1} + (1-β₁) g_t<br>v_t = β₂ v_{t-1} + (1-β₂) g_t²<br>m̂_t = m_t / (1-β₁^t)<br>v̂_t = v_t / (1-β₂^t)<br>θ_t = θ_{t-1} - η · m̂_t / (√v̂_t + ε)</div><p>偏差修正是因为训练早期 <code>m</code> 和 <code>v</code> 从 0 开始，会系统性偏小。</p>"
       },
       {
-        "term": "深挖追问",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「Adam 更新公式」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「AdamW vs Adam 的关键差异」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「8bit Adam」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「Lion 优化器」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "AdamW 改了哪里",
+        "explain": "<p>Adam 里如果把 L2 正则加进 loss，正则项会进入梯度，再被 <code>√v</code> 自适应缩放；这样 weight decay 的强度会因参数梯度统计不同而变形。</p><p>AdamW 把 weight decay 从梯度里解耦出来，直接在参数更新时做衰减：</p><div class=\"formula\">θ_t = θ_{t-1} - η · AdamUpdate - η · λ · θ_{t-1}</div><p>这样正则力度更接近“每步按比例拉小权重”的本意。</p>"
       },
       {
-        "term": "易错点",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "为什么大模型常用 AdamW",
+        "explain": "<p>AdamW 的学习率自适应适合稀疏、尺度差异大的梯度；解耦 weight decay 又让正则更可控。大模型训练里，AdamW 通常和 warmup、cosine decay、gradient clipping、BF16 混合精度一起出现。</p>"
       },
       {
-        "term": "补充与实战整理",
-        "explain": "<p><strong>项目/岗位连接</strong></p><p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「自适应优化器和解耦 weight decay」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul><p><strong>Adam 更新公式</strong></p><div class=\"formula\">m_t = β₁·m_(t-1) + (1-β₁)·g_t         一阶矩<br>v_t = β₂·v_(t-1) + (1-β₂)·g_t²        二阶矩<br>m̂_t = m_t / (1-β₁^t)                 偏差修正<br>v̂_t = v_t / (1-β₂^t)<br>θ_t = θ_(t-1) - η · m̂_t / (√v̂_t + ε)</div><p>典型超参：β₁=0.9, β₂=0.999, ε=1e-8。</p><p><strong>m_t</strong> 提供方向惯性让更新更平滑；<strong>v_t</strong> 给每个参数分配不同学习率，梯度大的参数步长小、反之步长大。</p><p><strong>AdamW vs Adam 的关键差异</strong></p><p>Adam 的 L2 正则通过 loss 加 <code>λ‖θ‖²</code> 实现，这个正则项会进入梯度、进入 m/v，<span class=\"key-point\">被二阶矩 v 缩放后效果就乱了</span>——对梯度大的参数正则实际变弱，正则行为和预期不符。</p><p>AdamW 的做法：<strong>直接在参数更新步骤里减去 η·λ·θ</strong>：</p><div class=\"formula\">θ_t = θ_(t-1) - η · (m̂_t / (√v̂_t + ε) + λ·θ_(t-1))</div><p>这样 weight decay 不受 v 影响，正则效果正确。</p><p><strong>8bit Adam</strong></p><p>bitsandbytes 库的实现，把 m/v 量化成 8bit，<span class=\"key-point\">优化器显存减半</span>。关键技巧是 block-wise quantization——每 2048 个元素用一个独立的 scale，避免 outlier 破坏整体精度。损失可以忽略，但显存显著节约。</p><p><strong>Lion 优化器</strong></p><p>Google 2023 年提出的替代，用 <code>sign(m_t)</code> 更新而不是 <code>m_t / √v_t</code>。只维护一阶动量，<span class=\"key-point\">显存比 AdamW 少一半</span>（不要 v）。在大模型训练上效果接近或略好于 AdamW，但超参需要重新调。</p>"
+        "term": "追问补充",
+        "explain": "<p><strong>8-bit Adam 是什么？</strong> 把 Adam 的 m/v 状态量化存储，降低优化器显存，常见实现会用分块 scale 控制误差。</p><p><strong>Lion 和 AdamW 的差别？</strong> Lion 主要用动量的符号更新，不存二阶矩，状态更省；但超参和稳定性需要重新验证。</p><p><strong>AdamW 是否总比 SGD 好？</strong> 不一定。AdamW 收敛快、调参友好；SGD 在一些视觉任务或特定泛化设置里仍有竞争力。</p>"
       }
     ],
     "group": "面经",
     "lv": 2,
     "details_ja": [
       {
-        "term": "質問意図",
-        "explain": "<p>这题表面在问「Adam 和 AdamW 的原理」，实际要验证你是否掌握 <span class=\"key-point\">自适应优化器和解耦 weight decay</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "Adam 的直觉",
+        "explain": "<p>Adam 可以看成 Momentum + RMSProp：一阶矩 <code>m</code> 记住梯度方向的惯性，二阶矩 <code>v</code> 估计梯度平方的大小，从而给不同参数自适应调学习率。</p>"
       },
       {
-        "term": "回答構成",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「Adam 和 AdamW 的原理」压缩成一个清晰定义或判断。</li><li>展开主干：Adam = Momentum（一阶动量）+ RMSProp（二阶动量自适应学习率）；m_t = β₁m + (1-β₁)g；v_t = β₂v + (1-β₂)g²；偏差修正后更新；AdamW 改动：解耦 weight decay，直接在更新步骤减 η·λ·θ。</li><li>补工程影响：AdamW 的 weight decay 不会被二阶矩缩放削弱，正则效果正确；现代大模型全部用 AdamW——泛化更好、超参更稳定。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "Adam 更新公式",
+        "explain": "<div class=\"formula\">m_t = β₁ m_{t-1} + (1-β₁) g_t<br>v_t = β₂ v_{t-1} + (1-β₂) g_t²<br>m̂_t = m_t / (1-β₁^t)<br>v̂_t = v_t / (1-β₂^t)<br>θ_t = θ_{t-1} - η · m̂_t / (√v̂_t + ε)</div><p>偏差修正是因为训练早期 <code>m</code> 和 <code>v</code> 从 0 开始，会系统性偏小。</p>"
       },
       {
-        "term": "深掘り質問",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「Adam 更新公式」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「AdamW vs Adam 的关键差异」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「8bit Adam」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「Lion 优化器」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "AdamW 改了哪里",
+        "explain": "<p>Adam 里如果把 L2 正则加进 loss，正则项会进入梯度，再被 <code>√v</code> 自适应缩放；这样 weight decay 的强度会因参数梯度统计不同而变形。</p><p>AdamW 把 weight decay 从梯度里解耦出来，直接在参数更新时做衰减：</p><div class=\"formula\">θ_t = θ_{t-1} - η · AdamUpdate - η · λ · θ_{t-1}</div><p>这样正则力度更接近“每步按比例拉小权重”的本意。</p>"
       },
       {
-        "term": "落とし穴",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "为什么大模型常用 AdamW",
+        "explain": "<p>AdamW 的学习率自适应适合稀疏、尺度差异大的梯度；解耦 weight decay 又让正则更可控。大模型训练里，AdamW 通常和 warmup、cosine decay、gradient clipping、BF16 混合精度一起出现。</p>"
       },
       {
-        "term": "プロジェクト接続",
-        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「自适应优化器和解耦 weight decay」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+        "term": "追问补充",
+        "explain": "<p><strong>8-bit Adam 是什么？</strong> 把 Adam 的 m/v 状态量化存储，降低优化器显存，常见实现会用分块 scale 控制误差。</p><p><strong>Lion 和 AdamW 的差别？</strong> Lion 主要用动量的符号更新，不存二阶矩，状态更省；但超参和稳定性需要重新验证。</p><p><strong>AdamW 是否总比 SGD 好？</strong> 不一定。AdamW 收敛快、调参友好；SGD 在一些视觉任务或特定泛化设置里仍有竞争力。</p>"
       }
     ],
     "related": [
@@ -541,48 +580,48 @@
     ],
     "details": [
       {
-        "term": "问题意图",
-        "explain": "<p>这题表面在问「LeetCode 股票系列（121/122/123/188）的通解」，实际要验证你是否掌握 <span class=\"key-point\">股票 DP 状态设计和多题统一抽象</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "统一状态",
+        "explain": "<p>股票系列的母题状态是：</p><div class=\"formula\">dp[i][j][0] = 第 i 天结束，最多完成 j 次交易，手里没股票的最大收益<br>dp[i][j][1] = 第 i 天结束，最多完成 j 次交易，手里有股票的最大收益</div><p>“交易次数”通常在买入时消耗，也可以在卖出时消耗，只要全程一致。</p>"
       },
       {
-        "term": "答题结构",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「LeetCode 股票系列（121/122/123/188）的通解」压缩成一个清晰定义或判断。</li><li>展开主干：121（1 次）：一次遍历维护最小价格和最大利润，O(n)/O(1)；122（无限次）：贪心，只要明天比今天高就买卖；123（最多 2 次）：四个状态 DP（buy1/sell1/buy2/sell2）。</li><li>补工程影响：188（最多 k 次）：dp[j] buy/sell 二维 DP，O(nk)/O(k)；通解：dp[i][j][0/1] = 第 i 天、用了 j 次交易、持/不持股的最大收益。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "通用转移",
+        "explain": "<div class=\"formula\">dp[i][j][0] = max(dp[i-1][j][0], dp[i-1][j][1] + price[i])<br>dp[i][j][1] = max(dp[i-1][j][1], dp[i-1][j-1][0] - price[i])</div><p>第一个式子表示今天不持股：要么昨天也不持，要么今天卖出。第二个式子表示今天持股：要么昨天就持有，要么今天买入并消耗一次交易名额。</p>"
       },
       {
-        "term": "深挖追问",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「188 最通用解法（k 次）」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「为什么这一家族能统一」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「含冷冻期（309）」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「含手续费（714）」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "四道题怎么退化",
+        "explain": "<ul><li><strong>121</strong>：最多 1 次交易，等价于维护历史最低价和最大利润。</li><li><strong>122</strong>：交易次数无限，所有上涨区间都可以吃到，贪心累加正收益。</li><li><strong>123</strong>：最多 2 次交易，可以写成 buy1/sell1/buy2/sell2 四个状态。</li><li><strong>188</strong>：最多 k 次交易，直接用 <code>buy[j]</code>/<code>sell[j]</code> 滚动数组。</li></ul>"
       },
       {
-        "term": "易错点",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "188 的滚动写法",
+        "explain": "<div class=\"formula\">buy[j]  = max(buy[j],  sell[j-1] - p)<br>sell[j] = max(sell[j], buy[j] + p)</div><p>外层遍历价格，内层遍历交易次数 <code>j=1..k</code>，空间可以压到 O(k)。当 <code>k &gt;= n/2</code> 时，交易次数不再构成限制，直接退化成 122 的贪心。</p>"
       },
       {
-        "term": "补充与实战整理",
-        "explain": "<p><strong>项目/岗位连接</strong></p><p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「股票 DP 状态设计和多题统一抽象」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul><p><strong>188 最通用解法（k 次）</strong></p><div class=\"formula\">def maxProfit(k, prices):<br>&nbsp;&nbsp;n = len(prices)<br>&nbsp;&nbsp;if k &gt;= n // 2:  # 退化成 122<br>&nbsp;&nbsp;&nbsp;&nbsp;return sum(max(0, prices[i]-prices[i-1]) for i in range(1, n))<br>&nbsp;&nbsp;buy = [-inf] * (k+1)<br>&nbsp;&nbsp;sell = [0] * (k+1)<br>&nbsp;&nbsp;for p in prices:<br>&nbsp;&nbsp;&nbsp;&nbsp;for j in range(1, k+1):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buy[j]  = max(buy[j],  sell[j-1] - p)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sell[j] = max(sell[j], buy[j]    + p)<br>&nbsp;&nbsp;return sell[k]</div><p>O(nk) 时间，O(k) 空间。是整个系列的母题。</p><p><strong>为什么这一家族能统一</strong></p><p>所有题本质都是 <code>dp[i][j][0/1]</code>：第 i 天、用了 j 次交易、持/不持股票的最大收益。</p><ul><li><strong>121</strong>：j=1 固定</li><li><strong>122</strong>：j 无限制（退化成贪心）</li><li><strong>123</strong>：j=2 固定</li><li><strong>188</strong>：j=k 通用</li></ul><p>掌握 188 的 DP 框架后，121/122/123 都能用它退化得出。</p><p><strong>含冷冻期（309）</strong></p><p>多一个「冷冻期」状态。从 sell 状态不能直接转到 buy，必须经过一天冷冻期。状态机：<code>hold → sold → cold → hold</code>。</p><p><strong>含手续费（714）</strong></p><p>每次 sell 时额外减 fee：<code>sell = max(sell, buy + p - fee)</code>。本质是改变贪心/DP 的阈值——只有价差大于 fee 的波动才值得交易。</p>"
+        "term": "变体怎么加约束",
+        "explain": "<p><strong>冷冻期 309</strong>：卖出后不能立刻买入，需要额外记录 sold/cooldown 状态，或让买入从 <code>i-2</code> 的不持股状态转移。</p><p><strong>手续费 714</strong>：卖出时减 fee，或买入时加 fee，本质是改变一次交易的收益门槛。</p><p>这类题不要死背题号，抓住“持有/不持有 + 交易次数/额外约束”的状态机即可。</p>"
       }
     ],
     "group": "面经",
     "lv": 1,
     "details_ja": [
       {
-        "term": "質問意図",
-        "explain": "<p>这题表面在问「LeetCode 股票系列（121/122/123/188）的通解」，实际要验证你是否掌握 <span class=\"key-point\">股票 DP 状态设计和多题统一抽象</span>，以及能不能把它放进 字节 LLM / 算法工程面 的真实场景里解释。</p><ul><li>先判断考点层级：定义题、机制题、工程取舍题，还是项目复盘题。</li><li>回答里要主动补充适用条件和失败边界，避免只背标准答案。</li><li>考你是否理解大模型训练、推理和基础算法的机制，而不只是背论文结论。</li></ul>"
+        "term": "统一状态",
+        "explain": "<p>股票系列的母题状态是：</p><div class=\"formula\">dp[i][j][0] = 第 i 天结束，最多完成 j 次交易，手里没股票的最大收益<br>dp[i][j][1] = 第 i 天结束，最多完成 j 次交易，手里有股票的最大收益</div><p>“交易次数”通常在买入时消耗，也可以在卖出时消耗，只要全程一致。</p>"
       },
       {
-        "term": "回答構成",
-        "explain": "<p>先给一句定义，再拆核心机制、公式或资源开销，最后讲工程影响和失效边界。</p><ol><li>一句话定性：先把「LeetCode 股票系列（121/122/123/188）的通解」压缩成一个清晰定义或判断。</li><li>展开主干：121（1 次）：一次遍历维护最小价格和最大利润，O(n)/O(1)；122（无限次）：贪心，只要明天比今天高就买卖；123（最多 2 次）：四个状态 DP（buy1/sell1/buy2/sell2）。</li><li>补工程影响：188（最多 k 次）：dp[j] buy/sell 二维 DP，O(nk)/O(k)；通解：dp[i][j][0/1] = 第 i 天、用了 j 次交易、持/不持股的最大收益。</li><li>最后收口：给出你在项目或岗位里会如何选、如何验证。</li></ol>"
+        "term": "通用转移",
+        "explain": "<div class=\"formula\">dp[i][j][0] = max(dp[i-1][j][0], dp[i-1][j][1] + price[i])<br>dp[i][j][1] = max(dp[i-1][j][1], dp[i-1][j-1][0] - price[i])</div><p>第一个式子表示今天不持股：要么昨天也不持，要么今天卖出。第二个式子表示今天持股：要么昨天就持有，要么今天买入并消耗一次交易名额。</p>"
       },
       {
-        "term": "深掘り質問",
-        "explain": "<p>面试官大概率会沿着“为什么、怎么做、怎么证明”继续追。</p><ul><li>如果追问「188 最通用解法（k 次）」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「为什么这一家族能统一」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「含冷冻期（309）」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果追问「含手续费（714）」，先给边界条件，再给实现/公式/流程，最后说明怎么验证。</li><li>如果被要求现场设计，优先画数据流或状态流，不要陷入零散名词。</li><li>如果问线上问题，主动补 trace、日志、回放、灰度和人工接管。</li></ul>"
+        "term": "四道题怎么退化",
+        "explain": "<ul><li><strong>121</strong>：最多 1 次交易，等价于维护历史最低价和最大利润。</li><li><strong>122</strong>：交易次数无限，所有上涨区间都可以吃到，贪心累加正收益。</li><li><strong>123</strong>：最多 2 次交易，可以写成 buy1/sell1/buy2/sell2 四个状态。</li><li><strong>188</strong>：最多 k 次交易，直接用 <code>buy[j]</code>/<code>sell[j]</code> 滚动数组。</li></ul>"
       },
       {
-        "term": "落とし穴",
-        "explain": "<ul><li>只背模型名、参数量或 benchmark，不解释为什么这个设计有效。</li><li>混淆训练和推理、显存和算力、SFT 和 RL、Adam 和 AdamW 等基本边界。</li><li>没有落到成本、稳定性、长上下文、部署或调参取舍，答案会显得像读摘要。</li><li>把结论说得太满：要承认前提，例如数据规模、模型能力、客户行业、部署环境都会改变选择。</li><li>忽略反例：至少准备一个“什么时候不适合这样做”的判断。</li></ul>"
+        "term": "188 的滚动写法",
+        "explain": "<div class=\"formula\">buy[j]  = max(buy[j],  sell[j-1] - p)<br>sell[j] = max(sell[j], buy[j] + p)</div><p>外层遍历价格，内层遍历交易次数 <code>j=1..k</code>，空间可以压到 O(k)。当 <code>k &gt;= n/2</code> 时，交易次数不再构成限制，直接退化成 122 的贪心。</p>"
       },
       {
-        "term": "プロジェクト接続",
-        "explain": "<p>把这题往个人经历上拉，答案会更像复盘而不是背诵。</p><ul><li>连接到 SiLR / Agentic RL 的训练管线、SFT/GRPO、显存估算、RAG/推理成本和算法手撕准备。</li><li>可用表达：我在项目里遇到的对应问题是「股票 DP 状态设计和多题统一抽象」，当时的约束是成本/稳定性/安全/可解释性之一。</li><li>收尾要落到岗位价值：在 字节 LLM / 算法工程面 中，这个知识点帮助我更快做方案取舍、排障或和团队对齐。</li></ul>"
+        "term": "变体怎么加约束",
+        "explain": "<p><strong>冷冻期 309</strong>：卖出后不能立刻买入，需要额外记录 sold/cooldown 状态，或让买入从 <code>i-2</code> 的不持股状态转移。</p><p><strong>手续费 714</strong>：卖出时减 fee，或买入时加 fee，本质是改变一次交易的收益门槛。</p><p>这类题不要死背题号，抓住“持有/不持有 + 交易次数/额外约束”的状态机即可。</p>"
       }
     ]
   }

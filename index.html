@@ -756,6 +756,62 @@
     background: var(--bg-surface);
     border: 1px solid var(--border);
   }
+  .concept-diagram {
+    margin: 14px 0;
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-surface);
+    display: grid;
+    gap: 10px;
+  }
+  .diagram-row {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .diagram-node {
+    min-width: 82px;
+    flex: 1;
+    padding: 9px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(50,75,145,0.18);
+    background: var(--indigo-dim);
+    color: var(--text);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-align: center;
+    line-height: 1.45;
+  }
+  .diagram-arrow {
+    align-self: center;
+    color: var(--text-muted);
+    font-weight: 900;
+  }
+  .diagram-caption {
+    color: var(--text-muted);
+    font-size: 0.74rem;
+    line-height: 1.6;
+  }
+  .mini-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.78rem;
+  }
+  .mini-table th,
+  .mini-table td {
+    border: 1px solid var(--border);
+    padding: 8px 9px;
+    text-align: left;
+    vertical-align: top;
+  }
+  .mini-table th {
+    color: var(--indigo);
+    background: var(--indigo-dim);
+    font-weight: 800;
+  }
 
   /* ══════════════════════════════════════════════════════
      Details / Glossary
@@ -1420,7 +1476,7 @@
   </div>
 </div>
 
-<script src="data/cards.js?v=13"></script>
+<script src="data/cards.js?v=14"></script>
 <script src="fsrs.js?v=7"></script>
 <script>
 

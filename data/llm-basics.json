@@ -1614,5 +1614,268 @@
         "note": "GQA/MQA 的收益来自 KV Cache 结构，忘记公式前先回到 l06。"
       }
     ]
+  },
+  {
+    "id": "l30",
+    "cat": "LLM基础",
+    "q": "Attention heads / MHA 基础：为什么要分多个头？",
+    "q_ja": "Attention heads / MHA の基礎：なぜ複数ヘッドに分けるのか",
+    "bullets": [
+      "一个 attention head 就像一位读者，只能用一种视角看上下文；MHA 让多个 head 并行看同一句话的不同关系",
+      "每个 head 都有自己的 Q/K/V 投影，先各自算 attention，再 concat 回 d_model",
+      "小例子：d_model=8、n_heads=2 时，每个 head 的 d_head=4；不是每个 head 都拿完整 8 维",
+      "生活类比：读一份合同，法务看风险、财务看金额、销售看承诺；多头就是多位专家同时批注",
+      "面经连接：先懂 MHA，才能解释 l29 的 GQA/MQA 为什么通过减少 KV heads 来省显存"
+    ],
+    "bullets_ja": [
+      "1つの attention head は1人の読者のように、1種類の視点で文脈を見る。MHA は複数 head が同じ文を別々の関係で読む仕組み",
+      "各 head は独自の Q/K/V 射影を持ち、attention を別々に計算してから concat して d_model に戻す",
+      "小例：d_model=8、n_heads=2 なら d_head=4。各 head が 8 次元全体を持つわけではない",
+      "生活の比喩：契約書を法務、財務、営業が同時に読む。多頭注意は複数専門家の同時注釈",
+      "面接接続：MHA を理解すると、l29 の GQA/MQA が KV heads を減らして VRAM を節約する理由を説明できる"
+    ],
+    "group": "基础",
+    "lv": 1,
+    "details": [
+      {
+        "term": "多头不是重复劳动，而是分工阅读",
+        "explain": "<p><strong>本质：</strong>Multi-Head Attention 把同一个 token 表示切到多个子空间里，让不同 head 学不同的注意力模式。一个 head 可能盯主语，一个 head 盯时间，一个 head 盯括号或引用关系。</p>\n<div class=\"concept-diagram\"><pre>输入 token 表示 X (d_model=8)\n        |\n   线性投影 Wq/Wk/Wv\n        |\n+-------+-------+\n| head0 | head1 |   每个 d_head=4\n| 语法  | 指代  |\n+-------+-------+\n        |\n concat + 输出投影 Wo\n        v\n新的 token 表示 (d_model=8)</pre></div>\n<div class=\"analogy\">像三个人一起看电影：一个人关注剧情，一个人关注镜头，一个人关注配乐。最后讨论时把三份观察合起来，得到比单人观看更丰富的理解。</div>"
+      },
+      {
+        "term": "一个 2-head 的小数字例子",
+        "explain": "<p>假设句子有 3 个 token，d_model=8，n_heads=2，那么每个 head 的 d_head=4。</p>\n<div class=\"formula\">每个 head 的 Q/K/V 形状：3 × 4\nhead0 attention 分数：Q0K0^T = 3 × 3\nhead1 attention 分数：Q1K1^T = 3 × 3\nconcat 后：3 × (4+4) = 3 × 8</div>\n<p><span class=\"key-point\">关键直觉：</span>总维度仍然是 8，只是被拆成 2 个视角。head 变多通常不是让计算免费变强，而是在同样 d_model 下改变信息分工方式。</p>"
+      },
+      {
+        "term": "常见误区与面试接法",
+        "explain": "<ul><li><strong>误区 1：</strong>以为 head 越多一定越好。实际上 head 太多会让 d_head 太小，每个 head 的表达空间变窄。</li><li><strong>误区 2：</strong>以为多头就是复制同一份 attention。每个 head 有不同投影矩阵，会学出不同模式。</li><li><strong>误区 3：</strong>混淆 query heads 和 KV heads。MHA 中二者数量相同；到了 MQA/GQA/MLA，KV 的存法会被单独优化。</li></ul><p><span class=\"key-point\">面试表达：</span>我会先说 MHA 是多视角的信息检索，再写 d_model = n_heads × d_head，最后自然接到 l29：推理显存主要缓存 K/V，所以后续优化会优先减少 KV heads，而不是简单减少 query heads。</p>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "複数ヘッドは同じ作業の複製ではなく役割分担",
+        "explain": "<p><strong>本質：</strong>MHA は同じ token 表現を複数の部分空間に分け、head ごとに異なる注意パターンを学ばせる。ある head は主語、別の head は時刻、別の head は参照関係を見る。</p>\n<div class=\"concept-diagram\"><pre>X (d_model=8)\n  -> Wq/Wk/Wv\n  -> head0(d_head=4) + head1(d_head=4)\n  -> concat -> Wo -> output(d_model=8)</pre></div>"
+      },
+      {
+        "term": "2-head の小さな数値例",
+        "explain": "<p>3 token、d_model=8、n_heads=2 なら d_head=4。各 head の Q/K/V は 3×4、attention score は 3×3、concat 後に 3×8 に戻る。</p>"
+      },
+      {
+        "term": "よくある誤解と面接接続",
+        "explain": "<p>head 数を増やせば必ず良くなるわけではない。d_head が小さくなりすぎると表現力が落ちる。MHA を説明した後、KV cache では K/V の head 数が VRAM を決めるため、GQA/MQA/MLA の話につなげる。</p>"
+      }
+    ],
+    "related": [
+      {
+        "id": "l02",
+        "type": "前置基础",
+        "note": "先用 Self-Attention 公式理解 Q/K/V，再看为什么要拆成多个 head。"
+      },
+      {
+        "id": "l29",
+        "type": "进阶连接",
+        "note": "l29 讨论减少 KV heads 的显存收益，前提是先分清 query head 和 KV head。"
+      }
+    ]
+  },
+  {
+    "id": "l31",
+    "cat": "LLM基础",
+    "q": "MHA / MQA / GQA / MLA 对比：从多头到低秩缓存",
+    "q_ja": "MHA / MQA / GQA / MLA 比較：多頭注意から低ランクキャッシュへ",
+    "bullets": [
+      "MHA：每个 query head 都有自己的 K/V，表达最自由，KV cache 也最贵",
+      "MQA：所有 query heads 共享一组 K/V，最省显存，但可能损失细粒度注意力模式",
+      "GQA：几个 query heads 共享一组 K/V，是 MHA 和 MQA 的工程折中",
+      "MLA：不直接缓存完整 K/V，而是缓存低维 latent，再按需还原/参与注意力，进一步压 KV cache",
+      "面经连接：ib02 常问 R1 的 MLA 如何省 KV cache；l29 是 GQA/MQA 的数学地基"
+    ],
+    "bullets_ja": [
+      "MHA：各 query head が独立した K/V を持つ。表現力は高いが KV cache が最も大きい",
+      "MQA：全 query heads が 1 組の K/V を共有。最も省メモリだが細かな注意パターンを失いやすい",
+      "GQA：複数 query heads が group ごとに K/V を共有。MHA と MQA の実用的折衷",
+      "MLA：完全な K/V を直接保存せず、低次元 latent を保存して必要時に利用することで KV cache をさらに圧縮",
+      "面接接続：ib02 の R1 MLA と KV cache 節約、l29 の GQA/MQA 数式に接続する"
+    ],
+    "group": "基础",
+    "lv": 2,
+    "details": [
+      {
+        "term": "四种注意力像四种会议记录法",
+        "explain": "<p><strong>本质：</strong>这些变体主要改变 K/V 的存储方式。Query 仍然负责“我现在想找什么信息”，K/V 则像历史会议记录，决定过去 token 能被怎样检索。</p>\n<div class=\"concept-diagram\"><pre>假设 query heads = 8\n\nMHA:  QQQQQQQQ\n      KKKKKKKK   每个 Q head 一份 K/V\n      VVVVVVVV\n\nMQA:  QQQQQQQQ\n          K      全部共享一份 K/V\n          V\n\nGQA:  QQQQ QQQQ\n       K    K    每组共享一份 K/V\n       V    V\n\nMLA:  QQQQQQQQ\n        latent c   缓存低维压缩表示，再映射到注意力所需空间</pre></div>\n<div class=\"analogy\">MHA 是每位专家都写完整会议纪要；MQA 是全员共用一份纪要；GQA 是每个小组一份纪要；MLA 是只存压缩索引卡，需要时再展开重点内容。</div>"
+      },
+      {
+        "term": "8 个头的小数字对比",
+        "explain": "<p>假设 n_layers、seq_len、batch、dtype 都固定，只看 KV heads 数量。query heads=8，d_head=4。</p>\n<div class=\"formula\">MHA: kv_heads = 8  -> 每层每 token K/V 元素 = 2 × 8 × 4 = 64\nMQA: kv_heads = 1  -> 每层每 token K/V 元素 = 2 × 1 × 4 = 8   (约 8× 省)\nGQA: kv_heads = 2  -> 每层每 token K/V 元素 = 2 × 2 × 4 = 16  (约 4× 省)\nMLA: cache latent_dim = 6 -> 缓存元素约 6，而不是完整 K/V 的 64</div>\n<p><span class=\"key-point\">注意：</span>MLA 的真实实现还涉及 q/k 的低秩投影、RoPE 部分拆分等细节；新手先抓住“缓存低维 latent，而不是完整 K/V”这个主线。</p>"
+      },
+      {
+        "term": "容易混淆的边界",
+        "explain": "<ul><li><strong>误区 1：</strong>把 GQA/MQA/MLA 当成训练技巧。它们首先是 attention 结构和推理缓存结构的变化。</li><li><strong>误区 2：</strong>只看参数量。线上更常见的瓶颈是 KV cache 随 seq_len 和 batch 线性增长。</li><li><strong>误区 3：</strong>以为越省显存越好。MQA 过度共享可能损表达，MLA 省显存但实现复杂度更高。</li></ul><p><span class=\"key-point\">面试表达：</span>先用 MHA/MQA/GQA 解释“减少 KV heads”，再把 MLA 解释成“进一步把 K/V 压到低秩 latent 空间缓存”。这样回答 ib02 会比直接背 DeepSeek 公式稳。</p>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "4方式は会議メモの取り方の違い",
+        "explain": "<p>MHA は head ごとに完全な K/V、MQA は全 head で 1 組、GQA は group ごとに 1 組、MLA は低次元 latent を cache する。</p>\n<div class=\"concept-diagram\"><pre>MHA: K/V x 8\nMQA: K/V x 1\nGQA: K/V x 2\nMLA: compressed latent cache</pre></div>"
+      },
+      {
+        "term": "8 head の数値例",
+        "explain": "<p>query heads=8、d_head=4 なら、MHA は 2×8×4=64 要素、MQA は 8 要素、GQA(kv_heads=2) は 16 要素。MLA は完全な K/V ではなく低次元 latent を保存する。</p>"
+      },
+      {
+        "term": "誤解しやすい境界",
+        "explain": "<p>これらは単なるパラメータ削減ではなく、推論時の KV cache を小さくする構造変更。ib02 の MLA 説明では、まず l29 の GQA/MQA から話すと安定する。</p>"
+      }
+    ],
+    "related": [
+      {
+        "id": "l29",
+        "type": "数学地基",
+        "note": "先看 GQA/MQA 的 KV cache 公式，再理解 MLA 为什么还能继续压缩。"
+      },
+      {
+        "id": "l06",
+        "type": "显存前置",
+        "note": "KV Cache 为什么会变成显存大头，是比较这些结构的前提。"
+      },
+      {
+        "id": "ib02",
+        "type": "面经应用",
+        "note": "R1 的 MLA 如何实现 KV-Cache 节约，是这张卡的直接面试落点。"
+      }
+    ]
+  },
+  {
+    "id": "l32",
+    "cat": "LLM基础",
+    "q": "KV Cache 显存账本：batch、上下文、dtype 怎么算？",
+    "q_ja": "KV Cache の VRAM 勘定：batch、context、dtype の計算",
+    "bullets": [
+      "KV Cache 是推理时保存过去 token 的 K/V；它让生成少算很多重复计算，但会吃显存",
+      "核心公式：2 × layers × kv_heads × d_head × seq_len × batch × bytes_per_element",
+      "小例子：32 层、32 KV heads、d_head=128、seq=4096、batch=1、FP16 约 2GB",
+      "生活类比：聊天越长，服务员手里的历史订单本越厚；batch 越大，相当于同时拿多本订单本",
+      "面经连接：l06 解释机制，l29 解释怎么通过 GQA/MQA 降低 kv_heads"
+    ],
+    "bullets_ja": [
+      "KV Cache は推論時に過去 token の K/V を保存する仕組み。重複計算を減らす代わりに VRAM を使う",
+      "基本式：2 × layers × kv_heads × d_head × seq_len × batch × bytes_per_element",
+      "小例：32層、32 KV heads、d_head=128、seq=4096、batch=1、FP16 なら約 2GB",
+      "生活の比喩：会話が長くなるほど注文メモが厚くなる。batch が増えると同時に複数冊を持つ",
+      "面接接続：l06 は仕組み、l29 は GQA/MQA で kv_heads を減らす理由"
+    ],
+    "group": "基础",
+    "lv": 1,
+    "details": [
+      {
+        "term": "先把公式当账本，不要当咒语背",
+        "explain": "<p><strong>本质：</strong>KV Cache 的每一项都能对应到一笔显存开销：K 和 V 两份、每层都要存、每个 KV head 都要存、每个历史 token 都要存、每个并发请求都要存。</p>\n<div class=\"concept-diagram\"><pre>KV Cache bytes\n= 2        (K 和 V 两本账)\n× layers   (每层一本)\n× kv_heads (每层有几组 K/V)\n× d_head   (每组向量多宽)\n× seq_len  (历史 token 多长)\n× batch    (同时几条请求)\n× bytes    (FP16=2, FP8/INT8=1)</pre></div>\n<div class=\"analogy\">像饭店点单本：每桌一页（token），每个楼层服务员都要留副本（layer），同时服务 8 桌（batch=8）时，本子厚度直接乘 8。</div>"
+      },
+      {
+        "term": "4096 token 的小数字例子",
+        "explain": "<p>假设一个简化模型：layers=32，kv_heads=32，d_head=128，seq_len=4096，batch=1，FP16=2 bytes。</p>\n<div class=\"formula\">KV bytes = 2 × 32 × 32 × 128 × 4096 × 1 × 2\n         = 2,147,483,648 bytes\n         ≈ 2.0 GiB</div>\n<p>如果 batch 从 1 变 8，约 16 GiB；如果 seq_len 从 4K 变 32K，再乘 8，约 128 GiB。<span class=\"key-point\">长上下文和高并发叠在一起，KV Cache 会比直觉膨胀得快。</span></p>"
+      },
+      {
+        "term": "最容易漏算的三件事",
+        "explain": "<ul><li><strong>漏 batch：</strong>demo 单条请求能跑，不代表线上 32 并发能跑。</li><li><strong>漏 dtype：</strong>FP16/BF16 是 2 bytes；INT8 KV cache 约省一半，但要评估质量和框架支持。</li><li><strong>漏 kv_heads：</strong>GQA/MQA 改的是 KV heads，不一定改 query heads；账本里要填 kv_heads。</li></ul><p><span class=\"key-point\">面试表达：</span>我会把 KV Cache 当成显存账本现场算一遍，然后说明优化旋钮：减少 seq_len、batch、kv_heads、dtype bytes，或用 PagedAttention 改善碎片和调度。</p>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "式を暗記ではなく勘定表として見る",
+        "explain": "<p>KV Cache は K/V の2つ、layers、kv_heads、d_head、seq_len、batch、dtype bytes の積で決まる。</p>\n<div class=\"concept-diagram\"><pre>2(K,V) × layers × kv_heads × d_head × seq_len × batch × bytes</pre></div>"
+      },
+      {
+        "term": "4096 token の小例",
+        "explain": "<p>32 layers、32 kv_heads、d_head=128、seq=4096、batch=1、FP16=2 bytes なら、2×32×32×128×4096×1×2 ≈ 2.0 GiB。</p>"
+      },
+      {
+        "term": "漏れやすい3点",
+        "explain": "<p>batch、dtype、kv_heads を漏らしやすい。面接では l06 の仕組みから始め、l29 の GQA/MQA による kv_heads 削減へつなげる。</p>"
+      }
+    ],
+    "related": [
+      {
+        "id": "l06",
+        "type": "机制基础",
+        "note": "l06 解释为什么只缓存 K/V、不缓存 Q，以及 PagedAttention 的背景。"
+      },
+      {
+        "id": "l29",
+        "type": "结构优化",
+        "note": "GQA/MQA 的节省可以直接代入这张卡的 kv_heads 项。"
+      },
+      {
+        "id": "ib02",
+        "type": "面经应用",
+        "note": "解释 MLA 省显存时，可以先用这张账本说明完整 K/V 有多贵。"
+      }
+    ]
+  },
+  {
+    "id": "l33",
+    "cat": "LLM基础",
+    "q": "RoPE 与 MLA 为什么要解耦：位置旋转不能随便压缩",
+    "q_ja": "RoPE と MLA をなぜ分離するか：位置回転は単純圧縮できない",
+    "bullets": [
+      "RoPE 把位置信息通过旋转写进 Q/K；attention 分数因此能感知相对位置",
+      "MLA 想把 K/V 压到低维 latent 里缓存，但 RoPE 相关的 K 带有位置旋转，不能和普通内容向量完全同等压缩",
+      "解耦思路：把需要 RoPE 的部分单独保留/处理，把可低秩压缩的内容部分放进 latent cache",
+      "小例子：内容向量像书名，RoPE 像页码；书名可以做索引压缩，页码顺序不能被压坏",
+      "面经连接：ib02 问 R1 MLA 省 KV cache，常追问为什么还要单独处理 RoPE"
+    ],
+    "bullets_ja": [
+      "RoPE は Q/K に回転で位置情報を入れ、attention score が相対位置を感じられるようにする",
+      "MLA は K/V を低次元 latent に圧縮したいが、RoPE 付き K は位置回転を含むため通常の内容ベクトルと同じように圧縮できない",
+      "分離の考え方：RoPE が必要な部分を別に扱い、低ランク圧縮できる内容部分を latent cache に入れる",
+      "小例：内容ベクトルは本の題名、RoPE はページ番号。題名は索引化できても、ページ順は壊せない",
+      "面接接続：ib02 の R1 MLA では、なぜ RoPE 部分を別処理するかが追問されやすい"
+    ],
+    "group": "基础",
+    "lv": 2,
+    "details": [
+      {
+        "term": "RoPE 是给 Q/K 贴上相对位置罗盘",
+        "explain": "<p><strong>本质：</strong>RoPE 不是额外拼一个 position embedding，而是对 Q/K 的成对维度做旋转。位置不同，旋转角度不同；两个 token 的 attention 分数就能反映相对距离。</p>\n<div class=\"concept-diagram\"><pre>普通内容向量 x\n   |\n投影成 Q, K\n   |\nRoPE 按位置旋转：pos=0,1,2,... 角度不同\n   |\nQ_rot · K_rot  -> attention score 含相对位置信息</pre></div>\n<div class=\"analogy\">RoPE 像给地图上的每个地点加指南针方向。地点名称是内容，指南针方向是位置关系。只压缩地点名称还不够，方向一乱，路线关系就错了。</div>"
+      },
+      {
+        "term": "为什么 MLA 不能把一切都塞进同一个 latent",
+        "explain": "<p>MLA 的目标是减少 KV cache：不要保存完整 K/V，而保存更小的 latent。但 RoPE 作用在 Q/K 上，且和 token 位置绑定。如果把带位置旋转的 K 粗暴压进同一个低维缓存，可能让模型难以恢复精确的位置关系。</p>\n<div class=\"formula\">粗略对比：\n完整缓存：K_content + K_rope + V_content 都按 head 存\nMLA 思路：content 部分 -> 低维 latent cache\n          RoPE 相关部分 -> 单独保留或单独计算路径</div>\n<p><span class=\"key-point\">小数字例子：</span>假设完整 K/V 每 token 要 64 个数，其中 48 个主要是内容、16 个承担 RoPE 位置检索。MLA 可以把 48 个内容数压到 8 个 latent，但那 16 个位置相关维度不能简单丢掉，否则长上下文里的“第 3 页”和“第 30 页”会更容易混。</p>"
+      },
+      {
+        "term": "面试里最稳的说法",
+        "explain": "<ul><li><strong>误区 1：</strong>以为 RoPE 是 V 的位置编码。RoPE 主要作用在 Q/K，因为 attention score 来自 QK^T。</li><li><strong>误区 2：</strong>以为 MLA 只是 GQA 的另一个名字。GQA 是减少 KV heads；MLA 是低秩 latent 缓存，压缩维度的方式更激进。</li><li><strong>误区 3：</strong>以为解耦是为了好看。解耦是为了同时保留位置可辨性和 KV cache 压缩收益。</li></ul><p><span class=\"key-point\">面试表达：</span>RoPE 负责相对位置，MLA 负责压缩 KV cache。二者冲突点在于 RoPE 后的 K 带位置旋转，不适合和普通内容信息一起低秩压缩，所以要把 RoPE 相关维度解耦出来处理。这样才能既省显存，又不破坏长上下文位置判断。</p>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "RoPE は Q/K に相対位置のコンパスを付ける",
+        "explain": "<p>RoPE は position embedding を足すのではなく、Q/K の次元ペアを位置に応じて回転する。これにより Q_rot · K_rot が相対位置を反映する。</p>\n<div class=\"concept-diagram\"><pre>x -> Q,K -> RoPE rotation by position -> Q_rot · K_rot</pre></div>"
+      },
+      {
+        "term": "MLA が全てを同じ latent に入れにくい理由",
+        "explain": "<p>MLA は完全な K/V の代わりに低次元 latent を cache するが、RoPE 付き K は位置回転を含む。内容部分は圧縮しやすくても、位置関係は壊せないため別処理が必要になる。</p>"
+      },
+      {
+        "term": "面接での安定した言い方",
+        "explain": "<p>RoPE は相対位置、MLA は KV cache 圧縮。RoPE 後の K は位置依存なので通常の内容情報と同じ低ランク圧縮に混ぜると位置判別が弱くなる。だから RoPE 関連部分を分離し、圧縮率と長文脈性能を両立させる。</p>"
+      }
+    ],
+    "related": [
+      {
+        "id": "l12",
+        "type": "位置编码基础",
+        "note": "RoPE vs ALiBi 的基本区别在 l12，忘记 RoPE 先回这里。"
+      },
+      {
+        "id": "l31",
+        "type": "MLA 前置",
+        "note": "先比较 MHA/MQA/GQA/MLA，再理解为什么 MLA 里 RoPE 要单独处理。"
+      },
+      {
+        "id": "ib02",
+        "type": "面经应用",
+        "note": "R1 的 MLA KV cache 节约题，常会追问 RoPE 解耦原因。"
+      }
+    ]
   }
 ]
