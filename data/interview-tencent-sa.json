@@ -247,6 +247,13 @@
         "term": "SA 视角的上云动机",
         "explain": "<ul><li><strong>财务视角</strong>：CapEx → OpEx，对现金流友好</li><li><strong>技术视角</strong>：弹性能应对业务波峰波谷</li><li><strong>战略视角</strong>：把「非核心能力」交给专业厂商，聚焦业务</li></ul><p>和客户讲云计算不能只讲技术——要讲<span class=\"key-point\">「这三个视角，客户最关心哪个」</span>，然后重点切入。</p>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc27",
+        "type": "基础概念",
+        "note": "云服务三层和传统服务器的差异。"
+      }
     ]
   },
   {
@@ -297,6 +304,13 @@
         "term": "FaaS（Serverless）",
         "explain": "<p>比 PaaS 更细粒度的一层——<span class=\"key-point\">只跑函数不跑进程</span>。代表产品：AWS Lambda、阿里云函数计算。</p><p>特点：</p><ul><li>按调用次数和执行时间计费</li><li>无需管理服务器（连容器都不用管）</li><li>自动扩缩容</li></ul><p>适合：事件驱动、流量波动大、调用稀疏的场景（比如图片处理、webhook 响应）。</p>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc27",
+        "type": "基础概念",
+        "note": "IaaS / PaaS / SaaS 披萨类比。"
+      }
     ]
   },
   {
@@ -346,6 +360,18 @@
       {
         "term": "延伸场景与边界",
         "explain": "<p><strong>安全</strong></p><ul><li>数据合规（GDPR、等保、行业法规）</li><li>权限控制（IAM 细粒度权限）</li><li>数据主权（数据存在哪里）</li></ul><p><strong>业务</strong></p><ul><li>业务增速（高增长 → 弹性需求大）</li><li>全球化部署（是否需要多地域）</li><li>业务连续性（容灾、备份策略）</li></ul><p><strong>混合云 vs 多云</strong></p><p><strong>混合云</strong>：部分敏感业务留在私有云，其他上公有云——银行典型做法。核心系统留在自建 IDC，面向用户的边缘服务上云。</p><p><strong>多云</strong>：同时用多家云厂商，<span class=\"key-point\">避免厂商锁定（vendor lock-in）</span>。代价是运维复杂度翻倍，因为每家云的 API 都不一样。</p><p><strong>上云成熟度模型（6R）</strong></p><ol><li><strong>Rehost</strong>（搬过去）：Lift-and-Shift，最简单，只是换个地方跑</li><li><strong>Replatform</strong>（改一点）：小改动利用云特性（比如用 RDS 替换自建 MySQL）</li><li><strong>Refactor</strong>（重构）：大改架构，充分利用云原生特性</li><li><strong>Rearchitect</strong>（重新设计）：从头设计一套云原生架构</li><li><strong>Retire</strong>（退役）：某些业务不再需要，直接关掉</li><li><strong>Retain</strong>（保留）：某些业务暂时不上云</li></ol>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc27",
+        "type": "基础概念",
+        "note": "企业上云前先理解服务层次。"
+      },
+      {
+        "id": "fc22",
+        "type": "基础概念",
+        "note": "上云方案也要看成本、性能和延迟。"
       }
     ]
   },

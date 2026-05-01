@@ -97,6 +97,13 @@
         "term": "追问与边界",
         "explain": "<p><strong>Context Manager 三大难题</strong></p><ol><li><strong>拼接</strong>:system prompt + 工具描述 + 历史 + 当前输入,顺序和分隔符影响模型行为</li><li><strong>裁剪</strong>:超过 context window 时先裁什么?通常保留 system + 最近 N 轮 + 关键中间结果</li><li><strong>压缩</strong>:用小模型把老对话压缩成摘要——Claude Code 的 compaction、OpenAI Codex 的 summarization 都用这个</li></ol><p><span class='key-point'>好的 Context Manager 决定 Agent 能走多远</span>——差的系统 20 步就上下文爆炸,好的可以跑 100+ 步。</p><p><strong>生产级组件补充</strong></p><ul><li><strong>Sandbox</strong>:Bash 工具必须跑在沙箱里(Docker/Firecracker/bwrap),否则能 <code>rm -rf /</code></li><li><strong>Streaming</strong>:SSE 流式输出,用户不用干等</li><li><strong>Checkpoint</strong>:每步状态存盘,挂了能恢复</li><li><strong>Rollback</strong>:文件修改前备份,失败能回滚(Claude Code 的 Write 用的 shadow copy)</li><li><strong>Multi-turn Memory</strong>:跨会话持久化(见 Claude Code 的 auto memory)</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc30",
+        "type": "基础概念",
+        "note": "Agent harness 排障时才需要 trace/log/metrics。"
+      }
     ]
   },
   {
@@ -360,6 +367,18 @@
       {
         "term": "追问与边界",
         "explain": "<p><strong>常见成本坑</strong></p><ul><li><strong>Egress 流量费</strong>:从云厂商往外传数据贵(每 GB $0.09),从外面传进来免费。跨云/混合云场景容易翻车</li><li><strong>冷启动</strong>:Lambda/Cloud Functions 冷启动 2-10s,高并发 QPS 场景要 pre-warm</li><li><strong>GPU 可用性</strong>:H100 经常无货,要靠 Reservation 提前锁</li><li><strong>跨 AZ 通信</strong>:同 region 跨 AZ 流量也收费,架构设计要考虑</li><li><strong>数据出境</strong>:中国业务出境有监管限制(个保法+数据安全法)</li></ul><p><strong>Linux + 云的常用组合</strong></p><div class='formula'>面试常问「在云上怎么部署一个 Web 服务」:<br><br>1. 买 VM(EC2/GCE) + 配安全组(80/443/22)<br>2. SSH 上去:ssh ubuntu@&lt;ip&gt;<br>3. 装 Docker:<br>&nbsp;&nbsp;curl -fsSL https://get.docker.com | sh<br>4. docker-compose.yml:<br>&nbsp;&nbsp;app + nginx + postgres<br>5. nginx 反向代理 443 → app:3000<br>6. Let's Encrypt certbot 拿证书<br>7. systemd 或 docker restart=always 保活<br>8. CloudWatch/Stackdriver 收日志</div><p>进阶:换成 <code>ECS/GKE/AKS</code> 容器编排 + <code>ALB/LB</code> 负载均衡 + <code>Auto Scaling Group</code>。</p>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc27",
+        "type": "基础概念",
+        "note": "云服务层次新手版。"
+      },
+      {
+        "id": "fc28",
+        "type": "基础概念",
+        "note": "Docker / 容器基础。"
       }
     ]
   },

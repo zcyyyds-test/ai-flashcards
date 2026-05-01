@@ -632,6 +632,18 @@
         "term": "Chunk 切分经验",
         "explain": "<ul><li><strong>默认</strong>：按文档段落自然切分</li><li><strong>长段落</strong>：512 字滑动窗口 + 50% overlap</li><li><strong>表格</strong>：每行转成一条文本，保留表头（「列名: 值」格式）</li><li><strong>代码块</strong>：不切（代码切了就没意义）</li></ul><p>踩坑：技术规格书一个段落 3000 字 → 不切就超过 embedding 上下文长度 → 必须二次切分。<span class='key-point'>切分规则要根据文档实际特点调整，没有银弹</span>。</p>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc12",
+        "type": "基础概念",
+        "note": "Chunking 是 RAG 检索优化的底层概念。"
+      },
+      {
+        "id": "fc13",
+        "type": "基础概念",
+        "note": "BM25 与 Dense 的取舍。"
+      }
     ]
   },
   {
@@ -723,6 +735,13 @@
       {
         "term": "金融场景的 Memory 限制",
         "explain": "<p>如果做金融领域 Agent，用户维度 Memory 有特殊约束：</p><ul><li><strong>合规</strong>：GDPR/个人信息保护法要求用户数据可删除、有留存期限</li><li><strong>过期清除</strong>：用户偏好必须有 TTL，过期自动清除</li><li><strong>用户隔离</strong>：用户 A 的交易偏好<span class='key-point'>绝不能泄露到用户 B 的 context</span>——这是硬约束，违反就是数据泄露事件</li><li><strong>审计</strong>：每一次 Memory 读写都要有审计日志</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc18",
+        "type": "基础概念",
+        "note": "多层 Memory 设计的基础概念。"
       }
     ]
   }

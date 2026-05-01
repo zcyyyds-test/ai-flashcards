@@ -1,5 +1,5 @@
 // Auto-generated from data/*.json — edit the JSON files, then run: bash build-cards.sh
-// Generated: 2026-05-01T10:24:40
+// Generated: 2026-05-01T10:54:10
 const BUILTIN_CARDS = [
   {
     "id": "s01",
@@ -832,6 +832,13 @@ const BUILTIN_CARDS = [
       {
         "term": "深掘り準備",
         "explain": "<p><strong>面接カードは標準回答だけでは足りない。</strong>なぜそう考えるか、代替案は何か、失敗時にどう切り分けるか、顧客にはどう説明するかまで準備する。</p><ul><li>第一層は簡潔に、第二層でフレームワーク、第三層で自分のプロジェクトに接続する。</li><li>価値判断では短期の工程価値と長期のモデル/データ価値を分ける。</li><li>コミュニケーション問題では目標確認、リスク共有、受入基準の合意まで具体化する。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc27",
+        "type": "基础概念",
+        "note": "IaaS / PaaS / SaaS 的新手类比。"
       }
     ]
   },
@@ -3069,6 +3076,13 @@ const BUILTIN_CARDS = [
         "term": "深掘り質問への準備",
         "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：Recall@5 = 96.4%（Rerank適用後）；Embeddingファインチューニング：Recall@1が47.3% → 63.6%（+16.4pp）；10ツールのAgentフレームワーク、マルチホップQA・自己反省リトライ対応。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc11",
+        "type": "基础概念",
+        "note": "RAG 整体链路新手版。"
+      }
     ]
   },
   {
@@ -3117,6 +3131,13 @@ const BUILTIN_CARDS = [
         "term": "深掘り質問への準備",
         "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：BM25 Recall@1 = 81.8%（最高！）；Denseはファインチューニングなしで47.3%、ファインチューニング後63.6%；小規模コーパス（359 chunks）ではn-gramのファジーマッチングが精密な形態素解析より頑健；「より精密」≠「より良い」、実験による検証が必要。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc13",
+        "type": "基础概念",
+        "note": "BM25 vs Dense 检索。"
+      }
     ]
   },
   {
@@ -3164,6 +3185,13 @@ const BUILTIN_CARDS = [
       {
         "term": "深掘り質問への準備",
         "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：Char 3-gram Recall@1 = 81.8% vs MeCab = 74.5%、7.3pp高くなっています；小規模コーパスではn-gramのファジーマッチングが精密な形態素解析より頑健；MeCabは複合語の中間部分を見落とす（\"需給調整\"→\"需給\"+\"調整\"、組み合わせ情報が失われる）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc13",
+        "type": "基础概念",
+        "note": "关键词检索与语义检索的边界。"
       }
     ]
   },
@@ -3264,6 +3292,13 @@ const BUILTIN_CARDS = [
       {
         "term": "深掘り質問への準備",
         "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：Rerankなし：BM25(81.8%) >> Hybrid(72.7%) >> Dense(63.6%)、大きな差；Rerankあり：全て80.0% / 96.4%に収束；Cross-Encoderが第一段階の全手法の差を解消する。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>学習系の深掘りでは、データの作り方、誤データの除去、モデル/LoRA 設定の理由、失敗時に data/prompt/sampling/reward のどこを疑ったかを準備する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc14",
+        "type": "基础概念",
+        "note": "Reranker 为什么能改善排序。"
       }
     ]
   },
@@ -3619,6 +3654,18 @@ const BUILTIN_CARDS = [
         "term": "深掘り質問への準備",
         "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：① Chunking：分割戦略は適切か？意味的完全性は？；② 検索：Recall@Kで定量化し、正しい文書が検索されるか？；③ Embedding：汎用モデルはドメイン用語に有効か？ファインチューニングが必要か？。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc11",
+        "type": "基础概念",
+        "note": "RAG 诊断前先理解完整链路。"
+      },
+      {
+        "id": "fc14",
+        "type": "基础概念",
+        "note": "很多 RAG 问题是排序问题。"
+      }
     ]
   },
   {
@@ -3762,6 +3809,13 @@ const BUILTIN_CARDS = [
       {
         "term": "深掘り質問への準備",
         "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、Agentic RAG は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：第一推奨：Rerankerの追加——全手法のRecall@5を96.4%に統一向上、レイテンシ+0.25sのみ、すぐ導入可能；第二推奨：Embeddingのファインチューニング——Recall@1を+16.4pp、27分の学習、オープンソースデータでアノテーションコストゼロ；bge-m3はオープンソースでファインチューニングやローカルデプロイが可能です。OpenAIのembeddingはファインチューニングできず、日本企業ではデータを外部に出せないことが要件になる場合があります。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>RAG 系の深掘りでは、gold chunk の定義、Recall@K/MAP、first-stage recall と rerank の役割分担を説明する。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc11",
+        "type": "基础概念",
+        "note": "预算有限时先看 RAG 链路瓶颈。"
       }
     ]
   },
@@ -4212,6 +4266,13 @@ const BUILTIN_CARDS = [
       {
         "term": "深掘り質問への準備",
         "explain": "<ul><li>面接官に「なぜ重要か」と聞かれたら、云边协同 は単発の技術ではなく、制約下で信頼できるシステムを作る話だと戻す。</li><li>「どう証明したか」と聞かれたら、このカードの根拠から入る：クラウドコスト 86%以上 削減（500ms WAN遅延下でも維持）；異常見逃し率 0%（全てのエラーは重大度の過小評価であり、見逃しではない）；カスケード信号精度 93.8%（16件中15件の判断が正確）。</li><li>「どこで失敗するか」と聞かれたら、分布変化、制約・評価器の不完全性、遅延やコストが SLA を超える場合、前提が崩れた場合を挙げる。</li><li>「あなたの貢献は」と聞かれたら、問題定義、技術選定、実装、実験設計、失敗分析、学びの整理のどこを担当したかを具体化する。</li><li>エッジ/クラウド系の深掘りでは、全クラウド・全エッジがなぜ不十分か、routing error の損失をどう分類し、SLA 下で threshold をどう調整するかを準備する。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc22",
+        "type": "基础概念",
+        "note": "EdgeRouter 本质是效果、延迟、成本取舍。"
       }
     ]
   },
@@ -11409,7 +11470,19 @@ const BUILTIN_CARDS = [
       }
     ],
     "group": "基础",
-    "lv": 3
+    "lv": 3,
+    "related": [
+      {
+        "id": "fc22",
+        "type": "基础概念",
+        "note": "推理优化要先看延迟、吞吐、成本。"
+      },
+      {
+        "id": "fc25",
+        "type": "基础概念",
+        "note": "Continuous batching 的新手解释。"
+      }
+    ]
   },
   {
     "id": "l19",
@@ -11524,6 +11597,11 @@ const BUILTIN_CARDS = [
         "id": "ita10",
         "type": "面试追问",
         "note": "适合准备“工具调用到底特殊在哪里”的追问。"
+      },
+      {
+        "id": "fc15",
+        "type": "基础概念",
+        "note": "Function Calling / Tool Use 的入口卡。"
       }
     ]
   },
@@ -11967,6 +12045,13 @@ const BUILTIN_CARDS = [
       {
         "term": "補足と実戦整理",
         "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。vLLM の 3 大最適化技術とその適用優先度 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>復習ルート</strong></p><p><strong>復習では三つを確認する：</strong>なぜこの解法パターンが使えるのか、不変条件は何か、どの境界で壊れやすいか。</p><ul><li>コードを書く前に状態の意味と更新条件を説明する。</li><li>計算量は「各要素が何回処理されるか」または「状態数 × 遷移コスト」から導く。</li><li>追問は重複、全解列挙、二次元化、オンライン更新などの変形から来やすい。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc25",
+        "type": "基础概念",
+        "note": "vLLM 中 continuous batching 的入口卡。"
       }
     ]
   },
@@ -13592,6 +13677,16 @@ const BUILTIN_CARDS = [
         "id": "ita10",
         "type": "面试追问",
         "note": "用于回答 Tool Calling 与普通函数调用的边界。"
+      },
+      {
+        "id": "fc15",
+        "type": "基础概念",
+        "note": "Function Calling 的新手版解释。"
+      },
+      {
+        "id": "fc26",
+        "type": "基础概念",
+        "note": "结构化输出和 JSON Schema。"
       }
     ]
   },
@@ -13925,6 +14020,13 @@ const BUILTIN_CARDS = [
         "term": "補足と実戦整理",
         "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Guardrailsの設計パターン では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc19",
+        "type": "基础概念",
+        "note": "Guardrails 的新手版入口。"
+      }
     ]
   },
   {
@@ -14123,6 +14225,13 @@ const BUILTIN_CARDS = [
         "term": "補足と実戦整理",
         "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Agentメモリシステムの設計（詳細） では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc18",
+        "type": "基础概念",
+        "note": "短期记忆、长期记忆、检索记忆的入口卡。"
+      }
     ]
   },
   {
@@ -14254,6 +14363,13 @@ const BUILTIN_CARDS = [
       {
         "term": "補足と実戦整理",
         "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。Agentの安全性とアライメント では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc19",
+        "type": "基础概念",
+        "note": "Agent 安全和权限边界的入口卡。"
       }
     ]
   },
@@ -14388,6 +14504,13 @@ const BUILTIN_CARDS = [
       {
         "term": "補足と実戦整理",
         "explain": "<p><strong>面接での言い方</strong></p><p><span class=\"key-point\">答える順番は「一文定義 → 仕組みまたは式/フロー → 失敗条件 → 実務での検証」。ツールが多数登録されている時、Agent に正しく選ばせる設計 では、単なる用語説明で終わらせず、どの条件で選ぶか、どの指標で確認するかまで述べる。</span></p><p><strong>知識の接続</strong></p><p><strong>この知識点は体系の中で理解する：</strong>モデル能力、データ品質、推論コスト、アプリケーション制約のどこに効くかを見る。</p><ul><li>まず訓練、推論、評価、実装のどの問題を解くかを明確にする。</li><li>次に近い概念との境界を説明する。例：SFT/DPO/RLHF、RAG/Agent、Prompt/Context Engineering。</li><li>最後にプロジェクト判断へ落とす：使う条件と、複雑度負担になる条件を分ける。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc15",
+        "type": "基础概念",
+        "note": "工具选择先从 Tool Use 基础理解。"
       }
     ]
   },
@@ -14861,6 +14984,11 @@ const BUILTIN_CARDS = [
         "id": "ita12",
         "type": "Agent场景版",
         "note": "pe05偏Prompt安全基础；ita12补工具调用和权限边界。"
+      },
+      {
+        "id": "fc19",
+        "type": "基础概念",
+        "note": "Prompt Injection 不能只靠提示词防。"
       }
     ]
   },
@@ -15063,6 +15191,1716 @@ const BUILTIN_CARDS = [
     ]
   },
   {
+    "id": "fc01",
+    "cat": "基础概念",
+    "q": "Token / Tokenizer：模型读文字前先切成什么？",
+    "q_ja": "Token / Tokenizer：模型读文字前先切成什么？",
+    "bullets": [
+      "Token 是模型真正处理的文字碎片，不一定等于一个汉字或一个英文单词",
+      "Tokenizer 负责把文本切成 token id，再由 embedding 变成向量",
+      "同一句话在不同 tokenizer 下 token 数可能不同，直接影响上下文长度和费用",
+      "新手先记：模型不是直接读“字”，而是在读一串整数编号"
+    ],
+    "bullets_ja": [
+      "Token 是模型真正处理的文字碎片，不一定等于一个汉字或一个英文单词",
+      "Tokenizer 负责把文本切成 token id，再由 embedding 变成向量",
+      "同一句话在不同 tokenizer 下 token 数可能不同，直接影响上下文长度和费用",
+      "新手先记：模型不是直接读“字”，而是在读一串整数编号"
+    ],
+    "details": [
+      {
+        "term": "像把句子切成积木",
+        "explain": "<p>Tokenizer 像把一句话拆成积木块。中文里“数据库索引”可能被切成“数据库 / 索引”，英文里 “unbelievable” 可能被切成 “un / believable”。模型内部看到的不是原文，而是 token id，例如 <code>[128, 7354, 91]</code>。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">文本</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Tokenizer</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Token IDs</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Embedding 向量</span></div><div class=\"diagram-caption\">每一步都可能影响长度、费用和模型理解。</div></div>"
+      },
+      {
+        "term": "一个小例子",
+        "explain": "<p>如果一句 prompt 有 1000 个 token，模型输出 500 个 token，那么计费和延迟通常都和这 1500 个 token 有关。长 prompt 不是“多几行字”这么简单，而是让模型多处理很多向量。</p><table class=\"mini-table\"><tr><th>概念</th><th>你应该问的问题</th></tr><tr><td>Token 数</td><td>这段输入大概有多长？</td></tr><tr><td>上下文窗口</td><td>模型一次能看多少 token？</td></tr><tr><td>输出 token</td><td>模型最多要生成多少？</td></tr></table>"
+      },
+      {
+        "term": "容易踩的坑",
+        "explain": "<ul><li>不要把 token 等同于字符数；日文、中文、代码、emoji 的切分差异很大。</li><li>压缩 prompt 时，删掉重复上下文往往比删几个标点更有效。</li><li>面试里问 token，通常会继续问成本、上下文窗口、截断和长上下文。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像把句子切成积木",
+        "explain": "<p>Tokenizer 像把一句话拆成积木块。中文里“数据库索引”可能被切成“数据库 / 索引”，英文里 “unbelievable” 可能被切成 “un / believable”。模型内部看到的不是原文，而是 token id，例如 <code>[128, 7354, 91]</code>。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">文本</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Tokenizer</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Token IDs</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Embedding 向量</span></div><div class=\"diagram-caption\">每一步都可能影响长度、费用和模型理解。</div></div>"
+      },
+      {
+        "term": "一个小例子",
+        "explain": "<p>如果一句 prompt 有 1000 个 token，模型输出 500 个 token，那么计费和延迟通常都和这 1500 个 token 有关。长 prompt 不是“多几行字”这么简单，而是让模型多处理很多向量。</p><table class=\"mini-table\"><tr><th>概念</th><th>你应该问的问题</th></tr><tr><td>Token 数</td><td>这段输入大概有多长？</td></tr><tr><td>上下文窗口</td><td>模型一次能看多少 token？</td></tr><tr><td>输出 token</td><td>模型最多要生成多少？</td></tr></table>"
+      },
+      {
+        "term": "容易踩的坑",
+        "explain": "<ul><li>不要把 token 等同于字符数；日文、中文、代码、emoji 的切分差异很大。</li><li>压缩 prompt 时，删掉重复上下文往往比删几个标点更有效。</li><li>面试里问 token，通常会继续问成本、上下文窗口、截断和长上下文。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "l03",
+        "type": "相关基础",
+        "note": "BPE / SentencePiece 是 tokenizer 的具体算法。"
+      }
+    ]
+  },
+  {
+    "id": "fc02",
+    "cat": "基础概念",
+    "q": "Embedding / 向量：为什么文字能被拿去计算相似度？",
+    "q_ja": "Embedding / 向量：为什么文字能被拿去计算相似度？",
+    "bullets": [
+      "Embedding 是把 token、句子或文档变成一串数字向量",
+      "向量空间里方向接近，通常表示语义接近",
+      "RAG、推荐、检索、聚类都离不开 embedding",
+      "关键不是“看起来像”，而是能否在目标任务上把相关内容排到前面"
+    ],
+    "bullets_ja": [
+      "Embedding 是把 token、句子或文档变成一串数字向量",
+      "向量空间里方向接近，通常表示语义接近",
+      "RAG、推荐、检索、聚类都离不开 embedding",
+      "关键不是“看起来像”，而是能否在目标任务上把相关内容排到前面"
+    ],
+    "details": [
+      {
+        "term": "像给每段话一个坐标",
+        "explain": "<p>Embedding 可以理解成给文字贴一个多维坐标。“苹果手机”和“iPhone”坐标会比较近，“苹果手机”和“番茄炒蛋”会比较远。检索系统不是逐字理解，而是比较这些坐标的距离。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">句子</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Embedding 模型</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">[0.12, -0.08, ...]</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">相似度检索</span></div></div>"
+      },
+      {
+        "term": "相似度怎么用",
+        "explain": "<p>最常见做法是 cosine similarity：看两个向量方向是否接近。向量长度可以是 384、768、1024 甚至更高。维度越高不一定越好，真正要看召回率、误召回和下游回答质量。</p><table class=\"mini-table\"><tr><th>场景</th><th>Embedding 的作用</th></tr><tr><td>RAG</td><td>找到语义相关文档</td></tr><tr><td>推荐</td><td>找相似用户或物品</td></tr><tr><td>去重</td><td>判断两段话是否近似</td></tr><tr><td>聚类</td><td>把主题接近的文本分组</td></tr></table>"
+      },
+      {
+        "term": "新手误区",
+        "explain": "<ul><li>Embedding 不是万能理解器；数字、时间、否定词、精确过滤常常需要结构化条件配合。</li><li>只用向量检索可能漏掉关键词精确匹配，所以常见方案是 BM25 + Dense hybrid。</li><li>向量数据库负责存和查向量，不自动保证答案正确。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像给每段话一个坐标",
+        "explain": "<p>Embedding 可以理解成给文字贴一个多维坐标。“苹果手机”和“iPhone”坐标会比较近，“苹果手机”和“番茄炒蛋”会比较远。检索系统不是逐字理解，而是比较这些坐标的距离。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">句子</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Embedding 模型</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">[0.12, -0.08, ...]</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">相似度检索</span></div></div>"
+      },
+      {
+        "term": "相似度怎么用",
+        "explain": "<p>最常见做法是 cosine similarity：看两个向量方向是否接近。向量长度可以是 384、768、1024 甚至更高。维度越高不一定越好，真正要看召回率、误召回和下游回答质量。</p><table class=\"mini-table\"><tr><th>场景</th><th>Embedding 的作用</th></tr><tr><td>RAG</td><td>找到语义相关文档</td></tr><tr><td>推荐</td><td>找相似用户或物品</td></tr><tr><td>去重</td><td>判断两段话是否近似</td></tr><tr><td>聚类</td><td>把主题接近的文本分组</td></tr></table>"
+      },
+      {
+        "term": "新手误区",
+        "explain": "<ul><li>Embedding 不是万能理解器；数字、时间、否定词、精确过滤常常需要结构化条件配合。</li><li>只用向量检索可能漏掉关键词精确匹配，所以常见方案是 BM25 + Dense hybrid。</li><li>向量数据库负责存和查向量，不自动保证答案正确。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "fc18",
+        "type": "下一步",
+        "note": "BM25 与 Dense 检索的差异。"
+      }
+    ]
+  },
+  {
+    "id": "fc03",
+    "cat": "基础概念",
+    "q": "System / User / Assistant：Prompt 里的角色到底有什么用？",
+    "q_ja": "System / User / Assistant：Prompt 里的角色到底有什么用？",
+    "bullets": [
+      "system 通常放规则和边界，user 放本轮请求，assistant 是模型历史回复",
+      "多轮对话本质是把历史消息一起塞回上下文",
+      "角色不是魔法安全锁，但会影响模型优先听谁的指令",
+      "Agent 系统里还会有 tool 角色，用于注入工具执行结果"
+    ],
+    "bullets_ja": [
+      "system 通常放规则和边界，user 放本轮请求，assistant 是模型历史回复",
+      "多轮对话本质是把历史消息一起塞回上下文",
+      "角色不是魔法安全锁，但会影响模型优先听谁的指令",
+      "Agent 系统里还会有 tool 角色，用于注入工具执行结果"
+    ],
+    "details": [
+      {
+        "term": "像会议纪要里的发言身份",
+        "explain": "<p>同一句话放在不同角色里，权重和含义不同。system 像会议主持人提前规定“今天只讨论预算”；user 是当前提问；assistant 是前面的回答记录；tool 是外部系统返回的事实。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">System 规则</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">User 请求</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Assistant 历史</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Tool 结果</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">下一次模型输入</span></div></div>"
+      },
+      {
+        "term": "为什么会变长",
+        "explain": "<p>多轮对话不是模型真的“记住了”所有内容，而是应用把历史消息重新拼给模型。历史越长，token 越多，费用和延迟越高，也越容易把旧信息和新目标混在一起。</p><ul><li>短任务：保留最近几轮即可。</li><li>长任务：需要摘要、检索或显式状态。</li><li>高风险任务：system 里要写清工具权限和确认边界。</li></ul>"
+      },
+      {
+        "term": "常见追问",
+        "explain": "<ul><li>问：system prompt 能不能完全防 prompt injection？答：不能，只是优先级较高，还需要工具权限、数据隔离和输出校验。</li><li>问：为什么有 tool 角色？答：把外部执行结果和模型生成内容区分开，方便模型继续推理，也方便系统审计。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像会议纪要里的发言身份",
+        "explain": "<p>同一句话放在不同角色里，权重和含义不同。system 像会议主持人提前规定“今天只讨论预算”；user 是当前提问；assistant 是前面的回答记录；tool 是外部系统返回的事实。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">System 规则</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">User 请求</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Assistant 历史</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Tool 结果</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">下一次模型输入</span></div></div>"
+      },
+      {
+        "term": "为什么会变长",
+        "explain": "<p>多轮对话不是模型真的“记住了”所有内容，而是应用把历史消息重新拼给模型。历史越长，token 越多，费用和延迟越高，也越容易把旧信息和新目标混在一起。</p><ul><li>短任务：保留最近几轮即可。</li><li>长任务：需要摘要、检索或显式状态。</li><li>高风险任务：system 里要写清工具权限和确认边界。</li></ul>"
+      },
+      {
+        "term": "常见追问",
+        "explain": "<ul><li>问：system prompt 能不能完全防 prompt injection？答：不能，只是优先级较高，还需要工具权限、数据隔离和输出校验。</li><li>问：为什么有 tool 角色？答：把外部执行结果和模型生成内容区分开，方便模型继续推理，也方便系统审计。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "a04",
+        "type": "相关基础",
+        "note": "Context Engineering 会继续讨论上下文如何组织。"
+      }
+    ]
+  },
+  {
+    "id": "fc04",
+    "cat": "基础概念",
+    "q": "Transformer Block：LLM 一层到底在做什么？",
+    "q_ja": "Transformer Block：LLM 一层到底在做什么？",
+    "bullets": [
+      "Transformer block 通常由 Attention、FFN、残差连接、LayerNorm 组成",
+      "Attention 负责“看上下文”，FFN 负责“加工每个位置的信息”",
+      "残差连接让信息和梯度更容易跨层流动",
+      "模型很多层堆叠后，才形成复杂语言能力"
+    ],
+    "bullets_ja": [
+      "Transformer block 通常由 Attention、FFN、残差连接、LayerNorm 组成",
+      "Attention 负责“看上下文”，FFN 负责“加工每个位置的信息”",
+      "残差连接让信息和梯度更容易跨层流动",
+      "模型很多层堆叠后，才形成复杂语言能力"
+    ],
+    "details": [
+      {
+        "term": "像读文章再做笔记",
+        "explain": "<p>一层 Transformer 可以想成：先让每个 token 看看上下文里哪些词重要（Attention），再对每个 token 的表示做一次加工（FFN），最后用残差把原信息保留下来，避免越处理越丢。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">输入向量</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Attention 看上下文</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">FFN 加工</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">残差 + Norm</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">输出向量</span></div></div>"
+      },
+      {
+        "term": "为什么要分 Attention 和 FFN",
+        "explain": "<p>Attention 的重点是 token 之间的信息交换，比如“它”指代前文哪个名词；FFN 的重点是对单个位置做非线性变换，相当于把已经汇总的信息再加工。两者结合，模型既能看关系，也能做抽象。</p><table class=\"mini-table\"><tr><th>组件</th><th>直觉</th></tr><tr><td>Attention</td><td>谁和谁有关</td></tr><tr><td>FFN</td><td>把已知信息变成更有用的特征</td></tr><tr><td>Residual</td><td>别把原信息弄丢</td></tr><tr><td>LayerNorm</td><td>让数值尺度更稳定</td></tr></table>"
+      },
+      {
+        "term": "新手边界",
+        "explain": "<ul><li>Transformer 不是只有 Attention；只背 “Attention is all you need” 会漏掉 FFN 和工程优化。</li><li>层数更多不一定永远更好，会带来显存、延迟和训练稳定性问题。</li><li>面试讲架构时，建议用“信息交换 + 特征加工 + 稳定训练”三句话收住。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像读文章再做笔记",
+        "explain": "<p>一层 Transformer 可以想成：先让每个 token 看看上下文里哪些词重要（Attention），再对每个 token 的表示做一次加工（FFN），最后用残差把原信息保留下来，避免越处理越丢。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">输入向量</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Attention 看上下文</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">FFN 加工</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">残差 + Norm</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">输出向量</span></div></div>"
+      },
+      {
+        "term": "为什么要分 Attention 和 FFN",
+        "explain": "<p>Attention 的重点是 token 之间的信息交换，比如“它”指代前文哪个名词；FFN 的重点是对单个位置做非线性变换，相当于把已经汇总的信息再加工。两者结合，模型既能看关系，也能做抽象。</p><table class=\"mini-table\"><tr><th>组件</th><th>直觉</th></tr><tr><td>Attention</td><td>谁和谁有关</td></tr><tr><td>FFN</td><td>把已知信息变成更有用的特征</td></tr><tr><td>Residual</td><td>别把原信息弄丢</td></tr><tr><td>LayerNorm</td><td>让数值尺度更稳定</td></tr></table>"
+      },
+      {
+        "term": "新手边界",
+        "explain": "<ul><li>Transformer 不是只有 Attention；只背 “Attention is all you need” 会漏掉 FFN 和工程优化。</li><li>层数更多不一定永远更好，会带来显存、延迟和训练稳定性问题。</li><li>面试讲架构时，建议用“信息交换 + 特征加工 + 稳定训练”三句话收住。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "l01",
+        "type": "深挖卡",
+        "note": "已有 Transformer 架构核心组件。"
+      }
+    ]
+  },
+  {
+    "id": "fc05",
+    "cat": "基础概念",
+    "q": "Q / K / V：Attention 为什么要分 Query、Key、Value？",
+    "q_ja": "Q / K / V：Attention 为什么要分 Query、Key、Value？",
+    "bullets": [
+      "Query 像“我要找什么”，Key 像“我有什么标签”，Value 像“真正取走的信息”",
+      "Attention 分数来自 Q 和 K 的相似度",
+      "最后按分数对 V 加权求和，得到当前 token 的上下文表示",
+      "理解 QKV 是理解 MHA、KV Cache、MLA 的前置知识"
+    ],
+    "bullets_ja": [
+      "Query 像“我要找什么”，Key 像“我有什么标签”，Value 像“真正取走的信息”",
+      "Attention 分数来自 Q 和 K 的相似度",
+      "最后按分数对 V 加权求和，得到当前 token 的上下文表示",
+      "理解 QKV 是理解 MHA、KV Cache、MLA 的前置知识"
+    ],
+    "details": [
+      {
+        "term": "图书馆检索类比",
+        "explain": "<p>你去图书馆找“关于云计算成本的书”：你的需求是 Query；每本书的目录标签是 Key；书里的正文内容是 Value。先用 Query 和 Key 匹配，确定哪些书重要，再从对应 Value 里拿信息。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">Query<br>我要找什么</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Key<br>匹配标签</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Attention 分数</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Value<br>取走信息</span></div></div>"
+      },
+      {
+        "term": "一个最小公式",
+        "explain": "<p>注意力可以粗略写成：<code>softmax(QK^T / sqrt(d))V</code>。前半段 <code>QK^T</code> 决定“看谁”，后半段乘 <code>V</code> 决定“拿什么”。这也是为什么 KV Cache 要缓存 K 和 V：历史 token 的 K/V 在生成后不会变，没必要每一步重复算。</p>"
+      },
+      {
+        "term": "常见误区",
+        "explain": "<ul><li>不要把 K/V 理解成数据库的 key/value，它们是向量，不是字符串键值对。</li><li>Q、K、V 通常都来自同一个 hidden state 的不同线性投影。</li><li>MLA 的核心就是想办法少存历史 K/V，同时尽量不损失每个 head 的差异。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "图书馆检索类比",
+        "explain": "<p>你去图书馆找“关于云计算成本的书”：你的需求是 Query；每本书的目录标签是 Key；书里的正文内容是 Value。先用 Query 和 Key 匹配，确定哪些书重要，再从对应 Value 里拿信息。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">Query<br>我要找什么</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Key<br>匹配标签</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Attention 分数</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Value<br>取走信息</span></div></div>"
+      },
+      {
+        "term": "一个最小公式",
+        "explain": "<p>注意力可以粗略写成：<code>softmax(QK^T / sqrt(d))V</code>。前半段 <code>QK^T</code> 决定“看谁”，后半段乘 <code>V</code> 决定“拿什么”。这也是为什么 KV Cache 要缓存 K 和 V：历史 token 的 K/V 在生成后不会变，没必要每一步重复算。</p>"
+      },
+      {
+        "term": "常见误区",
+        "explain": "<ul><li>不要把 K/V 理解成数据库的 key/value，它们是向量，不是字符串键值对。</li><li>Q、K、V 通常都来自同一个 hidden state 的不同线性投影。</li><li>MLA 的核心就是想办法少存历史 K/V，同时尽量不损失每个 head 的差异。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "l30",
+        "type": "衔接卡",
+        "note": "Attention heads / MHA 基础。"
+      }
+    ]
+  },
+  {
+    "id": "fc06",
+    "cat": "基础概念",
+    "q": "Context Window：模型“记忆长度”和真正记忆不是一回事",
+    "q_ja": "Context Window：模型“记忆长度”和真正记忆不是一回事",
+    "bullets": [
+      "context window 是模型一次能看到的 token 上限",
+      "窗口内的信息不等于都能被同等利用，太长会稀释注意力和增加成本",
+      "长期记忆通常要靠摘要、检索、数据库或外部状态管理",
+      "Agent 的记忆设计要区分短期上下文和长期存储"
+    ],
+    "bullets_ja": [
+      "context window 是模型一次能看到的 token 上限",
+      "窗口内的信息不等于都能被同等利用，太长会稀释注意力和增加成本",
+      "长期记忆通常要靠摘要、检索、数据库或外部状态管理",
+      "Agent 的记忆设计要区分短期上下文和长期存储"
+    ],
+    "details": [
+      {
+        "term": "像开卷考试的桌面大小",
+        "explain": "<p>Context window 像考试桌面：桌面越大，能摊开的资料越多。但资料摊得多不代表你一定能快速找到重点。长上下文模型能看很多 token，但应用仍需要组织信息。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">用户问题</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">历史对话</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">检索文档</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">工具结果</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Context Window</span></div></div>"
+      },
+      {
+        "term": "长上下文的代价",
+        "explain": "<p>上下文越长，预填充阶段通常越慢，KV Cache 也越大。比如把 10 页文档和 200 页文档都塞进去，后者不仅贵，还可能让模型在无关段落里迷路。工程上常用“先检索、再压缩、最后回答”。</p>"
+      },
+      {
+        "term": "面试回答边界",
+        "explain": "<ul><li>问：有了 128k context 还需要 RAG 吗？答：需要。RAG 负责找相关信息，长上下文只负责容纳更多信息。</li><li>问：上下文是不是记忆？答：不是。上下文是本次输入，记忆是跨会话可维护、可更新的外部状态。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像开卷考试的桌面大小",
+        "explain": "<p>Context window 像考试桌面：桌面越大，能摊开的资料越多。但资料摊得多不代表你一定能快速找到重点。长上下文模型能看很多 token，但应用仍需要组织信息。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">用户问题</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">历史对话</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">检索文档</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">工具结果</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Context Window</span></div></div>"
+      },
+      {
+        "term": "长上下文的代价",
+        "explain": "<p>上下文越长，预填充阶段通常越慢，KV Cache 也越大。比如把 10 页文档和 200 页文档都塞进去，后者不仅贵，还可能让模型在无关段落里迷路。工程上常用“先检索、再压缩、最后回答”。</p>"
+      },
+      {
+        "term": "面试回答边界",
+        "explain": "<ul><li>问：有了 128k context 还需要 RAG 吗？答：需要。RAG 负责找相关信息，长上下文只负责容纳更多信息。</li><li>问：上下文是不是记忆？答：不是。上下文是本次输入，记忆是跨会话可维护、可更新的外部状态。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "aa10",
+        "type": "深挖卡",
+        "note": "Agent 记忆系统设计。"
+      }
+    ]
+  },
+  {
+    "id": "fc07",
+    "cat": "基础概念",
+    "q": "LoRA / QLoRA：为什么微调可以只训练很少参数？",
+    "q_ja": "LoRA / QLoRA：为什么微调可以只训练很少参数？",
+    "bullets": [
+      "LoRA 不直接改完整大矩阵，而是在旁边加低秩增量矩阵",
+      "训练参数少，显存低，适合领域适配和风格适配",
+      "QLoRA 把底座模型量化，再训练 LoRA adapter，进一步省显存",
+      "LoRA 不是免费变强，数据质量和任务边界仍然关键"
+    ],
+    "bullets_ja": [
+      "LoRA 不直接改完整大矩阵，而是在旁边加低秩增量矩阵",
+      "训练参数少，显存低，适合领域适配和风格适配",
+      "QLoRA 把底座模型量化，再训练 LoRA adapter，进一步省显存",
+      "LoRA 不是免费变强，数据质量和任务边界仍然关键"
+    ],
+    "details": [
+      {
+        "term": "像给大机器加可拆插件",
+        "explain": "<p>完整微调像把整台机器拆开重装；LoRA 像在关键接口旁边加一个小插件。底座模型大部分参数冻结，只训练小矩阵 A/B，让输出方向发生可控偏移。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">冻结底座权重 W</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">+ LoRA 低秩增量 ΔW</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">适配新任务</span></div></div>"
+      },
+      {
+        "term": "小数字例子",
+        "explain": "<p>假设一个权重矩阵是 4096×4096，完整训练要更新约 1677 万参数。LoRA rank=8 时，只训练 4096×8 + 8×4096，约 6.5 万参数，少两个数量级。这就是 LoRA 省显存和训练快的直觉。</p>"
+      },
+      {
+        "term": "什么时候适合",
+        "explain": "<ul><li>适合：领域术语、输出格式、工具调用风格、轻量偏好适配。</li><li>不适合：底座完全不会的能力、需要大量新知识且无法通过 RAG 补足的场景。</li><li>面试记法：LoRA 改“行为倾向”，RAG 补“外部事实”。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像给大机器加可拆插件",
+        "explain": "<p>完整微调像把整台机器拆开重装；LoRA 像在关键接口旁边加一个小插件。底座模型大部分参数冻结，只训练小矩阵 A/B，让输出方向发生可控偏移。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">冻结底座权重 W</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">+ LoRA 低秩增量 ΔW</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">适配新任务</span></div></div>"
+      },
+      {
+        "term": "小数字例子",
+        "explain": "<p>假设一个权重矩阵是 4096×4096，完整训练要更新约 1677 万参数。LoRA rank=8 时，只训练 4096×8 + 8×4096，约 6.5 万参数，少两个数量级。这就是 LoRA 省显存和训练快的直觉。</p>"
+      },
+      {
+        "term": "什么时候适合",
+        "explain": "<ul><li>适合：领域术语、输出格式、工具调用风格、轻量偏好适配。</li><li>不适合：底座完全不会的能力、需要大量新知识且无法通过 RAG 补足的场景。</li><li>面试记法：LoRA 改“行为倾向”，RAG 补“外部事实”。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "m14",
+        "type": "相关基础",
+        "note": "模型压缩与量化。"
+      }
+    ]
+  },
+  {
+    "id": "fc08",
+    "cat": "基础概念",
+    "q": "SFT：监督微调到底在教模型什么？",
+    "q_ja": "SFT：监督微调到底在教模型什么？",
+    "bullets": [
+      "SFT 用输入-输出样例教模型按照期望格式回答",
+      "它更像“示范学习”，不是让模型从零学会全部知识",
+      "数据质量、覆盖范围、格式一致性比样本数量更重要",
+      "很多对齐流程会先 SFT，再做 DPO/RLHF/GRPO"
+    ],
+    "bullets_ja": [
+      "SFT 用输入-输出样例教模型按照期望格式回答",
+      "它更像“示范学习”，不是让模型从零学会全部知识",
+      "数据质量、覆盖范围、格式一致性比样本数量更重要",
+      "很多对齐流程会先 SFT，再做 DPO/RLHF/GRPO"
+    ],
+    "details": [
+      {
+        "term": "像老师给标准答案",
+        "explain": "<p>SFT 的数据通常是“用户问题 → 理想回答”。模型看很多示范后，会学到回答风格、步骤、格式和任务边界。比如工具调用 SFT 会教模型在什么情况下输出 JSON tool call。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">指令</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">标准回答</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">交叉熵训练</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">更会按格式回答</span></div></div>"
+      },
+      {
+        "term": "SFT 能和不能",
+        "explain": "<p>SFT 擅长让模型遵守格式、模仿任务流程、学会领域表达。但如果底座模型完全没有相关能力，少量 SFT 很难凭空创造能力。新手要分清：知识可以通过 RAG 补，行为格式可以通过 SFT 调。</p>"
+      },
+      {
+        "term": "常见坑",
+        "explain": "<ul><li>数据里有错答案，模型会认真学错。</li><li>只训练成功样例，不训练失败边界，模型会在不该回答时也硬答。</li><li>训练集格式和线上 prompt 不一致，会导致离线好看、上线变差。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像老师给标准答案",
+        "explain": "<p>SFT 的数据通常是“用户问题 → 理想回答”。模型看很多示范后，会学到回答风格、步骤、格式和任务边界。比如工具调用 SFT 会教模型在什么情况下输出 JSON tool call。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">指令</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">标准回答</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">交叉熵训练</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">更会按格式回答</span></div></div>"
+      },
+      {
+        "term": "SFT 能和不能",
+        "explain": "<p>SFT 擅长让模型遵守格式、模仿任务流程、学会领域表达。但如果底座模型完全没有相关能力，少量 SFT 很难凭空创造能力。新手要分清：知识可以通过 RAG 补，行为格式可以通过 SFT 调。</p>"
+      },
+      {
+        "term": "常见坑",
+        "explain": "<ul><li>数据里有错答案，模型会认真学错。</li><li>只训练成功样例，不训练失败边界，模型会在不该回答时也硬答。</li><li>训练集格式和线上 prompt 不一致，会导致离线好看、上线变差。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "l24",
+        "type": "深挖卡",
+        "note": "SFT / DPO / GRPO 超参数详解。"
+      }
+    ]
+  },
+  {
+    "id": "fc09",
+    "cat": "基础概念",
+    "q": "DPO / RLHF / GRPO：偏好优化在优化什么？",
+    "q_ja": "DPO / RLHF / GRPO：偏好优化在优化什么？",
+    "bullets": [
+      "SFT 教模型怎么答，偏好优化教模型更喜欢哪类答案",
+      "RLHF 通常训练 Reward Model，再用 RL 优化策略",
+      "DPO 直接用偏好对训练，不显式训练 reward model",
+      "GRPO 用组内相对奖励，常见于推理能力和规则奖励场景"
+    ],
+    "bullets_ja": [
+      "SFT 教模型怎么答，偏好优化教模型更喜欢哪类答案",
+      "RLHF 通常训练 Reward Model，再用 RL 优化策略",
+      "DPO 直接用偏好对训练，不显式训练 reward model",
+      "GRPO 用组内相对奖励，常见于推理能力和规则奖励场景"
+    ],
+    "details": [
+      {
+        "term": "像从“标准答案”到“更好答案”",
+        "explain": "<p>SFT 告诉模型“这样答是可以的”；偏好优化告诉模型“A 比 B 更好”。例如两个回答都正确，但一个更简洁、有证据、不瞎编，偏好数据会推动模型选择后者。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">SFT 示例</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">偏好对 A>B</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">优化回答倾向</span></div></div>"
+      },
+      {
+        "term": "三者怎么分",
+        "explain": "<table class=\"mini-table\"><tr><th>方法</th><th>直觉</th><th>常见代价</th></tr><tr><td>RLHF</td><td>训练奖励模型，再强化学习</td><td>流程复杂、稳定性难</td></tr><tr><td>DPO</td><td>直接从 chosen/rejected 学偏好</td><td>依赖偏好数据质量</td></tr><tr><td>GRPO</td><td>一组答案内部比较相对好坏</td><td>奖励设计和采样质量关键</td></tr></table><p>面试里不要把它们说成“都是微调”。它们解决的是偏好和对齐，不是单纯记知识。</p>"
+      },
+      {
+        "term": "新手边界",
+        "explain": "<ul><li>偏好数据错，DPO 会很快学错。</li><li>奖励写得不完整，RL 会 reward hacking。</li><li>推理模型训练里，过程奖励、格式奖励、最终答案奖励要分清。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像从“标准答案”到“更好答案”",
+        "explain": "<p>SFT 告诉模型“这样答是可以的”；偏好优化告诉模型“A 比 B 更好”。例如两个回答都正确，但一个更简洁、有证据、不瞎编，偏好数据会推动模型选择后者。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">SFT 示例</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">偏好对 A>B</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">优化回答倾向</span></div></div>"
+      },
+      {
+        "term": "三者怎么分",
+        "explain": "<table class=\"mini-table\"><tr><th>方法</th><th>直觉</th><th>常见代价</th></tr><tr><td>RLHF</td><td>训练奖励模型，再强化学习</td><td>流程复杂、稳定性难</td></tr><tr><td>DPO</td><td>直接从 chosen/rejected 学偏好</td><td>依赖偏好数据质量</td></tr><tr><td>GRPO</td><td>一组答案内部比较相对好坏</td><td>奖励设计和采样质量关键</td></tr></table><p>面试里不要把它们说成“都是微调”。它们解决的是偏好和对齐，不是单纯记知识。</p>"
+      },
+      {
+        "term": "新手边界",
+        "explain": "<ul><li>偏好数据错，DPO 会很快学错。</li><li>奖励写得不完整，RL 会 reward hacking。</li><li>推理模型训练里，过程奖励、格式奖励、最终答案奖励要分清。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 2,
+    "related": [
+      {
+        "id": "l13",
+        "type": "深挖卡",
+        "note": "RLHF vs DPO 对比。"
+      },
+      {
+        "id": "l24",
+        "type": "训练卡",
+        "note": "SFT / DPO / GRPO 训练超参数。"
+      }
+    ]
+  },
+  {
+    "id": "fc10",
+    "cat": "基础概念",
+    "q": "Reward Model / Reward：为什么奖励一写错模型就会钻空子？",
+    "q_ja": "Reward Model / Reward：为什么奖励一写错模型就会钻空子？",
+    "bullets": [
+      "Reward 是训练或评估时给行为打分的信号",
+      "Reward Model 是学习“人更喜欢什么”的模型",
+      "奖励只代表你写出来的目标，不一定代表真实目标",
+      "Agent 和 RL 场景里，奖励设计决定模型会往哪里钻"
+    ],
+    "bullets_ja": [
+      "Reward 是训练或评估时给行为打分的信号",
+      "Reward Model 是学习“人更喜欢什么”的模型",
+      "奖励只代表你写出来的目标，不一定代表真实目标",
+      "Agent 和 RL 场景里，奖励设计决定模型会往哪里钻"
+    ],
+    "details": [
+      {
+        "term": "像考试评分标准",
+        "explain": "<p>如果考试只按字数给分，学生会写很长但没内容；如果只按最终答案给分，过程可能乱猜。Reward 也是这样：模型会优化你给的分，而不是你心里没写出来的目标。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">行为/回答</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Reward 规则或模型</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">分数</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">优化方向</span></div></div>"
+      },
+      {
+        "term": "Reward Model 怎么来",
+        "explain": "<p>常见做法是收集偏好对：回答 A 比回答 B 好。Reward Model 学习给 A 更高分。之后 RLHF 用它给模型输出打分。但 reward model 也会有偏见、覆盖不足和被利用的问题。</p>"
+      },
+      {
+        "term": "常见反例",
+        "explain": "<ul><li>只奖励简洁：模型可能漏掉关键条件。</li><li>只奖励格式：模型可能格式正确但事实错误。</li><li>只奖励通过单元测试：模型可能写 hard-code。</li><li>所以好奖励通常要组合正确性、证据、格式、边界和安全约束。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像考试评分标准",
+        "explain": "<p>如果考试只按字数给分，学生会写很长但没内容；如果只按最终答案给分，过程可能乱猜。Reward 也是这样：模型会优化你给的分，而不是你心里没写出来的目标。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">行为/回答</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Reward 规则或模型</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">分数</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">优化方向</span></div></div>"
+      },
+      {
+        "term": "Reward Model 怎么来",
+        "explain": "<p>常见做法是收集偏好对：回答 A 比回答 B 好。Reward Model 学习给 A 更高分。之后 RLHF 用它给模型输出打分。但 reward model 也会有偏见、覆盖不足和被利用的问题。</p>"
+      },
+      {
+        "term": "常见反例",
+        "explain": "<ul><li>只奖励简洁：模型可能漏掉关键条件。</li><li>只奖励格式：模型可能格式正确但事实错误。</li><li>只奖励通过单元测试：模型可能写 hard-code。</li><li>所以好奖励通常要组合正确性、证据、格式、边界和安全约束。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 2,
+    "related": [
+      {
+        "id": "iad13",
+        "type": "项目深挖",
+        "note": "GRPO + Reward Model 训练 + 信任度。"
+      }
+    ]
+  },
+  {
+    "id": "fc11",
+    "cat": "基础概念",
+    "q": "RAG：为什么不是把资料全塞给模型？",
+    "q_ja": "RAG：为什么不是把资料全塞给模型？",
+    "bullets": [
+      "RAG = 先检索相关资料，再让模型基于资料回答",
+      "它解决外部知识、私有知识、时效知识和可追溯证据问题",
+      "RAG 的难点常常在检索质量，而不是生成模型本身",
+      "好的 RAG 要能说清来源、拒答无证据问题"
+    ],
+    "bullets_ja": [
+      "RAG = 先检索相关资料，再让模型基于资料回答",
+      "它解决外部知识、私有知识、时效知识和可追溯证据问题",
+      "RAG 的难点常常在检索质量，而不是生成模型本身",
+      "好的 RAG 要能说清来源、拒答无证据问题"
+    ],
+    "details": [
+      {
+        "term": "像开卷考试先找页码",
+        "explain": "<p>直接把整本书塞给模型，既贵又容易迷路。RAG 更像开卷考试：先用目录和关键词找到相关页，再让模型总结这些页。重点是“找对资料”。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">用户问题</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">检索相关段落</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">注入上下文</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">基于证据回答</span></div></div>"
+      },
+      {
+        "term": "一个完整链路",
+        "explain": "<p>常见链路：文档切 chunk → 建索引 → 查询改写 → 召回 top-k → rerank → 拼上下文 → 生成答案 → 标注来源。任何一步差，最后答案都可能差。</p>"
+      },
+      {
+        "term": "容易误解",
+        "explain": "<ul><li>RAG 不等于一定正确；检索错了，模型会认真总结错资料。</li><li>RAG 不一定比长上下文差，关键看检索是否能缩小范围。</li><li>评估 RAG 要分检索指标和回答指标，不能只看最终主观感觉。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像开卷考试先找页码",
+        "explain": "<p>直接把整本书塞给模型，既贵又容易迷路。RAG 更像开卷考试：先用目录和关键词找到相关页，再让模型总结这些页。重点是“找对资料”。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">用户问题</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">检索相关段落</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">注入上下文</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">基于证据回答</span></div></div>"
+      },
+      {
+        "term": "一个完整链路",
+        "explain": "<p>常见链路：文档切 chunk → 建索引 → 查询改写 → 召回 top-k → rerank → 拼上下文 → 生成答案 → 标注来源。任何一步差，最后答案都可能差。</p>"
+      },
+      {
+        "term": "容易误解",
+        "explain": "<ul><li>RAG 不等于一定正确；检索错了，模型会认真总结错资料。</li><li>RAG 不一定比长上下文差，关键看检索是否能缩小范围。</li><li>评估 RAG 要分检索指标和回答指标，不能只看最终主观感觉。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "r12",
+        "type": "诊断卡",
+        "note": "RAG 效果不好时如何排查。"
+      },
+      {
+        "id": "fc17",
+        "type": "基础概念",
+        "note": "Chunk 切分会直接影响 RAG。"
+      }
+    ]
+  },
+  {
+    "id": "fc12",
+    "cat": "基础概念",
+    "q": "Chunking：RAG 文档为什么要切块？",
+    "q_ja": "Chunking：RAG 文档为什么要切块？",
+    "bullets": [
+      "Chunk 是检索系统里的最小文档片段",
+      "切太大召回噪声多，切太小上下文不完整",
+      "chunk size、overlap、标题继承都会影响检索效果",
+      "好的 chunk 应该能独立表达一个相对完整意思"
+    ],
+    "bullets_ja": [
+      "Chunk 是检索系统里的最小文档片段",
+      "切太大召回噪声多，切太小上下文不完整",
+      "chunk size、overlap、标题继承都会影响检索效果",
+      "好的 chunk 应该能独立表达一个相对完整意思"
+    ],
+    "details": [
+      {
+        "term": "像把教材拆成卡片",
+        "explain": "<p>如果一本书整本作为一个块，检索会太粗；如果每句话一个块，又会丢上下文。Chunking 的目标是把资料切成“拿出来就能读懂”的小卡片。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">原文档</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">按标题/段落切分</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Chunk + 元数据</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">检索</span></div></div>"
+      },
+      {
+        "term": "切分参数怎么想",
+        "explain": "<table class=\"mini-table\"><tr><th>参数</th><th>影响</th></tr><tr><td>chunk size</td><td>越大上下文越完整，但噪声越多</td></tr><tr><td>overlap</td><td>避免边界信息断裂，但会增加索引量</td></tr><tr><td>metadata</td><td>标题、时间、来源帮助过滤和解释</td></tr><tr><td>粒度</td><td>FAQ 可短，论文/合同常要长一点</td></tr></table>"
+      },
+      {
+        "term": "面试边界",
+        "explain": "<ul><li>问：chunk size 有没有固定答案？答：没有，要看文档结构、查询类型和模型上下文。</li><li>问：效果差先调什么？答：先看 bad case：是没召回、召回了没排前、还是生成没用证据。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像把教材拆成卡片",
+        "explain": "<p>如果一本书整本作为一个块，检索会太粗；如果每句话一个块，又会丢上下文。Chunking 的目标是把资料切成“拿出来就能读懂”的小卡片。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">原文档</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">按标题/段落切分</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Chunk + 元数据</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">检索</span></div></div>"
+      },
+      {
+        "term": "切分参数怎么想",
+        "explain": "<table class=\"mini-table\"><tr><th>参数</th><th>影响</th></tr><tr><td>chunk size</td><td>越大上下文越完整，但噪声越多</td></tr><tr><td>overlap</td><td>避免边界信息断裂，但会增加索引量</td></tr><tr><td>metadata</td><td>标题、时间、来源帮助过滤和解释</td></tr><tr><td>粒度</td><td>FAQ 可短，论文/合同常要长一点</td></tr></table>"
+      },
+      {
+        "term": "面试边界",
+        "explain": "<ul><li>问：chunk size 有没有固定答案？答：没有，要看文档结构、查询类型和模型上下文。</li><li>问：效果差先调什么？答：先看 bad case：是没召回、召回了没排前、还是生成没用证据。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "iad14",
+        "type": "项目深挖",
+        "note": "RAG chunk 切分和检索优化。"
+      }
+    ]
+  },
+  {
+    "id": "fc13",
+    "cat": "基础概念",
+    "q": "BM25 vs Dense Retrieval：关键词和语义检索怎么互补？",
+    "q_ja": "BM25 vs Dense Retrieval：关键词和语义检索怎么互补？",
+    "bullets": [
+      "BM25 擅长关键词精确匹配，Dense 擅长语义相近匹配",
+      "专有名词、编号、错误码常常 BM25 更稳",
+      "同义表达、口语问题常常 Dense 更有优势",
+      "Hybrid 检索通常比单一路线更稳，但需要融合策略"
+    ],
+    "bullets_ja": [
+      "BM25 擅长关键词精确匹配，Dense 擅长语义相近匹配",
+      "专有名词、编号、错误码常常 BM25 更稳",
+      "同义表达、口语问题常常 Dense 更有优势",
+      "Hybrid 检索通常比单一路线更稳，但需要融合策略"
+    ],
+    "details": [
+      {
+        "term": "两种找资料方式",
+        "explain": "<p>BM25 像按书名目录查“精确词”；Dense 像问图书管理员“意思差不多的资料”。用户问“订单查不到”，Dense 可能找到“配送状态异常”；但用户搜错误码 E1024，BM25 往往更准。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">用户 query</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">BM25 关键词</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Dense 语义</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">融合排序</span></div></div>"
+      },
+      {
+        "term": "什么时候谁更强",
+        "explain": "<table class=\"mini-table\"><tr><th>场景</th><th>更常用</th></tr><tr><td>错误码 / API 名 / 产品名</td><td>BM25</td></tr><tr><td>口语化问题 / 同义表达</td><td>Dense</td></tr><tr><td>法律条款 / 精确数字</td><td>BM25 + 过滤</td></tr><tr><td>客服知识库</td><td>Hybrid + Rerank</td></tr></table>"
+      },
+      {
+        "term": "融合不是简单相加",
+        "explain": "<p>Hybrid 常用 RRF 或加权分数。难点是不同检索器分数尺度不同，不能直接把 BM25 分数和 embedding cosine 分数硬加。实际要看 recall@k、MRR 和最终回答质量。</p>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "两种找资料方式",
+        "explain": "<p>BM25 像按书名目录查“精确词”；Dense 像问图书管理员“意思差不多的资料”。用户问“订单查不到”，Dense 可能找到“配送状态异常”；但用户搜错误码 E1024，BM25 往往更准。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">用户 query</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">BM25 关键词</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Dense 语义</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">融合排序</span></div></div>"
+      },
+      {
+        "term": "什么时候谁更强",
+        "explain": "<table class=\"mini-table\"><tr><th>场景</th><th>更常用</th></tr><tr><td>错误码 / API 名 / 产品名</td><td>BM25</td></tr><tr><td>口语化问题 / 同义表达</td><td>Dense</td></tr><tr><td>法律条款 / 精确数字</td><td>BM25 + 过滤</td></tr><tr><td>客服知识库</td><td>Hybrid + Rerank</td></tr></table>"
+      },
+      {
+        "term": "融合不是简单相加",
+        "explain": "<p>Hybrid 常用 RRF 或加权分数。难点是不同检索器分数尺度不同，不能直接把 BM25 分数和 embedding cosine 分数硬加。实际要看 recall@k、MRR 和最终回答质量。</p>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "r02",
+        "type": "项目卡",
+        "note": "BM25 vs Dense 检索的小语料经验。"
+      }
+    ]
+  },
+  {
+    "id": "fc14",
+    "cat": "基础概念",
+    "q": "Reranker / RRF：为什么召回后还要重新排序？",
+    "q_ja": "Reranker / RRF：为什么召回后还要重新排序？",
+    "bullets": [
+      "召回负责尽量别漏，rerank 负责把最相关的排到前面",
+      "Reranker 通常更贵，但能看 query 和文档的细粒度匹配",
+      "RRF 是一种把多个排序列表融合的简单稳健方法",
+      "RAG 很多 bad case 不是没召回，而是正确文档排太后"
+    ],
+    "bullets_ja": [
+      "召回负责尽量别漏，rerank 负责把最相关的排到前面",
+      "Reranker 通常更贵，但能看 query 和文档的细粒度匹配",
+      "RRF 是一种把多个排序列表融合的简单稳健方法",
+      "RAG 很多 bad case 不是没召回，而是正确文档排太后"
+    ],
+    "details": [
+      {
+        "term": "像初筛和复试",
+        "explain": "<p>第一轮召回像简历初筛：先捞出 50 份可能相关的资料。Reranker 像复试：逐份看 query 和文档是否真的匹配，把最有用的放前面。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">召回 top-50</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Reranker 精排</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">top-5 注入 prompt</span></div></div>"
+      },
+      {
+        "term": "RRF 的直觉",
+        "explain": "<p>RRF 不关心原始分数，只看排名。一个文档如果在 BM25 和 Dense 里都排得靠前，它就更可能被推上去。这对不同检索器分数不可比的问题很有帮助。</p>"
+      },
+      {
+        "term": "常见边界",
+        "explain": "<ul><li>Reranker 不是越大越好，延迟和成本会增加。</li><li>如果召回阶段完全没捞到正确文档，reranker 也救不了。</li><li>评估时要看正确证据是否进入最终上下文，而不只是召回列表。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像初筛和复试",
+        "explain": "<p>第一轮召回像简历初筛：先捞出 50 份可能相关的资料。Reranker 像复试：逐份看 query 和文档是否真的匹配，把最有用的放前面。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">召回 top-50</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Reranker 精排</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">top-5 注入 prompt</span></div></div>"
+      },
+      {
+        "term": "RRF 的直觉",
+        "explain": "<p>RRF 不关心原始分数，只看排名。一个文档如果在 BM25 和 Dense 里都排得靠前，它就更可能被推上去。这对不同检索器分数不可比的问题很有帮助。</p>"
+      },
+      {
+        "term": "常见边界",
+        "explain": "<ul><li>Reranker 不是越大越好，延迟和成本会增加。</li><li>如果召回阶段完全没捞到正确文档，reranker 也救不了。</li><li>评估时要看正确证据是否进入最终上下文，而不只是召回列表。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "r05",
+        "type": "项目卡",
+        "note": "Reranker 为什么像均衡器。"
+      }
+    ]
+  },
+  {
+    "id": "fc15",
+    "cat": "基础概念",
+    "q": "Function Calling / Tool Use：模型什么时候该调用工具？",
+    "q_ja": "Function Calling / Tool Use：模型什么时候该调用工具？",
+    "bullets": [
+      "Function Calling 让模型输出结构化工具请求，而不是只输出自然语言",
+      "工具适合查事实、执行动作、计算、读写外部系统",
+      "模型负责判断何时调用和填参数，程序负责真正执行",
+      "工具调用必须配 schema、权限和错误处理"
+    ],
+    "bullets_ja": [
+      "Function Calling 让模型输出结构化工具请求，而不是只输出自然语言",
+      "工具适合查事实、执行动作、计算、读写外部系统",
+      "模型负责判断何时调用和填参数，程序负责真正执行",
+      "工具调用必须配 schema、权限和错误处理"
+    ],
+    "details": [
+      {
+        "term": "像让模型填一张工单",
+        "explain": "<p>用户说“查一下今天东京天气”，模型不应该凭记忆编天气，而是填写一个工具调用：<code>get_weather({city: \"Tokyo\", date: \"today\"})</code>。外部程序执行后，再把结果交回模型组织语言。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">用户请求</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">模型选择工具</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">参数 JSON</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">程序执行</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">模型总结结果</span></div></div>"
+      },
+      {
+        "term": "为什么要 schema",
+        "explain": "<p>Schema 规定工具需要哪些字段、字段类型是什么。没有 schema，模型可能把日期写成“明儿”、把金额写成字符串、或者调用不存在的工具。Schema 是模型和程序之间的合同。</p>"
+      },
+      {
+        "term": "失效边界",
+        "explain": "<ul><li>工具 description 太像，模型会选错。</li><li>参数缺失时应该追问，不应该瞎填。</li><li>写操作、发送消息、删除文件等工具必须有权限和确认机制。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像让模型填一张工单",
+        "explain": "<p>用户说“查一下今天东京天气”，模型不应该凭记忆编天气，而是填写一个工具调用：<code>get_weather({city: \"Tokyo\", date: \"today\"})</code>。外部程序执行后，再把结果交回模型组织语言。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">用户请求</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">模型选择工具</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">参数 JSON</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">程序执行</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">模型总结结果</span></div></div>"
+      },
+      {
+        "term": "为什么要 schema",
+        "explain": "<p>Schema 规定工具需要哪些字段、字段类型是什么。没有 schema，模型可能把日期写成“明儿”、把金额写成字符串、或者调用不存在的工具。Schema 是模型和程序之间的合同。</p>"
+      },
+      {
+        "term": "失效边界",
+        "explain": "<ul><li>工具 description 太像，模型会选错。</li><li>参数缺失时应该追问，不应该瞎填。</li><li>写操作、发送消息、删除文件等工具必须有权限和确认机制。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "l20",
+        "type": "深挖卡",
+        "note": "Function Calling / Tool Use 机制。"
+      },
+      {
+        "id": "a02",
+        "type": "实现卡",
+        "note": "Function Calling 实现机制。"
+      }
+    ]
+  },
+  {
+    "id": "fc16",
+    "cat": "基础概念",
+    "q": "Agent Loop / ReAct：Agent 为什么会一步步行动？",
+    "q_ja": "Agent Loop / ReAct：Agent 为什么会一步步行动？",
+    "bullets": [
+      "Agent 不只是一次回答，而是观察、思考、行动、再观察的循环",
+      "ReAct 把 reasoning 和 acting 交替组织起来",
+      "循环要有预算、停止条件和错误恢复，否则容易无限执行",
+      "Tool Use 是手脚，Agent Loop 是控制流程"
+    ],
+    "bullets_ja": [
+      "Agent 不只是一次回答，而是观察、思考、行动、再观察的循环",
+      "ReAct 把 reasoning 和 acting 交替组织起来",
+      "循环要有预算、停止条件和错误恢复，否则容易无限执行",
+      "Tool Use 是手脚，Agent Loop 是控制流程"
+    ],
+    "details": [
+      {
+        "term": "像边查资料边写报告",
+        "explain": "<p>普通聊天模型像一次性回答；Agent 更像写报告的人：先想缺什么资料，查一次，再根据结果决定下一步。每次工具结果都会改变它的状态。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">任务</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">计划/思考</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">调用工具</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">观察结果</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">继续或停止</span></div></div>"
+      },
+      {
+        "term": "为什么会失控",
+        "explain": "<p>如果没有 step limit、token budget、成功条件和失败条件，Agent 可能一直查、一直改、一直重试。生产系统通常要限制最大步数、最大工具调用次数、最大耗时，并记录每一步 trace。</p>"
+      },
+      {
+        "term": "ReAct 的边界",
+        "explain": "<ul><li>适合：需要多步查证、调用工具、根据中间结果调整的问题。</li><li>不适合：简单问答或确定性流程，直接 pipeline 更便宜稳定。</li><li>面试回答时要同时讲能力和兜底，不要只讲“会自主思考”。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像边查资料边写报告",
+        "explain": "<p>普通聊天模型像一次性回答；Agent 更像写报告的人：先想缺什么资料，查一次，再根据结果决定下一步。每次工具结果都会改变它的状态。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">任务</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">计划/思考</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">调用工具</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">观察结果</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">继续或停止</span></div></div>"
+      },
+      {
+        "term": "为什么会失控",
+        "explain": "<p>如果没有 step limit、token budget、成功条件和失败条件，Agent 可能一直查、一直改、一直重试。生产系统通常要限制最大步数、最大工具调用次数、最大耗时，并记录每一步 trace。</p>"
+      },
+      {
+        "term": "ReAct 的边界",
+        "explain": "<ul><li>适合：需要多步查证、调用工具、根据中间结果调整的问题。</li><li>不适合：简单问答或确定性流程，直接 pipeline 更便宜稳定。</li><li>面试回答时要同时讲能力和兜底，不要只讲“会自主思考”。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "g03",
+        "type": "项目卡",
+        "note": "Bounded ReAct 的 5 步循环。"
+      },
+      {
+        "id": "aa13",
+        "type": "失败模式",
+        "note": "ReAct 什么时候陷入无限推理。"
+      }
+    ]
+  },
+  {
+    "id": "fc17",
+    "cat": "基础概念",
+    "q": "MCP / Tool / Skill：外部能力接入到底分几层？",
+    "q_ja": "MCP / Tool / Skill：外部能力接入到底分几层？",
+    "bullets": [
+      "Tool 是可调用函数，MCP 是工具/资源接入协议，Skill 是更高层的能力包",
+      "Tool 偏执行，MCP 偏连接标准，Skill 偏任务说明和使用方法",
+      "三者不是互斥，而是可以叠在一起",
+      "面试里要先讲层次，再讲适用边界"
+    ],
+    "bullets_ja": [
+      "Tool 是可调用函数，MCP 是工具/资源接入协议，Skill 是更高层的能力包",
+      "Tool 偏执行，MCP 偏连接标准，Skill 偏任务说明和使用方法",
+      "三者不是互斥，而是可以叠在一起",
+      "面试里要先讲层次，再讲适用边界"
+    ],
+    "details": [
+      {
+        "term": "像插座、电器和说明书",
+        "explain": "<p>Tool 像具体电器：能做一件事。MCP 像统一插座标准：让不同电器能接进来。Skill 像“如何完成某类任务”的说明书，里面可能包含工具、流程、注意事项和示例。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">MCP 连接标准</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Tools / Resources</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Skill 任务包</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Agent 使用</span></div></div>"
+      },
+      {
+        "term": "怎么区分",
+        "explain": "<table class=\"mini-table\"><tr><th>概念</th><th>核心问题</th></tr><tr><td>Tool</td><td>能调用什么函数？参数是什么？</td></tr><tr><td>MCP</td><td>外部工具和资源怎么标准化接入？</td></tr><tr><td>Skill</td><td>完成某类任务需要哪些步骤和知识？</td></tr></table>"
+      },
+      {
+        "term": "常见误区",
+        "explain": "<ul><li>不要把 MCP 当成 Agent 本身，它是连接协议。</li><li>不要把 Skill 只理解成工具，Skill 也可以是文档、流程和约束。</li><li>工具越多不一定越强，选择错误会让 Agent 更不稳定。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像插座、电器和说明书",
+        "explain": "<p>Tool 像具体电器：能做一件事。MCP 像统一插座标准：让不同电器能接进来。Skill 像“如何完成某类任务”的说明书，里面可能包含工具、流程、注意事项和示例。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">MCP 连接标准</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Tools / Resources</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Skill 任务包</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Agent 使用</span></div></div>"
+      },
+      {
+        "term": "怎么区分",
+        "explain": "<table class=\"mini-table\"><tr><th>概念</th><th>核心问题</th></tr><tr><td>Tool</td><td>能调用什么函数？参数是什么？</td></tr><tr><td>MCP</td><td>外部工具和资源怎么标准化接入？</td></tr><tr><td>Skill</td><td>完成某类任务需要哪些步骤和知识？</td></tr></table>"
+      },
+      {
+        "term": "常见误区",
+        "explain": "<ul><li>不要把 MCP 当成 Agent 本身，它是连接协议。</li><li>不要把 Skill 只理解成工具，Skill 也可以是文档、流程和约束。</li><li>工具越多不一定越强，选择错误会让 Agent 更不稳定。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "iad02",
+        "type": "面经卡",
+        "note": "本地工具、MCP Tools、Skill 三者区别。"
+      },
+      {
+        "id": "aa09",
+        "type": "基础卡",
+        "note": "MCP 协议。"
+      }
+    ]
+  },
+  {
+    "id": "fc18",
+    "cat": "基础概念",
+    "q": "Agent Memory：短期记忆、长期记忆和检索记忆怎么分？",
+    "q_ja": "Agent Memory：短期记忆、长期记忆和检索记忆怎么分？",
+    "bullets": [
+      "短期记忆通常是当前 context 里的对话和中间结果",
+      "长期记忆是跨会话保存的用户偏好、事实或经验",
+      "检索记忆通过 embedding / keyword 找回相关片段",
+      "记忆需要更新、过期、权限和纠错机制"
+    ],
+    "bullets_ja": [
+      "短期记忆通常是当前 context 里的对话和中间结果",
+      "长期记忆是跨会话保存的用户偏好、事实或经验",
+      "检索记忆通过 embedding / keyword 找回相关片段",
+      "记忆需要更新、过期、权限和纠错机制"
+    ],
+    "details": [
+      {
+        "term": "像工作台和档案柜",
+        "explain": "<p>短期记忆像桌面上的纸，当前任务随手能看；长期记忆像档案柜，下次还可以拿出来；检索记忆像档案索引，先根据问题找相关资料。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">当前上下文</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">短期状态</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">长期存储</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">检索召回</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">写回/更新</span></div></div>"
+      },
+      {
+        "term": "为什么不能全存",
+        "explain": "<p>把所有历史都塞进 prompt 会贵、慢、乱，而且可能泄露不该用的信息。真正的记忆系统要判断什么值得存、存多久、谁能读、错误怎么删。</p>"
+      },
+      {
+        "term": "设计检查点",
+        "explain": "<ul><li>写入：什么时候把信息变成记忆？</li><li>读取：什么问题会触发检索？</li><li>冲突：新旧记忆矛盾时谁优先？</li><li>隐私：用户不想保留的信息能否删除？</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像工作台和档案柜",
+        "explain": "<p>短期记忆像桌面上的纸，当前任务随手能看；长期记忆像档案柜，下次还可以拿出来；检索记忆像档案索引，先根据问题找相关资料。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">当前上下文</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">短期状态</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">长期存储</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">检索召回</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">写回/更新</span></div></div>"
+      },
+      {
+        "term": "为什么不能全存",
+        "explain": "<p>把所有历史都塞进 prompt 会贵、慢、乱，而且可能泄露不该用的信息。真正的记忆系统要判断什么值得存、存多久、谁能读、错误怎么删。</p>"
+      },
+      {
+        "term": "设计检查点",
+        "explain": "<ul><li>写入：什么时候把信息变成记忆？</li><li>读取：什么问题会触发检索？</li><li>冲突：新旧记忆矛盾时谁优先？</li><li>隐私：用户不想保留的信息能否删除？</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "aa10",
+        "type": "深挖卡",
+        "note": "Agent 记忆系统设计。"
+      },
+      {
+        "id": "iad16",
+        "type": "项目深挖",
+        "note": "多层 Memory 设计。"
+      }
+    ]
+  },
+  {
+    "id": "fc19",
+    "cat": "基础概念",
+    "q": "Guardrails / Sandbox：为什么 Agent 不能想做什么就做什么？",
+    "q_ja": "Guardrails / Sandbox：为什么 Agent 不能想做什么就做什么？",
+    "bullets": [
+      "Guardrails 是输入、输出和工具执行的安全边界",
+      "Sandbox 把危险操作限制在可控环境里",
+      "权限分级比“相信模型”可靠",
+      "高风险动作需要确认、审计和回滚"
+    ],
+    "bullets_ja": [
+      "Guardrails 是输入、输出和工具执行的安全边界",
+      "Sandbox 把危险操作限制在可控环境里",
+      "权限分级比“相信模型”可靠",
+      "高风险动作需要确认、审计和回滚"
+    ],
+    "details": [
+      {
+        "term": "像实验室安全门",
+        "explain": "<p>模型会犯错，也可能被用户输入诱导。Guardrails 像安全门：读文件、写文件、发消息、删数据、运行命令都应该有不同权限。Sandbox 则确保即使出错，也不会直接伤到真实环境。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">用户输入</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">策略检查</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">工具权限</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Sandbox 执行</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">审计记录</span></div></div>"
+      },
+      {
+        "term": "常见防线",
+        "explain": "<table class=\"mini-table\"><tr><th>位置</th><th>防线</th></tr><tr><td>输入前</td><td>识别敏感数据、越权请求、prompt injection</td></tr><tr><td>工具前</td><td>权限、参数校验、dry-run</td></tr><tr><td>输出前</td><td>事实校验、隐私过滤、格式检查</td></tr><tr><td>事后</td><td>日志、trace、回滚</td></tr></table>"
+      },
+      {
+        "term": "边界判断",
+        "explain": "<ul><li>读操作也可能敏感，例如读本地历史、密钥、私人文件。</li><li>写操作更要小心，例如发消息、删除、改权限、执行代码。</li><li>面试里讲安全要落到“谁能做什么、何时确认、如何审计”。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像实验室安全门",
+        "explain": "<p>模型会犯错，也可能被用户输入诱导。Guardrails 像安全门：读文件、写文件、发消息、删数据、运行命令都应该有不同权限。Sandbox 则确保即使出错，也不会直接伤到真实环境。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">用户输入</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">策略检查</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">工具权限</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Sandbox 执行</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">审计记录</span></div></div>"
+      },
+      {
+        "term": "常见防线",
+        "explain": "<table class=\"mini-table\"><tr><th>位置</th><th>防线</th></tr><tr><td>输入前</td><td>识别敏感数据、越权请求、prompt injection</td></tr><tr><td>工具前</td><td>权限、参数校验、dry-run</td></tr><tr><td>输出前</td><td>事实校验、隐私过滤、格式检查</td></tr><tr><td>事后</td><td>日志、trace、回滚</td></tr></table>"
+      },
+      {
+        "term": "边界判断",
+        "explain": "<ul><li>读操作也可能敏感，例如读本地历史、密钥、私人文件。</li><li>写操作更要小心，例如发消息、删除、改权限、执行代码。</li><li>面试里讲安全要落到“谁能做什么、何时确认、如何审计”。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "a07",
+        "type": "基础卡",
+        "note": "Guardrails 设计模式。"
+      },
+      {
+        "id": "aa12",
+        "type": "深挖卡",
+        "note": "Agent 安全与对齐。"
+      }
+    ]
+  },
+  {
+    "id": "fc20",
+    "cat": "基础概念",
+    "q": "LLM-as-Judge：让模型当评委靠谱吗？",
+    "q_ja": "LLM-as-Judge：让模型当评委靠谱吗？",
+    "bullets": [
+      "LLM-as-Judge 用模型评价回答质量、相关性、事实性或格式",
+      "它适合做相对评估和大规模初筛",
+      "评委模型也会偏、会漏、会受提示影响",
+      "可靠评估要有 rubric、样例、人工抽检和一致性检查"
+    ],
+    "bullets_ja": [
+      "LLM-as-Judge 用模型评价回答质量、相关性、事实性或格式",
+      "它适合做相对评估和大规模初筛",
+      "评委模型也会偏、会漏、会受提示影响",
+      "可靠评估要有 rubric、样例、人工抽检和一致性检查"
+    ],
+    "details": [
+      {
+        "term": "像请助教批改作业",
+        "explain": "<p>LLM-as-Judge 像请助教按评分标准批作业。它比人工快，但必须给清楚 rubric：什么叫正确、什么叫有证据、什么情况扣分。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">候选回答</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Rubric</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Judge 模型</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">分数/理由</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">人工抽检</span></div></div>"
+      },
+      {
+        "term": "适合评什么",
+        "explain": "<ul><li>相关性：回答有没有针对问题。</li><li>完整性：关键点有没有漏。</li><li>格式：是否符合 JSON 或模板。</li><li>引用：是否基于给定证据。</li></ul>"
+      },
+      {
+        "term": "不可靠的地方",
+        "explain": "<p>Judge 可能偏爱长答案、漂亮措辞或自己熟悉的风格。严肃评测要加入 golden set、pairwise 比较、多 judge 一致性、人工抽样复核。不要把 judge 分数当绝对真理。</p>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像请助教批改作业",
+        "explain": "<p>LLM-as-Judge 像请助教按评分标准批作业。它比人工快，但必须给清楚 rubric：什么叫正确、什么叫有证据、什么情况扣分。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">候选回答</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Rubric</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Judge 模型</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">分数/理由</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">人工抽检</span></div></div>"
+      },
+      {
+        "term": "适合评什么",
+        "explain": "<ul><li>相关性：回答有没有针对问题。</li><li>完整性：关键点有没有漏。</li><li>格式：是否符合 JSON 或模板。</li><li>引用：是否基于给定证据。</li></ul>"
+      },
+      {
+        "term": "不可靠的地方",
+        "explain": "<p>Judge 可能偏爱长答案、漂亮措辞或自己熟悉的风格。严肃评测要加入 golden set、pairwise 比较、多 judge 一致性、人工抽样复核。不要把 judge 分数当绝对真理。</p>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "r09",
+        "type": "项目卡",
+        "note": "LLM-as-Judge 评估维度。"
+      },
+      {
+        "id": "a06",
+        "type": "基础卡",
+        "note": "Agent Evaluation 方法。"
+      }
+    ]
+  },
+  {
+    "id": "fc21",
+    "cat": "基础概念",
+    "q": "Precision / Recall / F1：评测指标别只看一个数字",
+    "q_ja": "Precision / Recall / F1：评测指标别只看一个数字",
+    "bullets": [
+      "Precision 看查出来的有多少是对的，Recall 看该查到的有多少被查到",
+      "F1 是 precision 和 recall 的折中",
+      "检索、分类、风控、RAG 都会用到这些指标",
+      "不同业务宁愿错杀还是漏放，会决定指标选择"
+    ],
+    "bullets_ja": [
+      "Precision 看查出来的有多少是对的，Recall 看该查到的有多少被查到",
+      "F1 是 precision 和 recall 的折中",
+      "检索、分类、风控、RAG 都会用到这些指标",
+      "不同业务宁愿错杀还是漏放，会决定指标选择"
+    ],
+    "details": [
+      {
+        "term": "找资料的例子",
+        "explain": "<p>系统返回 10 个文档，其中 7 个相关，precision=70%。如果库里总共有 20 个相关文档，系统找到了 7 个，recall=35%。一个系统可以很准但漏很多，也可以捞很多但噪声大。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">全部相关资料</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">系统返回资料</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Precision / Recall</span></div></div>"
+      },
+      {
+        "term": "什么时候看哪个",
+        "explain": "<table class=\"mini-table\"><tr><th>目标</th><th>更关注</th></tr><tr><td>不能漏掉证据</td><td>Recall</td></tr><tr><td>不能污染上下文</td><td>Precision</td></tr><tr><td>两者都要平衡</td><td>F1 / MRR / nDCG</td></tr><tr><td>最终回答好不好</td><td>答案级评测</td></tr></table>"
+      },
+      {
+        "term": "面试边界",
+        "explain": "<ul><li>RAG 检索阶段看 recall@k、MRR、nDCG。</li><li>生成阶段看事实性、引用正确率、拒答能力。</li><li>不要只报一个 overall score，要能解释错例类型。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "找资料的例子",
+        "explain": "<p>系统返回 10 个文档，其中 7 个相关，precision=70%。如果库里总共有 20 个相关文档，系统找到了 7 个，recall=35%。一个系统可以很准但漏很多，也可以捞很多但噪声大。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">全部相关资料</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">系统返回资料</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Precision / Recall</span></div></div>"
+      },
+      {
+        "term": "什么时候看哪个",
+        "explain": "<table class=\"mini-table\"><tr><th>目标</th><th>更关注</th></tr><tr><td>不能漏掉证据</td><td>Recall</td></tr><tr><td>不能污染上下文</td><td>Precision</td></tr><tr><td>两者都要平衡</td><td>F1 / MRR / nDCG</td></tr><tr><td>最终回答好不好</td><td>答案级评测</td></tr></table>"
+      },
+      {
+        "term": "面试边界",
+        "explain": "<ul><li>RAG 检索阶段看 recall@k、MRR、nDCG。</li><li>生成阶段看事实性、引用正确率、拒答能力。</li><li>不要只报一个 overall score，要能解释错例类型。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "v02",
+        "type": "深挖卡",
+        "note": "评测 5+1 维度框架。"
+      }
+    ]
+  },
+  {
+    "id": "fc22",
+    "cat": "基础概念",
+    "q": "Latency / Throughput / Cost：线上 LLM 为什么不是只看效果？",
+    "q_ja": "Latency / Throughput / Cost：线上 LLM 为什么不是只看效果？",
+    "bullets": [
+      "Latency 是单个请求等多久，throughput 是单位时间处理多少请求",
+      "Cost 包括输入 token、输出 token、模型规格、GPU 时间和工程运维",
+      "缓存、批处理、量化、路由都会改变三者平衡",
+      "真实系统要在效果、延迟、吞吐、成本之间取舍"
+    ],
+    "bullets_ja": [
+      "Latency 是单个请求等多久，throughput 是单位时间处理多少请求",
+      "Cost 包括输入 token、输出 token、模型规格、GPU 时间和工程运维",
+      "缓存、批处理、量化、路由都会改变三者平衡",
+      "真实系统要在效果、延迟、吞吐、成本之间取舍"
+    ],
+    "details": [
+      {
+        "term": "餐厅类比",
+        "explain": "<p>Latency 像一个客人从点餐到上菜等多久；throughput 像餐厅一小时能服务多少桌；cost 像食材、人力和房租。做 LLM 应用时，模型越大不一定越好，因为它可能让每个请求都变慢变贵。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">请求</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">排队/批处理</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">模型推理</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">返回</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">延迟与成本</span></div></div>"
+      },
+      {
+        "term": "常见优化手段",
+        "explain": "<table class=\"mini-table\"><tr><th>手段</th><th>主要改善</th></tr><tr><td>Prompt 压缩</td><td>输入成本和预填充延迟</td></tr><tr><td>KV Cache</td><td>长对话生成效率</td></tr><tr><td>Continuous batching</td><td>吞吐</td></tr><tr><td>量化</td><td>显存和成本</td></tr><tr><td>模型路由</td><td>平均成本</td></tr></table>"
+      },
+      {
+        "term": "面试答法",
+        "explain": "<p>如果被问“怎么优化 LLM 应用”，不要只说换大模型或小模型。先拆指标：p50/p95 latency、tokens/sec、GPU 利用率、单次请求成本、错误率，再决定是缓存、批处理、路由还是提示词压缩。</p>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "餐厅类比",
+        "explain": "<p>Latency 像一个客人从点餐到上菜等多久；throughput 像餐厅一小时能服务多少桌；cost 像食材、人力和房租。做 LLM 应用时，模型越大不一定越好，因为它可能让每个请求都变慢变贵。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">请求</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">排队/批处理</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">模型推理</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">返回</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">延迟与成本</span></div></div>"
+      },
+      {
+        "term": "常见优化手段",
+        "explain": "<table class=\"mini-table\"><tr><th>手段</th><th>主要改善</th></tr><tr><td>Prompt 压缩</td><td>输入成本和预填充延迟</td></tr><tr><td>KV Cache</td><td>长对话生成效率</td></tr><tr><td>Continuous batching</td><td>吞吐</td></tr><tr><td>量化</td><td>显存和成本</td></tr><tr><td>模型路由</td><td>平均成本</td></tr></table>"
+      },
+      {
+        "term": "面试答法",
+        "explain": "<p>如果被问“怎么优化 LLM 应用”，不要只说换大模型或小模型。先拆指标：p50/p95 latency、tokens/sec、GPU 利用率、单次请求成本、错误率，再决定是缓存、批处理、路由还是提示词压缩。</p>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "l18",
+        "type": "深挖卡",
+        "note": "LLM 推理优化。"
+      },
+      {
+        "id": "e01",
+        "type": "项目卡",
+        "note": "EdgeRouter 成本/准确率路由。"
+      }
+    ]
+  },
+  {
+    "id": "fc23",
+    "cat": "基础概念",
+    "q": "Quantization：INT8 / INT4 为什么能省显存？",
+    "q_ja": "Quantization：INT8 / INT4 为什么能省显存？",
+    "bullets": [
+      "量化把权重或激活从高精度浮点变成低比特表示",
+      "FP16 每个参数 2 bytes，INT4 理论上约 0.5 bytes",
+      "省显存不等于一定更快，硬件和 kernel 支持很重要",
+      "量化会带来精度损失，需要校准和评估"
+    ],
+    "bullets_ja": [
+      "量化把权重或激活从高精度浮点变成低比特表示",
+      "FP16 每个参数 2 bytes，INT4 理论上约 0.5 bytes",
+      "省显存不等于一定更快，硬件和 kernel 支持很重要",
+      "量化会带来精度损失，需要校准和评估"
+    ],
+    "details": [
+      {
+        "term": "像用简写记账",
+        "explain": "<p>原来每个参数用很精细的小数记录，现在用更粗的刻度记录。比如 FP16 是 16 bit，INT4 是 4 bit，单个参数存储理论上少 4 倍。但刻度变粗后，模型输出可能有误差。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">FP16 权重</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">校准/映射</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">INT8/INT4 权重</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">更低显存</span></div></div>"
+      },
+      {
+        "term": "常见类型",
+        "explain": "<table class=\"mini-table\"><tr><th>类型</th><th>直觉</th></tr><tr><td>Weight-only</td><td>只量化权重，推理常见</td></tr><tr><td>Activation quant</td><td>激活也量化，更难但更省</td></tr><tr><td>GPTQ/AWQ</td><td>常见离线量化方法</td></tr><tr><td>NF4</td><td>QLoRA 常用 4bit 格式</td></tr></table>"
+      },
+      {
+        "term": "边界",
+        "explain": "<ul><li>小模型量化后可能掉点明显，大模型通常更抗量化。</li><li>长上下文时，光量化权重不够，KV Cache 仍可能很大。</li><li>面试里要说清：省的是权重显存、KV 显存还是计算成本。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像用简写记账",
+        "explain": "<p>原来每个参数用很精细的小数记录，现在用更粗的刻度记录。比如 FP16 是 16 bit，INT4 是 4 bit，单个参数存储理论上少 4 倍。但刻度变粗后，模型输出可能有误差。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">FP16 权重</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">校准/映射</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">INT8/INT4 权重</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">更低显存</span></div></div>"
+      },
+      {
+        "term": "常见类型",
+        "explain": "<table class=\"mini-table\"><tr><th>类型</th><th>直觉</th></tr><tr><td>Weight-only</td><td>只量化权重，推理常见</td></tr><tr><td>Activation quant</td><td>激活也量化，更难但更省</td></tr><tr><td>GPTQ/AWQ</td><td>常见离线量化方法</td></tr><tr><td>NF4</td><td>QLoRA 常用 4bit 格式</td></tr></table>"
+      },
+      {
+        "term": "边界",
+        "explain": "<ul><li>小模型量化后可能掉点明显，大模型通常更抗量化。</li><li>长上下文时，光量化权重不够，KV Cache 仍可能很大。</li><li>面试里要说清：省的是权重显存、KV 显存还是计算成本。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "l08",
+        "type": "深挖卡",
+        "note": "量化方法对比。"
+      },
+      {
+        "id": "ib08",
+        "type": "面经卡",
+        "note": "BF16、FP16、FP32 对比。"
+      }
+    ]
+  },
+  {
+    "id": "fc24",
+    "cat": "基础概念",
+    "q": "Distillation：蒸馏为什么能让小模型学大模型？",
+    "q_ja": "Distillation：蒸馏为什么能让小模型学大模型？",
+    "bullets": [
+      "蒸馏让小模型学习大模型的输出、推理过程或偏好",
+      "目标不是复制所有能力，而是在特定任务上接近大模型",
+      "常见蒸馏包括答案蒸馏、过程蒸馏、logits 蒸馏",
+      "小模型更便宜更快，但上限受容量和数据覆盖限制"
+    ],
+    "bullets_ja": [
+      "蒸馏让小模型学习大模型的输出、推理过程或偏好",
+      "目标不是复制所有能力，而是在特定任务上接近大模型",
+      "常见蒸馏包括答案蒸馏、过程蒸馏、logits 蒸馏",
+      "小模型更便宜更快，但上限受容量和数据覆盖限制"
+    ],
+    "details": [
+      {
+        "term": "像师傅带徒弟",
+        "explain": "<p>大模型像经验丰富的师傅，小模型像徒弟。师傅不只是给最终答案，还可以展示解题步骤、错误反例和评分偏好。徒弟学会常见套路后，执行更快更便宜。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">Teacher 大模型</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">生成答案/过程</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">训练 Student 小模型</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">低成本部署</span></div></div>"
+      },
+      {
+        "term": "蒸馏学什么",
+        "explain": "<table class=\"mini-table\"><tr><th>蒸馏对象</th><th>适合场景</th></tr><tr><td>最终答案</td><td>问答、分类、格式化输出</td></tr><tr><td>推理过程</td><td>数学、代码、复杂规划</td></tr><tr><td>工具轨迹</td><td>Agent tool calling</td></tr><tr><td>偏好</td><td>风格、安全和拒答边界</td></tr></table>"
+      },
+      {
+        "term": "常见坑",
+        "explain": "<ul><li>Teacher 错了，Student 会学错。</li><li>只蒸馏简单样例，小模型遇到难题仍会崩。</li><li>蒸馏数据要覆盖线上分布，否则离线很好、上线掉点。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像师傅带徒弟",
+        "explain": "<p>大模型像经验丰富的师傅，小模型像徒弟。师傅不只是给最终答案，还可以展示解题步骤、错误反例和评分偏好。徒弟学会常见套路后，执行更快更便宜。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">Teacher 大模型</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">生成答案/过程</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">训练 Student 小模型</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">低成本部署</span></div></div>"
+      },
+      {
+        "term": "蒸馏学什么",
+        "explain": "<table class=\"mini-table\"><tr><th>蒸馏对象</th><th>适合场景</th></tr><tr><td>最终答案</td><td>问答、分类、格式化输出</td></tr><tr><td>推理过程</td><td>数学、代码、复杂规划</td></tr><tr><td>工具轨迹</td><td>Agent tool calling</td></tr><tr><td>偏好</td><td>风格、安全和拒答边界</td></tr></table>"
+      },
+      {
+        "term": "常见坑",
+        "explain": "<ul><li>Teacher 错了，Student 会学错。</li><li>只蒸馏简单样例，小模型遇到难题仍会崩。</li><li>蒸馏数据要覆盖线上分布，否则离线很好、上线掉点。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "ib01",
+        "type": "面经卡",
+        "note": "DeepSeek-R1 蒸馏模型。"
+      }
+    ]
+  },
+  {
+    "id": "fc25",
+    "cat": "基础概念",
+    "q": "Continuous Batching：为什么高并发推理要动态组批？",
+    "q_ja": "Continuous Batching：为什么高并发推理要动态组批？",
+    "bullets": [
+      "普通 batching 要等一批请求一起跑，continuous batching 可以动态加入/退出请求",
+      "LLM 生成长度不同，固定 batch 会浪费大量计算槽位",
+      "动态组批提升 GPU 利用率和吞吐",
+      "它主要改善服务端吞吐，不一定降低单个请求的首 token 延迟"
+    ],
+    "bullets_ja": [
+      "普通 batching 要等一批请求一起跑，continuous batching 可以动态加入/退出请求",
+      "LLM 生成长度不同，固定 batch 会浪费大量计算槽位",
+      "动态组批提升 GPU 利用率和吞吐",
+      "它主要改善服务端吞吐，不一定降低单个请求的首 token 延迟"
+    ],
+    "details": [
+      {
+        "term": "像拼车不断上下客",
+        "explain": "<p>固定 batching 像一辆车必须等所有乘客到齐再开，且中途不能换人。Continuous batching 像路线公交：有人下车空出座位，新请求可以补进来，让车一直满载。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">请求 A/B/C</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Prefill</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Decode 动态组批</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">请求完成即退出</span></div></div>"
+      },
+      {
+        "term": "为什么 LLM 特别需要",
+        "explain": "<p>不同用户输出长度差异很大：有人只要一句话，有人要长报告。固定 batch 会被最长输出拖住。动态组批让短请求完成后释放位置，提高 GPU decode 阶段利用率。</p>"
+      },
+      {
+        "term": "和其他优化的关系",
+        "explain": "<ul><li>PagedAttention 管 KV Cache 内存。</li><li>Continuous batching 管请求调度。</li><li>Speculative decoding 管单请求生成速度。</li><li>三者解决的问题不同，可以组合使用。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像拼车不断上下客",
+        "explain": "<p>固定 batching 像一辆车必须等所有乘客到齐再开，且中途不能换人。Continuous batching 像路线公交：有人下车空出座位，新请求可以补进来，让车一直满载。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">请求 A/B/C</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Prefill</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Decode 动态组批</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">请求完成即退出</span></div></div>"
+      },
+      {
+        "term": "为什么 LLM 特别需要",
+        "explain": "<p>不同用户输出长度差异很大：有人只要一句话，有人要长报告。固定 batch 会被最长输出拖住。动态组批让短请求完成后释放位置，提高 GPU decode 阶段利用率。</p>"
+      },
+      {
+        "term": "和其他优化的关系",
+        "explain": "<ul><li>PagedAttention 管 KV Cache 内存。</li><li>Continuous batching 管请求调度。</li><li>Speculative decoding 管单请求生成速度。</li><li>三者解决的问题不同，可以组合使用。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "l18",
+        "type": "深挖卡",
+        "note": "推理优化：Speculative Decoding 与 Continuous Batching。"
+      },
+      {
+        "id": "l27",
+        "type": "深挖卡",
+        "note": "vLLM 三大优化。"
+      }
+    ]
+  },
+  {
+    "id": "fc26",
+    "cat": "基础概念",
+    "q": "JSON Schema / Structured Output：为什么结构化输出这么重要？",
+    "q_ja": "JSON Schema / Structured Output：为什么结构化输出这么重要？",
+    "bullets": [
+      "结构化输出让模型按固定字段返回，便于程序解析",
+      "JSON Schema 可以约束字段名、类型、枚举和必填项",
+      "工具调用、信息抽取、自动评测都依赖结构化输出",
+      "它减少解析错误，但不能保证事实正确"
+    ],
+    "bullets_ja": [
+      "结构化输出让模型按固定字段返回，便于程序解析",
+      "JSON Schema 可以约束字段名、类型、枚举和必填项",
+      "工具调用、信息抽取、自动评测都依赖结构化输出",
+      "它减少解析错误，但不能保证事实正确"
+    ],
+    "details": [
+      {
+        "term": "像让模型填表而不是写作文",
+        "explain": "<p>自然语言回答很灵活，但程序难解析。结构化输出相当于让模型填表：姓名、日期、金额、操作类型各在固定格子里。这样后端才能稳定读取。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">自然语言需求</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Schema 约束</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">JSON 输出</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">程序处理</span></div></div>"
+      },
+      {
+        "term": "一个 schema 直觉",
+        "explain": "<pre>{\n  \"action\": \"create_ticket\",\n  \"priority\": \"high\",\n  \"assignee\": \"support\"\n}</pre><p>字段固定后，可以检查 action 是否在允许列表里，priority 是否只能是 high/medium/low。</p>"
+      },
+      {
+        "term": "边界",
+        "explain": "<ul><li>Schema 管格式，不管内容真不真。</li><li>字段描述不清，模型仍可能填错。</li><li>高风险动作不能因为 JSON 格式正确就直接执行，还要权限和确认。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像让模型填表而不是写作文",
+        "explain": "<p>自然语言回答很灵活，但程序难解析。结构化输出相当于让模型填表：姓名、日期、金额、操作类型各在固定格子里。这样后端才能稳定读取。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">自然语言需求</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Schema 约束</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">JSON 输出</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">程序处理</span></div></div>"
+      },
+      {
+        "term": "一个 schema 直觉",
+        "explain": "<pre>{\n  \"action\": \"create_ticket\",\n  \"priority\": \"high\",\n  \"assignee\": \"support\"\n}</pre><p>字段固定后，可以检查 action 是否在允许列表里，priority 是否只能是 high/medium/low。</p>"
+      },
+      {
+        "term": "边界",
+        "explain": "<ul><li>Schema 管格式，不管内容真不真。</li><li>字段描述不清，模型仍可能填错。</li><li>高风险动作不能因为 JSON 格式正确就直接执行，还要权限和确认。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "a02",
+        "type": "实现卡",
+        "note": "Function Calling 实现机制。"
+      }
+    ]
+  },
+  {
+    "id": "fc27",
+    "cat": "基础概念",
+    "q": "IaaS / PaaS / SaaS：云服务三层怎么讲给新手？",
+    "q_ja": "IaaS / PaaS / SaaS：云服务三层怎么讲给新手？",
+    "bullets": [
+      "IaaS 给基础资源，PaaS 给运行平台，SaaS 给直接可用的软件",
+      "越往上越省运维，越往下越灵活可控",
+      "企业选型要看控制权、成本、交付速度和合规",
+      "SA 面试常要求用生活类比讲清楚"
+    ],
+    "bullets_ja": [
+      "IaaS 给基础资源，PaaS 给运行平台，SaaS 给直接可用的软件",
+      "越往上越省运维，越往下越灵活可控",
+      "企业选型要看控制权、成本、交付速度和合规",
+      "SA 面试常要求用生活类比讲清楚"
+    ],
+    "details": [
+      {
+        "term": "披萨类比",
+        "explain": "<p>IaaS 像租厨房和食材，自己做披萨；PaaS 像餐厅提供厨房和半成品，你负责配方；SaaS 像直接点外卖，拿来就吃。越省事，定制空间通常越少。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">IaaS<br>虚机/网络/存储</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">PaaS<br>运行平台</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">SaaS<br>成品软件</span></div></div>"
+      },
+      {
+        "term": "怎么选",
+        "explain": "<table class=\"mini-table\"><tr><th>层级</th><th>适合</th></tr><tr><td>IaaS</td><td>需要强控制、自定义网络、安全策略</td></tr><tr><td>PaaS</td><td>想快速部署应用，少管机器</td></tr><tr><td>SaaS</td><td>业务功能标准化，直接购买更划算</td></tr></table>"
+      },
+      {
+        "term": "客户沟通角度",
+        "explain": "<p>不要只背定义，要转成客户问题：你想少运维还是要强定制？数据合规要求多高？团队有没有云原生能力？迁移期限和预算是多少？</p>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "披萨类比",
+        "explain": "<p>IaaS 像租厨房和食材，自己做披萨；PaaS 像餐厅提供厨房和半成品，你负责配方；SaaS 像直接点外卖，拿来就吃。越省事，定制空间通常越少。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">IaaS<br>虚机/网络/存储</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">PaaS<br>运行平台</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">SaaS<br>成品软件</span></div></div>"
+      },
+      {
+        "term": "怎么选",
+        "explain": "<table class=\"mini-table\"><tr><th>层级</th><th>适合</th></tr><tr><td>IaaS</td><td>需要强控制、自定义网络、安全策略</td></tr><tr><td>PaaS</td><td>想快速部署应用，少管机器</td></tr><tr><td>SaaS</td><td>业务功能标准化，直接购买更划算</td></tr></table>"
+      },
+      {
+        "term": "客户沟通角度",
+        "explain": "<p>不要只背定义，要转成客户问题：你想少运维还是要强定制？数据合规要求多高？团队有没有云原生能力？迁移期限和预算是多少？</p>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "its06",
+        "type": "SA 面经",
+        "note": "IaaS、PaaS、SaaS 的区别。"
+      }
+    ]
+  },
+  {
+    "id": "fc28",
+    "cat": "基础概念",
+    "q": "Container / Docker：容器到底解决什么问题？",
+    "q_ja": "Container / Docker：容器到底解决什么问题？",
+    "bullets": [
+      "容器把应用和运行依赖打包在一起",
+      "它解决“我电脑能跑，服务器不能跑”的环境不一致问题",
+      "镜像是模板，容器是运行中的实例",
+      "容器不是虚拟机，通常共享宿主机内核，更轻量"
+    ],
+    "bullets_ja": [
+      "容器把应用和运行依赖打包在一起",
+      "它解决“我电脑能跑，服务器不能跑”的环境不一致问题",
+      "镜像是模板，容器是运行中的实例",
+      "容器不是虚拟机，通常共享宿主机内核，更轻量"
+    ],
+    "details": [
+      {
+        "term": "像标准集装箱",
+        "explain": "<p>Docker 的直觉就是集装箱：不管里面是衣服还是机器，外面尺寸和装卸方式统一。应用、依赖、启动命令被打包成镜像，到不同机器上都按同样方式启动。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">代码</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">依赖</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Dockerfile</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">镜像</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">容器运行</span></div></div>"
+      },
+      {
+        "term": "镜像 vs 容器",
+        "explain": "<table class=\"mini-table\"><tr><th>概念</th><th>直觉</th></tr><tr><td>镜像 Image</td><td>只读模板，像安装包</td></tr><tr><td>容器 Container</td><td>运行实例，像打开的软件</td></tr><tr><td>Dockerfile</td><td>构建镜像的配方</td></tr><tr><td>Registry</td><td>存镜像的仓库</td></tr></table>"
+      },
+      {
+        "term": "常见边界",
+        "explain": "<ul><li>容器解决环境一致性，不自动解决扩缩容；扩缩容常用 Kubernetes。</li><li>容器共享宿主机内核，隔离不是绝对安全边界。</li><li>面试讲部署时，可以用“镜像构建、环境变量、日志、健康检查”四点展开。</li></ul>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像标准集装箱",
+        "explain": "<p>Docker 的直觉就是集装箱：不管里面是衣服还是机器，外面尺寸和装卸方式统一。应用、依赖、启动命令被打包成镜像，到不同机器上都按同样方式启动。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">代码</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">依赖</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Dockerfile</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">镜像</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">容器运行</span></div></div>"
+      },
+      {
+        "term": "镜像 vs 容器",
+        "explain": "<table class=\"mini-table\"><tr><th>概念</th><th>直觉</th></tr><tr><td>镜像 Image</td><td>只读模板，像安装包</td></tr><tr><td>容器 Container</td><td>运行实例，像打开的软件</td></tr><tr><td>Dockerfile</td><td>构建镜像的配方</td></tr><tr><td>Registry</td><td>存镜像的仓库</td></tr></table>"
+      },
+      {
+        "term": "常见边界",
+        "explain": "<ul><li>容器解决环境一致性，不自动解决扩缩容；扩缩容常用 Kubernetes。</li><li>容器共享宿主机内核，隔离不是绝对安全边界。</li><li>面试讲部署时，可以用“镜像构建、环境变量、日志、健康检查”四点展开。</li></ul>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "ieg07",
+        "type": "工程面经",
+        "note": "云服务使用经验。"
+      }
+    ]
+  },
+  {
+    "id": "fc29",
+    "cat": "基础概念",
+    "q": "API / SDK / Webhook：系统之间怎么说话？",
+    "q_ja": "API / SDK / Webhook：系统之间怎么说话？",
+    "bullets": [
+      "API 是系统暴露的能力接口，SDK 是封装好的客户端工具包",
+      "Webhook 是事件发生后主动通知你的回调",
+      "REST 常用 HTTP 方法和 URL 表达资源，RPC 更像远程调用函数",
+      "对接系统时要关注鉴权、限流、重试和幂等"
+    ],
+    "bullets_ja": [
+      "API 是系统暴露的能力接口，SDK 是封装好的客户端工具包",
+      "Webhook 是事件发生后主动通知你的回调",
+      "REST 常用 HTTP 方法和 URL 表达资源，RPC 更像远程调用函数",
+      "对接系统时要关注鉴权、限流、重试和幂等"
+    ],
+    "details": [
+      {
+        "term": "像点餐方式",
+        "explain": "<p>API 像餐厅菜单：你按规定格式点菜。SDK 像外卖 App：把点餐细节封装好了。Webhook 像餐厅做好后主动发短信通知你，而不是你每分钟去问一次。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">你的系统</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">API / SDK</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">对方服务</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Webhook 回调</span></div></div>"
+      },
+      {
+        "term": "对接四件事",
+        "explain": "<ul><li>鉴权：谁能调用。</li><li>限流：每分钟能调用多少次。</li><li>重试：失败后怎么重试，避免重复提交。</li><li>幂等：同一个请求重复发，不应该造成重复扣款或重复创建。</li></ul>"
+      },
+      {
+        "term": "面试边界",
+        "explain": "<p>如果问“调用第三方 API 怎么设计”，不要只说发请求。要补 timeout、重试退避、错误码、日志、监控、幂等 key、降级方案和敏感数据处理。</p>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像点餐方式",
+        "explain": "<p>API 像餐厅菜单：你按规定格式点菜。SDK 像外卖 App：把点餐细节封装好了。Webhook 像餐厅做好后主动发短信通知你，而不是你每分钟去问一次。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">你的系统</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">API / SDK</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">对方服务</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Webhook 回调</span></div></div>"
+      },
+      {
+        "term": "对接四件事",
+        "explain": "<ul><li>鉴权：谁能调用。</li><li>限流：每分钟能调用多少次。</li><li>重试：失败后怎么重试，避免重复提交。</li><li>幂等：同一个请求重复发，不应该造成重复扣款或重复创建。</li></ul>"
+      },
+      {
+        "term": "面试边界",
+        "explain": "<p>如果问“调用第三方 API 怎么设计”，不要只说发请求。要补 timeout、重试退避、错误码、日志、监控、幂等 key、降级方案和敏感数据处理。</p>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "t02",
+        "type": "相关工程",
+        "note": "REST API 基础。"
+      }
+    ]
+  },
+  {
+    "id": "fc30",
+    "cat": "基础概念",
+    "q": "Logs / Metrics / Traces：可观测性三件套怎么分？",
+    "q_ja": "Logs / Metrics / Traces：可观测性三件套怎么分？",
+    "bullets": [
+      "Logs 记录发生了什么，Metrics 记录整体数值趋势，Traces 记录一次请求经过哪些链路",
+      "排障时通常先看指标发现异常，再看 trace 定位链路，最后看日志查细节",
+      "Agent 系统的 trace 特别重要，因为要知道模型看到什么、调用了什么工具",
+      "可观测性不是模板话术，只有系统排障题才需要展开"
+    ],
+    "bullets_ja": [
+      "Logs 记录发生了什么，Metrics 记录整体数值趋势，Traces 记录一次请求经过哪些链路",
+      "排障时通常先看指标发现异常，再看 trace 定位链路，最后看日志查细节",
+      "Agent 系统的 trace 特别重要，因为要知道模型看到什么、调用了什么工具",
+      "可观测性不是模板话术，只有系统排障题才需要展开"
+    ],
+    "details": [
+      {
+        "term": "像医院检查",
+        "explain": "<p>Metrics 像体温和血压，告诉你有没有异常；Trace 像一次就诊流程，告诉你在哪个科室卡住；Log 像医生记录，告诉你具体发生了什么。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">Metrics 发现异常</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Trace 定位链路</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Logs 查细节</span></div></div>"
+      },
+      {
+        "term": "三者对比",
+        "explain": "<table class=\"mini-table\"><tr><th>类型</th><th>例子</th><th>用途</th></tr><tr><td>Logs</td><td>error: tool timeout</td><td>查具体事件</td></tr><tr><td>Metrics</td><td>p95 latency=3s</td><td>看趋势和报警</td></tr><tr><td>Traces</td><td>request → retriever → llm → tool</td><td>定位慢在哪一步</td></tr></table>"
+      },
+      {
+        "term": "什么时候该讲",
+        "explain": "<p>只有当卡片本身是线上排障、系统设计、Agent 调试时，才需要讲 trace/log/metrics。像 MLA、RoPE、沟通题这种单点知识，不应该硬塞“灰度和人工接管”。</p>"
+      }
+    ],
+    "details_ja": [
+      {
+        "term": "像医院检查",
+        "explain": "<p>Metrics 像体温和血压，告诉你有没有异常；Trace 像一次就诊流程，告诉你在哪个科室卡住；Log 像医生记录，告诉你具体发生了什么。</p><div class=\"concept-diagram\"><div class=\"diagram-row\"><span class=\"diagram-node\">Metrics 发现异常</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Trace 定位链路</span><span class=\"diagram-arrow\">→</span><span class=\"diagram-node\">Logs 查细节</span></div></div>"
+      },
+      {
+        "term": "三者对比",
+        "explain": "<table class=\"mini-table\"><tr><th>类型</th><th>例子</th><th>用途</th></tr><tr><td>Logs</td><td>error: tool timeout</td><td>查具体事件</td></tr><tr><td>Metrics</td><td>p95 latency=3s</td><td>看趋势和报警</td></tr><tr><td>Traces</td><td>request → retriever → llm → tool</td><td>定位慢在哪一步</td></tr></table>"
+      },
+      {
+        "term": "什么时候该讲",
+        "explain": "<p>只有当卡片本身是线上排障、系统设计、Agent 调试时，才需要讲 trace/log/metrics。像 MLA、RoPE、沟通题这种单点知识，不应该硬塞“灰度和人工接管”。</p>"
+      }
+    ],
+    "group": "基础",
+    "lv": 1,
+    "related": [
+      {
+        "id": "ita11",
+        "type": "Agent 调试",
+        "note": "工具选错时怎么定位。"
+      },
+      {
+        "id": "ieg02",
+        "type": "工程面经",
+        "note": "Agent harness 最小组件。"
+      }
+    ]
+  },
+  {
     "id": "v01",
     "cat": "模型评测",
     "q": "SA做模型评测要回答客户的3个核心问题",
@@ -15123,6 +16961,18 @@ const BUILTIN_CARDS = [
       {
         "term": "補足と実戦整理",
         "explain": "<p><strong>深掘り準備</strong></p><p><strong>面接カードは標準回答だけでは足りない。</strong>なぜそう考えるか、代替案は何か、失敗時にどう切り分けるか、顧客にはどう説明するかまで準備する。</p><ul><li>第一層は簡潔に、第二層でフレームワーク、第三層で自分のプロジェクトに接続する。</li><li>価値判断では短期の工程価値と長期のモデル/データ価値を分ける。</li><li>コミュニケーション問題では目標確認、リスク共有、受入基準の合意まで具体化する。</li></ul><p><strong>回答の強化</strong></p><p><strong>回答は30秒版と2分版を用意する：</strong>30秒版は結論、2分版は判断フレーム、具体例、リスクまで話す。</p><ul><li>技術質問は SiLR、RAG、EdgeRouter、評価経験に接続する。</li><li>ビジネス質問は顧客、会社、自分の貢献の三者価値を明確にする。</li><li>不確実な数字は断定せず、仮定と検証方法をセットで述べる。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc20",
+        "type": "基础概念",
+        "note": "LLM-as-Judge 的可靠性边界。"
+      },
+      {
+        "id": "fc21",
+        "type": "基础概念",
+        "note": "Precision / Recall / F1 是评测基础。"
       }
     ]
   },
@@ -15192,6 +17042,13 @@ const BUILTIN_CARDS = [
         "term": "補足と実戦整理",
         "explain": "<p><strong>本番制約</strong></p><p><strong>工程知識は本番制約まで落とす：</strong>正しさだけでなく、観測可能性、ロールバック、拡張性、コスト管理を説明する。</p><ul><li>設計問題では入力、出力、状態、障害復旧、権限境界を先に置く。</li><li>障害対応は再現、層の切り分け、範囲縮小、修正、回帰確認の順で話す。</li><li>顧客向けには技術指標を遅延、費用、転換率、コンプライアンスリスクに翻訳する。</li></ul><p><strong>実運用チェック</strong></p><p><strong>工程回答は実運用まで確認する：</strong>どうリリースし、何を監視し、異常をどう検知し、どう戻すかまで話す。</p><ul><li>リリース前：カナリア、回帰テスト、最小権限。</li><li>リリース中：メトリクス、ログサンプリング、アラート閾値。</li><li>リリース後：障害復盤、runbook化、自動チェックへの反映。</li></ul><p><strong>実戦での言い方</strong></p><p><strong>復習の最後は一つの判断に落とす：</strong>どの場面で使うか、最初に見る指標は何か、失敗時にどの層を疑うか。</p><ul><li>アルゴリズムなら制約と不変条件を先に話してから実装する。</li><li>工程なら境界、監視、ロールバックを置いてから最適化を語る。</li><li>面接/プロジェクトなら顧客やシステムの痛点、証拠、トレードオフを順に示す。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc21",
+        "type": "基础概念",
+        "note": "先理解基础指标，再看 5+1 维度。"
+      }
     ]
   },
   {
@@ -15258,6 +17115,13 @@ const BUILTIN_CARDS = [
         "term": "補足と実戦整理",
         "explain": "<p><strong>本番制約</strong></p><p><strong>工程知識は本番制約まで落とす：</strong>正しさだけでなく、観測可能性、ロールバック、拡張性、コスト管理を説明する。</p><ul><li>設計問題では入力、出力、状態、障害復旧、権限境界を先に置く。</li><li>障害対応は再現、層の切り分け、範囲縮小、修正、回帰確認の順で話す。</li><li>顧客向けには技術指標を遅延、費用、転換率、コンプライアンスリスクに翻訳する。</li></ul><p><strong>実運用チェック</strong></p><p><strong>工程回答は実運用まで確認する：</strong>どうリリースし、何を監視し、異常をどう検知し、どう戻すかまで話す。</p><ul><li>リリース前：カナリア、回帰テスト、最小権限。</li><li>リリース中：メトリクス、ログサンプリング、アラート閾値。</li><li>リリース後：障害復盤、runbook化、自動チェックへの反映。</li></ul><p><strong>実戦での言い方</strong></p><p><strong>復習の最後は一つの判断に落とす：</strong>どの場面で使うか、最初に見る指標は何か、失敗時にどの層を疑うか。</p><ul><li>アルゴリズムなら制約と不変条件を先に話してから実装する。</li><li>工程なら境界、監視、ロールバックを置いてから最適化を語る。</li><li>面接/プロジェクトなら顧客やシステムの痛点、証拠、トレードオフを順に示す。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc21",
+        "type": "基础概念",
+        "note": "Benchmark 和客户评测都要落到指标。"
+      }
     ]
   },
   {
@@ -15323,6 +17187,13 @@ const BUILTIN_CARDS = [
       {
         "term": "補足と実戦整理",
         "explain": "<p><strong>本番制約</strong></p><p><strong>工程知識は本番制約まで落とす：</strong>正しさだけでなく、観測可能性、ロールバック、拡張性、コスト管理を説明する。</p><ul><li>設計問題では入力、出力、状態、障害復旧、権限境界を先に置く。</li><li>障害対応は再現、層の切り分け、範囲縮小、修正、回帰確認の順で話す。</li><li>顧客向けには技術指標を遅延、費用、転換率、コンプライアンスリスクに翻訳する。</li></ul><p><strong>実運用チェック</strong></p><p><strong>工程回答は実運用まで確認する：</strong>どうリリースし、何を監視し、異常をどう検知し、どう戻すかまで話す。</p><ul><li>リリース前：カナリア、回帰テスト、最小権限。</li><li>リリース中：メトリクス、ログサンプリング、アラート閾値。</li><li>リリース後：障害復盤、runbook化、自動チェックへの反映。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc20",
+        "type": "基础概念",
+        "note": "自动评测里常用 LLM-as-Judge。"
       }
     ]
   },
@@ -15587,6 +17458,13 @@ const BUILTIN_CARDS = [
       {
         "term": "補足と実戦整理",
         "explain": "<p><strong>本番制約</strong></p><p><strong>工程知識は本番制約まで落とす：</strong>正しさだけでなく、観測可能性、ロールバック、拡張性、コスト管理を説明する。</p><ul><li>設計問題では入力、出力、状態、障害復旧、権限境界を先に置く。</li><li>障害対応は再現、層の切り分け、範囲縮小、修正、回帰確認の順で話す。</li><li>顧客向けには技術指標を遅延、費用、転換率、コンプライアンスリスクに翻訳する。</li></ul><p><strong>実運用チェック</strong></p><p><strong>工程回答は実運用まで確認する：</strong>どうリリースし、何を監視し、異常をどう検知し、どう戻すかまで話す。</p><ul><li>リリース前：カナリア、回帰テスト、最小権限。</li><li>リリース中：メトリクス、ログサンプリング、アラート閾値。</li><li>リリース後：障害復盤、runbook化、自動チェックへの反映。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc20",
+        "type": "基础概念",
+        "note": "Judge 也会有偏差和误判。"
       }
     ]
   },
@@ -15920,6 +17798,13 @@ const BUILTIN_CARDS = [
         "term": "補足と実戦整理",
         "explain": "<p><strong>本番制約</strong></p><p><strong>工程知識は本番制約まで落とす：</strong>正しさだけでなく、観測可能性、ロールバック、拡張性、コスト管理を説明する。</p><ul><li>設計問題では入力、出力、状態、障害復旧、権限境界を先に置く。</li><li>障害対応は再現、層の切り分け、範囲縮小、修正、回帰確認の順で話す。</li><li>顧客向けには技術指標を遅延、費用、転換率、コンプライアンスリスクに翻訳する。</li></ul><p><strong>実運用チェック</strong></p><p><strong>工程回答は実運用まで確認する：</strong>どうリリースし、何を監視し、異常をどう検知し、どう戻すかまで話す。</p><ul><li>リリース前：カナリア、回帰テスト、最小権限。</li><li>リリース中：メトリクス、ログサンプリング、アラート閾値。</li><li>リリース後：障害復盤、runbook化、自動チェックへの反映。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc21",
+        "type": "基础概念",
+        "note": "A/B 测试前先分清指标。"
+      }
     ]
   },
   {
@@ -16118,6 +18003,13 @@ const BUILTIN_CARDS = [
         "term": "補足と実戦整理",
         "explain": "<p><strong>本番制約</strong></p><p><strong>工程知識は本番制約まで落とす：</strong>正しさだけでなく、観測可能性、ロールバック、拡張性、コスト管理を説明する。</p><ul><li>設計問題では入力、出力、状態、障害復旧、権限境界を先に置く。</li><li>障害対応は再現、層の切り分け、範囲縮小、修正、回帰確認の順で話す。</li><li>顧客向けには技術指標を遅延、費用、転換率、コンプライアンスリスクに翻訳する。</li></ul><p><strong>実運用チェック</strong></p><p><strong>工程回答は実運用まで確認する：</strong>どうリリースし、何を監視し、異常をどう検知し、どう戻すかまで話す。</p><ul><li>リリース前：カナリア、回帰テスト、最小権限。</li><li>リリース中：メトリクス、ログサンプリング、アラート閾値。</li><li>リリース後：障害復盤、runbook化、自動チェックへの反映。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc29",
+        "type": "基础概念",
+        "note": "Web 框架和 API 对接前置概念。"
+      }
     ]
   },
   {
@@ -16185,6 +18077,13 @@ const BUILTIN_CARDS = [
       {
         "term": "補足と実戦整理",
         "explain": "<p><strong>本番制約</strong></p><p><strong>工程知識は本番制約まで落とす：</strong>正しさだけでなく、観測可能性、ロールバック、拡張性、コスト管理を説明する。</p><ul><li>設計問題では入力、出力、状態、障害復旧、権限境界を先に置く。</li><li>障害対応は再現、層の切り分け、範囲縮小、修正、回帰確認の順で話す。</li><li>顧客向けには技術指標を遅延、費用、転換率、コンプライアンスリスクに翻訳する。</li></ul><p><strong>実運用チェック</strong></p><p><strong>工程回答は実運用まで確認する：</strong>どうリリースし、何を監視し、異常をどう検知し、どう戻すかまで話す。</p><ul><li>リリース前：カナリア、回帰テスト、最小権限。</li><li>リリース中：メトリクス、ログサンプリング、アラート閾値。</li><li>リリース後：障害復盤、runbook化、自動チェックへの反映。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc28",
+        "type": "基础概念",
+        "note": "Docker 和容器的入口卡。"
       }
     ]
   },
@@ -16318,6 +18217,18 @@ const BUILTIN_CARDS = [
         "term": "補足と実戦整理",
         "explain": "<p><strong>ストーリーライン</strong></p><p><strong>プロジェクトは物語として話す：</strong>現実の制約、既存案の限界、自分の設計、定量的な検証の順に並べる。</p><ul><li>指標には必ず比較対象を置く：baseline、ablation、失敗版、コスト上限。</li><li>技術名だけでなく、どの失敗モードを潰したかを説明する。</li><li>失敗経験は判断力として語る：調整すべき問題か、方向転換すべき問題か。</li></ul><p><strong>転用練習</strong></p><p><strong>知識を転用して確認する：</strong>この概念を訓練、推論、評価、顧客導入の四場面に置き、何を改善し、どんなコストとリスクを生むか考える。</p><ul><li>境界を説明できれば暗記ではない。</li><li>プロジェクトに接続できれば実務知識になる。</li><li>検証方法まで言えれば工程判断として使える。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc02",
+        "type": "基础概念",
+        "note": "向量和 embedding 的入口卡。"
+      },
+      {
+        "id": "fc11",
+        "type": "基础概念",
+        "note": "RAG 为什么需要向量数据库。"
+      }
     ]
   },
   {
@@ -16384,6 +18295,13 @@ const BUILTIN_CARDS = [
         "term": "本番制約",
         "explain": "<p><strong>工程知識は本番制約まで落とす：</strong>正しさだけでなく、観測可能性、ロールバック、拡張性、コスト管理を説明する。</p><ul><li>設計問題では入力、出力、状態、障害復旧、権限境界を先に置く。</li><li>障害対応は再現、層の切り分け、範囲縮小、修正、回帰確認の順で話す。</li><li>顧客向けには技術指標を遅延、費用、転換率、コンプライアンスリスクに翻訳する。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc22",
+        "type": "基础概念",
+        "note": "vLLM / Ollama 选型背后的线上指标。"
+      }
     ]
   },
   {
@@ -16449,6 +18367,13 @@ const BUILTIN_CARDS = [
       {
         "term": "補足と実戦整理",
         "explain": "<p><strong>本番制約</strong></p><p><strong>工程知識は本番制約まで落とす：</strong>正しさだけでなく、観測可能性、ロールバック、拡張性、コスト管理を説明する。</p><ul><li>設計問題では入力、出力、状態、障害復旧、権限境界を先に置く。</li><li>障害対応は再現、層の切り分け、範囲縮小、修正、回帰確認の順で話す。</li><li>顧客向けには技術指標を遅延、費用、転換率、コンプライアンスリスクに翻訳する。</li></ul><p><strong>実運用チェック</strong></p><p><strong>工程回答は実運用まで確認する：</strong>どうリリースし、何を監視し、異常をどう検知し、どう戻すかまで話す。</p><ul><li>リリース前：カナリア、回帰テスト、最小権限。</li><li>リリース中：メトリクス、ログサンプリング、アラート閾値。</li><li>リリース後：障害復盤、runbook化、自動チェックへの反映。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc07",
+        "type": "基础概念",
+        "note": "LoRA / QLoRA 的新手版解释。"
       }
     ]
   },
@@ -16781,6 +18706,13 @@ const BUILTIN_CARDS = [
       {
         "term": "本番制約",
         "explain": "<p><strong>工程知識は本番制約まで落とす：</strong>正しさだけでなく、観測可能性、ロールバック、拡張性、コスト管理を説明する。</p><ul><li>設計問題では入力、出力、状態、障害復旧、権限境界を先に置く。</li><li>障害対応は再現、層の切り分け、範囲縮小、修正、回帰確認の順で話す。</li><li>顧客向けには技術指標を遅延、費用、転換率、コンプライアンスリスクに翻訳する。</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc29",
+        "type": "基础概念",
+        "note": "API / SDK / Webhook 和接口设计。"
       }
     ]
   },
@@ -22592,6 +24524,18 @@ const BUILTIN_CARDS = [
         "term": "容易混淆的边界",
         "explain": "<ul><li><strong>R1 和 V3</strong>：V3 是基座，R1 是在 V3 上强化推理后的模型。</li><li><strong>RL 和 SFT</strong>：冷启动 SFT 主要修格式和起点，推理能力的增强主要来自后续 RL。</li><li><strong>MoE 总参数和激活参数</strong>：总参数代表容量，激活参数更接近单 token 的计算开销。</li><li><strong>开源蒸馏模型</strong>：小模型不是 R1 本体，而是用 R1 数据训出的学生模型。</li></ul>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc24",
+        "type": "基础概念",
+        "note": "蒸馏解释 R1 小模型和大模型的关系。"
+      },
+      {
+        "id": "fc10",
+        "type": "基础概念",
+        "note": "Reward / Reward Model 是理解 R1 训练路线的前置概念。"
+      }
     ]
   },
   {
@@ -22674,6 +24618,31 @@ const BUILTIN_CARDS = [
         "id": "l32",
         "type": "基础概念",
         "note": "KV Cache 显存账本，解释长上下文为什么先卡缓存。"
+      },
+      {
+        "id": "fc05",
+        "type": "基础概念",
+        "note": "先理解 Q/K/V，再理解 MLA 为什么能少存 KV。"
+      },
+      {
+        "id": "l30",
+        "type": "基础概念",
+        "note": "MHA heads 是 MLA 的前置知识。"
+      },
+      {
+        "id": "l31",
+        "type": "基础概念",
+        "note": "MHA/MQA/GQA/MLA 横向对比。"
+      },
+      {
+        "id": "l32",
+        "type": "基础概念",
+        "note": "KV Cache 显存账本。"
+      },
+      {
+        "id": "l33",
+        "type": "基础概念",
+        "note": "RoPE 与 MLA 为什么要解耦。"
       }
     ]
   },
@@ -22733,6 +24702,18 @@ const BUILTIN_CARDS = [
         "term": "常见追问",
         "explain": "<p><strong>不冷启动行不行？</strong> 行，就是 R1-Zero 路线；能展示能力，但答案质量和可控性不够好。</p><p><strong>冷启动会不会限制 RL 的探索？</strong> 会带来一定先验，但高质量起点通常比从混乱输出里探索更划算；后续 RL 仍然可以扩展推理策略。</p><p><strong>冷启动数据从哪来？</strong> 可以来自人工整理的高质量 CoT、已有强模型生成后筛选的数据，以及 R1-Zero 轨迹的人工清洗。</p>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc08",
+        "type": "基础概念",
+        "note": "SFT 冷启动是什么。"
+      },
+      {
+        "id": "fc09",
+        "type": "基础概念",
+        "note": "SFT 之后的偏好优化路线。"
+      }
     ]
   },
   {
@@ -22790,6 +24771,13 @@ const BUILTIN_CARDS = [
       {
         "term": "和 MLA 的关系",
         "explain": "<p>MLA 希望把 K/V 的 up-projection 吸收到 Q 或输出投影里，但 RoPE 是位置相关旋转，会干扰这种吸收。因此 DeepSeek 把 RoPE 相关的 K 维度单独拆出来处理，让大部分 K/V 信息继续走 latent 压缩通路。</p>"
+      }
+    ],
+    "related": [
+      {
+        "id": "l33",
+        "type": "基础概念",
+        "note": "RoPE 和 MLA 解耦的直觉。"
       }
     ]
   },
@@ -22855,6 +24843,21 @@ const BUILTIN_CARDS = [
         "id": "l32",
         "type": "基础概念",
         "note": "KV Cache 显存账本，推理估算时补上长上下文缓存项。"
+      },
+      {
+        "id": "l32",
+        "type": "基础概念",
+        "note": "KV Cache 显存账本。"
+      },
+      {
+        "id": "fc22",
+        "type": "基础概念",
+        "note": "延迟、吞吐、成本的线上取舍。"
+      },
+      {
+        "id": "fc23",
+        "type": "基础概念",
+        "note": "量化如何影响权重显存。"
       }
     ]
   },
@@ -22920,6 +24923,21 @@ const BUILTIN_CARDS = [
         "id": "l32",
         "type": "基础概念",
         "note": "KV Cache 显存账本，对应推理显存随 batch/seq/layers 增长。"
+      },
+      {
+        "id": "l32",
+        "type": "基础概念",
+        "note": "KV Cache 显存账本。"
+      },
+      {
+        "id": "fc22",
+        "type": "基础概念",
+        "note": "显存、吞吐和成本的整体账本。"
+      },
+      {
+        "id": "fc23",
+        "type": "基础概念",
+        "note": "量化能省哪部分显存。"
       }
     ]
   },
@@ -22979,6 +24997,18 @@ const BUILTIN_CARDS = [
         "term": "取舍",
         "explain": "<p>完全不遗忘通常意味着新任务学得慢；新任务学得太猛又容易损伤旧能力。实际会用小学习率、少 epoch、早停、LoRA rank 控制、混合数据比例和保留集评测一起调。判断是否遗忘，不能只看新任务分数，还要看旧能力回归集。</p>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc08",
+        "type": "基础概念",
+        "note": "SFT 与遗忘问题相关。"
+      },
+      {
+        "id": "fc24",
+        "type": "基础概念",
+        "note": "蒸馏和持续学习的边界。"
+      }
     ]
   },
   {
@@ -23036,6 +25066,13 @@ const BUILTIN_CARDS = [
       {
         "term": "哪些地方仍常用 FP32",
         "explain": "<ul><li>optimizer states 或 master weights：减少长期累积误差。</li><li>softmax、loss、归一化统计：避免极值导致不稳定。</li><li>评估或敏感数值计算：需要更高精度时回到 FP32。</li></ul><p>混合精度不是所有张量都降精度，而是把吞吐敏感的大矩阵计算降到 BF16/FP16，把稳定性敏感的部分留在 FP32。</p>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc23",
+        "type": "基础概念",
+        "note": "量化和数值精度的区别。"
       }
     ]
   },
@@ -23210,6 +25247,13 @@ const BUILTIN_CARDS = [
         "term": "预缓存 prompt 片段",
         "explain": "<p>经常共现的 skill 组合可以预缓存好 prompt 片段。比如「订单查询 + 物流查询」经常一起出现，可以把两个 skill 的 prompt 拼好存起来，命中时直接用。</p><p>更进一步——配合 <strong>prompt caching</strong>（Claude / OpenAI 都支持），经常用的 skill prompt 能享受成本折扣。</p>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc17",
+        "type": "基础概念",
+        "note": "MCP / Tool / Skill 的层次。"
+      }
     ]
   },
   {
@@ -23259,6 +25303,13 @@ const BUILTIN_CARDS = [
       {
         "term": "语义长期接近怎么办 / 执行前校验",
         "explain": "<p><strong>语义长期接近怎么办</strong></p><p>如果两个 skill 语义长期接近，通常要在<span class=\"key-point\">系统设计层面合并成一个 skill</span>，再由内部参数路由。不然前面再怎么写 prompt，后面也会持续混。</p><p>例：「查北京天气」和「查上海天气」不是两个 skill，而是一个 skill 带 city 参数。</p><p><strong>执行前校验</strong></p><p>即使模型选错了，也要靠执行前校验兜底：</p><ul><li><strong>Schema 校验</strong>：参数类型/必填/枚举值</li><li><strong>Rule check</strong>：业务规则（金额上限、权限范围）</li><li><strong>白名单</strong>：当前用户能调用的 skill 集合</li></ul><p><span class=\"key-point\">把模型当成一个不可信的输入源，所有关键决策都要二次校验</span>。</p>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc17",
+        "type": "基础概念",
+        "note": "工具和 Skill 描述相似时为什么会选错。"
       }
     ]
   },
@@ -23683,6 +25734,11 @@ const BUILTIN_CARDS = [
         "id": "ita06",
         "type": "并行版",
         "note": "普通 Tool Calling 讲清楚后，再看并行调用的吞吐、一致性和回放问题。"
+      },
+      {
+        "id": "fc15",
+        "type": "基础概念",
+        "note": "先理解工具调用，再回答它和普通函数的差异。"
       }
     ]
   },
@@ -23733,6 +25789,18 @@ const BUILTIN_CARDS = [
       {
         "term": "按需召回 vs 全量拼接",
         "explain": "<p>错误做法：每次把整个长期记忆都拼到 prompt 里（token 爆炸，且噪声大）。</p><p>正确做法：<span class=\"key-point\">按需召回</span>——根据当前 query 语义检索最相关的 top-k 条记忆注入，不相关的不动。</p><p>这和 RAG 本质一致——长期记忆就是「关于用户的知识库」。</p>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc30",
+        "type": "基础概念",
+        "note": "工具选错定位需要 trace/log/metrics。"
+      },
+      {
+        "id": "fc18",
+        "type": "基础概念",
+        "note": "Agent Memory 的基础分层。"
       }
     ]
   },
@@ -23790,6 +25858,11 @@ const BUILTIN_CARDS = [
         "id": "pe05",
         "type": "基础版",
         "note": "先复习注入攻击的分类、隔离和指令优先级。"
+      },
+      {
+        "id": "fc19",
+        "type": "基础概念",
+        "note": "Guardrails 和 sandbox 是 prompt injection 防线的一部分。"
       }
     ]
   },
@@ -24191,6 +26264,13 @@ const BUILTIN_CARDS = [
         "term": "SA 视角的上云动机",
         "explain": "<ul><li><strong>财务视角</strong>：CapEx → OpEx，对现金流友好</li><li><strong>技术视角</strong>：弹性能应对业务波峰波谷</li><li><strong>战略视角</strong>：把「非核心能力」交给专业厂商，聚焦业务</li></ul><p>和客户讲云计算不能只讲技术——要讲<span class=\"key-point\">「这三个视角，客户最关心哪个」</span>，然后重点切入。</p>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc27",
+        "type": "基础概念",
+        "note": "云服务三层和传统服务器的差异。"
+      }
     ]
   },
   {
@@ -24241,6 +26321,13 @@ const BUILTIN_CARDS = [
         "term": "FaaS（Serverless）",
         "explain": "<p>比 PaaS 更细粒度的一层——<span class=\"key-point\">只跑函数不跑进程</span>。代表产品：AWS Lambda、阿里云函数计算。</p><p>特点：</p><ul><li>按调用次数和执行时间计费</li><li>无需管理服务器（连容器都不用管）</li><li>自动扩缩容</li></ul><p>适合：事件驱动、流量波动大、调用稀疏的场景（比如图片处理、webhook 响应）。</p>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc27",
+        "type": "基础概念",
+        "note": "IaaS / PaaS / SaaS 披萨类比。"
+      }
     ]
   },
   {
@@ -24290,6 +26377,18 @@ const BUILTIN_CARDS = [
       {
         "term": "延伸场景与边界",
         "explain": "<p><strong>安全</strong></p><ul><li>数据合规（GDPR、等保、行业法规）</li><li>权限控制（IAM 细粒度权限）</li><li>数据主权（数据存在哪里）</li></ul><p><strong>业务</strong></p><ul><li>业务增速（高增长 → 弹性需求大）</li><li>全球化部署（是否需要多地域）</li><li>业务连续性（容灾、备份策略）</li></ul><p><strong>混合云 vs 多云</strong></p><p><strong>混合云</strong>：部分敏感业务留在私有云，其他上公有云——银行典型做法。核心系统留在自建 IDC，面向用户的边缘服务上云。</p><p><strong>多云</strong>：同时用多家云厂商，<span class=\"key-point\">避免厂商锁定（vendor lock-in）</span>。代价是运维复杂度翻倍，因为每家云的 API 都不一样。</p><p><strong>上云成熟度模型（6R）</strong></p><ol><li><strong>Rehost</strong>（搬过去）：Lift-and-Shift，最简单，只是换个地方跑</li><li><strong>Replatform</strong>（改一点）：小改动利用云特性（比如用 RDS 替换自建 MySQL）</li><li><strong>Refactor</strong>（重构）：大改架构，充分利用云原生特性</li><li><strong>Rearchitect</strong>（重新设计）：从头设计一套云原生架构</li><li><strong>Retire</strong>（退役）：某些业务不再需要，直接关掉</li><li><strong>Retain</strong>（保留）：某些业务暂时不上云</li></ol>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc27",
+        "type": "基础概念",
+        "note": "企业上云前先理解服务层次。"
+      },
+      {
+        "id": "fc22",
+        "type": "基础概念",
+        "note": "上云方案也要看成本、性能和延迟。"
       }
     ]
   },
@@ -25126,6 +27225,18 @@ const BUILTIN_CARDS = [
         "term": "Chunk 切分经验",
         "explain": "<ul><li><strong>默认</strong>：按文档段落自然切分</li><li><strong>长段落</strong>：512 字滑动窗口 + 50% overlap</li><li><strong>表格</strong>：每行转成一条文本，保留表头（「列名: 值」格式）</li><li><strong>代码块</strong>：不切（代码切了就没意义）</li></ul><p>踩坑：技术规格书一个段落 3000 字 → 不切就超过 embedding 上下文长度 → 必须二次切分。<span class='key-point'>切分规则要根据文档实际特点调整，没有银弹</span>。</p>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc12",
+        "type": "基础概念",
+        "note": "Chunking 是 RAG 检索优化的底层概念。"
+      },
+      {
+        "id": "fc13",
+        "type": "基础概念",
+        "note": "BM25 与 Dense 的取舍。"
+      }
     ]
   },
   {
@@ -25217,6 +27328,13 @@ const BUILTIN_CARDS = [
       {
         "term": "金融场景的 Memory 限制",
         "explain": "<p>如果做金融领域 Agent，用户维度 Memory 有特殊约束：</p><ul><li><strong>合规</strong>：GDPR/个人信息保护法要求用户数据可删除、有留存期限</li><li><strong>过期清除</strong>：用户偏好必须有 TTL，过期自动清除</li><li><strong>用户隔离</strong>：用户 A 的交易偏好<span class='key-point'>绝不能泄露到用户 B 的 context</span>——这是硬约束，违反就是数据泄露事件</li><li><strong>审计</strong>：每一次 Memory 读写都要有审计日志</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc18",
+        "type": "基础概念",
+        "note": "多层 Memory 设计的基础概念。"
       }
     ]
   },
@@ -25317,6 +27435,13 @@ const BUILTIN_CARDS = [
       {
         "term": "追问与边界",
         "explain": "<p><strong>Context Manager 三大难题</strong></p><ol><li><strong>拼接</strong>:system prompt + 工具描述 + 历史 + 当前输入,顺序和分隔符影响模型行为</li><li><strong>裁剪</strong>:超过 context window 时先裁什么?通常保留 system + 最近 N 轮 + 关键中间结果</li><li><strong>压缩</strong>:用小模型把老对话压缩成摘要——Claude Code 的 compaction、OpenAI Codex 的 summarization 都用这个</li></ol><p><span class='key-point'>好的 Context Manager 决定 Agent 能走多远</span>——差的系统 20 步就上下文爆炸,好的可以跑 100+ 步。</p><p><strong>生产级组件补充</strong></p><ul><li><strong>Sandbox</strong>:Bash 工具必须跑在沙箱里(Docker/Firecracker/bwrap),否则能 <code>rm -rf /</code></li><li><strong>Streaming</strong>:SSE 流式输出,用户不用干等</li><li><strong>Checkpoint</strong>:每步状态存盘,挂了能恢复</li><li><strong>Rollback</strong>:文件修改前备份,失败能回滚(Claude Code 的 Write 用的 shadow copy)</li><li><strong>Multi-turn Memory</strong>:跨会话持久化(见 Claude Code 的 auto memory)</li></ul>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc30",
+        "type": "基础概念",
+        "note": "Agent harness 排障时才需要 trace/log/metrics。"
       }
     ]
   },
@@ -25581,6 +27706,18 @@ const BUILTIN_CARDS = [
       {
         "term": "追问与边界",
         "explain": "<p><strong>常见成本坑</strong></p><ul><li><strong>Egress 流量费</strong>:从云厂商往外传数据贵(每 GB $0.09),从外面传进来免费。跨云/混合云场景容易翻车</li><li><strong>冷启动</strong>:Lambda/Cloud Functions 冷启动 2-10s,高并发 QPS 场景要 pre-warm</li><li><strong>GPU 可用性</strong>:H100 经常无货,要靠 Reservation 提前锁</li><li><strong>跨 AZ 通信</strong>:同 region 跨 AZ 流量也收费,架构设计要考虑</li><li><strong>数据出境</strong>:中国业务出境有监管限制(个保法+数据安全法)</li></ul><p><strong>Linux + 云的常用组合</strong></p><div class='formula'>面试常问「在云上怎么部署一个 Web 服务」:<br><br>1. 买 VM(EC2/GCE) + 配安全组(80/443/22)<br>2. SSH 上去:ssh ubuntu@&lt;ip&gt;<br>3. 装 Docker:<br>&nbsp;&nbsp;curl -fsSL https://get.docker.com | sh<br>4. docker-compose.yml:<br>&nbsp;&nbsp;app + nginx + postgres<br>5. nginx 反向代理 443 → app:3000<br>6. Let's Encrypt certbot 拿证书<br>7. systemd 或 docker restart=always 保活<br>8. CloudWatch/Stackdriver 收日志</div><p>进阶:换成 <code>ECS/GKE/AKS</code> 容器编排 + <code>ALB/LB</code> 负载均衡 + <code>Auto Scaling Group</code>。</p>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc27",
+        "type": "基础概念",
+        "note": "云服务层次新手版。"
+      },
+      {
+        "id": "fc28",
+        "type": "基础概念",
+        "note": "Docker / 容器基础。"
       }
     ]
   },

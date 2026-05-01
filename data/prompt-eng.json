@@ -335,6 +335,11 @@
         "id": "ita12",
         "type": "Agent场景版",
         "note": "pe05偏Prompt安全基础；ita12补工具调用和权限边界。"
+      },
+      {
+        "id": "fc19",
+        "type": "基础概念",
+        "note": "Prompt Injection 不能只靠提示词防。"
       }
     ]
   },

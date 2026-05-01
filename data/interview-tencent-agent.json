@@ -47,6 +47,13 @@
         "term": "预缓存 prompt 片段",
         "explain": "<p>经常共现的 skill 组合可以预缓存好 prompt 片段。比如「订单查询 + 物流查询」经常一起出现，可以把两个 skill 的 prompt 拼好存起来，命中时直接用。</p><p>更进一步——配合 <strong>prompt caching</strong>（Claude / OpenAI 都支持），经常用的 skill prompt 能享受成本折扣。</p>"
       }
+    ],
+    "related": [
+      {
+        "id": "fc17",
+        "type": "基础概念",
+        "note": "MCP / Tool / Skill 的层次。"
+      }
     ]
   },
   {
@@ -96,6 +103,13 @@
       {
         "term": "语义长期接近怎么办 / 执行前校验",
         "explain": "<p><strong>语义长期接近怎么办</strong></p><p>如果两个 skill 语义长期接近，通常要在<span class=\"key-point\">系统设计层面合并成一个 skill</span>，再由内部参数路由。不然前面再怎么写 prompt，后面也会持续混。</p><p>例：「查北京天气」和「查上海天气」不是两个 skill，而是一个 skill 带 city 参数。</p><p><strong>执行前校验</strong></p><p>即使模型选错了，也要靠执行前校验兜底：</p><ul><li><strong>Schema 校验</strong>：参数类型/必填/枚举值</li><li><strong>Rule check</strong>：业务规则（金额上限、权限范围）</li><li><strong>白名单</strong>：当前用户能调用的 skill 集合</li></ul><p><span class=\"key-point\">把模型当成一个不可信的输入源，所有关键决策都要二次校验</span>。</p>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc17",
+        "type": "基础概念",
+        "note": "工具和 Skill 描述相似时为什么会选错。"
       }
     ]
   },
@@ -520,6 +534,11 @@
         "id": "ita06",
         "type": "并行版",
         "note": "普通 Tool Calling 讲清楚后，再看并行调用的吞吐、一致性和回放问题。"
+      },
+      {
+        "id": "fc15",
+        "type": "基础概念",
+        "note": "先理解工具调用，再回答它和普通函数的差异。"
       }
     ]
   },
@@ -570,6 +589,18 @@
       {
         "term": "按需召回 vs 全量拼接",
         "explain": "<p>错误做法：每次把整个长期记忆都拼到 prompt 里（token 爆炸，且噪声大）。</p><p>正确做法：<span class=\"key-point\">按需召回</span>——根据当前 query 语义检索最相关的 top-k 条记忆注入，不相关的不动。</p><p>这和 RAG 本质一致——长期记忆就是「关于用户的知识库」。</p>"
+      }
+    ],
+    "related": [
+      {
+        "id": "fc30",
+        "type": "基础概念",
+        "note": "工具选错定位需要 trace/log/metrics。"
+      },
+      {
+        "id": "fc18",
+        "type": "基础概念",
+        "note": "Agent Memory 的基础分层。"
       }
     ]
   },
@@ -627,6 +658,11 @@
         "id": "pe05",
         "type": "基础版",
         "note": "先复习注入攻击的分类、隔离和指令优先级。"
+      },
+      {
+        "id": "fc19",
+        "type": "基础概念",
+        "note": "Guardrails 和 sandbox 是 prompt injection 防线的一部分。"
       }
     ]
   },

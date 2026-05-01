@@ -78,6 +78,12 @@
     "group": "基础"
   },
   {
+    "file": "foundation-concepts.json",
+    "cat": "基础概念",
+    "count": 30,
+    "group": "基础"
+  },
+  {
     "file": "model-eval.json",
     "cat": "模型评测",
     "count": 15,
